@@ -1,0 +1,20 @@
+/* ==========================================================================
+   NO-JS FALLBACK — Hides preloader and restores scroll when JS is disabled.
+   File: assets/css/noscript.css
+   ========================================================================== */
+
+.preloader {
+  display: none !important;
+}
+
+html,
+body {
+  overflow: auto !important;
+}
+
+.reveal,
+.hero [data-intro],
+.hero-slide__content > * {
+  opacity: 1 !important;
+  transform: none !important;
+}

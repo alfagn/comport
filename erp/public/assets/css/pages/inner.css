@@ -1,0 +1,389 @@
+/* ==========================================================================
+   INNER PAGES: About, Partners, Careers & Executive Contact Us Page
+   File: assets/css/pages/inner.css
+   ========================================================================== */
+
+/* Partner programme rows */
+.programme {
+  border-block-start: var(--border) solid var(--color-line);
+}
+
+.programme__row {
+  display: grid;
+  gap: var(--space-4) var(--gutter);
+  padding-block: var(--space-8);
+  border-block-end: var(--border) solid var(--color-line);
+}
+
+@media (min-width: 64rem) {
+  .programme__row {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .programme__num { grid-column: 1 / span 1; }
+  .programme__title { grid-column: 2 / span 4; }
+  .programme__text { grid-column: 6 / span 4; }
+  .programme__list { grid-column: 10 / span 3; }
+}
+
+.programme__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-accent);
+}
+
+.programme__title {
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+}
+
+.programme__text {
+  color: var(--color-text-body);
+}
+
+.programme__list {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-body);
+}
+
+/* --------------------------------------------------------------------------
+   CONTACT US PAGE — Executive Multi-Channel Architecture
+   -------------------------------------------------------------------------- */
+
+/* 1. Direct Department Channels Bar (4 Cards at Top of Contact Page) */
+.contact-channels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gutter);
+  margin-block-end: var(--space-10);
+}
+
+@media (min-width: 48rem) {
+  .contact-channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .contact-channels {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.channel-card {
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-line);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-5);
+  transition:
+    transform var(--dur-base) var(--ease-spring),
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.channel-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-neutral-900);
+  box-shadow: var(--shadow-card);
+}
+
+.channel-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.channel-card__tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-accent);
+}
+
+.channel-card__sla {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  padding: 0.15rem 0.45rem;
+  background-color: var(--color-bg-alt);
+  border: var(--border) solid var(--color-line);
+}
+
+.channel-card__title {
+  font-size: var(--text-lg);
+  margin-block-start: var(--space-3);
+}
+
+.channel-card__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-body);
+  margin-block-start: var(--space-2);
+}
+
+.channel-card__foot {
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border) solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.channel-card__email {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.channel-card__email:hover {
+  color: var(--color-text-accent);
+}
+
+.channel-card__copy {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  padding: 0.2rem 0.5rem;
+  border: var(--border) solid var(--color-line);
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.channel-card__copy:hover {
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  border-color: var(--color-ink-900);
+}
+
+/* 2. Main Contact Split Layout (8-col Configurator + 4-col Executive Sidebar) */
+.contact {
+  display: grid;
+  gap: var(--space-9) var(--gutter);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .contact {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .contact__form { grid-column: 1 / span 8; }
+  .contact__aside {
+    grid-column: 9 / span 4;
+    position: sticky;
+    inset-block-start: calc(var(--header-h-compact) + var(--space-5));
+  }
+}
+
+.contact__aside {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.contact-promise {
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  padding: var(--space-6);
+  border: var(--border) solid var(--color-line-inverse);
+  display: grid;
+  gap: var(--space-5);
+}
+
+.contact-promise__title {
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+}
+
+.contact-promise__list {
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-inverse-body);
+}
+
+.contact-promise__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.contact-promise__list li::before {
+  content: "";
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  margin-block-start: 0.5em;
+  background-color: var(--color-accent-500);
+  flex-shrink: 0;
+}
+
+.contact-founders {
+  display: grid;
+  gap: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border) solid var(--color-line-inverse);
+}
+
+.contact-founder {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.contact-founder__img {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  object-fit: cover;
+  border: var(--border) solid var(--color-line-inverse);
+}
+
+.contact-founder__name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-inverse);
+}
+
+.contact-founder__role {
+  font-size: var(--text-2xs);
+  color: var(--color-text-inverse-muted);
+}
+
+.contact-block {
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-line);
+  padding: var(--space-5);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.contact-block__title {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.contact-block__big {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-snug);
+}
+
+.contact-block__big:hover {
+  color: var(--color-text-accent);
+}
+
+/* 3. Global Studios Cards (Cairo HQ, Riyadh KAFD, London Shoreditch) */
+.offices {
+  display: grid;
+  gap: var(--gutter);
+}
+
+@media (min-width: 64rem) {
+  .offices {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.office {
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition:
+    transform var(--dur-base) var(--ease-spring),
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.office:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-neutral-900);
+  box-shadow: var(--shadow-card);
+}
+
+.office__media {
+  aspect-ratio: 16 / 9;
+  border-block-end: var(--border) solid var(--color-line);
+}
+
+.office__body {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+}
+
+.office__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.office__role {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-accent);
+  letter-spacing: 0.06em;
+}
+
+.office__clock {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 0.15rem 0.5rem;
+  background-color: var(--color-bg-alt);
+  border: var(--border) solid var(--color-line);
+}
+
+.office__clock::before {
+  content: "";
+  inline-size: 0.4rem;
+  block-size: 0.4rem;
+  background-color: #16A34A;
+  border-radius: 50%;
+}
+
+.office__city {
+  font-size: var(--text-2xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+.office__addr {
+  font-size: var(--text-sm);
+  color: var(--color-text-body);
+  line-height: var(--leading-normal);
+}
+
+.office__meta {
+  margin-block-start: auto;
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border) solid var(--color-line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
