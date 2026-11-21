@@ -1,29 +1,52 @@
 <!-- PARTIAL: preloader -->
-<div id="preloader" class="preloader" role="region" aria-label="Empetix loading screen" aria-live="polite">
-  <div class="preloader__top">
-    <span>EMPETIX // SOFTWARE ENGINEERING &amp; GROWTH MARKETING</span>
-    <span>CAIRO &middot; RIYADH &middot; LONDON</span>
-  </div>
+<div
+  id="preloader"
+  class="preloader"
+  role="status"
+  aria-label="Loading Empetix Solution"
+>
+  <span id="preloader-sr" class="preloader__sr" aria-live="polite">Loading 0%</span>
 
-  <div class="preloader__center">
-    <svg class="preloader__mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Empetix emblem">
-      <rect x="2" y="2" width="44" height="44" stroke="currentColor" stroke-width="2"/>
-      <path d="M13 15H35M13 24H28M13 33H35" stroke="currentColor" stroke-width="3"/>
-      <rect x="31" y="21" width="6" height="6" fill="#FF5520"/>
-    </svg>
-    <span class="preloader__word">Empetix</span>
-  </div>
+  <div class="preloader__stage">
+    <div class="preloader__logo-stack">
+      <!-- 1. Dim Grayscale Base Silhouette -->
+      <img
+        class="preloader__logo preloader__logo--base"
+        src="assets/img/logo/empetix-logo.png"
+        alt="Empetix Solution"
+        width="881"
+        height="302"
+        fetchpriority="high"
+        decoding="sync"
+      />
 
-  <div class="preloader__bottom">
-    <span id="preloader-status" class="preloader__status">Loading Studio Systems</span>
-    <div class="preloader__count">
-      <span id="preloader-num">00</span>
-      <span class="preloader__pct">%</span>
+      <!-- 2. Precision 12-Piece Letter & Equalizer Assembly of the Official 881x302 Logo -->
+      <div class="preloader__pieces" aria-hidden="true">
+        <img class="preloader__piece preloader__piece--e1" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m1" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m2" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m3" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m4" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m5" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--p" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--e2" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--t" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--i" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--x" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--solution" src="assets/img/logo/empetix-logo.png" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+      </div>
+
+      <!-- 3. Thin 2px Accent Scan Line following --p -->
+      <span class="preloader__scan" aria-hidden="true"></span>
     </div>
   </div>
 
+  <div class="preloader__hud" aria-hidden="true">
+    <span id="preloader-counter" class="preloader__counter">0</span>
+  </div>
+
   <div class="preloader__track" aria-hidden="true">
-    <div id="preloader-bar" class="preloader__bar"></div>
+    <div class="preloader__bar"></div>
   </div>
 </div>
 <!-- END PARTIAL: preloader -->

@@ -1,36 +1,38 @@
 /* ==========================================================================
-   EMPETIX — DESIGN TOKENS (Link Development / Enterprise Tech Aesthetic)
+   EMPETIX SOLUTIONS — DESIGN TOKENS
    File: assets/css/base/variables.css
-   Crisp architectural white, cool tech slate, deep enterprise navy, sharp accent.
+   Typography: Archivo (700/800), Public Sans (400/500), IBM Plex Mono (400/500),
+   IBM Plex Sans Arabic (400/700). Strict 1.25 type scale (5 sizes).
    ========================================================================== */
 
 :root {
   /* ---------------------------------------------------------------------
-     1. COLOUR PALETTE — Crisp Enterprise Tech & Digital Agency Scale
+     1. COLOUR PALETTE — White, Off-White, Deep Navy, Sparse Accent Orange
      --------------------------------------------------------------------- */
   --color-ink-950: #050C1A;
-  --color-ink-900: #08142C;   /* Primary Brand Navy (Link Development / Enterprise Navy) */
+  --color-ink-900: #08142C;   /* Deep Brand Navy */
   --color-ink-850: #0D1E3D;
   --color-ink-800: #13274D;
   --color-ink-700: #1E3664;
   --color-ink-600: #2F4B80;
 
-  --color-accent-500: #FF4D1C; /* Sharp Signal Accent */
+  /* Accent Orange — used ONLY for primary CTA and 1 highlighted figure per screen */
+  --color-accent-500: #FF4D1C;
   --color-accent-600: #E03D10;
   --color-accent-700: #C23008;
 
-  /* Cool Architectural White & Slate Scale (Crisp, modern, never muddy beige) */
+  /* Neutral Surfaces: White (#FFFFFF) & Warm Off-White (#F5F5F2) */
   --color-neutral-0: #FFFFFF;
-  --color-neutral-50: #FFFFFF;  /* Primary Page Canvas — Pure Crisp White */
-  --color-neutral-100: #F3F6FA; /* Secondary Section Surface — Cool Tech Slate */
-  --color-neutral-150: #E8EEF5; /* Interactive Hover Surface */
-  --color-neutral-200: #DCE3EE; /* 1px Structural Hairline Border */
-  --color-neutral-300: #BCC7D8;
-  --color-neutral-500: #5A677D; /* Metadata & Captions (AA Contrast) */
-  --color-neutral-700: #2C3647; /* Editorial Body Copy */
-  --color-neutral-900: #08142C; /* Headlines — Deep Enterprise Navy Ink */
+  --color-neutral-50: #FFFFFF;
+  --color-neutral-100: #F5F5F2; /* Off-White Alternating Section Surface */
+  --color-neutral-150: #EBEBE6;
+  --color-neutral-200: #DCDCD4; /* 1px Hairline Divider */
+  --color-neutral-300: #C2C2B8;
+  --color-neutral-500: #595953; /* Metadata & Dates (AA Contrast) */
+  --color-neutral-700: #2B2B28; /* Primary Body Copy */
+  --color-neutral-900: #08142C; /* Headings Ink */
 
-  /* Semantic Aliases */
+  /* Semantic Aliases (Note: text-accent is navy, not orange, to avoid orange overuse) */
   --color-bg: var(--color-neutral-0);
   --color-bg-alt: var(--color-neutral-100);
   --color-bg-raised: var(--color-neutral-0);
@@ -40,55 +42,69 @@
   --color-text: var(--color-neutral-900);
   --color-text-body: var(--color-neutral-700);
   --color-text-muted: var(--color-neutral-500);
-  --color-text-accent: var(--color-accent-600);
+  --color-text-accent: var(--color-ink-900);
   --color-text-inverse: #FFFFFF;
-  --color-text-inverse-body: #C5D0E2;
-  --color-text-inverse-muted: #8796B0;
+  --color-text-inverse-body: #C9D2E3;
+  --color-text-inverse-muted: #8B99B2;
 
   --color-line: var(--color-neutral-200);
   --color-line-strong: var(--color-ink-900);
-  --color-line-inverse: #1B2D4F;
+  --color-line-inverse: #1C2E52;
 
-  --color-overlay: rgba(5, 12, 26, 0.64);
+  --color-overlay: rgba(5, 12, 26, 0.66);
   --color-overlay-strong: rgba(5, 12, 26, 0.94);
-  --color-focus: var(--color-accent-500);
+  --color-focus: var(--color-ink-900);
 
   /* ---------------------------------------------------------------------
-     2. TYPOGRAPHY
+     2. TYPOGRAPHY — Archivo + Public Sans + IBM Plex Mono + IBM Plex Sans Arabic
+     Strict 1.25 Major Third Scale — Max 5 Font Sizes in Use
      --------------------------------------------------------------------- */
-  --font-sans: "Inter Tight", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --font-arabic: "IBM Plex Sans Arabic", "Inter Tight", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-heading: "Archivo", "IBM Plex Sans Arabic", sans-serif;
+  --font-sans: "Public Sans", "IBM Plex Sans Arabic", sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 
-  --text-2xs: 0.75rem;                                         /* 12px */
-  --text-xs: 0.8125rem;                                        /* 13px */
-  --text-sm: 0.9375rem;                                        /* 15px */
-  --text-base: 1.0625rem;                                      /* 17px */
-  --text-md: 1.1875rem;                                        /* 19px */
-  --text-lg: clamp(1.25rem, 1.1rem + 0.55vw, 1.5625rem);       /* 20px -> 25px */
-  --text-xl: clamp(1.5rem, 1.25rem + 1vw, 2.125rem);           /* 24px -> 34px */
-  --text-2xl: clamp(1.875rem, 1.45rem + 1.75vw, 2.875rem);     /* 30px -> 46px */
-  --text-3xl: clamp(2.25rem, 1.65rem + 2.4vw, 3.625rem);       /* 36px -> 58px */
-  --text-display: clamp(2.5rem, 1.8rem + 3vw, 4.375rem);       /* 40px -> 70px */
+  /* The 5 Strict Sizes (1.25 Ratio: 14px -> 17.5px -> 22px -> 27.5px -> 43px) */
+  --size-1: 0.875rem;                                       /* 14px — Meta, dates, tags */
+  --size-2: 1.09375rem;                                     /* 17.5px — Body copy (17–18px) */
+  --size-3: 1.375rem;                                       /* 22px — H3 / Card titles / Lead */
+  --size-4: clamp(1.5625rem, 1.35rem + 0.7vw, 1.75rem);     /* 25px -> 28px — Sub-sections */
+  --size-5: clamp(2.15rem, 1.65rem + 1.8vw, 2.75rem);       /* 34px -> 44px — H1 / H2 Display */
 
+  /* Map all legacy size tokens onto the 5 strict scale steps */
+  --text-2xs: var(--size-1);
+  --text-xs: var(--size-1);
+  --text-sm: var(--size-1);
+  --text-base: var(--size-2);
+  --text-md: var(--size-2);
+  --text-lg: var(--size-3);
+  --text-xl: var(--size-4);
+  --text-2xl: var(--size-5);
+  --text-3xl: var(--size-5);
+  --text-display: var(--size-5);
+
+  /* Max 2 weights per family: Public Sans (400, 500), Archivo (700, 800) */
   --weight-regular: 400;
   --weight-medium: 500;
-  --weight-semibold: 600;
+  --weight-semibold: 700;
+  --weight-bold: 800;
 
-  --leading-none: 1.04;
-  --leading-tight: 1.12;
-  --leading-snug: 1.26;
-  --leading-normal: 1.48;
-  --leading-body: 1.62;
+  /* Line Heights */
+  --leading-none: 1.1;
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-body: 1.65;
 
-  --tracking-display: -0.032em;
-  --tracking-tight: -0.022em;
-  --tracking-snug: -0.012em;
+  /* Letter Spacing (Headings: -0.01em to -0.02em, never below -0.03em) */
+  --tracking-display: -0.02em;
+  --tracking-tight: -0.015em;
+  --tracking-snug: -0.01em;
   --tracking-normal: 0;
-  --tracking-caps: 0.08em;
+  --tracking-caps: 0.04em;
 
-  --measure: 66ch;
-  --measure-narrow: 52ch;
+  --measure: 68ch;
+  --measure-narrow: 54ch;
 
   /* ---------------------------------------------------------------------
      3. SPACING SCALE
@@ -113,14 +129,14 @@
   /* ---------------------------------------------------------------------
      4. LAYOUT & GRID
      --------------------------------------------------------------------- */
-  --container-max: 90rem; /* 1440px */
+  --container-max: 90rem;
   --container-pad: clamp(1.25rem, 3.5vw, 3.5rem);
   --gutter: clamp(1.25rem, 2vw, 2rem);
   --row-gap: clamp(2.25rem, 3.5vw, 3.75rem);
 
-  --utility-h: 2.25rem;
-  --header-h: 4.5rem;
-  --header-h-compact: 3.875rem;
+  --utility-h: 2.75rem;
+  --header-h: 5rem;
+  --header-h-compact: 4.25rem;
 
   /* ---------------------------------------------------------------------
      5. BORDERS, RADII & ELEVATION
@@ -132,23 +148,20 @@
   --radius-2: 4px;
 
   --shadow-subtle: 0 12px 28px -10px rgba(8, 20, 44, 0.08);
-  --shadow-card: 0 22px 44px -14px rgba(8, 20, 44, 0.14);
-  --shadow-menu: 0 28px 56px -20px rgba(5, 12, 26, 0.24);
+  --shadow-card: 0 20px 40px -14px rgba(8, 20, 44, 0.12);
+  --shadow-menu: 0 28px 56px -20px rgba(5, 12, 26, 0.22);
 
   /* ---------------------------------------------------------------------
-     6. MOTION & ANIMATION TOKENS
+     6. MOTION & Z-INDEX
      --------------------------------------------------------------------- */
   --dur-fast: 180ms;
-  --dur-base: 280ms;
-  --dur-slow: 640ms;
+  --dur-base: 260ms;
+  --dur-slow: 600ms;
   --dur-curtain: 760ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-curtain: cubic-bezier(0.77, 0, 0.18, 1);
 
-  /* ---------------------------------------------------------------------
-     7. Z-INDEX LAYERS
-     --------------------------------------------------------------------- */
   --z-header: 100;
   --z-menu: 200;
   --z-drawer: 300;
@@ -158,7 +171,9 @@
 }
 
 [dir="rtl"] {
+  --font-heading: var(--font-arabic);
   --font-sans: var(--font-arabic);
+  --leading-body: 1.8;
   --tracking-display: 0;
   --tracking-tight: 0;
   --tracking-snug: 0;

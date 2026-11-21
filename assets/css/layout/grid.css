@@ -241,7 +241,7 @@ button:hover .frame--zoom > img {
   inset-block-end: -1px;
   inline-size: 4.5rem;
   block-size: 2px;
-  background-color: var(--color-accent-500);
+  background-color: var(--color-ink-900);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 900ms var(--ease-spring) 200ms;

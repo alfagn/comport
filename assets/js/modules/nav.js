@@ -1,6 +1,10 @@
 /**
- * EMPETIX — Navigation, Hysteresis Sticky Header, Mega Menu, Search, Mobile Drawer & RTL
+ * EMPETIX SOLUTIONS — Link Development-Style Hover Mega Menu, Sticky Header & Search
  * File: assets/js/modules/nav.js
+ *
+ * - Opens Mega Menu IMMEDIATELY on hover (mouseenter) over Capabilities, Solutions, or Blogs!
+ * - Smoothly keeps Mega Menu open while hovering inside the panel, and closes when mouse leaves.
+ * - Full keyboard (Arrow keys, Escape) and touch click support.
  */
 
 (function (global) {
@@ -25,9 +29,10 @@
 
     var langBtns = Array.prototype.slice.call(document.querySelectorAll("[data-lang-btn]"));
 
-    // 1. Hysteresis Scroll Handler (Eliminates any flicker when scrolling near top)
+    // 1. Smart Hide-on-Scroll-Down / Show-on-Scroll-Up Navbar
     var isCompact = false;
     var ticking = false;
+    var lastScrollY = window.scrollY || window.pageYOffset || 0;
 
     var updateHeader = function () {
       ticking = false;
@@ -35,13 +40,34 @@
         return;
       }
       var y = window.scrollY || window.pageYOffset || 0;
-      if (!isCompact && y > 64) {
+      var delta = y - lastScrollY;
+
+      if (!isCompact && y > 48) {
         isCompact = true;
         head.classList.add("is-compact");
-      } else if (isCompact && y < 16) {
+      } else if (isCompact && y < 12) {
         isCompact = false;
         head.classList.remove("is-compact");
       }
+
+      // Hide navbar when scrolling down past 100px; show when scrolling up or near top
+      if (y <= 80) {
+        head.classList.remove("is-hidden");
+      } else if (delta > 6 && y > 100) {
+        if (!head.classList.contains("is-hidden")) {
+          head.classList.add("is-hidden");
+          if (mega && mega.classList.contains("is-open")) {
+            closeMega(false);
+          }
+          if (searchPanel && searchPanel.classList.contains("is-open")) {
+            closeSearch();
+          }
+        }
+      } else if (delta < -8) {
+        head.classList.remove("is-hidden");
+      }
+
+      lastScrollY = y < 0 ? 0 : y;
     };
 
     window.addEventListener(
@@ -56,10 +82,19 @@
     );
     updateHeader();
 
-    // 2. Mega Menu with Full Keyboard Support
+    // 2. Instant Hover + Click Mega Menu Engine
     var activeBtn = null;
+    var closeTimer = null;
+
+    var cancelCloseTimer = function () {
+      if (closeTimer) {
+        window.clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+    };
 
     var closeMega = function (returnFocus) {
+      cancelCloseTimer();
       if (!mega) {
         return;
       }
@@ -79,17 +114,19 @@
       activeBtn = null;
     };
 
-    var toggleMega = function (btn) {
+    var scheduleCloseMega = function () {
+      cancelCloseTimer();
+      closeTimer = window.setTimeout(function () {
+        closeMega(false);
+      }, 130);
+    };
+
+    var openMega = function (btn) {
+      cancelCloseTimer();
       if (!mega) {
         return;
       }
       var target = btn.getAttribute("data-mega-trigger");
-      var expanded = btn.getAttribute("aria-expanded") === "true";
-
-      if (expanded) {
-        closeMega(false);
-        return;
-      }
 
       if (searchPanel && searchPanel.classList.contains("is-open")) {
         searchPanel.classList.remove("is-open");
@@ -99,8 +136,10 @@
       }
 
       triggers.forEach(function (b) {
-        b.setAttribute("aria-expanded", b === btn ? "true" : "false");
+        var sameTarget = b.getAttribute("data-mega-trigger") === target;
+        b.setAttribute("aria-expanded", sameTarget ? "true" : "false");
       });
+
       panels.forEach(function (p) {
         var match = p.getAttribute("data-mega-panel") === target;
         p.classList.toggle("is-active", match);
@@ -114,9 +153,32 @@
     };
 
     triggers.forEach(function (btn, idx) {
+      // Instant open on mouse hover!
+      btn.addEventListener("mouseenter", function () {
+        openMega(btn);
+      });
+
+      btn.addEventListener("mouseleave", function () {
+        scheduleCloseMega();
+      });
+
+      // Also open on keyboard focus
+      btn.addEventListener("focus", function () {
+        openMega(btn);
+      });
+
+      // Click behaviour: if it's a button, toggle; if it's an <a href="...">, let click navigate or open on touch
       btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        toggleMega(btn);
+        var isAnchor = btn.tagName.toLowerCase() === "a" && btn.getAttribute("href");
+        if (!isAnchor) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (mega && mega.classList.contains("is-open") && activeBtn === btn) {
+            closeMega(false);
+          } else {
+            openMega(btn);
+          }
+        }
       });
 
       btn.addEventListener("keydown", function (e) {
@@ -127,9 +189,7 @@
           e.preventDefault();
           triggers[(idx - 1 + triggers.length) % triggers.length].focus();
         } else if (e.key === "ArrowDown") {
-          if (btn.getAttribute("aria-expanded") !== "true") {
-            toggleMega(btn);
-          }
+          openMega(btn);
           var activePanel = panels.find(function (p) {
             return p.classList.contains("is-active");
           });
@@ -139,6 +199,21 @@
             firstLink.focus();
           }
         }
+      });
+    });
+
+    if (mega) {
+      mega.addEventListener("mouseenter", cancelCloseTimer);
+      mega.addEventListener("mouseleave", scheduleCloseMega);
+    }
+
+    // Close mega menu when hovering over non-trigger nav links
+    var plainNavLinks = Array.prototype.slice.call(
+      document.querySelectorAll(".nav__link:not([data-mega-trigger])")
+    );
+    plainNavLinks.forEach(function (link) {
+      link.addEventListener("mouseenter", function () {
+        closeMega(false);
       });
     });
 
@@ -282,9 +357,7 @@
       });
       try {
         window.sessionStorage.setItem(DIR_KEY, lang);
-      } catch (e) {
-        // Ignore
-      }
+      } catch (e) {}
     };
 
     try {
@@ -292,9 +365,7 @@
       if (savedLang === "ar" || savedLang === "en") {
         applyLang(savedLang);
       }
-    } catch (e) {
-      // Ignore
-    }
+    } catch (e) {}
 
     langBtns.forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -302,7 +373,7 @@
       });
     });
 
-    // 6. Live Studio Clocks in Footer & Contact Page
+    // 6. Live Studio Clock
     var clockEls = Array.prototype.slice.call(document.querySelectorAll("[data-tz-clock]"));
     if (clockEls.length > 0) {
       var updateClocks = function () {

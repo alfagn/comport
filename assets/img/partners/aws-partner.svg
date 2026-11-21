@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" width="220" height="56" role="img" aria-label="AWS ADVANCED">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" width="220" height="56" role="img" aria-label="AWS ADVANCED">
   <rect x="1" y="10" width="8" height="8" fill="#FF5A26"/>
-  <text x="20" y="26" fill="#121212" font-family="Inter Tight, system-ui, sans-serif" font-size="17" font-weight="600" letter-spacing="1.2">AWS ADVANCED</text>
-  <text x="20" y="44" fill="#6B675F" font-family="Inter Tight, system-ui, sans-serif" font-size="9.5" font-weight="500" letter-spacing="1.8">CLOUD INFRASTRUCTURE</text>
+  <text x="20" y="26" fill="#121212" font-family="Archivo, sans-serif" font-size="17" font-weight="600" letter-spacing="1.2">AWS ADVANCED</text>
+  <text x="20" y="44" fill="#6B675F" font-family="Archivo, sans-serif" font-size="9.5" font-weight="500" letter-spacing="1.8">CLOUD INFRASTRUCTURE</text>
 </svg>
+

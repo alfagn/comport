@@ -1,140 +1,142 @@
 /* ==========================================================================
-   ARCHITECTURAL MULTI-COLUMN FOOTER
+   EMPETIX SOLUTIONS — EXECUTIVE CORPORATE FOOTER (Link Development Style)
    File: assets/css/layout/footer.css
+   Single headquarters, 5-column balanced grid, social icon buttons, zero clutter.
    ========================================================================== */
 
 .site-foot {
   background-color: var(--color-ink-950);
   color: var(--color-text-inverse);
-  padding-block: var(--section-y) var(--space-7);
+  padding-block: clamp(4rem, 6vw, 6.5rem) var(--space-7);
   border-block-start: var(--border) solid var(--color-line-inverse);
-  overflow: hidden;
 }
 
-/* 1. Top Executive CTA Box */
-.foot-cta {
+/* --------------------------------------------------------------------------
+   1. Top Framed Executive CTA Banner
+   -------------------------------------------------------------------------- */
+.foot-banner {
   display: grid;
-  gap: var(--space-7) var(--gutter);
-  padding-block-end: var(--space-10);
-  border-block-end: var(--border) solid var(--color-line-inverse);
+  gap: var(--space-6) var(--gutter);
+  padding: clamp(1.75rem, 3.5vw, 3rem);
+  background-color: var(--color-ink-900);
+  border: var(--border) solid var(--color-line-inverse);
+  
+  margin-block-end: var(--space-10);
 }
 
 @media (min-width: 64rem) {
-  .foot-cta {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    align-items: end;
-  }
-
-  .foot-cta > div:first-child {
-    grid-column: 1 / span 8;
-  }
-
-  .foot-cta__aside {
-    grid-column: 9 / span 4;
+  .foot-banner {
+    grid-template-columns: 1fr auto;
+    align-items: center;
   }
 }
 
-.foot-cta__title {
-  margin-block-start: var(--space-4);
-  font-size: clamp(2.15rem, 1.5rem + 2.8vw, 3.85rem);
-  line-height: 1.08;
-  letter-spacing: var(--tracking-display);
-  font-weight: var(--weight-medium);
+.foot-banner__title {
+  margin-block-start: var(--space-2);
+  font-size: clamp(1.65rem, 1.3rem + 1.5vw, 2.5rem);
+  font-weight: var(--weight-semibold);
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
 }
 
-.foot-cta__title a {
-  display: inline-flex;
+.foot-banner__sub {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-inverse-body);
+  max-inline-size: 56ch;
+}
+
+.foot-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.3em;
-  transition: color var(--dur-base) var(--ease-out);
+  gap: var(--space-3);
 }
 
-.foot-cta__title a:hover {
-  color: var(--color-accent-500);
-}
-
-.foot-cta__arrow {
-  inline-size: 0.65em;
-  block-size: 0.65em;
-  color: var(--color-accent-500);
-  transition: transform var(--dur-base) var(--ease-spring);
-}
-
-.foot-cta__title a:hover .foot-cta__arrow {
-  transform: translate(0.12em, -0.12em);
-}
-
-[dir="rtl"] .foot-cta__arrow {
-  transform: scaleX(-1);
-}
-
-.foot-cta__aside {
-  display: grid;
-  gap: var(--space-2);
-  padding: var(--space-5);
-  background-color: var(--color-ink-900);
-  border: var(--border) solid var(--color-line-inverse);
-  font-size: var(--text-xs);
-  color: var(--color-text-inverse-muted);
-}
-
-.foot-cta__aside a {
-  font-family: var(--font-mono);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-medium);
-  color: var(--color-text-inverse);
-  letter-spacing: var(--tracking-snug);
-}
-
-.foot-cta__aside a:hover {
-  color: var(--color-accent-500);
-}
-
-/* 2. 12-Column Sitemap Grid (Properly aligned on 1 row on desktop) */
-.foot-map {
+/* --------------------------------------------------------------------------
+   2. Main 12-Column Sitemap & Single Headquarters Grid
+   -------------------------------------------------------------------------- */
+.foot-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-8) var(--gutter);
-  padding-block: var(--space-9);
+  padding-block-end: var(--space-9);
   border-block-end: var(--border) solid var(--color-line-inverse);
 }
 
-.foot-map__brand {
+.foot-grid__brand {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: var(--space-5);
-  padding-block-end: var(--space-6);
-  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+.foot-grid__newsletter {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 @media (min-width: 64rem) {
-  .foot-map {
+  .foot-grid {
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  .foot-map__brand {
+  .foot-grid__brand {
     grid-column: 1 / span 4;
-    padding-block-end: 0;
     padding-inline-end: var(--space-6);
-    border-block-end: 0;
     border-inline-end: var(--border) solid var(--color-line-inverse);
   }
 
-  .foot-map__col {
+  .foot-grid__col {
+    grid-column: span 2;
+  }
+
+  .foot-grid__newsletter {
     grid-column: span 2;
   }
 }
 
-.foot-map__summary {
-  max-inline-size: 34ch;
+.foot-grid__summary {
   font-size: var(--text-sm);
   color: var(--color-text-inverse-body);
   line-height: var(--leading-normal);
+  max-inline-size: 36ch;
 }
 
-.foot-map__title {
+/* Single Headquarters Contact Info Block inside Brand Column */
+.foot-hq {
+  display: grid;
+  gap: var(--space-3);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border) solid var(--color-line-inverse);
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-body);
+}
+
+.foot-hq__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.foot-hq__icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+  color: var(--color-text-inverse);
+  flex-shrink: 0;
+  margin-block-start: 0.1rem;
+}
+
+.foot-hq__item a:hover {
+  color: var(--color-text-inverse);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Sitemap Column Headings & Links */
+.foot-col__title {
   margin-block-end: var(--space-4);
   padding-block-end: var(--space-2);
   border-block-end: var(--border) solid var(--color-line-inverse);
@@ -146,96 +148,95 @@
   color: var(--color-text-inverse);
 }
 
-.foot-map__list {
+.foot-col__list {
   display: grid;
   gap: var(--space-3);
   font-size: var(--text-sm);
 }
 
-.foot-map__list a {
+.foot-col__list a {
   color: var(--color-text-inverse-body);
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.foot-map__list a:hover {
-  color: var(--color-accent-500);
+.foot-col__list a:hover {
+  color: var(--color-text-inverse);
   transform: translateX(3px);
 }
 
-[dir="rtl"] .foot-map__list a:hover {
+[dir="rtl"] .foot-col__list a:hover {
   transform: translateX(-3px);
 }
 
-/* 3. Framed Regional Offices Row */
-.foot-offices {
-  display: grid;
-  gap: var(--gutter);
-  padding-block: var(--space-8);
-  border-block-end: var(--border) solid var(--color-line-inverse);
+/* Newsletter Box & Social Icon Buttons */
+.foot-sub-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-@media (min-width: 48rem) {
-  .foot-offices {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.foot-offices > div {
-  padding: var(--space-5);
+.foot-sub-form__input {
+  inline-size: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse);
   background-color: var(--color-ink-900);
   border: var(--border) solid var(--color-line-inverse);
-  display: grid;
-  gap: var(--space-3);
   transition: border-color var(--dur-fast) var(--ease-out);
 }
 
-.foot-offices > div:hover {
-  border-color: var(--color-accent-500);
+.foot-sub-form__input::placeholder {
+  color: var(--color-text-inverse-muted);
 }
 
-.foot-office__city {
+.foot-sub-form__input:focus {
+  outline: none;
+  border-color: var(--color-text-inverse);
+}
+
+.foot-socials {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  color: var(--color-text-inverse);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
 }
 
-.foot-office__time {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.15rem 0.5rem;
-  background-color: var(--color-ink-950);
+.foot-social-btn {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2.35rem;
+  block-size: 2.35rem;
+  background-color: var(--color-ink-900);
   border: var(--border) solid var(--color-line-inverse);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-regular);
   color: var(--color-text-inverse-body);
-  font-variant-numeric: tabular-nums;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-spring);
 }
 
-.foot-office__time::before {
-  content: "";
-  inline-size: 0.38rem;
-  block-size: 0.38rem;
-  border-radius: 50%;
-  background-color: #22C55E;
+.foot-social-btn:hover {
+  background-color: var(--color-text-inverse);
+  border-color: var(--color-text-inverse);
+  color: var(--color-ink-950);
+  transform: translateY(-2px);
 }
 
-.foot-office__addr {
-  font-size: var(--text-xs);
-  color: var(--color-text-inverse-body);
-  line-height: var(--leading-normal);
+.foot-social-btn svg {
+  inline-size: 1rem;
+  block-size: 1rem;
 }
 
-/* 4. Bottom Legal & Social Bar */
-.foot-bar {
+/* --------------------------------------------------------------------------
+   3. Crisp Bottom Legal & Copyright Bar
+   -------------------------------------------------------------------------- */
+.foot-bottom {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -246,36 +247,83 @@
   color: var(--color-text-inverse-muted);
 }
 
-.foot-bar__links {
+.foot-bottom__links {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-5);
 }
 
-.foot-bar__links a {
+.foot-bottom__links a {
   transition: color var(--dur-fast) var(--ease-out);
 }
 
-.foot-bar__links a:hover {
+.foot-bottom__links a:hover {
   color: var(--color-text-inverse);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-/* 5. Architectural Signature Wordmark — Balanced & Never Clipped */
-.foot-word {
-  margin-block-start: var(--space-8);
-  padding-block-top: var(--space-4);
-  font-size: clamp(3.75rem, 15.5vw, 14.5rem);
-  font-weight: var(--weight-semibold);
-  line-height: 0.85;
-  letter-spacing: -0.04em;
-  text-align: center;
-  color: var(--color-ink-900);
-  border-block-start: var(--border) solid var(--color-line-inverse);
-  user-select: none;
+/* Single HQ Split Showcase Card on Contact Page */
+.hq-showcase {
+  display: grid;
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-line);
+  box-shadow: var(--shadow-subtle);
+  overflow: hidden;
 }
 
-[dir="rtl"] .foot-word {
-  letter-spacing: 0;
+@media (min-width: 64rem) {
+  .hq-showcase {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .hq-showcase__media {
+    grid-column: 1 / span 7;
+  }
+
+  .hq-showcase__body {
+    grid-column: 8 / span 5;
+  }
+}
+
+.hq-showcase__media {
+  min-block-size: 20rem;
+}
+
+.hq-showcase__media img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.hq-showcase__body {
+  padding: clamp(1.75rem, 3.5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.hq-showcase__list {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-block: var(--border) solid var(--color-line);
+  font-size: var(--text-sm);
+}
+
+.hq-showcase__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.hq-showcase__row span:first-child {
+  color: var(--color-text-muted);
+}
+
+.hq-showcase__row span:last-child {
+  font-weight: var(--weight-semibold);
+  text-align: end;
 }

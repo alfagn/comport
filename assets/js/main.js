@@ -1,45 +1,35 @@
 /**
- * EMPETIX — Main Application Entry Point
+ * EMPETIX SOLUTION — Main Application Entry Point (ES Module)
  * File: assets/js/main.js
- *
- * Works seamlessly on both file:// (double-click) and HTTP / Laravel Blade servers.
  */
 
-(function (global) {
-  "use strict";
+import { initPreloader } from "./modules/preloader.js";
 
-  document.documentElement.classList.add("js");
+const boot = () => {
+  const app = window.EmpetixApp || {};
 
-  var boot = function () {
-    var app = global.EmpetixApp || {};
+  if (typeof app.initNav === "function") {
+    app.initNav();
+  }
+  if (typeof app.initCounters === "function") {
+    app.initCounters();
+  }
+  if (typeof app.initMedia === "function") {
+    app.initMedia();
+  }
+  if (typeof app.initCareers === "function") {
+    app.initCareers();
+  }
 
-    if (typeof app.initNav === "function") {
-      app.initNav();
-    }
-    if (typeof app.initCounters === "function") {
-      app.initCounters();
-    }
-    if (typeof app.initMedia === "function") {
-      app.initMedia();
-    }
-    if (typeof app.initCareers === "function") {
-      app.initCareers();
-    }
-
-    if (typeof app.initPreloader === "function") {
-      app.initPreloader(function () {
-        if (typeof app.initReveal === "function") {
-          app.initReveal();
-        }
-      });
-    } else if (typeof app.initReveal === "function") {
+  initPreloader(() => {
+    if (typeof app.initReveal === "function") {
       app.initReveal();
     }
-  };
+  });
+};
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
-  }
-})(window);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot, { once: true });
+} else {
+  boot();
+}

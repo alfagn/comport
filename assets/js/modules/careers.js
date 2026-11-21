@@ -1,29 +1,10 @@
 /**
- * EMPETIX CAREERS PORTAL (jobs.empetix.com) — Search, Filters, Saved Jobs & Apply Flow
+ * EMPETIX CAREERS PORTAL (jobs.empetix.com) — Search, Filters & Apply Flow
  * File: assets/js/modules/careers.js
  */
 
 (function (global) {
   "use strict";
-
-  var SAVED_KEY = "empetix_saved_jobs_v1";
-
-  function getSavedJobs() {
-    try {
-      var raw = window.localStorage.getItem(SAVED_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function setSavedJobs(arr) {
-    try {
-      window.localStorage.setItem(SAVED_KEY, JSON.stringify(arr));
-    } catch (e) {
-      // Ignore storage errors
-    }
-  }
 
   function initCareers() {
     // 1. Live Multi-Filter & Keyword Search on careers.html (jobs.empetix.com)
@@ -121,47 +102,7 @@
       });
     });
 
-    // 2. Save / Bookmark Job Roles (Persisted in localStorage)
-    var saveBtns = Array.prototype.slice.call(document.querySelectorAll("[data-save-job]"));
-    var savedCounterEls = Array.prototype.slice.call(
-      document.querySelectorAll("[data-saved-jobs-count]")
-    );
-
-    var refreshSavedUI = function () {
-      var saved = getSavedJobs();
-      savedCounterEls.forEach(function (el) {
-        el.textContent = String(saved.length);
-      });
-      saveBtns.forEach(function (btn) {
-        var id = btn.getAttribute("data-save-job");
-        var isSaved = saved.indexOf(id) !== -1;
-        btn.setAttribute("aria-pressed", isSaved ? "true" : "false");
-        var labelEl = btn.querySelector("[data-save-label]");
-        if (labelEl) {
-          labelEl.textContent = isSaved ? "Saved \u2605" : "Save Role \u2606";
-        } else {
-          btn.textContent = isSaved ? "Saved \u2605" : "Save Role \u2606";
-        }
-      });
-    };
-
-    saveBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var id = btn.getAttribute("data-save-job");
-        var saved = getSavedJobs();
-        var idx = saved.indexOf(id);
-        if (idx === -1) {
-          saved.push(id);
-        } else {
-          saved.splice(idx, 1);
-        }
-        setSavedJobs(saved);
-        refreshSavedUI();
-      });
-    });
-    refreshSavedUI();
-
-    // 3. Individual Job Detail Page: "Click Apply -> Reveal Application Form"
+    // 2. Individual Job Detail Page: "Click Apply -> Reveal Application Form"
     var applyTriggers = Array.prototype.slice.call(
       document.querySelectorAll("[data-trigger-apply]")
     );
@@ -193,7 +134,7 @@
       }
     }
 
-    // 4. Interactive CV / Resume File Picker Preview
+    // 3. Interactive CV / Resume File Picker Preview
     var fileInput = document.getElementById("app-cv-file");
     var dropzone = document.getElementById("cv-dropzone");
     var fileLabel = document.getElementById("cv-file-label");
@@ -211,7 +152,7 @@
       });
     }
 
-    // 5. Job Application Form Submit with Unique Tracking Reference Code
+    // 4. Job Application Form Submit with Unique Tracking Reference Code
     var jobForm = document.getElementById("job-application-form");
     if (jobForm) {
       jobForm.addEventListener("submit", function (e) {

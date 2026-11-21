@@ -359,11 +359,11 @@
 }
 
 /* --------------------------------------------------------------------------
-   Person Card (Founders / Leadership)
+   Person Card (Founders / Managing Partners — Executive Editorial Design)
    -------------------------------------------------------------------------- */
 .people {
   display: grid;
-  gap: var(--space-8) var(--gutter);
+  gap: var(--space-6) var(--gutter);
 }
 
 @media (min-width: 48rem) {
@@ -381,10 +381,9 @@
 .person {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
   background-color: var(--color-bg-raised);
   border: var(--border) solid var(--color-line);
-  padding: var(--space-5);
+  overflow: hidden;
   transition:
     transform var(--dur-base) var(--ease-spring),
     border-color var(--dur-base) var(--ease-out),
@@ -392,65 +391,124 @@
 }
 
 .person:hover {
-  transform: translateY(-5px);
-  border-color: var(--color-neutral-900);
+  transform: translateY(-6px);
+  border-color: var(--color-ink-900);
   box-shadow: var(--shadow-card);
+}
+
+.person__media-link {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-block-end: var(--border) solid var(--color-line);
 }
 
 .person__frame {
   aspect-ratio: 4 / 5;
-  background-color: var(--color-neutral-150);
+  background-color: var(--color-ink-900);
 }
 
 .person__frame img {
-  filter: grayscale(0.85);
-  transition:
-    filter var(--dur-slow) var(--ease-out),
-    transform var(--dur-slow) var(--ease-spring);
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: contrast(1.03);
+  transition: transform 700ms var(--ease-spring);
 }
 
 .person:hover .person__frame img {
-  filter: grayscale(0);
-  transform: scale(1.04);
+  transform: scale(1.05);
+}
+
+.person__badge {
+  position: absolute;
+  inset-block-end: var(--space-3);
+  inset-inline-start: var(--space-3);
+  padding: 0.25rem 0.6rem;
+  background-color: rgba(8, 20, 44, 0.9);
+  color: var(--color-text-inverse);
+  font-family: var(--font-mono);
+  font-size: var(--size-1);
+  letter-spacing: 0.04em;
+}
+
+.person__body {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
 }
 
 .person__name {
-  font-size: var(--text-lg);
-  letter-spacing: var(--tracking-snug);
-  margin-block-start: var(--space-1);
+  font-family: var(--font-heading);
+  font-size: var(--size-3);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-ink-900);
+}
+
+.person__name a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .person__role {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
-  color: var(--color-text-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-block-start: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--size-1);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-block-start: 0.2rem;
+}
+
+.person__specialty {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  background-color: var(--color-bg-alt);
+  border: var(--border) solid var(--color-line);
+  font-family: var(--font-mono);
+  font-size: var(--size-1);
+  color: var(--color-ink-900);
+  width: fit-content;
 }
 
 .person__bio {
-  font-size: var(--text-sm);
+  font-size: var(--size-1);
   color: var(--color-text-body);
-  line-height: var(--leading-normal);
+  line-height: 1.55;
 }
 
-.person__links {
-  display: flex;
-  gap: var(--space-4);
+.person__cta {
   margin-block-start: auto;
-  padding-block-start: var(--space-4);
+  padding: var(--space-4) var(--space-5);
   border-block-start: var(--border) solid var(--color-line);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
+  background-color: var(--color-bg-alt);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--size-1);
+  font-weight: 500;
+  color: var(--color-ink-900);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
-.person__links a {
-  border-block-end: var(--border) solid currentColor;
+.person:hover .person__cta {
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
 }
 
-.person__links a:hover {
-  color: var(--color-text-accent);
+.person__cta svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.person:hover .person__cta svg {
+  transform: translateX(4px);
 }
 
 /* Compact team list */

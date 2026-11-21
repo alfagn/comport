@@ -202,7 +202,7 @@
   padding: var(--space-5);
   background-color: var(--color-ink-900);
   color: var(--color-text-inverse);
-  border-inline-start: 4px solid var(--color-accent-500);
+  
   font-size: var(--text-sm);
 }
 
