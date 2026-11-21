@@ -1,0 +1,412 @@
+/* ==========================================================================
+   HEADER: Zero-Flicker Utility Bar + Sticky Main Navigation + Mobile Drawer
+   File: assets/css/layout/header.css
+   ========================================================================== */
+
+/* Utility bar sits in normal flow above the sticky header so scrolling never
+   changes sticky header height or causes scrollY feedback oscillation. */
+.utility {
+  block-size: var(--utility-h);
+  font-size: var(--text-2xs);
+  background-color: var(--color-ink-950);
+  color: var(--color-text-inverse-body);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+.utility__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  block-size: 100%;
+  gap: var(--space-5);
+}
+
+.utility__group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.utility__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-inverse);
+}
+
+.utility__dot {
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  background-color: var(--color-accent-500);
+  animation: pulse-dot 2.2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.82); }
+}
+
+.utility__note {
+  display: none;
+  color: var(--color-text-inverse-muted);
+}
+
+@media (min-width: 48rem) {
+  .utility__note {
+    display: inline;
+  }
+}
+
+.utility__links {
+  display: none;
+  gap: var(--space-5);
+}
+
+@media (min-width: 64rem) {
+  .utility__links {
+    display: flex;
+  }
+}
+
+.utility__link,
+.utility__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-inverse-body);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.utility__link:hover,
+.utility__btn:hover,
+.utility__btn[aria-pressed="true"] {
+  color: var(--color-text-inverse);
+}
+
+.utility__lang {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.utility__btn[aria-pressed="true"] {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-accent-500);
+}
+
+.utility__btn svg {
+  inline-size: 0.8rem;
+  block-size: 0.8rem;
+}
+
+/* --------------------------------------------------------------------------
+   Sticky Header Wrapper (Constant height = zero scroll jitter / flicker)
+   -------------------------------------------------------------------------- */
+.site-head {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  background-color: var(--color-bg-raised);
+  color: var(--color-text);
+  transition:
+    background-color 220ms var(--ease-out),
+    color 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+
+/* Dark theme at top of dark-hero pages; switches cleanly once scrolled past threshold */
+.site-head--overlay:not(.is-compact):not(.is-menu-open) {
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+}
+
+.site-head--overlay:not(.is-compact):not(.is-menu-open) .nav-bar {
+  border-block-end-color: var(--color-line-inverse);
+}
+
+.site-head.is-compact {
+  background-color: var(--color-bg-raised);
+  color: var(--color-text);
+  box-shadow: var(--shadow-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Search panel
+   -------------------------------------------------------------------------- */
+.search-panel {
+  display: none;
+  background-color: var(--color-ink-950);
+  color: var(--color-text-inverse);
+  padding-block: var(--space-6);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+.search-panel.is-open {
+  display: block;
+}
+
+.search-panel__form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  border-block-end: var(--border) solid var(--color-ink-600);
+}
+
+.search-panel__input {
+  flex: 1;
+  min-inline-size: 0;
+  padding-block: var(--space-3);
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+}
+
+.search-panel__input::placeholder {
+  color: var(--color-text-inverse-muted);
+}
+
+.search-panel__input:focus {
+  outline: none;
+}
+
+.search-panel__form:focus-within {
+  border-block-end-color: var(--color-accent-500);
+}
+
+.search-panel__hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  margin-block-start: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-muted);
+}
+
+.search-panel__hints a:hover {
+  color: var(--color-text-inverse);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Main nav bar (Constant 4.375rem height eliminates layout shift oscillation)
+   -------------------------------------------------------------------------- */
+.nav-bar {
+  block-size: 4.375rem;
+  border-block-end: var(--border) solid var(--color-line);
+}
+
+.nav-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  block-size: 100%;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.brand__mark {
+  inline-size: 1.85rem;
+  block-size: 1.85rem;
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+
+.brand:hover .brand__mark {
+  transform: rotate(-6deg) scale(1.05);
+}
+
+.brand__word {
+  font-size: 1.35rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+[dir="rtl"] .brand__word {
+  letter-spacing: 0;
+}
+
+.nav {
+  display: none;
+  block-size: 100%;
+}
+
+@media (min-width: 64rem) {
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  block-size: 100%;
+}
+
+.nav__item {
+  display: flex;
+  block-size: 100%;
+}
+
+.nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  block-size: 100%;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: inherit;
+}
+
+.nav__link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -1px;
+  block-size: var(--border-thick);
+  background-color: var(--color-accent-500);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+[dir="rtl"] .nav__link::after {
+  transform-origin: right;
+}
+
+.nav__link:hover::after,
+.nav__link[aria-expanded="true"]::after,
+.nav__link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.nav__chevron {
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.nav__link[aria-expanded="true"] .nav__chevron {
+  transform: rotate(180deg);
+}
+
+/* Mobile toggle */
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: inherit;
+}
+
+.menu-toggle__bars {
+  display: grid;
+  gap: 5px;
+  inline-size: 1.25rem;
+}
+
+.menu-toggle__bars span {
+  display: block;
+  block-size: 1.5px;
+  background-color: currentColor;
+}
+
+@media (min-width: 64rem) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile drawer
+   -------------------------------------------------------------------------- */
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-drawer);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  visibility: hidden;
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path var(--dur-slow) var(--ease-curtain),
+    visibility 0s linear var(--dur-slow);
+  overflow-y: auto;
+}
+
+.drawer.is-open {
+  visibility: visible;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path var(--dur-slow) var(--ease-curtain), visibility 0s;
+}
+
+.drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  block-size: 4.375rem;
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+.drawer__close {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.drawer__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--space-8);
+  padding-block: var(--space-6) var(--space-8);
+}
+
+.drawer__list {
+  counter-reset: drawer;
+}
+
+.drawer__link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-block: var(--space-3);
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.15;
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+.drawer__link::after {
+  counter-increment: drawer;
+  content: "0" counter(drawer);
+  font-size: var(--text-xs);
+  letter-spacing: 0;
+  color: var(--color-text-inverse-muted);
+}
+
+.drawer__link[aria-current="page"] {
+  color: var(--color-accent-500);
+}
+
+.drawer__meta {
+  display: grid;
+  gap: var(--space-2);
+  margin-block-start: auto;
+  font-size: var(--text-sm);
+  color: var(--color-text-inverse-body);
+}

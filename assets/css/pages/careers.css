@@ -1,0 +1,775 @@
+/* ==========================================================================
+   JOBS.EMPETIX.COM — DEDICATED CAREERS PORTAL & JOB DETAIL ARCHITECTURE
+   File: assets/css/pages/careers.css
+   Inspired by Vodafone Careers, Microsoft Careers & Greenhouse Enterprise ATS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Dedicated Careers Portal Sub-Header Bar (jobs.empetix.com identity)
+   -------------------------------------------------------------------------- */
+.jobs-topbar {
+  background-color: var(--color-ink-950);
+  color: var(--color-text-inverse);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+  font-size: var(--text-xs);
+}
+
+.jobs-topbar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-block-size: 2.5rem;
+  gap: var(--space-4);
+}
+
+.jobs-topbar__domain {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+  color: var(--color-text-inverse);
+}
+
+.jobs-topbar__pill {
+  padding: 0.15rem 0.5rem;
+  background-color: var(--color-accent-500);
+  color: var(--color-ink-950);
+  font-weight: var(--weight-semibold);
+}
+
+.jobs-topbar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-body);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.jobs-topbar__back:hover {
+  color: var(--color-accent-500);
+}
+
+/* Saved jobs counter badge in portal nav */
+.saved-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.35rem;
+  block-size: 1.35rem;
+  padding-inline: 0.35rem;
+  background-color: var(--color-accent-500);
+  color: var(--color-ink-950);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Careers Portal Hero & Live Search Bar
+   -------------------------------------------------------------------------- */
+.jobs-hero {
+  position: relative;
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  padding-block: clamp(3.5rem, 6vw, 6rem) var(--space-10);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+  overflow: hidden;
+}
+
+.jobs-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 5rem 5rem;
+}
+
+.jobs-hero__grid {
+  position: relative;
+  display: grid;
+  gap: var(--space-7) var(--gutter);
+  align-items: end;
+}
+
+@media (min-width: 64rem) {
+  .jobs-hero__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .jobs-hero__main {
+    grid-column: 1 / span 7;
+  }
+
+  .jobs-hero__stats {
+    grid-column: 8 / span 5;
+  }
+}
+
+.jobs-hero__title {
+  margin-block-start: var(--space-4);
+  font-size: clamp(2.25rem, 1.6rem + 2.8vw, 4rem);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-display);
+}
+
+.jobs-hero__lead {
+  margin-block-start: var(--space-4);
+  font-size: var(--text-base);
+  color: var(--color-text-inverse-body);
+  max-inline-size: 54ch;
+}
+
+.jobs-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  background-color: var(--color-ink-950);
+  border: var(--border) solid var(--color-line-inverse);
+}
+
+.jobs-hero__stat {
+  padding: var(--space-5);
+  border-inline-end: var(--border) solid var(--color-line-inverse);
+}
+
+.jobs-hero__stat:last-child {
+  border-inline-end: 0;
+}
+
+.jobs-hero__stat-num {
+  display: block;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-inverse);
+  font-variant-numeric: tabular-nums;
+}
+
+.jobs-hero__stat-num span {
+  color: var(--color-accent-500);
+}
+
+.jobs-hero__stat-label {
+  font-size: var(--text-2xs);
+  color: var(--color-text-inverse-muted);
+  margin-block-start: var(--space-1);
+  display: block;
+}
+
+/* Search & Multi-Filter Console docked in Careers Hero */
+.jobs-console {
+  position: relative;
+  margin-block-start: var(--space-8);
+  background-color: var(--color-bg-raised);
+  color: var(--color-text);
+  border: var(--border) solid var(--color-neutral-900);
+  box-shadow: var(--shadow-menu);
+  padding: var(--space-4);
+}
+
+.jobs-console__grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (min-width: 64rem) {
+  .jobs-console__grid {
+    grid-template-columns: 2fr 1.1fr 1.1fr 1fr auto;
+    align-items: center;
+  }
+}
+
+.jobs-console__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-inline: var(--space-3);
+}
+
+@media (min-width: 64rem) {
+  .jobs-console__field + .jobs-console__field {
+    border-inline-start: var(--border) solid var(--color-line);
+  }
+}
+
+.jobs-console__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.jobs-console__input,
+.jobs-console__select {
+  inline-size: 100%;
+  padding-block: 0.45rem;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  background-color: transparent;
+}
+
+.jobs-console__input:focus,
+.jobs-console__select:focus {
+  outline: none;
+}
+
+.jobs-console__select {
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   3. Career Tracks / Department Cards (Vodafone / Enterprise Style)
+   -------------------------------------------------------------------------- */
+.tracks-grid {
+  display: grid;
+  gap: var(--gutter);
+}
+
+@media (min-width: 48rem) {
+  .tracks-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .tracks-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.track-card {
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-line);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-5);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--ease-spring),
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.track-card:hover,
+.track-card.is-active {
+  transform: translateY(-4px);
+  border-color: var(--color-ink-900);
+  box-shadow: var(--shadow-card);
+}
+
+.track-card.is-active {
+  border-inline-start: 4px solid var(--color-accent-500);
+}
+
+.track-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.track-card__code {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--color-text-accent);
+  font-weight: var(--weight-semibold);
+}
+
+.track-card__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  padding: 0.15rem 0.5rem;
+  background-color: var(--color-bg-alt);
+  border: var(--border) solid var(--color-line);
+}
+
+.track-card__title {
+  font-size: var(--text-lg);
+  margin-block-start: var(--space-3);
+}
+
+.track-card__desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-body);
+  margin-block-start: var(--space-2);
+  line-height: var(--leading-normal);
+}
+
+.track-card__cta {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border) solid var(--color-line);
+}
+
+.track-card:hover .track-card__cta {
+  color: var(--color-text-accent);
+}
+
+/* --------------------------------------------------------------------------
+   4. Enterprise Job Listing Cards (.job-card)
+   -------------------------------------------------------------------------- */
+.jobs-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block-end: var(--space-5);
+  margin-block-end: var(--space-6);
+  border-block-end: var(--border) solid var(--color-line);
+}
+
+.jobs-toolbar__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.jobs-grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.job-card {
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-line);
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  display: grid;
+  gap: var(--space-5);
+  transition:
+    transform var(--dur-base) var(--ease-spring),
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.job-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-ink-900);
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 64rem) {
+  .job-card {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: var(--space-8);
+  }
+}
+
+.job-card__meta-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-end: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+}
+
+.job-card__req {
+  color: var(--color-text-muted);
+}
+
+.job-card__dept {
+  padding: 0.15rem 0.55rem;
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  font-weight: var(--weight-medium);
+}
+
+.job-card__new {
+  padding: 0.15rem 0.5rem;
+  background-color: rgba(255, 85, 32, 0.12);
+  color: var(--color-text-accent);
+  font-weight: var(--weight-semibold);
+}
+
+.job-card__title {
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+
+.job-card__title a:hover {
+  color: var(--color-text-accent);
+}
+
+.job-card__summary {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-body);
+  max-inline-size: 68ch;
+}
+
+.job-card__pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  margin-block-start: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border) solid var(--color-line);
+  font-size: var(--text-xs);
+  color: var(--color-text-body);
+}
+
+.job-card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-medium);
+}
+
+.job-card__pill strong {
+  color: var(--color-text-muted);
+  font-weight: var(--weight-regular);
+}
+
+.job-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+@media (min-width: 64rem) {
+  .job-card__actions {
+    flex-direction: column;
+    align-items: stretch;
+    min-inline-size: 12.5rem;
+  }
+}
+
+.job-save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: 2.65rem;
+  padding-inline: var(--space-4);
+  border: var(--border) solid var(--color-line);
+  background-color: var(--color-bg);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.job-save-btn:hover,
+.job-save-btn[aria-pressed="true"] {
+  border-color: var(--color-accent-500);
+  color: var(--color-text-accent);
+}
+
+.job-save-btn[aria-pressed="true"] {
+  background-color: rgba(255, 85, 32, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   5. Individual Job Detail Page (job-*.html)
+   -------------------------------------------------------------------------- */
+.job-header {
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  padding-block: clamp(3rem, 5vw, 5rem);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+.job-header__grid {
+  display: grid;
+  gap: var(--space-7) var(--gutter);
+  align-items: end;
+}
+
+@media (min-width: 64rem) {
+  .job-header__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .job-header__main {
+    grid-column: 1 / span 8;
+  }
+
+  .job-header__cta {
+    grid-column: 9 / span 4;
+    justify-self: end;
+  }
+}
+
+.job-header__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-end: var(--space-4);
+}
+
+.job-header__title {
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.35rem);
+  line-height: 1.1;
+  letter-spacing: var(--tracking-display);
+}
+
+.job-header__highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-block-start: var(--space-7);
+  padding-block-start: var(--space-5);
+  border-block-start: var(--border) solid var(--color-line-inverse);
+}
+
+@media (min-width: 48rem) {
+  .job-header__highlights {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.job-header__highlight-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--color-text-inverse-muted);
+  text-transform: uppercase;
+}
+
+.job-header__highlight-val {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-inverse);
+  margin-block-start: 0.2rem;
+}
+
+.job-header__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* 2-Column Job Detail Body (8-col Specification + 4-col Sticky Summary Card) */
+.job-layout {
+  display: grid;
+  gap: var(--space-9) var(--gutter);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .job-layout {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .job-layout__main {
+    grid-column: 1 / span 8;
+  }
+
+  .job-layout__aside {
+    grid-column: 9 / span 4;
+    position: sticky;
+    inset-block-start: calc(4.375rem + var(--space-5));
+  }
+}
+
+.job-section {
+  padding-block: var(--space-7);
+  border-block-end: var(--border) solid var(--color-line);
+}
+
+.job-section:first-child {
+  padding-block-start: 0;
+}
+
+.job-section__title {
+  font-size: var(--text-xl);
+  margin-block-end: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.job-section__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-accent);
+  padding: 0.15rem 0.45rem;
+  border: var(--border) solid var(--color-line);
+  background-color: var(--color-bg-raised);
+}
+
+.req-list {
+  display: grid;
+  gap: var(--space-3);
+  margin-block-start: var(--space-4);
+}
+
+.req-list li {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-line);
+  font-size: var(--text-sm);
+  color: var(--color-text-body);
+}
+
+.req-list__bullet {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-block-start: 0.45rem;
+  background-color: var(--color-accent-500);
+}
+
+/* Sticky Job Summary Card */
+.job-summary-card {
+  background-color: var(--color-bg-raised);
+  border: var(--border) solid var(--color-neutral-900);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-subtle);
+  display: grid;
+  gap: var(--space-5);
+}
+
+.job-summary-card__list {
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.job-summary-card__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block-end: var(--space-3);
+  border-block-end: var(--border) solid var(--color-line);
+}
+
+.job-summary-card__row span:first-child {
+  color: var(--color-text-muted);
+}
+
+.job-summary-card__row span:last-child {
+  font-weight: var(--weight-semibold);
+  text-align: end;
+}
+
+.hiring-manager {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--color-bg-alt);
+  border: var(--border) solid var(--color-line);
+}
+
+.hiring-manager__img {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  object-fit: cover;
+}
+
+.hiring-manager__name {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.hiring-manager__role {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   6. Expandable Application Form Drawer (Hidden until user clicks "Apply")
+   -------------------------------------------------------------------------- */
+.apply-drawer {
+  display: none;
+  margin-block-start: var(--space-8);
+  padding-block: var(--space-9);
+  background-color: var(--color-bg-alt);
+  border-block-start: 3px solid var(--color-accent-500);
+  animation: drawer-slide-down 420ms var(--ease-spring);
+}
+
+.apply-drawer.is-open {
+  display: block;
+}
+
+@keyframes drawer-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cv-dropzone {
+  position: relative;
+  border: 2px dashed var(--color-neutral-300);
+  background-color: var(--color-bg);
+  padding: var(--space-6);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.cv-dropzone:hover,
+.cv-dropzone.has-file {
+  border-color: var(--color-accent-500);
+  background-color: rgba(255, 85, 32, 0.04);
+}
+
+.cv-dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.cv-dropzone__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+.cv-dropzone__sub {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-block-start: var(--space-1);
+}
+
+.apply-prompt-bar {
+  margin-block-start: var(--space-7);
+  padding: var(--space-6);
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}

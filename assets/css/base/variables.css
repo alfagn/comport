@@ -1,0 +1,166 @@
+/* ==========================================================================
+   EMPETIX — DESIGN TOKENS (Link Development / Enterprise Tech Aesthetic)
+   File: assets/css/base/variables.css
+   Crisp architectural white, cool tech slate, deep enterprise navy, sharp accent.
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------
+     1. COLOUR PALETTE — Crisp Enterprise Tech & Digital Agency Scale
+     --------------------------------------------------------------------- */
+  --color-ink-950: #050C1A;
+  --color-ink-900: #08142C;   /* Primary Brand Navy (Link Development / Enterprise Navy) */
+  --color-ink-850: #0D1E3D;
+  --color-ink-800: #13274D;
+  --color-ink-700: #1E3664;
+  --color-ink-600: #2F4B80;
+
+  --color-accent-500: #FF4D1C; /* Sharp Signal Accent */
+  --color-accent-600: #E03D10;
+  --color-accent-700: #C23008;
+
+  /* Cool Architectural White & Slate Scale (Crisp, modern, never muddy beige) */
+  --color-neutral-0: #FFFFFF;
+  --color-neutral-50: #FFFFFF;  /* Primary Page Canvas — Pure Crisp White */
+  --color-neutral-100: #F3F6FA; /* Secondary Section Surface — Cool Tech Slate */
+  --color-neutral-150: #E8EEF5; /* Interactive Hover Surface */
+  --color-neutral-200: #DCE3EE; /* 1px Structural Hairline Border */
+  --color-neutral-300: #BCC7D8;
+  --color-neutral-500: #5A677D; /* Metadata & Captions (AA Contrast) */
+  --color-neutral-700: #2C3647; /* Editorial Body Copy */
+  --color-neutral-900: #08142C; /* Headlines — Deep Enterprise Navy Ink */
+
+  /* Semantic Aliases */
+  --color-bg: var(--color-neutral-0);
+  --color-bg-alt: var(--color-neutral-100);
+  --color-bg-raised: var(--color-neutral-0);
+  --color-bg-inverse: var(--color-ink-900);
+  --color-bg-inverse-deep: var(--color-ink-950);
+
+  --color-text: var(--color-neutral-900);
+  --color-text-body: var(--color-neutral-700);
+  --color-text-muted: var(--color-neutral-500);
+  --color-text-accent: var(--color-accent-600);
+  --color-text-inverse: #FFFFFF;
+  --color-text-inverse-body: #C5D0E2;
+  --color-text-inverse-muted: #8796B0;
+
+  --color-line: var(--color-neutral-200);
+  --color-line-strong: var(--color-ink-900);
+  --color-line-inverse: #1B2D4F;
+
+  --color-overlay: rgba(5, 12, 26, 0.64);
+  --color-overlay-strong: rgba(5, 12, 26, 0.94);
+  --color-focus: var(--color-accent-500);
+
+  /* ---------------------------------------------------------------------
+     2. TYPOGRAPHY
+     --------------------------------------------------------------------- */
+  --font-sans: "Inter Tight", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", "Inter Tight", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-2xs: 0.75rem;                                         /* 12px */
+  --text-xs: 0.8125rem;                                        /* 13px */
+  --text-sm: 0.9375rem;                                        /* 15px */
+  --text-base: 1.0625rem;                                      /* 17px */
+  --text-md: 1.1875rem;                                        /* 19px */
+  --text-lg: clamp(1.25rem, 1.1rem + 0.55vw, 1.5625rem);       /* 20px -> 25px */
+  --text-xl: clamp(1.5rem, 1.25rem + 1vw, 2.125rem);           /* 24px -> 34px */
+  --text-2xl: clamp(1.875rem, 1.45rem + 1.75vw, 2.875rem);     /* 30px -> 46px */
+  --text-3xl: clamp(2.25rem, 1.65rem + 2.4vw, 3.625rem);       /* 36px -> 58px */
+  --text-display: clamp(2.5rem, 1.8rem + 3vw, 4.375rem);       /* 40px -> 70px */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --leading-none: 1.04;
+  --leading-tight: 1.12;
+  --leading-snug: 1.26;
+  --leading-normal: 1.48;
+  --leading-body: 1.62;
+
+  --tracking-display: -0.032em;
+  --tracking-tight: -0.022em;
+  --tracking-snug: -0.012em;
+  --tracking-normal: 0;
+  --tracking-caps: 0.08em;
+
+  --measure: 66ch;
+  --measure-narrow: 52ch;
+
+  /* ---------------------------------------------------------------------
+     3. SPACING SCALE
+     --------------------------------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 5rem;
+  --space-11: 6rem;
+  --space-12: 7.5rem;
+  --space-13: 9rem;
+
+  --section-y: clamp(4.5rem, 3rem + 5vw, 7.5rem);
+  --section-y-sm: clamp(3rem, 2rem + 3vw, 4.75rem);
+
+  /* ---------------------------------------------------------------------
+     4. LAYOUT & GRID
+     --------------------------------------------------------------------- */
+  --container-max: 90rem; /* 1440px */
+  --container-pad: clamp(1.25rem, 3.5vw, 3.5rem);
+  --gutter: clamp(1.25rem, 2vw, 2rem);
+  --row-gap: clamp(2.25rem, 3.5vw, 3.75rem);
+
+  --utility-h: 2.25rem;
+  --header-h: 4.5rem;
+  --header-h-compact: 3.875rem;
+
+  /* ---------------------------------------------------------------------
+     5. BORDERS, RADII & ELEVATION
+     --------------------------------------------------------------------- */
+  --border: 1px;
+  --border-thick: 2px;
+  --radius-0: 0px;
+  --radius-1: 2px;
+  --radius-2: 4px;
+
+  --shadow-subtle: 0 12px 28px -10px rgba(8, 20, 44, 0.08);
+  --shadow-card: 0 22px 44px -14px rgba(8, 20, 44, 0.14);
+  --shadow-menu: 0 28px 56px -20px rgba(5, 12, 26, 0.24);
+
+  /* ---------------------------------------------------------------------
+     6. MOTION & ANIMATION TOKENS
+     --------------------------------------------------------------------- */
+  --dur-fast: 180ms;
+  --dur-base: 280ms;
+  --dur-slow: 640ms;
+  --dur-curtain: 760ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-curtain: cubic-bezier(0.77, 0, 0.18, 1);
+
+  /* ---------------------------------------------------------------------
+     7. Z-INDEX LAYERS
+     --------------------------------------------------------------------- */
+  --z-header: 100;
+  --z-menu: 200;
+  --z-drawer: 300;
+  --z-lightbox: 600;
+  --z-skip: 900;
+  --z-preloader: 1000;
+}
+
+[dir="rtl"] {
+  --font-sans: var(--font-arabic);
+  --tracking-display: 0;
+  --tracking-tight: 0;
+  --tracking-snug: 0;
+  --tracking-caps: 0;
+}

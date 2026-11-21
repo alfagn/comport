@@ -1,0 +1,130 @@
+/* ==========================================================================
+   PRELOADER — brand intro, once per session
+   File: assets/css/components/preloader.css
+   ========================================================================== */
+
+/* Hidden by default: without JS (or on repeat visits) it never shows. */
+.preloader {
+  display: none;
+}
+
+.js .preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-6) var(--container-pad);
+  background-color: var(--color-ink-900);
+  color: var(--color-text-inverse);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path var(--dur-curtain) var(--ease-curtain);
+  /* Fail-safe: never block the site for more than 6s even if JS breaks */
+  animation: preloader-failsafe 0.01s linear 6s forwards;
+}
+
+.js.intro-seen .preloader {
+  display: none;
+}
+
+.preloader.is-exiting {
+  clip-path: inset(0 0 100% 0);
+}
+
+.preloader.is-done {
+  display: none;
+}
+
+@keyframes preloader-failsafe {
+  to {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .preloader {
+    transition: opacity var(--dur-base) linear;
+  }
+
+  .preloader.is-exiting {
+    clip-path: inset(0 0 0 0);
+    opacity: 0;
+  }
+}
+
+.preloader__top,
+.preloader__bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.preloader__top {
+  align-items: center;
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-muted);
+}
+
+.preloader__center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.preloader__mark {
+  inline-size: clamp(2.5rem, 5vw, 3.5rem);
+  block-size: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.preloader__word {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.preloader__status {
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-muted);
+}
+
+.preloader__count {
+  display: flex;
+  align-items: flex-start;
+  font-size: clamp(4.5rem, 14vw, 11rem);
+  font-weight: var(--weight-medium);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.preloader__pct {
+  margin-inline-start: 0.1em;
+  font-size: 0.25em;
+  letter-spacing: 0;
+  color: var(--color-accent-500);
+}
+
+.preloader__track {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background-color: var(--color-line-inverse);
+}
+
+.preloader__bar {
+  block-size: 100%;
+  background-color: var(--color-accent-500);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+[dir="rtl"] .preloader__bar {
+  transform-origin: right;
+}

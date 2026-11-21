@@ -1,0 +1,730 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Meet the four co-founders leading Empetix's software engineering, product design, and growth marketing practices."/>
+  <title>About Empetix & Meet the Founders (أصحاب المشروع) — Empetix</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght%40400;500&amp;family=IBM+Plex+Sans+Arabic:wght%40400;500;600&amp;family=Inter+Tight:wght%40400;500;600&amp;display=swap"/>
+
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <noscript>
+    <link rel="stylesheet" href="assets/css/noscript.css"/>
+  </noscript>
+</head>
+<body>
+
+  <!-- PARTIAL: header -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- Utility Bar -->
+  <div class="utility" role="region" aria-label="Studio utility bar">
+    <div class="container utility__inner">
+      <div class="utility__group">
+        <span class="utility__status">
+          <span class="utility__dot" aria-hidden="true"></span>
+          <span>EMPETIX STUDIO // Q1&ndash;Q2 ENGAGEMENTS OPEN</span>
+        </span>
+        <span class="utility__note">CAIRO &middot; RIYADH &middot; LONDON</span>
+      </div>
+
+      <div class="utility__group">
+        <ul class="utility__links">
+          <li><a href="partners.html" class="utility__link">Partners</a></li>
+          <li><a href="careers.html" class="utility__link">Careers (6)</a></li>
+          <li><a href="contact.html" class="utility__link">Contact Us</a></li>
+        </ul>
+
+        <div class="utility__lang" role="group" aria-label="Language and direction">
+          <button type="button" class="utility__btn" data-lang-btn="en" aria-pressed="true">EN</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" class="utility__btn" data-lang-btn="ar" aria-pressed="false">العربية</button>
+        </div>
+
+        <button type="button" id="search-toggle" class="utility__btn" aria-expanded="false" aria-controls="search-panel">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11 11L14.5 14.5" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span>Search</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="site-head" class="site-head">
+
+  <!-- Search Panel -->
+  <div id="search-panel" class="search-panel" role="search" aria-label="Search Empetix">
+    <div class="container">
+      <form class="search-panel__form" action="blog.html" method="get">
+        <label for="search-input" class="sr-only">Search projects, blog posts, and roles</label>
+        <input id="search-input" type="search" name="q" class="search-panel__input" placeholder="Search projects, engineering essays, video episodes..." autocomplete="off"/>
+        <button type="submit" class="btn btn--accent btn--sm">Search</button>
+        <button type="button" id="search-close" class="btn btn--ghost btn--sm">Close</button>
+      </form>
+      <div class="search-panel__hints">
+        <span>Quick jump:</span>
+        <a href="project-nilepay.html">NilePay Case Study</a>
+        <a href="blog-video.html">5-Day Sprint Video</a>
+        <a href="blog-photos.html">Qahwa Photo Essay</a>
+        <a href="about.html#founders">Meet the Founders</a>
+        <a href="contact.html">Contact Us</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <header class="nav-bar">
+    <div class="container nav-bar__inner">
+      <a href="index.html" class="brand" aria-label="Empetix Home">
+        <svg class="brand__mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="33" height="33" stroke="currentColor" stroke-width="2"/>
+          <path d="M9 11H27M9 18H21M9 25H27" stroke="currentColor" stroke-width="2.5"/>
+          <rect x="23" y="15.5" width="4.5" height="4.5" fill="#FF5520"/>
+        </svg>
+        <span class="brand__word">Empetix</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <button type="button" class="nav__link" data-mega-trigger="capabilities" aria-expanded="false" aria-controls="mega-capabilities">
+              <span>Capabilities</span>
+              <svg class="nav__chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+          </li>
+          <li class="nav__item">
+            <a href="work.html" class="nav__link">Projects</a>
+          </li>
+          <li class="nav__item">
+            <a href="about.html" class="nav__link" aria-current="page">About &amp; Founders</a>
+          </li>
+          <li class="nav__item">
+            <a href="partners.html" class="nav__link">Partners</a>
+          </li>
+          <li class="nav__item">
+            <button type="button" class="nav__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">
+              <span>Blogs</span>
+              <svg class="nav__chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+          </li>
+          <li class="nav__item">
+            <a href="careers.html" class="nav__link">Careers</a>
+          </li>
+          <li class="nav__item">
+            <a href="contact.html" class="nav__link">Contact Us</a>
+          </li>
+        </ul>
+
+        <a href="contact.html" class="btn btn--accent btn--sm">
+          <span>Start a Project</span>
+          <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </a>
+      </nav>
+
+      <button type="button" id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="mobile-drawer">
+        <span>Menu</span>
+        <span class="menu-toggle__bars" aria-hidden="true">
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PARTIAL: mega-menu -->
+<div id="mega-menu" class="mega" role="region" aria-label="Expanded studio directory">
+  <!-- Panel 1: Capabilities (Software + Marketing) -->
+  <div id="mega-capabilities" class="mega__panel" data-mega-panel="capabilities">
+    <div class="container mega__grid">
+      <div class="mega__intro">
+        <div>
+          <span class="eyebrow">01 / Capabilities</span>
+          <h2 class="mega__title">One studio. Code and growth under one roof.</h2>
+          <p class="mega__desc">
+            We pair senior software architects with performance marketers and commercial directors so products ship fast and scale profitably.
+          </p>
+        </div>
+        <a href="work.html" class="arrow-link">
+          <span>Explore All Case Studies</span>
+          <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="mega__col">
+        <p class="mega__col-title">Software Engineering</p>
+        <ul>
+          <li>
+            <a href="work.html" class="mega__link">
+              <span class="mega__link-title">
+                <span>Web &amp; Mobile Platforms</span>
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+              <span class="mega__link-sub">Laravel, Next.js, Flutter &amp; high-concurrency APIs</span>
+            </a>
+          </li>
+          <li>
+            <a href="work.html" class="mega__link">
+              <span class="mega__link-title">
+                <span>E-Commerce &amp; FinTech Core</span>
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+              <span class="mega__link-sub">Custom checkouts, wallets, ERP &amp; payment orchestration</span>
+            </a>
+          </li>
+          <li>
+            <a href="work.html" class="mega__link">
+              <span class="mega__link-title">
+                <span>AI Automation &amp; Data Pipelines</span>
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+              <span class="mega__link-sub">Internal copilots, CRM workflows &amp; BI telemetry</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mega__col">
+        <p class="mega__col-title">Marketing &amp; Growth</p>
+        <ul>
+          <li>
+            <a href="work.html" class="mega__link">
+              <span class="mega__link-title">
+                <span>Performance &amp; Paid Acquisition</span>
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+              <span class="mega__link-sub">Full-funnel ROAS across Meta, Google, TikTok &amp; LinkedIn</span>
+            </a>
+          </li>
+          <li>
+            <a href="blog-photos.html" class="mega__link">
+              <span class="mega__link-title">
+                <span>Brand Systems &amp; Campaign Production</span>
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+              <span class="mega__link-sub">Visual identity, commercial video shoots &amp; art direction</span>
+            </a>
+          </li>
+          <li>
+            <a href="blog-post.html" class="mega__link">
+              <span class="mega__link-title">
+                <span>CRO, SEO &amp; Lifecycle Retention</span>
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+              <span class="mega__link-sub">Arabic/English technical SEO, A/B testing &amp; CRM flows</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mega__col">
+        <p class="mega__col-title">Featured Case Study</p>
+        <a href="project-nilepay.html" class="mega__feature">
+          <div class="frame frame--16x9 frame--zoom">
+            <img src="assets/img/work/nilepay.jpg" alt="Woman paying with smartphone at a sunlit Cairo cafe counter" width="640" height="360"/>
+          </div>
+          <span class="t-meta">NILEPAY FINTECH // +310% ACTIVATION</span>
+          <p class="mega__feature-title">Re-architecting mobile checkout and launch acquisition for 1.4M users.</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 2: Journal / Blogs Preview -->
+  <div id="mega-journal" class="mega__panel" data-mega-panel="journal">
+    <div class="container mega__grid">
+      <div class="mega__intro">
+        <div>
+          <span class="eyebrow">02 / Empetix Journal</span>
+          <h2 class="mega__title">Articles, video episodes &amp; photo essays.</h2>
+          <p class="mega__desc">
+            Field notes from our engineers, product designers, and performance marketers.
+          </p>
+        </div>
+        <a href="blog.html" class="arrow-link">
+          <span>Open Full Blog Archive</span>
+          <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="mega__col">
+        <p class="mega__col-title">Full Article + Media</p>
+        <a href="blog-post.html" class="mega__feature">
+          <div class="frame frame--3x2 frame--zoom">
+            <img src="assets/img/blog/arabic-first.jpg" alt="Designer sketching Arabic RTL interface layouts on paper" width="600" height="400"/>
+          </div>
+          <span class="t-meta">DESIGN &amp; CRO &middot; 8 MIN READ</span>
+          <p class="mega__feature-title">Engineering Arabic-First Design Systems &amp; High-Conversion Funnels</p>
+        </a>
+      </div>
+
+      <div class="mega__col">
+        <p class="mega__col-title">Video Episode</p>
+        <a href="blog-video.html" class="mega__feature">
+          <div class="frame frame--3x2 frame--zoom">
+            <img src="assets/img/blog/design-sprint.jpg" alt="Team voting on product sprint sketches on studio wall" width="600" height="400"/>
+          </div>
+          <span class="t-meta">VIDEO + TRANSCRIPT &middot; 14:20</span>
+          <p class="mega__feature-title">Inside an Empetix 5-Day Product &amp; Growth Sprint</p>
+        </a>
+      </div>
+
+      <div class="mega__col">
+        <p class="mega__col-title">Photo Essay</p>
+        <a href="blog-photos.html" class="mega__feature">
+          <div class="frame frame--3x2 frame--zoom">
+            <img src="assets/img/blog/behind-the-lens.jpg" alt="Behind the scenes of a commercial specialty coffee shoot" width="600" height="400"/>
+          </div>
+          <span class="t-meta">PHOTO GALLERY + VIDEO &middot; CAMPAIGN</span>
+          <p class="mega__feature-title">Behind the Lens: Directing the Qahwa Roasters Launch Shoot</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END PARTIAL: mega-menu -->
+</div>
+
+<!-- Mobile Drawer -->
+<aside id="mobile-drawer" class="drawer" aria-label="Mobile navigation" aria-hidden="true">
+  <div class="container drawer__head">
+    <a href="index.html" class="brand">
+      <span class="brand__word">Empetix</span>
+    </a>
+    <button type="button" id="drawer-close" class="drawer__close">Close</button>
+  </div>
+  <div class="container drawer__body">
+    <ul class="drawer__list">
+      <li><a href="index.html" class="drawer__link">Home</a></li>
+      <li><a href="work.html" class="drawer__link">Projects</a></li>
+      <li><a href="about.html" class="drawer__link" aria-current="page">About &amp; Founders</a></li>
+      <li><a href="partners.html" class="drawer__link">Partners</a></li>
+      <li><a href="blog.html" class="drawer__link">Blogs &amp; Media</a></li>
+      <li><a href="careers.html" class="drawer__link">Careers</a></li>
+      <li><a href="contact.html" class="drawer__link">Contact Us</a></li>
+    </ul>
+
+    <div class="drawer__meta">
+      <p>New Business: hello&#64;empetix.com</p>
+      <p>Careers: talent&#64;empetix.com</p>
+      <p>Cairo &middot; Riyadh &middot; London</p>
+    </div>
+  </div>
+</aside>
+<!-- END PARTIAL: header -->
+
+  <!-- SECTION: content -->
+  <main id="main-content">
+
+
+    <section class="page-hero">
+      <div class="container">
+        <ol class="page-hero__crumbs" aria-label="Breadcrumb">
+          <li><a href="index.html">Home</a></li>
+          <li aria-current="page">About &amp; Founders</li>
+        </ol>
+        <h1 class="page-hero__title">Built by engineers and storytellers who got tired of the hand-off gap.</h1>
+        <div class="page-hero__row">
+          <div class="page-hero__label">
+            <span class="eyebrow">Established 2018 &middot; Cairo</span>
+          </div>
+          <p class="page-hero__lead">
+            Empetix was founded in Cairo by two software architects, a design director, and a performance marketing lead with a single conviction: digital products win when the people who write the code and the people who drive the revenue work as one team.
+          </p>
+          <div class="page-hero__aside">
+            <span class="t-meta">48 SPECIALISTS &middot; 3 STUDIOS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Studio Documentary Photo -->
+    <section class="bleed">
+      <div class="container">
+        <div class="frame bleed__frame bleed__frame--office">
+          <img src="assets/img/about/office.jpg" alt="Empetix product designers and engineers reviewing interface wireframes in our sunlit Cairo studio" width="1600" height="900"/>
+        </div>
+        <div class="bleed__caption">
+          <span>EMPETIX CAIRO HEADQUARTERS // MORNING ARCHITECTURE REVIEW</span>
+          <span>48 FULL-TIME ENGINEERS, DESIGNERS &amp; MARKETERS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOUNDERS / OWNERS SECTION (أصحاب المشروع) -->
+    <section id="founders" class="section" aria-labelledby="founders-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="section-head__label">
+            <span class="eyebrow">01 / The Founders (أصحاب المشروع)</span>
+          </div>
+          <div class="section-head__title">
+            <h2 id="founders-heading" class="t-h2">Four managing partners. Hands-on across every client engagement.</h2>
+            <p class="t-lead">
+              We are a founder-led, 100% independent company. Meet the four co-founders who lead our engineering, product design, infrastructure, and growth practices.
+            </p>
+          </div>
+        </div>
+
+        <div class="people">
+          <!-- LOOP: founder-item -->
+          <article class="person reveal">
+            <div class="frame person__frame">
+              <img src="assets/img/team/omar-haddad.jpg" alt="Omar Haddad, Co-Founder and CEO of Empetix" width="600" height="750"/>
+            </div>
+            <div>
+              <span class="t-meta">CO-FOUNDER 01 // STRATEGY &amp; ARCHITECTURE</span>
+              <h3 class="person__name">Eng. Omar Haddad</h3>
+              <p class="person__role">Co-Founder &amp; Chief Executive Officer</p>
+            </div>
+            <p class="person__bio">
+              Computer Engineering graduate (Cairo University) and former Principal Architect for European FinTech platforms in London. Omar oversees product strategy, commercial partnerships, and enterprise system design.
+            </p>
+            <div class="person__links">
+              <a href="mailto:omar&#64;empetix.com">omar&#64;empetix.com</a>
+              <a href="https://www.linkedin.com" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          </article>
+          <!-- END LOOP: founder-item -->
+
+          <!-- LOOP: founder-item -->
+          <article class="person reveal">
+            <div class="frame person__frame">
+              <img src="assets/img/team/lina-mansour.jpg" alt="Lina Mansour, Co-Founder and Chief Design Officer of Empetix" width="600" height="750"/>
+            </div>
+            <div>
+              <span class="t-meta">CO-FOUNDER 02 // PRODUCT &amp; BRAND DESIGN</span>
+              <h3 class="person__name">Lina Mansour</h3>
+              <p class="person__role">Co-Founder &amp; Chief Design Officer</p>
+            </div>
+            <p class="person__bio">
+              14+ years leading product UX, Arabic-first design systems, and brand identity across Cairo, Dubai, and Amsterdam. Lina directs every interface system and visual rebrand that leaves the studio.
+            </p>
+            <div class="person__links">
+              <a href="mailto:lina&#64;empetix.com">lina&#64;empetix.com</a>
+              <a href="https://www.linkedin.com" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          </article>
+          <!-- END LOOP: founder-item -->
+
+          <!-- LOOP: founder-item -->
+          <article class="person reveal">
+            <div class="frame person__frame">
+              <img src="assets/img/team/karim-adel.jpg" alt="Karim Adel, Co-Founder and Chief Technology Officer of Empetix" width="600" height="750"/>
+            </div>
+            <div>
+              <span class="t-meta">CO-FOUNDER 03 // ENGINEERING &amp; CLOUD</span>
+              <h3 class="person__name">Eng. Karim Adel</h3>
+              <p class="person__role">Co-Founder &amp; Chief Technology Officer</p>
+            </div>
+            <p class="person__bio">
+              Backend and distributed-systems specialist. Karim leads our 26 software engineers across Laravel, Node.js, Flutter, high-availability AWS infrastructure, and automated security auditing.
+            </p>
+            <div class="person__links">
+              <a href="mailto:karim&#64;empetix.com">karim&#64;empetix.com</a>
+              <a href="https://www.github.com" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </article>
+          <!-- END LOOP: founder-item -->
+
+          <!-- LOOP: founder-item -->
+          <article class="person reveal">
+            <div class="frame person__frame">
+              <img src="assets/img/team/sara-elmasry.jpg" alt="Sara El-Masry, Co-Founder and VP of Growth Marketing of Empetix" width="600" height="750"/>
+            </div>
+            <div>
+              <span class="t-meta">CO-FOUNDER 04 // GROWTH &amp; PRODUCTION</span>
+              <h3 class="person__name">Sara El-Masry</h3>
+              <p class="person__role">Co-Founder &amp; VP of Growth Marketing</p>
+            </div>
+            <p class="person__bio">
+              Performance marketing director and executive producer. Sara leads our media buying, conversion optimization, and commercial film/photography crews across MENA and Europe.
+            </p>
+            <div class="person__links">
+              <a href="mailto:sara&#64;empetix.com">sara&#64;empetix.com</a>
+              <a href="https://www.linkedin.com" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          </article>
+          <!-- END LOOP: founder-item -->
+        </div>
+      </div>
+    </section>
+
+    <!-- OPERATING PRINCIPLES -->
+    <section class="section is-inverse" aria-labelledby="principles-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="section-head__label">
+            <span class="eyebrow eyebrow--inverse">02 / Operating Principles</span>
+          </div>
+          <div class="section-head__title">
+            <h2 id="principles-heading" class="t-h2">How we work when the stakes are high.</h2>
+          </div>
+        </div>
+
+        <div class="principles">
+          <div class="principle reveal">
+            <span class="principle__num">01</span>
+            <h3 class="principle__title">Code and campaigns share one scoreboard.</h3>
+            <p class="principle__text">
+              We don&rsquo;t measure engineering in story points and marketing in impressions. Both teams are accountable for activation, retention, and net revenue.
+            </p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle__num">02</span>
+            <h3 class="principle__title">Senior principals on the tools.</h3>
+            <p class="principle__text">
+              We don&rsquo;t bait-and-switch with senior pitch decks and junior execution. Our founders and staff engineers write production code and direct campaigns daily.
+            </p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle__num">03</span>
+            <h3 class="principle__title">Arabic and English as equal first-class citizens.</h3>
+            <p class="principle__text">
+              We engineer bidirectional RTL/LTR interfaces and bilingual brand systems natively—never as a rushed translation layer at the end.
+            </p>
+          </div>
+          <div class="principle reveal">
+            <span class="principle__num">04</span>
+            <h3 class="principle__title">Full IP ownership and clean handovers.</h3>
+            <p class="principle__text">
+              Every line of Laravel/React code, Figma token, ad account, and raw camera file belongs to our client, documented so your internal team can run with it.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STUDIO TIMELINE -->
+    <section class="section" aria-labelledby="timeline-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="section-head__label">
+            <span class="eyebrow">03 / Studio History</span>
+          </div>
+          <div class="section-head__title">
+            <h2 id="timeline-heading" class="t-h2">Eight years of compounding craft.</h2>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline__item reveal">
+            <span class="timeline__year">2018</span>
+            <h3 class="timeline__title">Founded in Downtown Cairo</h3>
+            <p class="timeline__text">Omar, Lina, Karim, and Sara launch Empetix in a two-room studio at the Greek Campus, shipping three FinTech and e-commerce platforms in year one.</p>
+          </div>
+          <div class="timeline__item reveal">
+            <span class="timeline__year">2021</span>
+            <h3 class="timeline__title">In-House Film &amp; Performance Lab</h3>
+            <p class="timeline__text">Added a dedicated commercial film crew, photo studio, and server-side attribution practice to close the loop between software launches and customer acquisition.</p>
+          </div>
+          <div class="timeline__item reveal">
+            <span class="timeline__year">2024</span>
+            <h3 class="timeline__title">Riyadh Studio &amp; London Desk</h3>
+            <p class="timeline__text">Expanded on-the-ground engineering and growth squads to KAFD in Riyadh and Shoreditch in London to support GCC and European enterprise clients.</p>
+          </div>
+          <div class="timeline__item reveal">
+            <span class="timeline__year">2026</span>
+            <h3 class="timeline__title">48 Specialists &amp; 64+ Shipped Products</h3>
+            <p class="timeline__text">Operating across 14 countries with audited client platforms processing over USD 1.9B in annual gross transaction volume.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEADERSHIP & PRACTICE HEADS DIRECTORY -->
+    <section class="section section--alt section--ruled" aria-labelledby="directory-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="section-head__label">
+            <span class="eyebrow">04 / Practice Leads</span>
+          </div>
+          <div class="section-head__title">
+            <h2 id="directory-heading" class="t-h3">Senior Principals &amp; Discipline Heads</h2>
+          </div>
+        </div>
+
+        <ul class="team-list reveal">
+          <li class="team-list__item"><span>Youssef Nabil</span><span class="team-list__role">Principal Laravel Architect</span></li>
+          <li class="team-list__item"><span>Nourhan Shawky</span><span class="team-list__role">Head of Product Design Systems</span></li>
+          <li class="team-list__item"><span>Hassan El-Kholy</span><span class="team-list__role">Staff Mobile Engineer (Flutter)</span></li>
+          <li class="team-list__item"><span>Mariam Farouk</span><span class="team-list__role">Director of Paid Acquisition</span></li>
+          <li class="team-list__item"><span>Ziad Mansour</span><span class="team-list__role">Director of Photography &amp; Film</span></li>
+          <li class="team-list__item"><span>DinaAbdelrahman</span><span class="team-list__role">Head of CRO &amp; Analytics</span></li>
+          <li class="team-list__item"><span>Mostafa Salem</span><span class="team-list__role">Lead DevOps &amp; Cloud Security</span></li>
+          <li class="team-list__item"><span>Salma Hegazy</span><span class="team-list__role">Bilingual Brand &amp; Copy Director</span></li>
+          <li class="team-list__item"><span>Tامر Al-Qahtani</span><span class="team-list__role">Managing Director, Riyadh Studio</span></li>
+        </ul>
+      </div>
+    </section>
+
+  
+  </main>
+  <!-- END SECTION: content -->
+
+  <!-- PARTIAL: footer -->
+<footer class="site-foot" aria-label="Site footer">
+  <div class="container">
+    <!-- Closing Big CTA -->
+    <div class="foot-cta">
+      <div>
+        <span class="eyebrow eyebrow--inverse">Ready When You Are</span>
+        <h2 class="foot-cta__title">
+          <a href="contact.html">
+            <span>Have a product to build or scale?</span>
+            <svg class="foot-cta__arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 19L19 5M19 5H7M19 5V17" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </a>
+        </h2>
+      </div>
+      <div class="foot-cta__aside">
+        <span>Direct New Business Desk</span>
+        <a href="mailto:hello&#64;empetix.com">hello&#64;empetix.com</a>
+        <span>Response within 24 business hours</span>
+      </div>
+    </div>
+
+    <!-- Multi-Column Sitemap -->
+    <div class="foot-map">
+      <div class="foot-map__brand">
+        <a href="index.html" class="brand">
+          <svg class="brand__mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="33" height="33" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 11H27M9 18H21M9 25H27" stroke="currentColor" stroke-width="2.5"/>
+            <rect x="23" y="15.5" width="4.5" height="4.5" fill="#FF5520"/>
+          </svg>
+          <span class="brand__word">Empetix</span>
+        </a>
+        <p class="foot-map__summary">
+          Empetix is an independent software engineering and performance marketing studio. We build digital products and scale the brands behind them.
+        </p>
+      </div>
+
+      <div class="foot-map__col">
+        <h3 class="foot-map__title">Navigation</h3>
+        <ul class="foot-map__list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="work.html">Projects</a></li>
+          <li><a href="about.html">About &amp; Founders</a></li>
+          <li><a href="partners.html">Corporate Partners</a></li>
+          <li><a href="blog.html">Blogs &amp; Media</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-map__col">
+        <h3 class="foot-map__title">Software</h3>
+        <ul class="foot-map__list">
+          <li><a href="work.html">Web &amp; Mobile Apps</a></li>
+          <li><a href="work.html">Laravel &amp; Cloud APIs</a></li>
+          <li><a href="work.html">FinTech &amp; Payments</a></li>
+          <li><a href="work.html">E-Commerce Systems</a></li>
+          <li><a href="work.html">AI &amp; Data Pipelines</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-map__col">
+        <h3 class="foot-map__title">Marketing</h3>
+        <ul class="foot-map__list">
+          <li><a href="work.html">Performance &amp; Paid Media</a></li>
+          <li><a href="work.html">Brand Strategy &amp; Identity</a></li>
+          <li><a href="blog-photos.html">Commercial Video &amp; Photo</a></li>
+          <li><a href="blog-post.html">Conversion Rate Optimization</a></li>
+          <li><a href="work.html">SEO &amp; Content Engines</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-map__col">
+        <h3 class="foot-map__title">Featured Posts</h3>
+        <ul class="foot-map__list">
+          <li><a href="blog-post.html">Arabic-First Design Systems</a></li>
+          <li><a href="blog-video.html">5-Day Sprint (Video Episode)</a></li>
+          <li><a href="blog-photos.html">Qahwa Shoot (Photo Essay)</a></li>
+          <li><a href="project-nilepay.html">NilePay Case Dossier</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Regional Studios -->
+    <div class="foot-offices">
+      <div>
+        <p class="foot-office__city">
+          <span>Cairo HQ</span>
+          <span class="foot-office__time" data-tz-clock="Africa/Cairo">12:00</span>
+        </p>
+        <address class="foot-office__addr">
+          Building 14, Greek Campus, Downtown &amp; New Cairo District 5<br/>
+          Cairo, Egypt &middot; +20 2 2792 8400
+        </address>
+      </div>
+
+      <div>
+        <p class="foot-office__city">
+          <span>Riyadh Studio</span>
+          <span class="foot-office__time" data-tz-clock="Asia/Riyadh">13:00</span>
+        </p>
+        <address class="foot-office__addr">
+          King Abdullah Financial District (KAFD), Parcel 4.08<br/>
+          Riyadh, Saudi Arabia &middot; +966 11 510 9200
+        </address>
+      </div>
+
+      <div>
+        <p class="foot-office__city">
+          <span>London Desk</span>
+          <span class="foot-office__time" data-tz-clock="Europe/London">10:00</span>
+        </p>
+        <address class="foot-office__addr">
+          48 Redchurch Street, Shoreditch<br/>
+          London E2 7DP, United Kingdom &middot; +44 20 7946 0821
+        </address>
+      </div>
+    </div>
+
+    <!-- Legal & Social -->
+    <div class="foot-bar">
+      <p>&copy; 2026 Empetix Studio LLC. All rights reserved.</p>
+      <ul class="foot-bar__links" aria-label="Legal links">
+        <li><a href="contact.html">Privacy Policy</a></li>
+        <li><a href="contact.html">Terms of Service</a></li>
+        <li><a href="contact.html">Cookie Settings</a></li>
+      </ul>
+      <ul class="foot-bar__links" aria-label="Social links">
+        <li><a href="https://www.linkedin.com" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href="https://www.github.com" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://www.instagram.com" rel="noopener noreferrer">Instagram</a></li>
+        <li><a href="https://www.youtube.com" rel="noopener noreferrer">YouTube</a></li>
+      </ul>
+    </div>
+
+    <p class="foot-word" aria-hidden="true">EMPETIX</p>
+  </div>
+</footer>
+<!-- END PARTIAL: footer -->
+
+  <script defer src="assets/js/modules/preloader.js"></script>
+  <script defer src="assets/js/modules/nav.js"></script>
+  <script defer src="assets/js/modules/reveal.js"></script>
+  <script defer src="assets/js/modules/counter.js"></script>
+  <script defer src="assets/js/modules/media.js"></script>
+  <script defer src="assets/js/modules/careers.js"></script>
+  <script defer src="assets/js/main.js"></script>
+</body>
+</html>
+

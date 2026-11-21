@@ -1,0 +1,19 @@
+/* ==========================================================================
+   NO-JS FALLBACK — everything visible, nothing locked.
+   File: assets/css/noscript.css
+   ========================================================================== */
+
+.preloader {
+  display: none !important;
+}
+
+html,
+body {
+  overflow: auto !important;
+}
+
+.reveal,
+.hero [data-intro] {
+  opacity: 1 !important;
+  transform: none !important;
+}

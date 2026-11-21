@@ -1,0 +1,281 @@
+/* ==========================================================================
+   ARCHITECTURAL MULTI-COLUMN FOOTER
+   File: assets/css/layout/footer.css
+   ========================================================================== */
+
+.site-foot {
+  background-color: var(--color-ink-950);
+  color: var(--color-text-inverse);
+  padding-block: var(--section-y) var(--space-7);
+  border-block-start: var(--border) solid var(--color-line-inverse);
+  overflow: hidden;
+}
+
+/* 1. Top Executive CTA Box */
+.foot-cta {
+  display: grid;
+  gap: var(--space-7) var(--gutter);
+  padding-block-end: var(--space-10);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+@media (min-width: 64rem) {
+  .foot-cta {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .foot-cta > div:first-child {
+    grid-column: 1 / span 8;
+  }
+
+  .foot-cta__aside {
+    grid-column: 9 / span 4;
+  }
+}
+
+.foot-cta__title {
+  margin-block-start: var(--space-4);
+  font-size: clamp(2.15rem, 1.5rem + 2.8vw, 3.85rem);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-display);
+  font-weight: var(--weight-medium);
+}
+
+.foot-cta__title a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+.foot-cta__title a:hover {
+  color: var(--color-accent-500);
+}
+
+.foot-cta__arrow {
+  inline-size: 0.65em;
+  block-size: 0.65em;
+  color: var(--color-accent-500);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+
+.foot-cta__title a:hover .foot-cta__arrow {
+  transform: translate(0.12em, -0.12em);
+}
+
+[dir="rtl"] .foot-cta__arrow {
+  transform: scaleX(-1);
+}
+
+.foot-cta__aside {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background-color: var(--color-ink-900);
+  border: var(--border) solid var(--color-line-inverse);
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-muted);
+}
+
+.foot-cta__aside a {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-inverse);
+  letter-spacing: var(--tracking-snug);
+}
+
+.foot-cta__aside a:hover {
+  color: var(--color-accent-500);
+}
+
+/* 2. 12-Column Sitemap Grid (Properly aligned on 1 row on desktop) */
+.foot-map {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8) var(--gutter);
+  padding-block: var(--space-9);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+.foot-map__brand {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-block-end: var(--space-6);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+@media (min-width: 64rem) {
+  .foot-map {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .foot-map__brand {
+    grid-column: 1 / span 4;
+    padding-block-end: 0;
+    padding-inline-end: var(--space-6);
+    border-block-end: 0;
+    border-inline-end: var(--border) solid var(--color-line-inverse);
+  }
+
+  .foot-map__col {
+    grid-column: span 2;
+  }
+}
+
+.foot-map__summary {
+  max-inline-size: 34ch;
+  font-size: var(--text-sm);
+  color: var(--color-text-inverse-body);
+  line-height: var(--leading-normal);
+}
+
+.foot-map__title {
+  margin-block-end: var(--space-4);
+  padding-block-end: var(--space-2);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-inverse);
+}
+
+.foot-map__list {
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.foot-map__list a {
+  color: var(--color-text-inverse-body);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+
+.foot-map__list a:hover {
+  color: var(--color-accent-500);
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .foot-map__list a:hover {
+  transform: translateX(-3px);
+}
+
+/* 3. Framed Regional Offices Row */
+.foot-offices {
+  display: grid;
+  gap: var(--gutter);
+  padding-block: var(--space-8);
+  border-block-end: var(--border) solid var(--color-line-inverse);
+}
+
+@media (min-width: 48rem) {
+  .foot-offices {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.foot-offices > div {
+  padding: var(--space-5);
+  background-color: var(--color-ink-900);
+  border: var(--border) solid var(--color-line-inverse);
+  display: grid;
+  gap: var(--space-3);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.foot-offices > div:hover {
+  border-color: var(--color-accent-500);
+}
+
+.foot-office__city {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-inverse);
+}
+
+.foot-office__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  background-color: var(--color-ink-950);
+  border: var(--border) solid var(--color-line-inverse);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-inverse-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.foot-office__time::before {
+  content: "";
+  inline-size: 0.38rem;
+  block-size: 0.38rem;
+  border-radius: 50%;
+  background-color: #22C55E;
+}
+
+.foot-office__addr {
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-body);
+  line-height: var(--leading-normal);
+}
+
+/* 4. Bottom Legal & Social Bar */
+.foot-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+  padding-block-start: var(--space-6);
+  font-size: var(--text-xs);
+  color: var(--color-text-inverse-muted);
+}
+
+.foot-bar__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+
+.foot-bar__links a {
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.foot-bar__links a:hover {
+  color: var(--color-text-inverse);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 5. Architectural Signature Wordmark — Balanced & Never Clipped */
+.foot-word {
+  margin-block-start: var(--space-8);
+  padding-block-top: var(--space-4);
+  font-size: clamp(3.75rem, 15.5vw, 14.5rem);
+  font-weight: var(--weight-semibold);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  text-align: center;
+  color: var(--color-ink-900);
+  border-block-start: var(--border) solid var(--color-line-inverse);
+  user-select: none;
+}
+
+[dir="rtl"] .foot-word {
+  letter-spacing: 0;
+}
