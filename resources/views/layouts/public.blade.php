@@ -303,7 +303,7 @@
 </aside>
 
 
-  <main id="main-content">
+  <main id="main-content" @class(['team-page' => ($activePage ?? '') === 'team'])>
 @yield('content')
   </main>
 

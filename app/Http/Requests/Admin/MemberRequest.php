@@ -26,6 +26,7 @@ class MemberRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:180', 'alpha_dash'],
             'role' => ['nullable', 'string', 'max:160'],
             'kind' => ['required', 'in:founder,member'],
+            'department' => ['nullable', 'in:engineering,design,marketing'],
             'focus' => ['nullable', 'string', 'max:255'],
             'lead' => ['nullable', 'string', 'max:500'],
             'expertise' => ['nullable', 'string'],
