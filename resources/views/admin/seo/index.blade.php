@@ -54,19 +54,19 @@
         </div>
       </div>
 
-      <div class="seo-audit-checklist">
+      <div class="seo-audit-grid">
         @foreach($health['checks'] as $check)
-          <div class="seo-audit-item {{ $check['passed'] ? 'is-passed' : 'is-pending' }}">
-            <div class="seo-audit-item__icon">
+          <div class="seo-audit-tile {{ $check['passed'] ? 'is-passed' : 'is-pending' }}">
+            <div class="seo-audit-tile__icon">
               @if($check['passed'])
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg>
               @else
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.6"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               @endif
             </div>
-            <div class="seo-audit-item__content">
-              <span class="seo-audit-item__label">{{ $check['label'] }}</span>
-              <span class="seo-audit-item__msg">{{ $check['message'] }}</span>
+            <div class="seo-audit-tile__content">
+              <span class="seo-audit-tile__label">{{ $check['label'] }}</span>
+              <span class="seo-audit-tile__msg">{{ $check['message'] }}</span>
             </div>
           </div>
         @endforeach
@@ -112,7 +112,7 @@
           {{ $settings['seo_meta_description_en'] ?? 'Empetix Solutions is a premier digital engineering studio architecting enterprise SaaS platforms, custom software, FinTech solutions, and high-conversion web & mobile apps.' }}
         </div>
         <div class="seo-serp-box__sitelinks">
-          <span>SaaS Projects</span> &bull; <span>Engineering Blog</span> &bull; <span>FinTech Ledger Core</span> &bull; <span>Contact Cairo Studio</span>
+          <span>SaaS Projects</span> &bull; <span>Alfagn Academy</span> &bull; <span>Western eLearning</span> &bull; <span>Contact Cairo Studio</span>
         </div>
       </div>
 
@@ -134,7 +134,7 @@
           {{ $settings['seo_meta_description_ar'] ?? 'إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)، المنصات السحابية، والتطبيقات الرقمية المتقدمة بتجربة مستخدم عربية وعالمية فائقة السرعة.' }}
         </div>
         <div class="seo-serp-box__sitelinks">
-          <span>مشاريع الساس والأنظمة</span> &bull; <span>دراسات الحالة (Alfagn)</span> &bull; <span>تطوير تطبيقات الموبايل</span> &bull; <span>تواصل معنا</span>
+          <span>مشاريع الساس والأنظمة</span> &bull; <span>دراسات الحالة (Alfagn)</span> &bull; <span>أكاديمية ويسترن</span> &bull; <span>تواصل معنا</span>
         </div>
       </div>
 
@@ -163,7 +163,85 @@
   @csrf
   @method('PUT')
 
-  {{-- Section 1: Arabic Search Discovery (الظهور في محركات البحث بالعربي) --}}
+  {{-- Section 1: AI Model Search Discovery & llms.txt Context --}}
+  <div class="card card--glass form-card">
+    <div class="card__header">
+      <div class="card__header-icon">
+        <img src="{{ asset('assets/images/3d/3d-lightbulb.png') }}" alt="" width="28" height="28" />
+      </div>
+      <div>
+        <h3 class="card__title">AI Search Discovery &amp; Ingestion Engine (llms.txt)</h3>
+        <p class="card__sub">Powers how ChatGPT, Perplexity, Claude, Gemini, and SearchGPT understand Empetix and your software</p>
+      </div>
+    </div>
+    <div class="card__body">
+      
+      {{-- Luxury Toggle Switches Grid --}}
+      <div class="seo-switches-grid">
+        
+        {{-- Switch Tile 1: AI Bots --}}
+        <div class="seo-switch-tile">
+          <div class="seo-switch-tile__meta">
+            <div class="seo-switch-tile__icon seo-switch-tile__icon--ai">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <div>
+              <h4 class="seo-switch-tile__title">Welcome AI Crawlers (ChatGPT, Perplexity, Claude)</h4>
+              <p class="seo-switch-tile__sub">Welcomes GPTBot, ClaudeBot, PerplexityBot, and Google-Extended to ingest your SaaS case studies in /llms.txt</p>
+            </div>
+          </div>
+          <div class="seo-switch-tile__action">
+            <label class="toggle">
+              <input type="hidden" name="seo_welcome_ai_bots" value="0"/>
+              <input type="checkbox" name="seo_welcome_ai_bots" value="1" @checked(old('seo_welcome_ai_bots', $settings['seo_welcome_ai_bots'] ?? '1') == '1')/>
+              <span class="track"></span>
+            </label>
+          </div>
+        </div>
+
+        {{-- Switch Tile 2: Search Indexing --}}
+        <div class="seo-switch-tile">
+          <div class="seo-switch-tile__meta">
+            <div class="seo-switch-tile__icon seo-switch-tile__icon--search">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div>
+              <h4 class="seo-switch-tile__title">Search Engine Indexing</h4>
+              <p class="seo-switch-tile__sub">Emits &lt;meta name="robots" content="index, follow"&gt;. Uncheck only during staging maintenance.</p>
+            </div>
+          </div>
+          <div class="seo-switch-tile__action">
+            <label class="toggle">
+              <input type="hidden" name="seo_allow_indexing" value="0"/>
+              <input type="checkbox" name="seo_allow_indexing" value="1" @checked(old('seo_allow_indexing', $settings['seo_allow_indexing'] ?? '1') == '1')/>
+              <span class="track"></span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      {{-- AI Studio Briefing Context (Full Width) --}}
+      <div class="field" style="margin-top: 24px;">
+        <label for="seo_ai_company_bio">
+          <span>AI Studio Briefing Context (Fed directly to /llms.txt)</span>
+          <span class="form-hint-badge">AI LLM Context</span>
+        </label>
+        <textarea name="seo_ai_company_bio"
+                  id="seo_ai_company_bio"
+                  class="textarea"
+                  rows="4"
+                  placeholder="Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digital engineering and software growth studio founded in Cairo, Egypt...">{{ old('seo_ai_company_bio', $settings['seo_ai_company_bio'] ?? '') }}</textarea>
+        <div class="hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align:-2px; margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          This text is directly parsed by modern LLM crawlers via <code>/llms.txt</code>. Describe who Empetix is, what SaaS products you built, and your engineering strengths.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{-- Section 2: Arabic Search Discovery (الظهور في محركات البحث بالعربي) --}}
   <div class="card card--glass form-card">
     <div class="card__header">
       <div class="card__header-icon">
@@ -174,55 +252,55 @@
         <p class="card__sub">تهيئة الكلمات المفتاحية وعناوين البحث لظهور إمبيتكس ومشاريع الساس عند البحث بالعربي</p>
       </div>
     </div>
-    <div class="card__body form-grid" dir="rtl">
+    <div class="card__body" dir="rtl">
       
-      <div class="form-group form-group--full">
-        <label for="seo_meta_title_ar" class="form-label">
+      <div class="field" style="margin-bottom: 20px;">
+        <label for="seo_meta_title_ar">
           <span>عنوان الموقع ومحركات البحث (بالعربي)</span>
           <span class="form-hint-badge">Title Tag</span>
         </label>
         <input type="text"
                name="seo_meta_title_ar"
                id="seo_meta_title_ar"
-               class="form-control"
+               class="input"
                value="{{ old('seo_meta_title_ar', $settings['seo_meta_title_ar'] ?? 'حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي') }}"
                placeholder="حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي"
                oninput="document.getElementById('preview-serp-title-ar').innerText = this.value || 'حلول إمبيتكس'" />
-        <span class="form-hint">يظهر كعنوان رئيسي في نتائج بحث جوجل وشاشات المشاركة بالعربية (مفضل 50-60 حرف).</span>
+        <div class="hint">يظهر كعنوان رئيسي في نتائج بحث جوجل وشاشات المشاركة بالعربية (المثالي 50-60 حرف).</div>
       </div>
 
-      <div class="form-group form-group--full">
-        <label for="seo_meta_description_ar" class="form-label">
+      <div class="field" style="margin-bottom: 20px;">
+        <label for="seo_meta_description_ar">
           <span>الوصف التعريفي لمحركات البحث (بالعربي)</span>
           <span class="form-hint-badge">Meta Description</span>
         </label>
         <textarea name="seo_meta_description_ar"
                   id="seo_meta_description_ar"
-                  class="form-control form-control--textarea"
+                  class="textarea"
                   rows="3"
                   placeholder="إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)..."
                   oninput="document.getElementById('preview-serp-desc-ar').innerText = this.value || ''">{{ old('seo_meta_description_ar', $settings['seo_meta_description_ar'] ?? 'إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)، المنصات السحابية، والتطبيقات الرقمية المتقدمة بتجربة مستخدم عربية وعالمية فائقة السرعة.') }}</textarea>
-        <span class="form-hint">يظهر أسفل العنوان في جوجل لمساعدة الزوار العرب على الضغط والتفاعل.</span>
+        <div class="hint">يظهر أسفل العنوان في جوجل لمساعدة الزوار العرب على الضغط والتفاعل.</div>
       </div>
 
-      <div class="form-group form-group--full">
-        <label for="seo_keywords_ar" class="form-label">
+      <div class="field">
+        <label for="seo_keywords_ar">
           <span>الكلمات المفتاحية للبحث ومشاريع البرمجة والساس (بالعربي)</span>
           <span class="form-hint-badge">Meta Keywords</span>
         </label>
         <input type="text"
                name="seo_keywords_ar"
                id="seo_keywords_ar"
-               class="form-control"
-               value="{{ old('seo_keywords_ar', $settings['seo_keywords_ar'] ?? 'إمبيتكس, حلول إمبيتكس, شركة إمبيتكس, شركة برمجة, تطوير ساس, برمجة مواقع, تصميم تطبيقات, تحول رقمي, مصر, السعودية, نايل باي, محفظة رقمية') }}"
+               class="input"
+               value="{{ old('seo_keywords_ar', $settings['seo_keywords_ar'] ?? 'إمبيتكس, حلول إمبيتكس, شركة إمبيتكس, شركة برمجة, تطوير ساس, برمجة مواقع, تصميم تطبيقات, تحول رقمي, مصر, السعودية, ألفا جن, أكاديمية ويسترن') }}"
                placeholder="إمبيتكس, شركة برمجة, تطوير ساس, تصميم تطبيقات..." />
-        <span class="form-hint">افصل بين الكلمات بفواصل (,). تشمل اسم الشركة والمشاريع البرمجية وتقنيات الاستوديو.</span>
+        <div class="hint">افصل بين الكلمات بفواصل (,). تشمل اسم الشركة والمشاريع البرمجية وتقنيات الاستوديو.</div>
       </div>
 
     </div>
   </div>
 
-  {{-- Section 2: English Search Discovery --}}
+  {{-- Section 3: English Global Discovery & Metadata --}}
   <div class="card card--glass form-card">
     <div class="card__header">
       <div class="card__header-icon">
@@ -233,69 +311,69 @@
         <p class="card__sub">Primary SERP title, meta description, and keywords for global discovery</p>
       </div>
     </div>
-    <div class="card__body form-grid">
+    <div class="card__body">
       
-      <div class="form-group form-group--full">
-        <label for="seo_meta_title_en" class="form-label">
+      <div class="field" style="margin-bottom: 20px;">
+        <label for="seo_meta_title_en">
           <span>Global Site &amp; Search Title (English)</span>
           <span class="form-hint-badge">Title Tag</span>
         </label>
         <input type="text"
                name="seo_meta_title_en"
                id="seo_meta_title_en"
-               class="form-control"
+               class="input"
                value="{{ old('seo_meta_title_en', $settings['seo_meta_title_en'] ?? 'Empetix Solutions — Software, SaaS & Digital Growth Studio') }}"
                placeholder="Empetix Solutions — Software, SaaS & Digital Growth Studio"
                oninput="document.getElementById('preview-serp-title-en').innerText = this.value || 'Empetix Solutions'" />
-        <span class="form-hint">Displayed in Google, Bing, browser tabs, and bookmark previews (optimal: 50-60 characters).</span>
+        <div class="hint">Displayed in Google, Bing, browser tabs, and bookmark previews (optimal: 50-60 characters).</div>
       </div>
 
-      <div class="form-group form-group--full">
-        <label for="seo_meta_description_en" class="form-label">
+      <div class="field" style="margin-bottom: 20px;">
+        <label for="seo_meta_description_en">
           <span>Global Meta Description (English)</span>
           <span class="form-hint-badge">Meta Description</span>
         </label>
         <textarea name="seo_meta_description_en"
                   id="seo_meta_description_en"
-                  class="form-control form-control--textarea"
+                  class="textarea"
                   rows="3"
                   placeholder="Empetix Solutions is a premier digital engineering studio architecting enterprise SaaS platforms..."
                   oninput="document.getElementById('preview-serp-desc-en').innerText = this.value || ''">{{ old('seo_meta_description_en', $settings['seo_meta_description_en'] ?? 'Empetix Solutions is a premier digital engineering studio architecting enterprise SaaS platforms, custom software, FinTech solutions, and high-conversion web & mobile apps.') }}</textarea>
-        <span class="form-hint">Appears under the headline in Google search results (optimal: 140-160 characters).</span>
+        <div class="hint">Appears under the headline in Google search results (optimal: 140-160 characters).</div>
       </div>
 
-      <div class="form-group form-group--full">
-        <label for="seo_keywords_en" class="form-label">
+      <div class="field" style="margin-bottom: 20px;">
+        <label for="seo_keywords_en">
           <span>Search Keywords &amp; Software Tags (English)</span>
           <span class="form-hint-badge">Meta Keywords</span>
         </label>
         <input type="text"
                name="seo_keywords_en"
                id="seo_keywords_en"
-               class="form-control"
+               class="input"
                value="{{ old('seo_keywords_en', $settings['seo_keywords_en'] ?? 'Empetix, Empetix Solution, SaaS Architecture, Custom Software, EdTech, Alfagn, Western eLearning Academy, Laravel, Flutter, Mobile App Development, Cairo Studio') }}"
                placeholder="Empetix, SaaS, Software Engineering..." />
-        <span class="form-hint">Comma-separated terms describing Empetix, your products, and engineering capabilities.</span>
+        <div class="hint">Comma-separated terms describing Empetix, your products, and engineering capabilities.</div>
       </div>
 
-      <div class="form-group form-group--full">
-        <label for="seo_canonical_base" class="form-label">
+      <div class="field">
+        <label for="seo_canonical_base">
           <span>Canonical URL Base</span>
           <span class="form-hint-badge">Canonical</span>
         </label>
         <input type="text"
                name="seo_canonical_base"
                id="seo_canonical_base"
-               class="form-control"
+               class="input"
                value="{{ old('seo_canonical_base', $settings['seo_canonical_base'] ?? url('/')) }}"
                placeholder="https://empetix.com" />
-        <span class="form-hint">Prevents duplicate content penalties by explicitly declaring the preferred domain for search engines.</span>
+        <div class="hint">Prevents duplicate content penalties by explicitly declaring the preferred domain for search engines.</div>
       </div>
 
     </div>
   </div>
 
-  {{-- Section 3: Social & OpenGraph Visual Assets --}}
+  {{-- Section 4: Social & OpenGraph Visual Assets --}}
   <div class="card card--glass form-card">
     <div class="card__header">
       <div class="card__header-icon">
@@ -316,65 +394,13 @@
     </div>
   </div>
 
-  {{-- Section 4: AI Model Search Discovery & llms.txt Context --}}
-  <div class="card card--glass form-card">
-    <div class="card__header">
-      <div class="card__header-icon">
-        <img src="{{ asset('assets/images/3d/3d-lightbulb.png') }}" alt="" width="28" height="28" />
-      </div>
-      <div>
-        <h3 class="card__title">AI Search Discovery &amp; Ingestion Engine (llms.txt)</h3>
-        <p class="card__sub">Powers how ChatGPT, Perplexity, Claude, Gemini, and SearchGPT understand Empetix and your software</p>
-      </div>
-    </div>
-    <div class="card__body form-grid">
-      
-      <div class="form-group form-group--half">
-        <label class="form-label">
-          <span>Welcome AI Crawlers (ChatGPT, Perplexity, Claude)</span>
-        </label>
-        <label class="form-toggle-pill">
-          <input type="hidden" name="seo_welcome_ai_bots" value="0" />
-          <input type="checkbox" name="seo_welcome_ai_bots" value="1" {{ ($settings['seo_welcome_ai_bots'] ?? '1') === '1' ? 'checked' : '' }} />
-          <span class="form-toggle-pill__slider"></span>
-          <span class="form-toggle-pill__text">Allow AI Bots in robots.txt &amp; /llms.txt</span>
-        </label>
-        <span class="form-hint">Welcomes GPTBot, ClaudeBot, PerplexityBot, and Google-Extended to parse your SaaS case studies.</span>
-      </div>
-
-      <div class="form-group form-group--half">
-        <label class="form-label">
-          <span>Search Engine Indexing</span>
-        </label>
-        <label class="form-toggle-pill">
-          <input type="hidden" name="seo_allow_indexing" value="0" />
-          <input type="checkbox" name="seo_allow_indexing" value="1" {{ ($settings['seo_allow_indexing'] ?? '1') === '1' ? 'checked' : '' }} />
-          <span class="form-toggle-pill__slider"></span>
-          <span class="form-toggle-pill__text">Allow Google &amp; Bing Indexation</span>
-        </label>
-        <span class="form-hint">Emits &lt;meta name="robots" content="index, follow"&gt;. Uncheck only during staging maintenance.</span>
-      </div>
-
-      <div class="form-group form-group--full">
-        <label for="seo_ai_company_bio" class="form-label">
-          <span>AI Studio Briefing Context (Fed directly to /llms.txt)</span>
-          <span class="form-hint-badge">AI LLM Context</span>
-        </label>
-        <textarea name="seo_ai_company_bio"
-                  id="seo_ai_company_bio"
-                  class="form-control form-control--textarea"
-                  rows="4"
-                  placeholder="Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digital engineering and software growth studio founded in Cairo, Egypt...">{{ old('seo_ai_company_bio', $settings['seo_ai_company_bio'] ?? '') }}</textarea>
-        <span class="form-hint">This text is consumed by modern LLM crawlers via /llms.txt. Describe who Empetix is, what SaaS products you built, and your engineering strengths.</span>
-      </div>
-
-    </div>
-  </div>
-
   {{-- Save Actions --}}
   <div class="form-actions-bar">
     <div class="form-actions-bar__inner">
-      <span class="form-actions-bar__info">Changes take effect immediately and refresh the /sitemap.xml and /llms.txt caches.</span>
+      <div class="form-actions-bar__info">
+        <span class="form-actions-bar__dot"></span>
+        <span>Changes take effect immediately and refresh the /sitemap.xml and /llms.txt caches.</span>
+      </div>
       <button type="submit" class="btn btn--primary btn--lg">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         <span>Save SEO &amp; AI Settings</span>
@@ -387,7 +413,9 @@
 <script>
   function empetixSwitchSeoPreview(tabKey) {
     document.querySelectorAll('.seo-preview-tab').forEach(function(b) { b.classList.remove('is-active'); });
-    event.currentTarget.classList.add('is-active');
+    if (event && event.currentTarget) {
+      event.currentTarget.classList.add('is-active');
+    }
 
     document.getElementById('seo-preview-google-en').classList.add('is-hidden');
     document.getElementById('seo-preview-google-ar').classList.add('is-hidden');
