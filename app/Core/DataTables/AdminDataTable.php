@@ -93,7 +93,7 @@ abstract class AdminDataTable
     {
         return $this->html
             ->columns($this->columns())
-            ->ajax(route($this->routePrefix() . '.index'))
+            ->ajax(route($this->ajaxRoute()))
             ->orderBy(...$this->defaultOrder())
             ->parameters([
                 'pageLength' => 15,
@@ -106,6 +106,15 @@ abstract class AdminDataTable
                     'zeroRecords' => 'No rows match that filter.',
                 ],
             ]);
+    }
+
+    /**
+     * Route name the DataTables XHR hits. Usually the resource index;
+     * listings living on a custom route (e.g. subscribers) override it.
+     */
+    protected function ajaxRoute(): string
+    {
+        return $this->routePrefix() . '.index';
     }
 
     /**

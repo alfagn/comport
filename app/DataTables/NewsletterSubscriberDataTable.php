@@ -46,6 +46,12 @@ class NewsletterSubscriberDataTable extends AdminDataTable
     }
 
     /** Newest subscribers first. */
+    /** The subscribers listing lives on a custom route, not a resource index. */
+    protected function ajaxRoute(): string
+    {
+        return 'admin.inbox.subscribers';
+    }
+
     protected function defaultOrder(): array
     {
         return [1, 'desc'];

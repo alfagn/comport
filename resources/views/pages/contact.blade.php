@@ -148,7 +148,7 @@
                 <span class="t-meta">PROTECTED BY MUTUAL NDA</span>
               </div>
 
-              <form class="form" action="{{ route('contact.store') }}" method="post" data-interactive-form data-success-msg="Thank you. Your brief has been delivered directly to Co-Founders Ayman Ibrahim (CEO) and Bishoy Magdy (VP Growth). We will reply with a proposed architecture &amp; growth call time within 24 business hours.">
+              <form class="form" action="{{ route('contact.store') }}" method="post">
                 @csrf
                 @if(session('success'))
                   <p class="form__success" role="status" style="color:#1a7f4b;font-weight:600">{{ session('success') }}</p>
@@ -217,7 +217,7 @@
 
                 <div class="form__field form__field--full">
                   <label for="c-brief" class="form__label">Project Context, Technical Stack &amp; Commercial Goals <abbr title="Required">*</abbr></label>
-                  <textarea id="c-brief" name="brief" class="form__textarea" required placeholder="Tell us what you are building or scaling, what bottleneck you want to solve, and any key launch dates..."></textarea>
+                  <textarea id="c-brief" name="description" class="form__textarea" required placeholder="Tell us what you are building or scaling, what bottleneck you want to solve, and any key launch dates..."></textarea>
                 </div>
 
                 <div class="form__actions">

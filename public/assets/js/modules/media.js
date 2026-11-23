@@ -266,22 +266,6 @@
         }, 2000);
       });
     });
-
-    // 6. Client-Side Form Submission Feedback
-    var forms = Array.prototype.slice.call(document.querySelectorAll("[data-interactive-form]"));
-    forms.forEach(function (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var status = form.querySelector("[data-form-status]");
-        var msg =
-          form.getAttribute("data-success-msg") ||
-          "Thank you. Your submission has been received by the Empetix team and we will respond within one business day.";
-        if (status) {
-          status.textContent = msg;
-        }
-        form.reset();
-      });
-    });
   }
 
   global.EmpetixApp = global.EmpetixApp || {};

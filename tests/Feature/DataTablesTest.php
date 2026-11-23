@@ -107,6 +107,43 @@ class DataTablesTest extends TestCase
         $this->assertStringContainsString('&lt;script&gt;', $row['title']);
     }
 
+    public function test_server_side_pagination_beyond_the_first_page(): void
+    {
+        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        // Grow past one page (15 rows) so a second page must exist.
+        for ($i = 1; $i <= 20; $i++) {
+            Project::create(['title' => "Bulk Project $i", 'slug' => "bulk-project-$i", 'kicker' => 'k', 'description' => 'd']);
+        }
+        $total = Project::count();
+        $this->assertGreaterThan(15, $total);
+
+        $cols = [
+            'draw' => 1, 'length' => 15,
+            'columns' => [
+                ['data' => 'title', 'searchable' => 'true', 'orderable' => 'true'],
+                ['data' => 'tags', 'searchable' => 'false', 'orderable' => 'false'],
+                ['data' => 'is_featured', 'searchable' => 'false', 'orderable' => 'true'],
+                ['data' => 'is_active', 'searchable' => 'false', 'orderable' => 'true'],
+                ['data' => 'actions', 'searchable' => 'false', 'orderable' => 'false'],
+            ],
+            'order' => [['column' => 0, 'dir' => 'asc']],
+        ];
+
+        $page1 = $this->actingAs($this->admin())
+            ->get(route('admin.projects.index', $cols + ['start' => 0]), $this->ajaxHeaders())->json();
+        $page2 = $this->actingAs($this->admin())
+            ->get(route('admin.projects.index', $cols + ['start' => 15]), $this->ajaxHeaders())->json();
+
+        $this->assertSame($total, $page1['recordsTotal']);
+        $this->assertCount(15, $page1['data']);
+        $this->assertCount($total - 15, $page2['data']);
+        // Pages must not overlap: second page rows differ from the first.
+        $page1Titles = array_column($page1['data'], 'title');
+        foreach ($page2['data'] as $row) {
+            $this->assertNotContains($row['title'], $page1Titles);
+        }
+    }
+
     public function test_subscribers_listing_is_a_datatable_too(): void
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);
@@ -115,6 +152,18 @@ class DataTablesTest extends TestCase
             ->get(route('admin.inbox.subscribers', ['draw' => 1, 'start' => 0, 'length' => 15]), $this->ajaxHeaders());
 
         $response->assertOk()->assertJsonStructure(['draw', 'recordsTotal', 'data']);
+    }
+
+    public function test_subscribers_page_renders_its_table(): void
+    {
+        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+
+        $html = $this->actingAs($this->admin())
+            ->get(route('admin.inbox.subscribers'))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('dt-table', $html);
     }
 
     public function test_index_pages_embed_the_datatable_markup(): void
