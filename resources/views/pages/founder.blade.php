@@ -8,7 +8,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ $member->name }} — Empetix Solution"/>
   <meta property="og:description" content="{{ $member->name }}, {{ $member->role }} at Empetix Solution."/>
-  <meta property="og:url" content="https://empetix.vercel.app/founders/{{ $member->slug }}"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ $member->name }} — Empetix Solution"/>

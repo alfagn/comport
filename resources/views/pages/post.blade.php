@@ -8,7 +8,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ $post->title }} — Empetix Journal"/>
   <meta property="og:description" content="{{ $post->excerpt }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/blog/{{ $post->slug }}"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 

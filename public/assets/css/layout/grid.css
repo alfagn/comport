@@ -189,7 +189,7 @@
 a:hover .frame--zoom > img,
 a:focus-visible .frame--zoom > img,
 button:hover .frame--zoom > img {
-  transform: scale(1.045);
+  transform: scale(1.028);
 }
 
 /* --------------------------------------------------------------------------
@@ -226,7 +226,7 @@ button:hover .frame--zoom > img {
 }
 
 .js .reveal.is-visible a:hover .frame--zoom > img {
-  transform: scale(1.045);
+  transform: scale(1.028);
 }
 
 /* Animated section divider line draw */

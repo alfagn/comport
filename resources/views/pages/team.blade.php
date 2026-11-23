@@ -9,7 +9,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ sec('team', 'copy_1bd5cb61a600') }}"/>
   <meta property="og:description" content="{{ sec('team', 'copy_dca495ea9079') }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/team.html"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>

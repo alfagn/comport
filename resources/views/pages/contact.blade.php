@@ -9,7 +9,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ sec('contact', 'copy_b33a9603fc54') }}"/>
   <meta property="og:description" content="{{ sec('contact', 'copy_d6d0b4b6f76b') }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/contact.html"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>

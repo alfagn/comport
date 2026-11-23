@@ -8,7 +8,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ $project->title }} — Empetix Solution Case Study"/>
   <meta property="og:description" content="{{ $project->excerpt }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/work/{{ $project->slug }}"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
@@ -49,10 +49,6 @@
       <div class="container">
         <div class="frame bleed__frame">
           <img src="{{ str_starts_with((string) $project->image, 'uploads/') ? asset('storage/'.$project->image) : asset($project->image) }}" alt="{{ $project->title }}" width="1600" height="900"/>
-        </div>
-        <div class="bleed__caption">
-          <span>{{ strtoupper($project->client ?? 'EMPETIX') }} &mdash; {{ sec('project', 'case_study_suffix') }}</span>
-          <span>{{ sec('project', 'copy_b3d3c7a19f0e') }}</span>
         </div>
       </div>
     </section>

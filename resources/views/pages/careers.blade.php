@@ -9,7 +9,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ sec('careers', 'copy_c8f958fda5c5') }}"/>
   <meta property="og:description" content="{{ sec('careers', 'copy_71c7ef938d08') }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/careers.html"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>

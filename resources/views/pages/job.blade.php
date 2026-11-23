@@ -8,7 +8,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ $job->title }} — Careers at Empetix Solution"/>
   <meta property="og:description" content="{{ $job->summary }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/careers/{{ $job->slug }}"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 

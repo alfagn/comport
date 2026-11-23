@@ -329,6 +329,50 @@
   opacity: 1;
 }
 
+/* Desktop End-Cap Action Button (Balances Logo on Left, Anchors Right Edge) */
+.nav-bar__actions {
+  display: none;
+  align-items: center;
+  padding-inline-start: var(--space-5);
+  flex-shrink: 0;
+}
+
+@media (min-width: 64rem) {
+  .nav-bar__actions {
+    display: flex;
+  }
+}
+
+.nav-bar__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: 2.5rem;
+  padding-inline: 1.25rem;
+  font-size: 0.85rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  background-color: #FF5B1F;
+  color: #FFFFFF;
+  border-radius: var(--radius-1);
+  box-shadow: 0 4px 14px rgba(255, 91, 31, 0.28);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.nav-bar__cta:hover {
+  background-color: var(--color-ink-900);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(8, 20, 44, 0.22);
+}
+
+.nav-bar__cta:active {
+  transform: scale(0.98);
+}
+
 /* --------------------------------------------------------------------------
    Search panel
    -------------------------------------------------------------------------- */

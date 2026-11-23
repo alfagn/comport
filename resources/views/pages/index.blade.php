@@ -9,7 +9,7 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ sec('home', 'copy_3e8e84b38e6d') }}"/>
   <meta property="og:description" content="{{ sec('home', 'copy_24622118df1b') }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/"/>
+  <meta property="og:url" content="{{ url()->current() }}"/>
   <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
@@ -39,10 +39,11 @@
           </div>
           <div class="container">
             <div class="hero-slide__content">
-              <div class="hero-slide__meta">
-                <span class="hero-slide__tag">{{ $slide->tag }}</span>
-                <span class="hero-slide__kicker">{{ sec('home', 'hero_kicker', 'NEW CAIRO, EGYPT') }}</span>
-              </div>
+              @if($slide->tag)
+                <div class="hero-slide__meta">
+                  <span class="hero-slide__tag">{{ $slide->tag }}</span>
+                </div>
+              @endif
               <h1 class="hero-slide__title">
                 {{ $slide->title }}
               </h1>

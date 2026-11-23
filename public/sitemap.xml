@@ -5,7 +5,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://cms.test</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test"/>
@@ -17,7 +17,7 @@
   </url>
   <url>
     <loc>https://cms.test/work</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work"/>
@@ -25,7 +25,7 @@
   </url>
   <url>
     <loc>https://cms.test/about</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/about"/>
@@ -33,7 +33,7 @@
   </url>
   <url>
     <loc>https://cms.test/team</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/team"/>
@@ -41,7 +41,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers"/>
@@ -49,7 +49,7 @@
   </url>
   <url>
     <loc>https://cms.test/partners</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/partners"/>
@@ -57,7 +57,7 @@
   </url>
   <url>
     <loc>https://cms.test/blog</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog"/>
@@ -65,7 +65,7 @@
   </url>
   <url>
     <loc>https://cms.test/contact</loc>
-    <lastmod>2026-11-23T05:34:14+00:00</lastmod>
+    <lastmod>2026-11-23T22:10:05+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/contact"/>
@@ -73,7 +73,7 @@
   </url>
   <url>
     <loc>https://cms.test/work/alfagn</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/alfagn"/>
@@ -85,7 +85,7 @@
   </url>
   <url>
     <loc>https://cms.test/work/western-elearning-academy</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/western-elearning-academy"/>
@@ -97,7 +97,7 @@
   </url>
   <url>
     <loc>https://cms.test/blog/arabic-first-design-systems</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog/arabic-first-design-systems"/>
@@ -109,7 +109,7 @@
   </url>
   <url>
     <loc>https://cms.test/blog/five-day-product-growth-sprint</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog/five-day-product-growth-sprint"/>
@@ -117,7 +117,7 @@
   </url>
   <url>
     <loc>https://cms.test/blog/behind-the-lens-qahwa-launch</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog/behind-the-lens-qahwa-launch"/>
@@ -125,7 +125,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/laravel</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/laravel"/>
@@ -133,7 +133,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/frontend</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/frontend"/>
@@ -141,7 +141,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/flutter</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/flutter"/>
@@ -149,7 +149,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/marketing</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/marketing"/>
@@ -157,7 +157,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/designer</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/designer"/>
@@ -165,10 +165,46 @@
   </url>
   <url>
     <loc>https://cms.test/careers/producer</loc>
-    <lastmod>2026-11-23T05:34:13+00:00</lastmod>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/producer"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/careers/producer"/>
+  </url>
+  <url>
+    <loc>https://cms.test/founders/mohanad</loc>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/founders/mohanad"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/founders/mohanad"/>
+    <image:image>
+      <image:loc>https://cms.test/assets/img/team/mohanad-shehata.jpg</image:loc>
+      <image:title>Mohanad Ahmed Shehata — Co-founder and chief technology officer</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://cms.test/founders/ayman</loc>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/founders/ayman"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/founders/ayman"/>
+    <image:image>
+      <image:loc>https://cms.test/assets/img/team/ayman-ibrahim.jpg</image:loc>
+      <image:title>Ayman Ibrahim — Co-founder and chief executive officer</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://cms.test/founders/bishoy</loc>
+    <lastmod>2026-11-23T22:09:48+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/founders/bishoy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/founders/bishoy"/>
+    <image:image>
+      <image:loc>https://cms.test/assets/img/team/bishoy-magdy.jpg</image:loc>
+      <image:title>Bishoy Magdy — Co-founder and chief operating officer</image:title>
+    </image:image>
   </url>
 </urlset>

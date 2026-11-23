@@ -99,10 +99,19 @@
   <div class="utility" role="region" aria-label="Secondary navigation">
     <div class="utility__inner">
       <ul class="utility__links">
-        {{-- Dashboard-editable links (Navigation → Utility bar). --}}
-        @foreach(nav_items('utility') as $navItem)
-          <li class="utility__item"><a href="{{ str_starts_with($navItem->url, 'http') ? $navItem->url : url($navItem->url) }}" class="utility__link"@if($navItem->label === 'Blog') data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal"@endif>{{ $navItem->label }}</a></li>
-        @endforeach
+        {{-- Dashboard-editable links (Navigation → Utility bar) with resilient editorial fallback --}}
+        @php($utilityNav = nav_items('utility'))
+        @if($utilityNav->isNotEmpty())
+          @foreach($utilityNav as $navItem)
+            <li class="utility__item"><a href="{{ str_starts_with($navItem->url, 'http') ? $navItem->url : url($navItem->url) }}" class="utility__link"@if($navItem->label === 'Blog') data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal"@endif>{{ $navItem->label }}</a></li>
+          @endforeach
+        @else
+          <li class="utility__item"><a href="{{ url('/careers') }}" class="utility__link">Careers</a></li>
+          <li class="utility__item"><a href="{{ url('/work') }}" class="utility__link">Projects</a></li>
+          <li class="utility__item"><a href="{{ url('/team') }}" class="utility__link">Team</a></li>
+          <li class="utility__item"><a href="{{ url('/blog') }}" class="utility__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">Blog & Insights</a></li>
+          <li class="utility__item"><a href="{{ url('/contact') }}" class="utility__link">Contact</a></li>
+        @endif
       </ul>
 
       <button type="button" id="search-toggle" class="utility__search-block" aria-expanded="false" aria-controls="search-panel" aria-label="Open site search">
@@ -182,6 +191,15 @@
           </li>
         </ul>
       </nav>
+
+      <div class="nav-bar__actions">
+        <a href="{{ url('/contact') }}" class="nav-bar__cta btn btn--accent btn--sm">
+          <span>Start a Project</span>
+          <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </a>
+      </div>
 
       <div class="nav-bar__mobile-actions">
         <button type="button" class="mobile-search-toggle" data-search-toggle aria-expanded="false" aria-controls="search-panel" aria-label="Open site search">
