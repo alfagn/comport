@@ -144,6 +144,29 @@ class DataTablesTest extends TestCase
         }
     }
 
+    public function test_ampersand_displays_once_and_markup_stays_escaped_in_inbox(): void
+    {
+        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        \App\Models\ContactMessage::create([
+            'name' => '<b>Ampersand</b> Co',
+            'email' => 'amp@example.com',
+            'services' => ['SaaS & Cloud'],
+            'brief' => 'Checks the escaping boundary.',
+        ]);
+
+        $payload = $this->actingAs($this->admin())
+            ->get(route('admin.inbox.index', ['draw' => 1, 'start' => 0, 'length' => 15]), $this->ajaxHeaders())
+            ->json();
+
+        $row = collect($payload['data'])->firstWhere('email', 'amp@example.com');
+        // Ordinary ampersand: encoded exactly once, so the browser shows "&".
+        $this->assertSame('SaaS &amp; Cloud', $row['services']);
+        $this->assertStringNotContainsString('&amp;amp;', $row['services']);
+        // Malicious markup in a raw-rendered cell stays entity-escaped.
+        $this->assertStringContainsString('&lt;b&gt;Ampersand&lt;/b&gt;', $row['name']);
+        $this->assertStringNotContainsString('<b>', $row['name']);
+    }
+
     public function test_subscribers_listing_is_a_datatable_too(): void
     {
         $this->seed(\Database\Seeders\DatabaseSeeder::class);

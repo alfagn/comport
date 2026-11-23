@@ -43,10 +43,11 @@ class ContactMessageDataTable extends AdminDataTable
                     .'<div class="cell-sub">'.e($row->email).'</div>';
             })
             ->editColumn('services', function ($row) {
-                // services is a JSON array of labels; join safely.
-                return e(implode(', ', $row->services ?? [])) ?: '—';
+                // Plain text: Yajra applies its default output escaping to
+                // this column, so an ampersand renders as "&" exactly once.
+                return implode(', ', $row->services ?? []) ?: '—';
             })
-            ->editColumn('created_at', fn ($row) => e($row->created_at->diffForHumans()))
+            ->editColumn('created_at', fn ($row) => $row->created_at->diffForHumans())
             ->addColumn('actions', function ($row) {
                 $open = '<a class="btn btn--ghost btn--sm" href="'.e(route('admin.inbox.show', $row->id)).'">Open</a>';
 
