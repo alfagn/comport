@@ -41,12 +41,16 @@ Upgrading an EXISTING install (database already has your content):
 git pull origin laravel-13-dashboard
 php artisan migrate                          # adds new tables/columns, never touches your rows
 php artisan db:seed --class=PageSectionSeeder  # registers newly editable CMS blocks (additive only)
-php artisan db:seed --class=RolesAndPermissionsSeeder  # adds roles/permissions (additive; keeps your login)
+php artisan empetix:owner you@example.com    # grant owner to YOUR account (use your real login email)
 ```
 
-RolesAndPermissionsSeeder only creates what is missing and gives every
-EXISTING admin account the `owner` role, so your login keeps full access.
-New admins created from the Admins screen get exactly the roles you pick.
+`empetix:owner` creates the roles/permissions tables content (additively)
+and grants the `owner` role to exactly the one account you name. Nothing
+grants roles in bulk or implicitly: until an account is granted a role it
+can reach the dashboard home only, and every section is enforced
+server-side. New admins created from the Admins screen get exactly the
+roles you pick. `empetix:admin` also asks, per account, whether the new
+login should be an owner.
 
 Do NOT run a bare `php artisan db:seed` (or `migrate --seed`) on an install where
 you have edited content in the dashboard: ContentSeeder, NavItemSeeder and

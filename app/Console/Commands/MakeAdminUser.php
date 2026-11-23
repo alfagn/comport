@@ -55,12 +55,26 @@ class MakeAdminUser extends Command
             return self::FAILURE;
         }
 
-        User::updateOrCreate(
+        $user = User::updateOrCreate(
             ['email' => $email],
             ['name' => $name, 'password' => Hash::make($password)]
         );
 
         $this->info($existing ? "Password updated for {$email}." : "Dashboard user {$email} created.");
+
+        // Access is never implicit: the operator explicitly decides whether
+        // THIS account gets the owner role. New accounts without it (and no
+        // other role) can reach the dashboard home only.
+        if (! $existing) {
+            $this->callSilently(\Database\Seeders\RolesAndPermissionsSeeder::class);
+
+            if ($this->confirm('Grant this account the owner role (full dashboard access)?', true)) {
+                $user->assignRole(\App\Support\Permissions::OWNER_ROLE);
+                $this->info("{$email} is now an owner.");
+            } else {
+                $this->warn("{$email} has no roles yet - assign one from the Admins screen or re-run this prompt.");
+            }
+        }
 
         return self::SUCCESS;
     }

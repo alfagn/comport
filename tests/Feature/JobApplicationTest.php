@@ -21,6 +21,14 @@ class JobApplicationTest extends TestCase
 
     protected $seed = true;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Explicit owner grant for the seeded admin (access is never implicit).
+        \App\Models\User::first()?->assignRole(\App\Support\Permissions::OWNER_ROLE);
+    }
+
     /** Valid payload factory for the careers form. */
     private function payload(array $overrides = []): array
     {

@@ -21,6 +21,14 @@ class AdminPanelTest extends TestCase
     /** Seed the real content + admin user for every test. */
     protected $seed = true;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Explicit owner grant for the seeded admin (access is never implicit).
+        \App\Models\User::first()?->assignRole(\App\Support\Permissions::OWNER_ROLE);
+    }
+
     /** Guests are redirected to the login screen. */
     public function test_guests_cannot_open_the_dashboard(): void
     {

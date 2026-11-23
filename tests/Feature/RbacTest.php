@@ -127,13 +127,39 @@ class RbacTest extends TestCase
         $this->actingAs($owner)->delete('/admin/roles/'.$role->id)->assertSessionHasErrors('role');
     }
 
-    public function test_seeder_is_idempotent_and_grants_existing_users_owner(): void
+    public function test_seeder_is_idempotent_and_never_elevates_anyone(): void
     {
         $user = User::factory()->create();
         $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
         $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
 
-        $this->assertTrue($user->fresh()->hasRole(Permissions::OWNER_ROLE));
+        // Privilege-escalation regression: seeding must never grant roles.
+        $this->assertFalse($user->fresh()->hasRole(Permissions::OWNER_ROLE));
+        $this->assertEquals(0, \DB::table('model_has_roles')->where('model_type', User::class)->where('model_id', $user->id)->count());
         $this->assertEquals(count(Permissions::all()), Permission::count());
+    }
+
+    public function test_owner_bootstrap_command_grants_only_the_named_account(): void
+    {
+        $named = User::factory()->create(['email' => 'named@example.com']);
+        $other = User::factory()->create(['email' => 'other@example.com']);
+
+        $this->artisan('empetix:owner', ['email' => 'named@example.com'])->assertSuccessful();
+
+        $this->assertTrue($named->fresh()->hasRole(Permissions::OWNER_ROLE));
+        $this->assertFalse($other->fresh()->hasRole(Permissions::OWNER_ROLE));
+
+        $this->artisan('empetix:owner', ['email' => 'ghost@example.com'])->assertFailed();
+    }
+
+    public function test_admin_without_any_role_is_blocked_everywhere(): void
+    {
+        $user = User::factory()->create();
+
+        // Dashboard home is the only reachable admin screen without a role.
+        $this->actingAs($user)->get('/admin')->assertOk();
+        foreach (['/admin/services', '/admin/admins', '/admin/roles', '/admin/settings', '/admin/inbox', '/admin/partners'] as $url) {
+            $this->actingAs($user)->get($url)->assertForbidden();
+        }
     }
 }
