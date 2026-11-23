@@ -9,6 +9,32 @@
   <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/favicon.svg') }}"/>
   <link rel="stylesheet" href="{{ asset('assets/css/base/typography.css') }}"/>
   <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}"/>
+  <script>
+    // Theme: persisted admin light/dark choice, applied before first paint.
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('empetix-admin-theme'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
+      window.empetixToggleTheme = function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('empetix-admin-theme', next); } catch (e) {}
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+          btn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+          btn.querySelector('.icon-moon').style.display = next === 'dark' ? 'none' : '';
+          btn.querySelector('.icon-sun').style.display = next === 'dark' ? '' : 'none';
+        });
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+          btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+          btn.querySelector('.icon-moon').style.display = dark ? 'none' : '';
+          btn.querySelector('.icon-sun').style.display = dark ? '' : 'none';
+        });
+      });
+    })();
+  </script>
 </head>
 <body class="admin">
 <div class="login-wrap">

@@ -11,6 +11,32 @@
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/public-sans-400.woff2') }}" crossorigin/>
   <link rel="stylesheet" href="{{ asset('assets/css/base/typography.css') }}"/>
   <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}"/>
+  <script>
+    // Theme: persisted admin light/dark choice, applied before first paint.
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('empetix-admin-theme'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
+      window.empetixToggleTheme = function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('empetix-admin-theme', next); } catch (e) {}
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+          btn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+          btn.querySelector('.icon-moon').style.display = next === 'dark' ? 'none' : '';
+          btn.querySelector('.icon-sun').style.display = next === 'dark' ? '' : 'none';
+        });
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+          btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+          btn.querySelector('.icon-moon').style.display = dark ? 'none' : '';
+          btn.querySelector('.icon-sun').style.display = dark ? '' : 'none';
+        });
+      });
+    })();
+  </script>
 </head>
 <body class="admin">
   {{-- Decorative orange ribbon sweeps from the user's reference design.
@@ -159,6 +185,10 @@
       <div class="topbar__actions">
         @yield('actions')
         {{-- Unread-briefs bell: the badge is the real unread count. --}}
+        <button class="icon-btn" type="button" data-theme-toggle onclick="empetixToggleTheme()" aria-label="Toggle dark mode" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="18" height="18"><path d="M20 13.5A8.5 8.5 0 0 1 10.5 4 8.5 8.5 0 1 0 20 13.5z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="18" height="18" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
         <a class="icon-btn" href="{{ route('admin.inbox.index') }}" aria-label="Inbox, {{ $unread }} unread">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 16v-5a6 6 0 1112 0v5l1.5 2.5h-15z"/><path d="M10 21a2.2 2.2 0 004 0"/></svg>
           @if($unread > 0)<span class="icon-btn__badge">{{ $unread }}</span>@endif
