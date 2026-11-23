@@ -129,3 +129,17 @@ filter mechanics and protocol metadata remain developer-owned, not a drag-and-dr
 page builder. Some dynamic interface sentences (for example job-count phrases)
 remain fixed around live record values. Public marketing numbers are editable
 site content, not verified business analytics.
+
+
+### Repairing missing copy after the editorial upgrade
+
+After backing up as above, pull this branch and run `php artisan migrate` then
+`php artisan optimize:clear`. The additive content migration inserts missing
+original copy and impact values into `page_sections`, and materializes legacy
+NULL template defaults. Existing nonblank edits, numeric zero, explicit empty
+strings, content-list deletions and entity records are preserved. No full content
+seeder or reset is needed. Pages & Content > Home shows ticker and impact fields;
+Pages & Content > Global shows shared navigation text. A runtime original-copy
+fallback also prevents missing registrations from blanking the public page.
+Explicit saved blank strings remain blank; those require a specific owner choice
+rather than blindly overwriting potentially intentional deletions.

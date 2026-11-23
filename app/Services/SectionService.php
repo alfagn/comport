@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PageSection;
+use App\Support\EditorialDefaults;
 use App\Repositories\Contracts\PageSectionRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
@@ -27,18 +28,22 @@ class SectionService
      */
     public function get(string $page, string $key, ?string $default = null): ?string
     {
-        return $this->map()["{$page}.{$key}"] ?? $default;
+        $id = "{$page}.{$key}";
+        $values = $this->map();
+        // A missing registration must not erase shipped copy during an upgrade.
+        // An explicit saved empty string is preserved and never replaced.
+        return array_key_exists($id, $values) ? $values[$id] : ($default ?? (EditorialDefaults::rows()[$id]['value'] ?? null));
     }
 
     /** All sections of a page for the dashboard editor. */
     public function forPage(string $page): Collection
     {
-        $defaults = collect(json_decode(file_get_contents(database_path('seeders/data/template-defaults.json')), true))
-            ->where('page', $page)->keyBy('key');
-        return $this->repository->forPage($page)->each(function (PageSection $section) use ($defaults) {
-            // Show the exact template fallback without writing over the database.
-            if ($section->value === null && isset($defaults[$section->key])) {
-                $section->value = $defaults[$section->key]['value'];
+        $defaults = EditorialDefaults::rows();
+        return $this->repository->forPage($page)->each(function (PageSection $section) use ($defaults, $page) {
+            $id = $page.'.'.$section->key;
+            // Match the effective public value for a still-unset registration.
+            if ($section->value === null && isset($defaults[$id])) {
+                $section->value = $defaults[$id]['value'];
             }
         });
     }
@@ -56,7 +61,7 @@ class SectionService
     public function savePage(string $page, array $values): void
     {
         foreach ($values as $key => $value) {
-            PageSection::query()->where('page', $page)->where('key', $key)->update(['value' => $value]);
+            PageSection::query()->where('page', $page)->where('key', $key)->update(['value' => $value ?? '']);
         }
 
         Cache::forget(self::CACHE_KEY);

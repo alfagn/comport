@@ -165,5 +165,6 @@ class PageSectionSeeder extends Seeder
                 );
             }
         }
+        $this->call(EditorialDefaultsBackfillSeeder::class);
     }
 }
