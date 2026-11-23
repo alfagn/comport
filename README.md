@@ -39,6 +39,7 @@ Upgrading an EXISTING install (database already has your content):
 
 ```bash
 git pull origin laravel-13-dashboard
+composer install                           # picks up new packages (Livewire, permissions)
 php artisan migrate                          # adds new tables/columns, never touches your rows
 php artisan db:seed --class=PageSectionSeeder  # registers newly editable CMS blocks (additive only)
 php artisan empetix:owner you@example.com    # grant owner to YOUR account (use your real login email)
