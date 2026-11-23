@@ -36,13 +36,13 @@
         <h1 class="page-hero__title">{{ sec('partners', 'hero_title', 'Corporate partners & technology alliances.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
-            <span class="eyebrow">Ecosystem &amp; Alliances</span>
+            <span class="eyebrow">{{ sec('partners', 'hero_eyebrow', 'Ecosystem & Alliances') }}</span>
           </div>
           <p class="page-hero__lead">
-            We partner with ambitious enterprises, venture-backed category leaders, and global cloud and marketing platforms to deliver end-to-end digital transformation and commercial growth.
+            {{ sec('partners', 'hero_lead', 'We partner with ambitious enterprises, venture-backed category leaders, and global cloud and marketing platforms to deliver end-to-end digital transformation and commercial growth.') }}
           </p>
           <div class="page-hero__aside">
-            <a href="{{ url('/contact') }}" class="btn btn--primary btn--sm">Become a Partner</a>
+            <a href="{{ url('/contact') }}" class="btn btn--primary btn--sm">{{ sec('partners', 'cta_button', 'Become a Partner') }}</a>
           </div>
         </div>
       </div>

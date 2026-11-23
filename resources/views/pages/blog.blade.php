@@ -36,13 +36,13 @@
         <h1 class="page-hero__title">{{ sec('blog', 'hero_title', 'The Empetix Journal: Engineering, Growth, Video & Photo Essays.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
-            <span class="eyebrow">Studio Publications</span>
+            <span class="eyebrow">{{ sec('blog', 'hero_eyebrow', 'Studio Publications') }}</span>
           </div>
           <p class="page-hero__lead">
-            Long-form technical articles, full video episodes with chapter transcripts, and behind-the-scenes photography galleries from our software and marketing teams. Click any entry to open the full post.
+            {{ sec('blog', 'hero_lead', 'Long-form technical articles, full video episodes with chapter transcripts, and behind-the-scenes photography galleries from our software and marketing teams. Click any entry to open the full post.') }}
           </p>
           <div class="page-hero__aside">
-            <span class="t-meta">VIDEOS &middot; PHOTOS &middot; ESSAYS</span>
+            <span class="t-meta">{{ sec('blog', 'hero_meta', 'VIDEOS · PHOTOS · ESSAYS') }}</span>
           </div>
         </div>
       </div>

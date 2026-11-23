@@ -36,7 +36,7 @@
 
           <div class="job-header__cta">
             <button type="button" class="btn btn--accent btn--lg" data-trigger-apply>
-              <span>Apply for this Job</span>
+              <span>{{ sec('careers', 'apply_button_open', 'Apply for this Job') }}</span>
               <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -133,7 +133,7 @@
               @endif
 
               <button type="button" class="btn btn--primary btn--lg" data-trigger-apply>
-                <span>Apply for this Job</span>
+                <span>{{ sec('careers', 'apply_button_open', 'Apply for this Job') }}</span>
                 <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
@@ -152,11 +152,11 @@
         <div class="form-card">
           <div class="form-card__head">
             <div>
-              <span class="eyebrow">Official Application &middot; jobs.empetix.com</span>
+              <span class="eyebrow">{{ sec('careers', 'apply_eyebrow', 'Official Application · jobs.empetix.com') }}</span>
               <h2 id="apply-drawer-title" class="t-h2">Apply for: {{ $job->title }}</h2>
               <p class="t-small">@if($job->ref_code)Requisition ID: <strong>{{ $job->ref_code }}</strong>@endif @if($job->hiringManager) &middot; Reviewed directly by {{ $job->hiringManager->name }} ({{ $job->hiringManager->role }})@endif</p>
             </div>
-            <span class="hero__badge">STEP 1 OF 1 &middot; ~3 MINS</span>
+            <span class="hero__badge">{{ sec('careers', 'apply_badge', 'STEP 1 OF 1 · ~3 MINS') }}</span>
           </div>
 
           @if(session('success'))
@@ -171,75 +171,75 @@
           <form id="job-application-form" class="form" action="{{ route('jobs.apply', $job->slug) }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="form__field">
-              <label for="app-name" class="form__label">Full Legal Name <abbr title="Required">*</abbr></label>
-              <input id="app-name" name="full_name" type="text" class="form__input" required placeholder="e.g. Mostafa El-Sayed"/>
+              <label for="app-name" class="form__label">{{ sec('careers', 'apply_label_name', 'Full Legal Name') }} <abbr title="Required">*</abbr></label>
+              <input id="app-name" name="full_name" type="text" class="form__input" required placeholder="{{ sec('careers', 'apply_ph_name', 'e.g. Mostafa El-Sayed') }}"/>
             </div>
 
             <div class="form__field">
-              <label for="app-email" class="form__label">Email Address <abbr title="Required">*</abbr></label>
-              <input id="app-email" name="email" type="email" class="form__input" required placeholder="you&#64;domain.com"/>
+              <label for="app-email" class="form__label">{{ sec('careers', 'apply_label_email', 'Email Address') }} <abbr title="Required">*</abbr></label>
+              <input id="app-email" name="email" type="email" class="form__input" required placeholder="{{ sec('careers', 'apply_ph_email', 'you@domain.com') }}"/>
             </div>
 
             <div class="form__field">
-              <label for="app-phone" class="form__label">Phone / WhatsApp Number <abbr title="Required">*</abbr></label>
-              <input id="app-phone" name="phone" type="tel" class="form__input" required placeholder="+20 10 ... or +966 5 ..."/>
+              <label for="app-phone" class="form__label">{{ sec('careers', 'apply_label_phone', 'Phone / WhatsApp Number') }} <abbr title="Required">*</abbr></label>
+              <input id="app-phone" name="phone" type="tel" class="form__input" required placeholder="{{ sec('careers', 'apply_ph_phone', '+20 10 ... or +966 5 ...') }}"/>
             </div>
 
             <div class="form__field">
-              <label for="app-city" class="form__label">Current City &amp; Country <abbr title="Required">*</abbr></label>
-              <input id="app-city" name="location" type="text" class="form__input" required placeholder="e.g. Cairo, Egypt"/>
+              <label for="app-city" class="form__label">{{ sec('careers', 'apply_label_city', 'Current City & Country') }} <abbr title="Required">*</abbr></label>
+              <input id="app-city" name="location" type="text" class="form__input" required placeholder="{{ sec('careers', 'apply_ph_city', 'e.g. Cairo, Egypt') }}"/>
             </div>
 
             <div class="form__field">
-              <label for="app-linkedin" class="form__label">LinkedIn Profile URL <abbr title="Required">*</abbr></label>
-              <input id="app-linkedin" name="linkedin" type="url" class="form__input" required placeholder="https://linkedin.com/in/..."/>
+              <label for="app-linkedin" class="form__label">{{ sec('careers', 'apply_label_linkedin', 'LinkedIn Profile URL') }} <abbr title="Required">*</abbr></label>
+              <input id="app-linkedin" name="linkedin" type="url" class="form__input" required placeholder="{{ sec('careers', 'apply_ph_linkedin', 'https://linkedin.com/in/...') }}"/>
             </div>
 
             <div class="form__field">
-              <label for="app-portfolio" class="form__label">GitHub / Portfolio / Behance / Case Studies URL <abbr title="Required">*</abbr></label>
-              <input id="app-portfolio" name="portfolio" type="url" class="form__input" required placeholder="https://github.com/..."/>
+              <label for="app-portfolio" class="form__label">{{ sec('careers', 'apply_label_portfolio', 'GitHub / Portfolio / Behance / Case Studies URL') }} <abbr title="Required">*</abbr></label>
+              <input id="app-portfolio" name="portfolio" type="url" class="form__input" required placeholder="{{ sec('careers', 'apply_ph_portfolio', 'https://github.com/...') }}"/>
             </div>
 
             <!-- Interactive CV / Resume Upload Box -->
             <div class="form__field form__field--full">
-              <label for="app-cv-file" class="form__label">Upload CV / Resume (PDF or DOCX) <abbr title="Required">*</abbr></label>
+              <label for="app-cv-file" class="form__label">{{ sec('careers', 'apply_label_cv', 'Upload CV / Resume (PDF or DOCX)') }} <abbr title="Required">*</abbr></label>
               <div id="cv-dropzone" class="cv-dropzone">
                 <input id="app-cv-file" name="cv_file" type="file" accept=".pdf,.doc,.docx" required/>
-                <p id="cv-file-label" class="cv-dropzone__title">Click or drag your CV / Resume here (PDF, DOCX &mdash; Max 10MB)</p>
-                <p class="cv-dropzone__sub">Your CV goes straight to our practice lead&rsquo;s inbox—no automated ATS keyword rejection.</p>
+                <p id="cv-file-label" class="cv-dropzone__title">{{ sec('careers', 'apply_cv_title', 'Click or drag your CV / Resume here (PDF, DOCX — Max 10MB)') }}</p>
+                <p class="cv-dropzone__sub">{{ sec('careers', 'apply_cv_sub', "Your CV goes straight to our practice lead's inbox — no automated ATS keyword rejection.") }}</p>
               </div>
             </div>
 
             <div class="form__field">
-              <label for="app-exp" class="form__label">Years of Relevant Experience <abbr title="Required">*</abbr></label>
+              <label for="app-exp" class="form__label">{{ sec('careers', 'apply_label_exp', 'Years of Relevant Experience') }} <abbr title="Required">*</abbr></label>
               <select id="app-exp" name="experience_years" class="form__select" required>
-                <option value="3-5">3 &ndash; 5 Years</option>
-                <option value="5-8" selected>5 &ndash; 8 Years</option>
-                <option value="8+">8+ Years (Staff / Principal)</option>
+                <option value="3-5">{{ sec('careers', 'apply_exp_1', '3 – 5 Years') }}</option>
+                <option value="5-8" selected>{{ sec('careers', 'apply_exp_2', '5 – 8 Years') }}</option>
+                <option value="8+">{{ sec('careers', 'apply_exp_3', '8+ Years (Staff / Principal)') }}</option>
               </select>
             </div>
 
             <div class="form__field">
-              <label for="app-notice" class="form__label">Notice Period / Availability <abbr title="Required">*</abbr></label>
+              <label for="app-notice" class="form__label">{{ sec('careers', 'apply_label_notice', 'Notice Period / Availability') }} <abbr title="Required">*</abbr></label>
               <select id="app-notice" name="notice_period" class="form__select" required>
-                <option value="immediate">Available Immediately</option>
-                <option value="2-weeks">2 Weeks Notice</option>
-                <option value="30-days" selected>30 Days Notice</option>
-                <option value="60-days">60 Days Notice</option>
+                <option value="immediate">{{ sec('careers', 'apply_notice_1', 'Available Immediately') }}</option>
+                <option value="2-weeks">{{ sec('careers', 'apply_notice_2', '2 Weeks Notice') }}</option>
+                <option value="30-days" selected>{{ sec('careers', 'apply_notice_3', '30 Days Notice') }}</option>
+                <option value="60-days">{{ sec('careers', 'apply_notice_4', '60 Days Notice') }}</option>
               </select>
             </div>
 
             <div class="form__field form__field--full">
-              <label for="app-achievement" class="form__label">Tell us about the most complex system, product, or campaign you have shipped <abbr title="Required">*</abbr></label>
-              <textarea id="app-achievement" name="achievement" class="form__textarea" required placeholder="Share the technical or commercial challenge, your exact contribution, and the measurable result..."></textarea>
+              <label for="app-achievement" class="form__label">{{ sec('careers', 'apply_label_achievement', 'Tell us about the most complex system, product, or campaign you have shipped') }} <abbr title="Required">*</abbr></label>
+              <textarea id="app-achievement" name="achievement" class="form__textarea" required placeholder="{{ sec('careers', 'apply_ph_achievement', 'Share the technical or commercial challenge, your exact contribution, and the measurable result...') }}"></textarea>
             </div>
 
             <div class="form__actions">
               <p class="form__consent">
-                By submitting, you consent to Empetix storing your application for recruitment evaluation. We reply to 100% of applicants within 3 business days.
+                {{ sec('careers', 'apply_consent', 'By submitting, you consent to Empetix storing your application for recruitment evaluation. We reply to 100% of applicants within 3 business days.') }}
               </p>
               <button type="submit" class="btn btn--accent btn--lg">
-                <span>Submit Application{{ $job->ref_code ? ' ('.$job->ref_code.')' : '' }}</span>
+                <span>{{ sec('careers', 'apply_button', 'Submit Application') }}{{ $job->ref_code ? ' ('.$job->ref_code.')' : '' }}</span>
                 <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                 </svg>

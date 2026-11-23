@@ -36,13 +36,13 @@
         <h1 class="page-hero__title">{{ sec('work', 'hero_title', 'Selected software & growth case studies.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
-            <span class="eyebrow">Portfolio 2023&ndash;2026</span>
+            <span class="eyebrow">{{ sec('work', 'hero_eyebrow', 'Portfolio 2023–2026') }}</span>
           </div>
           <p class="page-hero__lead">
-            Every project below pairs production software engineering with measurable commercial growth. Click any project to inspect the full architecture, creative assets, and business outcomes.
+            {{ sec('work', 'hero_lead', 'Every project below pairs production software engineering with measurable commercial growth. Click any project to inspect the full architecture, creative assets, and business outcomes.') }}
           </p>
           <div class="page-hero__aside">
-            <span class="t-meta">6 FEATURED DOSSIERS</span>
+            <span class="t-meta">{{ sec('work', 'hero_meta', '6 FEATURED DOSSIERS') }}</span>
           </div>
         </div>
       </div>
@@ -52,7 +52,7 @@
       <div class="container">
         <!-- Interactive Filter Bar -->
         <div class="filter" data-filter-bar="work-archive" role="toolbar" aria-label="Filter projects by discipline">
-          <span class="filter__label">Filter by discipline:</span>
+          <span class="filter__label">{{ sec('work', 'filter_label', 'Filter by discipline:') }}</span>
           <button type="button" class="filter__btn" data-filter="all" aria-pressed="true">All Projects<sup>6</sup></button>
           <button type="button" class="filter__btn" data-filter="software" aria-pressed="false">Software Engineering<sup>4</sup></button>
           <button type="button" class="filter__btn" data-filter="marketing" aria-pressed="false">Growth &amp; Marketing<sup>4</sup></button>

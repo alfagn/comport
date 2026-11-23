@@ -102,12 +102,12 @@
     <div class="container">
       <form class="search-panel__form" action="{{ route('blog') }}" method="get">
         <label for="search-input" class="sr-only">Search projects, blog posts, and roles</label>
-        <input id="search-input" type="search" name="q" class="search-panel__input" placeholder="Search solutions, case studies, engineering essays, video episodes..." autocomplete="off"/>
+        <input id="search-input" type="search" name="q" class="search-panel__input" placeholder="{{ sec('footer', 'search_placeholder', 'Search solutions, case studies, engineering essays, video episodes...') }}" autocomplete="off"/>
         <button type="submit" class="btn btn--accent btn--sm">Search</button>
         <button type="button" id="search-close" class="btn btn--ghost btn--sm">Close</button>
       </form>
       <div class="search-panel__hints">
-        <span>Quick jump:</span>
+        <span>{{ sec('footer', 'search_quickjump', 'Quick jump:') }}</span>
         <a href="{{ url('/work/nilepay') }}">NilePay Case Study</a>
         <a href="{{ url('/blog/five-day-product-growth-sprint') }}">5-Day Sprint Video</a>
         <a href="{{ url('/blog/behind-the-lens-qahwa-launch') }}">Qahwa Photo Essay</a>
@@ -416,15 +416,15 @@
 
       <!-- Col 5 (2 cols): Newsletter & Social Connect -->
       <div class="foot-grid__newsletter">
-        <h3 class="foot-col__title">Insights Dispatch</h3>
+        <h3 class="foot-col__title">{{ sec('footer', 'newsletter_title', 'Insights Dispatch') }}</h3>
         <p class="foot-grid__summary">
-          Monthly engineering monographs, video episodes, and growth playbooks.
+          {{ sec('footer', 'newsletter_summary', 'Monthly engineering monographs, video episodes, and growth playbooks.') }}
         </p>
         <form class="foot-sub-form" action="{{ route('subscribe') }}" method="post">
             @csrf
           <label for="foot-email-input" class="sr-only">Work email address</label>
-          <input id="foot-email-input" name="email" type="email" class="foot-sub-form__input" required placeholder="Enter your work email..."/>
-          <button type="submit" class="btn btn--accent btn--sm">Subscribe &rarr;</button>
+          <input id="foot-email-input" name="email" type="email" class="foot-sub-form__input" required placeholder="{{ sec('footer', 'newsletter_placeholder', 'Enter your work email...') }}"/>
+          <button type="submit" class="btn btn--accent btn--sm">{{ sec('footer', 'newsletter_button', 'Subscribe →') }}</button>
           <div class="form__status" data-form-status role="status" aria-live="polite"></div>
         @if(session('subscribed'))
               <p role="status" style="color:#1a7f4b;font-weight:600">{{ session('subscribed') }}</p>

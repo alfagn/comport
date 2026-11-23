@@ -43,25 +43,27 @@
         <div class="stat-card__head">
           <span class="stat-card__icon" aria-hidden="true">
             @switch($card['key'])
-              @case('messages')<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 13h4l2 3h6l2-3h4"/><path d="M5 6h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1z"/><path d="M4 7l8 5 8-5"/></svg>@break
-              @case('projects')<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16v13H4z"/><path d="M9 7V4h6v3"/></svg>@break
-              @case('services')<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 13a8 8 0 0116 0"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19a4 4 0 01-4 3h-2"/></svg>@break
-              @case('members')<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c.6-3.4 2.8-5 5.5-5s4.9 1.6 5.5 5"/></svg>@break
-              @case('jobs')<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 6c-2-1.4-4.5-1.7-8-1v13c3.5-.7 6-.4 8 1 2-1.4 4.5-1.7 8-1V5c-3.5-.7-6-.4-8 1z"/><path d="M12 6v13"/></svg>@break
-              @case('posts')<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12.5h5"/></svg>@break
-              @case('partners')<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9.5" r="2.3"/><path d="M3.5 19c.5-3.2 2.7-5 5.5-5s5 1.8 5.5 5"/><path d="M14.5 14.6c2.6.2 4.3 1.8 4.8 4.4"/></svg>@break
-              @default<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 12l3 3 5-6"/><circle cx="12" cy="12" r="9"/></svg>
+              @case('messages')<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2.5h7.2l5.3 5.3V20a1.8 1.8 0 01-1.8 1.8H6A1.8 1.8 0 014.2 20V4.3A1.8 1.8 0 016 2.5z"/><path d="M13.2 2.5l5.3 5.3h-4.3a1 1 0 01-1-1z" fill="#fff"/><rect x="7.5" y="11.5" width="9" height="1.7" rx="0.85" fill="#fff"/><rect x="7.5" y="14.7" width="6.5" height="1.7" rx="0.85" fill="#fff"/><rect x="7.5" y="17.9" width="7.5" height="1.7" rx="0.85" fill="#fff"/></svg>@break
+              @case('projects')<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.2 6.5A2.3 2.3 0 016.5 4.2h3.6l2 2.2h7.2a2.3 2.3 0 012.3 2.3v8.8a2.3 2.3 0 01-2.3 2.3H6.5a2.3 2.3 0 01-2.3-2.3z"/><path d="M9.4 13.4l2.1 2.1 3.9-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>@break
+              @case('services')<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5a7.5 7.5 0 00-7.5 7.5v4.7a2.8 2.8 0 002.8 2.8H9a1 1 0 001-1v-4.8a1 1 0 00-1-1H6.5a5.5 5.5 0 0111 0H15a1 1 0 00-1 1v4.8a1 1 0 001 1h.7a3.4 3.4 0 01-3.2 2.4H11a1 1 0 000 2h1.5a5.4 5.4 0 005.2-4V11A7.5 7.5 0 0012 3.5z"/></svg>@break
+              @case('members')<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0114.4 0z"/></svg>@break
+              @case('jobs')<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.3 4.5C7.9 4.5 10.1 5.2 12 6.5c1.9-1.3 4.1-2 6.7-2a1.3 1.3 0 011.3 1.3v11.4a1.3 1.3 0 01-1.3 1.3c-2.3 0-4.3.7-5.7 1.7a1.3 1.3 0 01-1.9 0c-1.4-1-3.4-1.7-5.8-1.7a1.3 1.3 0 01-1.3-1.3V5.8a1.3 1.3 0 011.3-1.3z"/><rect x="11.2" y="7" width="1.6" height="11.4" rx="0.8" fill="#fff"/></svg>@break
+              @case('posts')<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 3.5h5.3a2.2 2.2 0 012.2 2.2v4.6a2.2 2.2 0 01-2.2 2.2h-.8v3.2l-3.6-3.2h-.9z" opacity="0.55"/><path d="M5.2 8h8.6a2.2 2.2 0 012.2 2.2v4.4a2.2 2.2 0 01-2.2 2.2H9l-3.9 3.2v-3.2h-.9a2.2 2.2 0 01-2.2-2.2v-4.4A2.2 2.2 0 015.2 8z"/><circle cx="7" cy="12.4" r="1.05" fill="#fff"/><circle cx="10" cy="12.4" r="1.05" fill="#fff"/><circle cx="13" cy="12.4" r="1.05" fill="#fff"/></svg>@break
+              @case('partners')<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8.6" cy="8.2" r="3.1"/><path d="M2.8 19.8a5.9 5.9 0 0111.6 0z"/><circle cx="16.9" cy="9.4" r="2.5" opacity="0.85"/><path d="M14.6 19.8a5 5 0 016.6-4.7 5 5 0 011.6 4.7z" opacity="0.85"/></svg>@break
+              @default<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             @endswitch
           </span>
-          <span class="stat-card__label">{{ $card['label'] }}</span>
+          <span class="stat-card__meta">
+            <span class="stat-card__label">{{ $card['label'] }}</span>
+            <span class="stat-card__sub">{{ $card['delta'] === null ? 'New this period' : 'vs last week' }} &middot; 14-day activity</span>
+          </span>
           <span class="stat-card__chev" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
         </div>
         <div class="stat-card__num">{{ number_format($card['count']) }}@if($card['delta'] === null)<span class="delta-chip" title="No records last week to compare against">—</span>@else<span class="delta-chip {{ $card['delta'] >= 0 ? 'delta-chip--up' : 'delta-chip--down' }}" title="Created this week vs. last week">{{ $card['delta'] >= 0 ? '↑' : '↓' }} {{ abs($card['delta']) }}%</span>@endif</div>
         <svg class="sparkline" viewBox="0 0 120 36" preserveAspectRatio="none" role="img" aria-label="Records created per day over the last 14 days">
-          <polygon points="0,36 {{ $polyline }} 120,36" fill="currentColor" opacity="0.12" stroke="none"/>
-          <polyline points="{{ $polyline }}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polygon points="0,36 {{ $polyline }} 120,36" fill="currentColor" opacity="0.16" stroke="none"/>
+          <polyline points="{{ $polyline }}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div class="stat-card__foot">{{ $card['delta'] === null ? 'New this period · 14-day activity' : 'vs last week · 14-day activity' }}</div>
       </a>
     @endforeach
   </div>

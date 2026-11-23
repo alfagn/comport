@@ -97,7 +97,7 @@
                 @endif
                 <!-- Step A: Capabilities -->
                 <fieldset class="form__group">
-                  <legend class="form__label">A. Which capabilities do you need? (Select one or more)</legend>
+                  <legend class="form__label">{{ sec('contact', 'form_legend_a', 'A. Which capabilities do you need? (Select one or more)') }}</legend>
                   <div class="choices">
                     @foreach($services as $i => $service)
                     <label class="choice">
@@ -110,64 +110,64 @@
 
                 <!-- Step B: Budget Tier -->
                 <fieldset class="form__group">
-                  <legend class="form__label">B. Estimated Investment Range</legend>
+                  <legend class="form__label">{{ sec('contact', 'form_legend_b', 'B. Estimated Investment Range') }}</legend>
                   <div class="choices">
                     <label class="choice">
                       <input type="radio" name="budget_tier" value="15-35k"/>
-                      <span>USD 15k &ndash; 35k (5-Day Sprint / Audit)</span>
+                      <span>{{ sec('contact', 'form_budget_1', 'USD 15k – 35k (5-Day Sprint / Audit)') }}</span>
                     </label>
                     <label class="choice">
                       <input type="radio" name="budget_tier" value="35-80k" checked/>
-                      <span>USD 35k &ndash; 80k (Full Product / Campaign)</span>
+                      <span>{{ sec('contact', 'form_budget_2', 'USD 35k – 80k (Full Product / Campaign)') }}</span>
                     </label>
                     <label class="choice">
                       <input type="radio" name="budget_tier" value="80-150k"/>
-                      <span>USD 80k &ndash; 150k (Platform + Growth Engine)</span>
+                      <span>{{ sec('contact', 'form_budget_3', 'USD 80k – 150k (Platform + Growth Engine)') }}</span>
                     </label>
                     <label class="choice">
                       <input type="radio" name="budget_tier" value="150k+"/>
-                      <span>USD 150k+ (Enterprise Multi-Quarter)</span>
+                      <span>{{ sec('contact', 'form_budget_4', 'USD 150k+ (Enterprise Multi-Quarter)') }}</span>
                     </label>
                   </div>
                 </fieldset>
 
                 <!-- Step C: Contact Details -->
                 <div class="form__field">
-                  <label for="c-name" class="form__label">Full Name <abbr title="Required">*</abbr></label>
-                  <input id="c-name" name="name" type="text" class="form__input" required placeholder="e.g. Tariq Al-Faisal"/>
+                  <label for="c-name" class="form__label">{{ sec('contact', 'form_label_name', 'Full Name') }} <abbr title="Required">*</abbr></label>
+                  <input id="c-name" name="name" type="text" class="form__input" required placeholder="{{ sec('contact', 'form_ph_name', 'e.g. Tariq Al-Faisal') }}"/>
                 </div>
 
                 <div class="form__field">
-                  <label for="c-email" class="form__label">Work Email <abbr title="Required">*</abbr></label>
-                  <input id="c-email" name="email" type="email" class="form__input" required placeholder="name&#64;company.com"/>
+                  <label for="c-email" class="form__label">{{ sec('contact', 'form_label_email', 'Work Email') }} <abbr title="Required">*</abbr></label>
+                  <input id="c-email" name="email" type="email" class="form__input" required placeholder="{{ sec('contact', 'form_ph_email', 'name@company.com') }}"/>
                 </div>
 
                 <div class="form__field">
-                  <label for="c-company" class="form__label">Company &amp; Website <abbr title="Required">*</abbr></label>
-                  <input id="c-company" name="company" type="text" class="form__input" required placeholder="e.g. Acme FinTech (acme.com)"/>
+                  <label for="c-company" class="form__label">{{ sec('contact', 'form_label_company', 'Company & Website') }} <abbr title="Required">*</abbr></label>
+                  <input id="c-company" name="company" type="text" class="form__input" required placeholder="{{ sec('contact', 'form_ph_company', 'e.g. Acme FinTech (acme.com)') }}"/>
                 </div>
 
                 <div class="form__field">
-                  <label for="c-timeline" class="form__label">Target Kickoff Window</label>
+                  <label for="c-timeline" class="form__label">{{ sec('contact', 'form_label_timeline', 'Target Kickoff Window') }}</label>
                   <select id="c-timeline" name="timeline" class="form__select">
-                    <option value="immediate">Immediate (Within 2 Weeks)</option>
-                    <option value="month">Within 30 Days</option>
-                    <option value="quarter">Next Quarter Planning</option>
-                    <option value="exploring">Exploratory / RFP Stage</option>
+                    <option value="immediate">{{ sec('contact', 'form_timeline_1', 'Immediate (Within 2 Weeks)') }}</option>
+                    <option value="month">{{ sec('contact', 'form_timeline_2', 'Within 30 Days') }}</option>
+                    <option value="quarter">{{ sec('contact', 'form_timeline_3', 'Next Quarter Planning') }}</option>
+                    <option value="exploring">{{ sec('contact', 'form_timeline_4', 'Exploratory / RFP Stage') }}</option>
                   </select>
                 </div>
 
                 <div class="form__field form__field--full">
-                  <label for="c-brief" class="form__label">Project Context, Technical Stack &amp; Commercial Goals <abbr title="Required">*</abbr></label>
-                  <textarea id="c-brief" name="description" class="form__textarea" required placeholder="Tell us what you are building or scaling, what bottleneck you want to solve, and any key launch dates..."></textarea>
+                  <label for="c-brief" class="form__label">{{ sec('contact', 'form_label_brief', 'Project Context, Technical Stack & Commercial Goals') }} <abbr title="Required">*</abbr></label>
+                  <textarea id="c-brief" name="description" class="form__textarea" required placeholder="{{ sec('contact', 'form_ph_brief', 'Tell us what you are building or scaling, what bottleneck you want to solve, and any key launch dates...') }}"></textarea>
                 </div>
 
                 <div class="form__actions">
                   <p class="form__consent">
-                    We sign mutual NDAs prior to reviewing private repositories or ad accounts. Zero spam, ever.
+                    {{ sec('contact', 'form_consent', 'We sign mutual NDAs prior to reviewing private repositories or ad accounts. Zero spam, ever.') }}
                   </p>
                   <button type="submit" class="btn btn--primary btn--lg">
-                    <span>Submit Project Brief</span>
+                    <span>{{ sec('contact', 'form_button', 'Submit Project Brief') }}</span>
                     <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                       <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
