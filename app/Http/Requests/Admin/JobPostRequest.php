@@ -23,6 +23,7 @@ class JobPostRequest extends FormRequest
     {
         return [
             'ref_code' => ['nullable', 'string', 'max:30'],
+            'hiring_manager_id' => ['nullable', 'integer', 'exists:members,id'],
             'title' => ['required', 'string', 'max:200'],
             'slug' => ['nullable', 'string', 'max:220', 'alpha_dash'],
             'department' => ['nullable', 'string', 'max:120'],

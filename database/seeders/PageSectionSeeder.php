@@ -49,6 +49,17 @@ class PageSectionSeeder extends Seeder
         ],
         'contact' => [
             ['hero_title', 'Hero title', 'textarea'],
+            ['channels_heading', 'Practice desks heading', 'text'],
+            ['form_heading', 'Brief form heading', 'text'],
+            ['promise_title', '"What happens next" title', 'text'],
+            ['hotline_title', 'Hotline block title', 'text'],
+            ['hotline_hours', 'Hotline hours line', 'text'],
+            ['studios_heading', 'Headquarters section heading', 'text'],
+            ['hq_city', 'Headquarters city title', 'text'],
+            ['hq_desc', 'Headquarters description', 'textarea'],
+            ['hq_hours', 'Headquarters working hours', 'text'],
+            ['visit_cta', 'Studio visit button label', 'text'],
+            ['faq_heading', 'FAQ section heading', 'text'],
         ],
         'careers' => [
             ['tracks_heading', "Practice areas heading", 'text'],

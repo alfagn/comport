@@ -152,30 +152,6 @@
       });
     }
 
-    // 4. Job Application Form Submit with Unique Tracking Reference Code
-    var jobForm = document.getElementById("job-application-form");
-    if (jobForm) {
-      jobForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var status = jobForm.querySelector("[data-job-form-status]");
-        var reqId = jobForm.getAttribute("data-req-id") || "REQ-2026";
-        var randCode = Math.floor(1000 + Math.random() * 9000);
-        var refCode = "EMP-" + reqId + "-" + randCode;
-        if (status) {
-          status.textContent =
-            "Application Confirmed (Tracking ID: " +
-            refCode +
-            "). Your CV and portfolio have been routed directly to the Hiring Manager. Expect a status update within 3 business days.";
-        }
-        jobForm.reset();
-        if (fileLabel) {
-          fileLabel.textContent = "Click or drag your CV / Resume here (PDF, DOCX — Max 10MB)";
-        }
-        if (dropzone) {
-          dropzone.classList.remove("has-file");
-        }
-      });
-    }
   }
 
   global.EmpetixApp = global.EmpetixApp || {};

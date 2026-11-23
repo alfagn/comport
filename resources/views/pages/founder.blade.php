@@ -52,7 +52,7 @@
     <section class="founder-band founder-band--surface" aria-labelledby="about-heading">
       <div class="founder-container">
         <div class="founder-about">
-          <h2 id="about-heading" class="founder-heading">About Mohanad</h2>
+          <h2 id="about-heading" class="founder-heading">About {{ str($member->name)->before(" ") }}</h2>
           <div class="founder-about__body">
               @foreach((array) $member->bio as $paragraph)
                 <p class="founder-about__copy">{{ $paragraph }}</p>
@@ -65,7 +65,7 @@
     <!-- Expertise -->
     <section class="founder-band founder-band--white" aria-labelledby="expertise-heading">
       <div class="founder-container">
-        <h2 id="expertise-heading" class="founder-heading">Where Mohanad can help</h2>
+        <h2 id="expertise-heading" class="founder-heading">Where {{ str($member->name)->before(" ") }} can help</h2>
         <ul class="founder-expertise">
               @foreach((array) $member->expertise as $expertise)
                 <li class="founder-expertise__item">

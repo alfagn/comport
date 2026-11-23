@@ -145,7 +145,11 @@ class ContentSeeder extends Seeder
     /** Open positions with their numbered specification sections. */
     private function seedJobs(): void
     {
+        // Default hiring manager: the CTO founder reviews engineering openings.
+        $cto = Member::where('slug', 'mohanad')->first();
+
         foreach ($this->data['job_posts'] as $row) {
+            $row['hiring_manager_id'] = $cto?->id;
             JobPost::updateOrCreate(['slug' => $row['slug']], $row);
         }
     }

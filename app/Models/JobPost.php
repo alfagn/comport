@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class JobPost extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'ref_code', 'department', 'location', 'type', 'summary',
+        'title', 'slug', 'ref_code', 'hiring_manager_id', 'department', 'location', 'type', 'summary',
         'intro', 'pills', 'tags', 'responsibilities', 'requirements', 'sections',
         'is_active', 'sort_order',
     ];
@@ -24,6 +24,18 @@ class JobPost extends Model
         'sections' => 'array',
         'is_active' => 'boolean',
     ];
+
+    /** The team member who reviews this opening's applications. */
+    public function hiringManager(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'hiring_manager_id');
+    }
+
+    /** Applications received for this opening. */
+    public function applications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JobApplication::class);
+    }
 
     /** Scope: open positions in display order. */
     public function scopeActive($query)

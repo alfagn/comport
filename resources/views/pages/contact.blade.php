@@ -54,86 +54,28 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 class="t-h2">Reach the right practice desk immediately.</h2>
+            <h2 class="t-h2">{{ sec('contact', 'channels_heading', 'Reach the right practice desk immediately.') }}</h2>
           </div>
         </div>
 
         <div class="contact-channels">
-          <!-- LOOP: channel-card -->
-          <article class="channel-card reveal">
-            <div>
-              <div class="channel-card__top">
-                <span class="channel-card__tag">NEW BUSINESS</span>
-                <span class="channel-card__sla">SLA: &lt; 24H</span>
+          @foreach(content_list('contact.channels') as $channel)
+            @php($channelEmail = setting($channel->url ?: 'email', 'hello@empetix.com'))
+            <article class="channel-card reveal">
+              <div>
+                <div class="channel-card__top">
+                  <span class="channel-card__tag">{{ $channel->meta }}</span>
+                  <span class="channel-card__sla">{{ $channel->badge }}</span>
+                </div>
+                <h3 class="channel-card__title">{{ $channel->title }}</h3>
+                <p class="channel-card__desc">{{ $channel->body }}</p>
               </div>
-              <h3 class="channel-card__title">Product &amp; Growth Projects</h3>
-              <p class="channel-card__desc">
-                For custom web/mobile software builds, FinTech &amp; e-commerce platforms, or full-funnel marketing retainers.
-              </p>
-            </div>
-            <div class="channel-card__foot">
-              <a href="mailto:{{ setting('email', 'hello@empetix.com') }}" class="channel-card__email">{{ setting('email', 'hello@empetix.com') }}</a>
-              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('email', 'hello@empetix.com') }}">Copy</button>
-            </div>
-          </article>
-          <!-- END LOOP: channel-card -->
-
-          <!-- LOOP: channel-card -->
-          <article class="channel-card reveal">
-            <div>
-              <div class="channel-card__top">
-                <span class="channel-card__tag">ENTERPRISE &amp; ALLIANCES</span>
-                <span class="channel-card__sla">SLA: &lt; 24H</span>
+              <div class="channel-card__foot">
+                <a href="mailto:{{ $channelEmail }}" class="channel-card__email">{{ $channelEmail }}</a>
+                <button type="button" class="channel-card__copy" data-copy-email="{{ $channelEmail }}">Copy</button>
               </div>
-              <h3 class="channel-card__title">Corporate Partnerships</h3>
-              <p class="channel-card__desc">
-                For dedicated embedded engineering squads, AWS/Shopify Plus co-delivery, and formal enterprise RFPs.
-              </p>
-            </div>
-            <div class="channel-card__foot">
-              <a href="mailto:{{ setting('partners_email', 'partners@empetix.com') }}" class="channel-card__email">{{ setting('partners_email', 'partners@empetix.com') }}</a>
-              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('partners_email', 'partners@empetix.com') }}">Copy</button>
-            </div>
-          </article>
-          <!-- END LOOP: channel-card -->
-
-          <!-- LOOP: channel-card -->
-          <article class="channel-card reveal">
-            <div>
-              <div class="channel-card__top">
-                <span class="channel-card__tag">TALENT &amp; CAREERS</span>
-                <span class="channel-card__sla">6 OPEN ROLES</span>
-              </div>
-              <h3 class="channel-card__title">Engineering &amp; Creative Talent</h3>
-              <p class="channel-card__desc">
-                For senior engineers, product designers, filmmakers, and performance marketers joining our studios.
-              </p>
-            </div>
-            <div class="channel-card__foot">
-              <a href="mailto:{{ setting('talent_email', 'talent@empetix.com') }}" class="channel-card__email">{{ setting('talent_email', 'talent@empetix.com') }}</a>
-              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('talent_email', 'talent@empetix.com') }}">Copy</button>
-            </div>
-          </article>
-          <!-- END LOOP: channel-card -->
-
-          <!-- LOOP: channel-card -->
-          <article class="channel-card reveal">
-            <div>
-              <div class="channel-card__top">
-                <span class="channel-card__tag">MEDIA &amp; SPEAKING</span>
-                <span class="channel-card__sla">PRESS DESK</span>
-              </div>
-              <h3 class="channel-card__title">Press &amp; Keynotes</h3>
-              <p class="channel-card__desc">
-                For conference speaking invitations, podcast appearances, press kits, and industry research citations.
-              </p>
-            </div>
-            <div class="channel-card__foot">
-              <a href="mailto:{{ setting('press_email', 'press@empetix.com') }}" class="channel-card__email">{{ setting('press_email', 'press@empetix.com') }}</a>
-              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('press_email', 'press@empetix.com') }}">Copy</button>
-            </div>
-          </article>
-          <!-- END LOOP: channel-card -->
+            </article>
+          @endforeach
         </div>
 
         <!-- 3. Interactive Project & Partnership Configurator + Executive Promise Sidebar -->
@@ -143,7 +85,7 @@
               <div class="form-card__head">
                 <div>
                   <span class="eyebrow">02 / Interactive Project Brief</span>
-                  <h2 class="t-h3">Configure your project or partnership brief.</h2>
+                  <h2 class="t-h3">{{ sec('contact', 'form_heading', 'Configure your project or partnership brief.') }}</h2>
                 </div>
                 <span class="t-meta">PROTECTED BY MUTUAL NDA</span>
               </div>
@@ -241,19 +183,19 @@
           <aside class="contact__aside reveal">
             <div class="contact-promise">
               <span class="eyebrow eyebrow--inverse">What Happens Next</span>
-              <h3 class="contact-promise__title">Direct founder review within 24 hours.</h3>
+              <h3 class="contact-promise__title">{{ sec('contact', 'promise_title', 'Direct founder review within 24 hours.') }}</h3>
               <ul class="contact-promise__list">
-                <li><strong>1. Technical &amp; Commercial Triage:</strong> Your brief is reviewed directly by our CEO, CTO, or VP of Growth.</li>
-                <li><strong>2. Mutual NDA &amp; Discovery Call:</strong> A focused 30-minute architecture and growth call—no generic slide deck fluff.</li>
-                <li><strong>3. Written Scope &amp; Roadmap:</strong> Within 4 days of our call, you receive a fixed-scope engineering &amp; media proposal with clear milestones.</li>
+                @foreach(content_list('contact.promise') as $promise)
+                  <li><strong>{{ $promise->title }}</strong> {{ $promise->body }}</li>
+                @endforeach
               </ul>
               <p class="t-small"><a href="{{ url('/team') }}" class="text-link">Meet the full Empetix team &rarr;</a></p>
             </div>
 
             <div class="contact-block">
-              <span class="contact-block__title">Immediate Executive Hotline</span>
+              <span class="contact-block__title">{{ sec('contact', 'hotline_title', 'Immediate Executive Hotline') }}</span>
               <a href="tel:{{ setting('phone', '+20227928400') }}" class="contact-block__big">{{ setting('phone', '+20 2 2792 8400') }}</a>
-              <p class="t-small">Sunday &ndash; Thursday, 09:00 &ndash; 18:00 Cairo / Riyadh Time.</p>
+              <p class="t-small">{{ sec('contact', 'hotline_hours', 'Sunday – Thursday, 09:00 – 18:00 Cairo / Riyadh Time.') }}</p>
             </div>
           </aside>
         </div>
@@ -266,7 +208,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="studios-heading" class="t-h2">Visit our headquarters in New Cairo.</h2>
+            <h2 id="studios-heading" class="t-h2">{{ sec('contact', 'studios_heading', 'Visit our headquarters in New Cairo.') }}</h2>
           </div>
         </div>
 
@@ -280,10 +222,8 @@
                 <span class="office__role">EMPETIX SOLUTIONS HEADQUARTERS</span>
                 <span class="office__clock"><span data-tz-clock="Africa/Cairo">12:00</span> CAIRO</span>
               </div>
-              <h3 class="t-h2">Cairo, Egypt</h3>
-              <p class="t-small">
-                All software engineering, product design, commercial production, and performance marketing squads operate together under one roof at our New Cairo campus.
-              </p>
+              <h3 class="t-h2">{{ sec('contact', 'hq_city', 'Cairo, Egypt') }}</h3>
+              <p class="t-small">{{ sec('contact', 'hq_desc', 'All software engineering, product design, commercial production, and performance marketing squads operate together under one roof at our New Cairo campus.') }}</p>
             </div>
 
             <div class="hq-showcase__list">
@@ -293,20 +233,20 @@
               </div>
               <div class="hq-showcase__row">
                 <span>Working Hours</span>
-                <span>Sunday &ndash; Thursday &middot; 09:00 &ndash; 18:00</span>
+                <span>{{ sec('contact', 'hq_hours', 'Sunday – Thursday · 09:00 – 18:00') }}</span>
               </div>
               <div class="hq-showcase__row">
                 <span>Direct Telephone</span>
-                <span><a href="tel:+20227928400" class="text-link">+20 2 2792 8400</a></span>
+                <span><a href="tel:{{ setting('phone', '+20227928400') }}" class="text-link">{{ setting('phone', '+20 2 2792 8400') }}</a></span>
               </div>
               <div class="hq-showcase__row">
                 <span>New Business Desk</span>
-                <span><a href="mailto:hello&#64;empetix.com" class="text-link">hello&#64;empetix.com</a></span>
+                <span><a href="mailto:{{ setting('email', 'hello@empetix.com') }}" class="text-link">{{ setting('email', 'hello@empetix.com') }}</a></span>
               </div>
             </div>
 
             <a href="#main-content" class="btn btn--primary">
-              <span>Schedule an In-Person Studio Visit</span>
+              <span>{{ sec('contact', 'visit_cta', 'Schedule an In-Person Studio Visit') }}</span>
               <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -322,58 +262,22 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="faq-heading" class="t-h2">Common questions before we kick off.</h2>
+            <h2 id="faq-heading" class="t-h2">{{ sec('contact', 'faq_heading', 'Common questions before we kick off.') }}</h2>
           </div>
         </div>
 
         <div class="accordion reveal">
-          <details class="accordion__item" open>
-            <summary class="accordion__summary">
-              <span>01. Can we hire Empetix for software engineering only, or growth marketing only?</span>
-              <span class="accordion__icon" aria-hidden="true"></span>
-            </summary>
-            <div class="accordion__body">
-              <p>
-                Yes. Around 40% of our clients start with a single practice—such as rebuilding a Laravel/Flutter platform or overhauling paid acquisition and CRO—and expand into a dual-practice partnership once they see the velocity gains of having both teams under one roof.
-              </p>
-            </div>
-          </details>
-
-          <details class="accordion__item">
-            <summary class="accordion__summary">
-              <span>02. How quickly can an Empetix squad start on our project?</span>
-              <span class="accordion__icon" aria-hidden="true"></span>
-            </summary>
-            <div class="accordion__body">
-              <p>
-                For a 5-Day Architecture &amp; Growth Sprint, we can typically mobilize within 7 to 10 business days. For full dedicated engineering and marketing squads, onboarding takes 2 weeks from signed agreement.
-              </p>
-            </div>
-          </details>
-
-          <details class="accordion__item">
-            <summary class="accordion__summary">
-              <span>03. Who owns the source code, design tokens, raw video footage, and ad accounts?</span>
-              <span class="accordion__icon" aria-hidden="true"></span>
-            </summary>
-            <div class="accordion__body">
-              <p>
-                You do—100%. All GitHub repositories, Figma design systems, ad accounts (Meta, Google, TikTok), and commercial film footage are provisioned under your organization&rsquo;s ownership from day one.
-              </p>
-            </div>
-          </details>
-
-          <details class="accordion__item">
-            <summary class="accordion__summary">
-              <span>04. How do you structure pricing—fixed project fee or monthly retainer?</span>
-              <span class="accordion__icon" aria-hidden="true"></span>
-            </summary>
-            <div class="accordion__body">
-              <p>
-                We offer both: fixed-milestone project pricing for clearly scoped v1.0 platform builds and brand launches, and transparent monthly squad retainers for continuous software delivery, CRO, and performance media scaling.
-              </p>
-            </div>
-          </details>
+          @foreach(content_list('contact.faq') as $faq)
+            <details class="accordion__item"@if($loop->first) open @endif>
+              <summary class="accordion__summary">
+                <span>{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}. {{ $faq->title }}</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </summary>
+              <div class="accordion__body">
+                <p>{{ $faq->body }}</p>
+              </div>
+            </details>
+          @endforeach
         </div>
       </div>
     </section>

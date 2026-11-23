@@ -47,6 +47,24 @@ class ContentListSeeder extends Seeder
             ['M3 Max workstation & USD 1,800 learning fund', 'Top-spec MacBook Pro, 4K display, ergonomic chair stipend, and an annual USD 1,800 budget for books, courses, conferences, or camera gear.', null, null, null, null],
             ['Tier-1 family medical & 28 days paid leave', 'Comprehensive private medical insurance covering you and your family, 28 days of annual paid vacation, and paid parental leave.', null, null, null, null],
         ],
+        'contact.channels' => [
+            // url holds the Settings KEY whose email the card displays.
+            ['Product & Growth Projects', 'For custom web/mobile software builds, FinTech & e-commerce platforms, or full-funnel marketing retainers.', 'NEW BUSINESS', 'SLA: < 24H', null, 'email'],
+            ['Corporate Partnerships', 'For dedicated embedded engineering squads, AWS/Shopify Plus co-delivery, and formal enterprise RFPs.', 'ENTERPRISE & ALLIANCES', 'SLA: < 24H', null, 'partners_email'],
+            ['Engineering & Creative Talent', 'For senior engineers, product designers, filmmakers, and performance marketers joining our studios.', 'TALENT & CAREERS', '6 OPEN ROLES', null, 'talent_email'],
+            ['Press & Keynotes', 'For conference speaking invitations, podcast appearances, press kits, and industry research citations.', 'MEDIA & SPEAKING', 'PRESS DESK', null, 'press_email'],
+        ],
+        'contact.promise' => [
+            ['1. Technical & Commercial Triage:', 'Your brief is reviewed directly by our CEO, CTO, or VP of Growth.', null, null, null, null],
+            ['2. Mutual NDA & Discovery Call:', 'A focused 30-minute architecture and growth call—no generic slide deck fluff.', null, null, null, null],
+            ['3. Written Scope & Roadmap:', 'Within 4 days of our call, you receive a fixed-scope engineering & media proposal with clear milestones.', null, null, null, null],
+        ],
+        'contact.faq' => [
+            ['Can we hire Empetix for software engineering only, or growth marketing only?', 'Yes. Around 40% of our clients start with a single practice—such as rebuilding a Laravel/Flutter platform or overhauling paid acquisition and CRO—and expand into a dual-practice partnership once they see the velocity gains of having both teams under one roof.', null, null, null, null],
+            ['How quickly can an Empetix squad start on our project?', 'For a 5-Day Architecture & Growth Sprint, we can typically mobilize within 7 to 10 business days. For full dedicated engineering and marketing squads, onboarding takes 2 weeks from signed agreement.', null, null, null, null],
+            ['Who owns the source code, design tokens, raw video footage, and ad accounts?', "You do—100%. All GitHub repositories, Figma design systems, ad accounts (Meta, Google, TikTok), and commercial film footage are provisioned under your organization's ownership from day one.", null, null, null, null],
+            ['How do you structure pricing—fixed project fee or monthly retainer?', 'We offer both: fixed-milestone project pricing for clearly scoped v1.0 platform builds and brand launches, and transparent monthly squad retainers for continuous software delivery, CRO, and performance media scaling.', null, null, null, null],
+        ],
         'careers.process' => [
             ['Intro Call with Practice Lead', 'A direct conversation with the hiring manager (not an external recruiter) covering your past work and salary expectations.', 'STEP 30 MIN', null, null, null],
             ['Paid 3-Hour Craft Sample', 'No trick algorithm riddles. You complete a focused, paid 3-hour real-world architecture, design, or campaign exercise at your own pace.', 'STEP PAID EXERCISE', null, null, null],

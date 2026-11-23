@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Public\ContactMessageController;
+use App\Http\Controllers\Public\JobApplicationController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\PageController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::get('/team', [PageController::class, 'team'])->name('team');
 Route::get('/founders/{slug}', [PageController::class, 'founder'])->name('founders.show');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 Route::get('/careers/{slug}', [PageController::class, 'job'])->name('jobs.show');
+Route::post('/careers/{slug}/apply', [JobApplicationController::class, 'store'])->name('jobs.apply');
 Route::get('/partners', [PageController::class, 'partners'])->name('partners');
 Route::get('/blog', [PageController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [PageController::class, 'post'])->name('blog.show');
@@ -72,6 +74,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/inbox/subscribers', [Admin\InboxController::class, 'subscribers'])->name('inbox.subscribers');
         Route::get('/inbox/{id}', [Admin\InboxController::class, 'show'])->name('inbox.show');
         Route::delete('/inbox/{id}', [Admin\InboxController::class, 'destroy'])->name('inbox.destroy');
+
+        // Job applications (CVs download only through this authenticated group).
+        Route::get('/applications', [Admin\ApplicationController::class, 'index'])->name('applications.index');
+        Route::get('/applications/{id}', [Admin\ApplicationController::class, 'show'])->name('applications.show');
+        Route::get('/applications/{application}/cv', [Admin\ApplicationController::class, 'cv'])->name('applications.cv');
+        Route::delete('/applications/{id}', [Admin\ApplicationController::class, 'destroy'])->name('applications.destroy');
 
         // Site settings.
         Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('settings.edit');

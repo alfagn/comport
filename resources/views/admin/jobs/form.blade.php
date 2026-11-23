@@ -12,6 +12,7 @@
       <div class="full"><x-admin.input name="ref_code" label="Requisition ID" :value="$item?->ref_code" placeholder="REQ-2026-014"/>
       <x-admin.input name="title" label="Job title" :value="$item?->title" :required="true"/></div>
       <x-admin.input name="slug" label="Slug" :value="$item?->slug" hint="Leave empty to generate from the title."/>
+      <x-admin.select name="hiring_manager_id" label="Hiring manager (shown on the job page)" :options="['' => '— None —'] + $members->mapWithKeys(fn($m) => [$m->id => $m->name.' — '.$m->role])->all()" :value="$item?->hiring_manager_id" hint="Applications for this opening are reviewed by this person."/>
       <x-admin.input name="department" label="Department" :value="$item?->department" placeholder="SOFTWARE ENGINEERING"/>
       <x-admin.input name="location" label="Location" :value="$item?->location" placeholder="Cairo or Remote"/>
       <x-admin.input name="type" label="Type" :value="$item?->type" placeholder="Full-time"/>

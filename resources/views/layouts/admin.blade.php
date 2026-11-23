@@ -13,6 +13,21 @@
   <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}"/>
 </head>
 <body class="admin">
+  {{-- Decorative orange ribbon sweeps from the user's reference design.
+       Pure background artwork, kept separate from real data charts. --}}
+  <svg class="bg-ribbon bg-ribbon--top" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="ribbonGradT" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF4D1C" stop-opacity="0.55"/><stop offset="1" stop-color="#FF9E7A" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="M600 0 L600 120 C470 150 380 60 260 110 C180 142 140 210 60 230 C150 90 320 -40 600 0 Z" fill="url(#ribbonGradT)"/>
+    <path d="M600 0 L600 60 C500 90 430 30 340 60 C420 -20 520 -30 600 0 Z" fill="#FF4D1C" fill-opacity="0.35"/>
+  </svg>
+  <svg class="bg-ribbon bg-ribbon--bottom" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="ribbonGradB" x1="1" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#FF4D1C" stop-opacity="0.45"/><stop offset="1" stop-color="#FF9E7A" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="M600 400 L600 260 C470 230 380 330 250 290 C160 262 120 200 40 180 C140 320 330 440 600 400 Z" fill="url(#ribbonGradB)"/>
+  </svg>
 <div class="admin-shell">
 
   {{-- ============ Sidebar ============ --}}
@@ -22,7 +37,7 @@
         <img src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="Empetix"/>
       </a>
       <div>
-        <small>Command</small>
+        <small>Solutions</small>
       </div>
     </div>
 
@@ -31,6 +46,8 @@
       $r = request()->route()->getName();
       // Unread briefs feed both the sidebar badge and the topbar bell.
       $unread = \App\Models\ContactMessage::unread()->count();
+      // New job applications badge on the Careers-adjacent Applications item.
+      $newApplications = \App\Models\JobApplication::new()->count();
       $adminUser = auth()->user();
     @endphp
 
@@ -73,6 +90,11 @@
     <a class="nav-item {{ str_starts_with($r, 'admin.jobs') ? 'is-active' : '' }}" href="{{ route('admin.jobs.index') }}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
       Careers
+    </a>
+    <a class="nav-item {{ str_starts_with($r, 'admin.applications') ? 'is-active' : '' }}" href="{{ route('admin.applications.index') }}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h11l3 3v13H5z"/><path d="M9 12h6M9 16h6"/><circle cx="9" cy="8" r="1.6"/></svg>
+      Applications
+      @if($newApplications)<span class="badge">{{ $newApplications }}</span>@endif
     </a>
     <a class="nav-item {{ str_starts_with($r, 'admin.posts') ? 'is-active' : '' }}" href="{{ route('admin.posts.index') }}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
@@ -121,8 +143,10 @@
     <div class="topbar">
       <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('is-open')" aria-label="Toggle menu">☰</button>
       <div class="topbar__titles">
-        <span class="crumb">@yield('crumb')</span>
-        <h1>@yield('title', 'Dashboard')</h1>
+        @if($__env->yieldContent('page_header') !== 'hide')
+          <span class="crumb">@yield('crumb')</span>
+          <h1>@yield('title', 'Dashboard')</h1>
+        @endif
       </div>
 
       {{-- Quick-jump search: filters the admin sections client-side (opens with / or Cmd+K). --}}
@@ -169,6 +193,7 @@
           <li data-name="projects work portfolio"><a href="{{ route('admin.projects.index') }}">Projects</a></li>
           <li data-name="team founders members"><a href="{{ route('admin.members.index') }}">Team &amp; Founders</a></li>
           <li data-name="careers jobs roles hiring"><a href="{{ route('admin.jobs.index') }}">Careers</a></li>
+          <li data-name="applications candidates cvs resumes hiring"><a href="{{ route('admin.applications.index') }}">Applications</a></li>
           <li data-name="blog media posts news"><a href="{{ route('admin.posts.index') }}">Blog &amp; Media</a></li>
           <li data-name="partners clients logos"><a href="{{ route('admin.partners.index') }}">Partners</a></li>
           <li data-name="navigation menu mega"><a href="{{ route('admin.navigation.index') }}">Navigation</a></li>

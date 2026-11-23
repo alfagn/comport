@@ -11,11 +11,12 @@ use App\Core\DTOs\BaseData;
  */
 class JobPostData extends BaseData
 {
-    protected static array $fields = ['title', 'slug', 'ref_code', 'department', 'location', 'type', 'summary', 'intro', 'pills', 'tags', 'responsibilities', 'requirements', 'sections', 'is_active', 'sort_order'];
+    protected static array $fields = ['title', 'slug', 'ref_code', 'hiring_manager_id', 'department', 'location', 'type', 'summary', 'intro', 'pills', 'tags', 'responsibilities', 'requirements', 'sections', 'is_active', 'sort_order'];
 
     public mixed $title = null;
     public mixed $slug = null;
     public mixed $ref_code = null;
+    public mixed $hiring_manager_id = null;
     public mixed $department = null;
     public mixed $location = null;
     public mixed $type = null;

@@ -21,7 +21,7 @@
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
           <li><a href="{{ url('/careers') }}">jobs.empetix.com</a></li>
           <li><a href="{{ url('/careers') }}#open-roles">Software Engineering</a></li>
-          <li aria-current="page">REQ-2026-014</li>
+          <li aria-current="page">{{ $job->ref_code ?? $job->title }}</li>
         </ol>
 
         <div class="job-header__grid">
@@ -91,7 +91,7 @@
 <h3 class="t-h4">Click &ldquo;Apply Now&rdquo; to open the application form below.</h3>
               </div>
               <button type="button" class="btn btn--accent btn--lg" data-trigger-apply>
-                <span>Apply Now for REQ-2026-014</span>
+                <span>Apply Now{{ $job->ref_code ? ' for '.$job->ref_code : '' }}</span>
                 <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
@@ -117,16 +117,20 @@
                 @endforeach
               </div>
 
-              <div>
-                <p class="t-meta">HIRING MANAGER</p>
-                <div class="hiring-manager">
-                  <img class="hiring-manager__img" src="{{ asset('assets/img/team/mohanad-shehata.jpg') }}" alt="Mohanad Ahmed Shehata" width="88" height="88"/>
-                  <div>
-                    <p class="hiring-manager__name">Mohanad Ahmed Shehata</p>
-                    <p class="hiring-manager__role">Co-Founder & Chief Technology Officer</p>
+              @if($job->hiringManager)
+                <div>
+                  <p class="t-meta">HIRING MANAGER</p>
+                  <div class="hiring-manager">
+                    @if($job->hiringManager->photo)
+                      <img class="hiring-manager__img" src="{{ asset('storage/'.$job->hiringManager->photo) }}" alt="{{ $job->hiringManager->name }}" width="88" height="88"/>
+                    @endif
+                    <div>
+                      <p class="hiring-manager__name">{{ $job->hiringManager->name }}</p>
+                      <p class="hiring-manager__role">{{ $job->hiringManager->role }}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              @endif
 
               <button type="button" class="btn btn--primary btn--lg" data-trigger-apply>
                 <span>Apply for this Job</span>
@@ -135,7 +139,7 @@
                 </svg>
               </button>
 
-              <a href="{{ url('/careers') }}#open-roles" class="text-link t-small">&larr; Back to all 6 open jobs</a>
+              <a href="{{ url('/careers') }}#open-roles" class="text-link t-small">&larr; Back to all {{ $openCount }} open jobs</a>
             </div>
           </aside>
         </div>
@@ -143,19 +147,29 @@
     </section>
 
     <!-- 3. EXPANDABLE APPLICATION FORM (Hidden until candidate clicks "Apply for this Job") -->
-    <section id="job-apply-drawer" class="apply-drawer" hidden aria-labelledby="apply-drawer-title">
+    <section id="job-apply-drawer" class="apply-drawer"@if(!session('success') && !$errors->any()) hidden @endif aria-labelledby="apply-drawer-title">
       <div class="container">
         <div class="form-card">
           <div class="form-card__head">
             <div>
               <span class="eyebrow">Official Application &middot; jobs.empetix.com</span>
               <h2 id="apply-drawer-title" class="t-h2">Apply for: {{ $job->title }}</h2>
-              <p class="t-small">Requisition ID: <strong>REQ-2026-014</strong> &middot; Reviewed directly by Mohanad Ahmed Shehata (Co-Founder & Chief Technology Officer)</p>
+              <p class="t-small">@if($job->ref_code)Requisition ID: <strong>{{ $job->ref_code }}</strong>@endif @if($job->hiringManager) &middot; Reviewed directly by {{ $job->hiringManager->name }} ({{ $job->hiringManager->role }})@endif</p>
             </div>
             <span class="hero__badge">STEP 1 OF 1 &middot; ~3 MINS</span>
           </div>
 
-          <form id="job-application-form" class="form" action="#job-apply-drawer" method="post" data-req-id="REQ-2026-014">
+          @if(session('success'))
+            <div class="form__status form__status--success" role="status">{{ session('success') }}</div>
+          @endif
+          @if($errors->any())
+            <div class="form__status form__status--error" role="alert">
+              <strong>Please fix the following:</strong>
+              <ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+            </div>
+          @endif
+          <form id="job-application-form" class="form" action="{{ route('jobs.apply', $job->slug) }}" method="post" enctype="multipart/form-data">
+            @csrf
             <div class="form__field">
               <label for="app-name" class="form__label">Full Legal Name <abbr title="Required">*</abbr></label>
               <input id="app-name" name="full_name" type="text" class="form__input" required placeholder="e.g. Mostafa El-Sayed"/>
@@ -225,7 +239,7 @@
                 By submitting, you consent to Empetix storing your application for recruitment evaluation. We reply to 100% of applicants within 3 business days.
               </p>
               <button type="submit" class="btn btn--accent btn--lg">
-                <span>Submit Official Application (REQ-2026-014)</span>
+                <span>Submit Application{{ $job->ref_code ? ' ('.$job->ref_code.')' : '' }}</span>
                 <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
@@ -249,7 +263,7 @@
             <h2 id="other-jobs-heading" class="t-h3">{{ sec('careers', 'other_jobs_heading', 'Other open positions on jobs.empetix.com') }}</h2>
           </div>
           <div class="section-head__action">
-            <a href="{{ url('/careers') }}#open-roles" class="arrow-link">View All 6 Jobs &rarr;</a>
+            <a href="{{ url('/careers') }}#open-roles" class="arrow-link">View All {{ $openCount }} Jobs &rarr;</a>
           </div>
         </div>
 

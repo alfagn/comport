@@ -100,7 +100,7 @@
   <!-- Expandable Search Panel -->
   <div id="search-panel" class="search-panel" role="search" aria-label="Search Empetix Solutions">
     <div class="container">
-      <form class="search-panel__form" action="blog.html" method="get">
+      <form class="search-panel__form" action="{{ route('blog') }}" method="get">
         <label for="search-input" class="sr-only">Search projects, blog posts, and roles</label>
         <input id="search-input" type="search" name="q" class="search-panel__input" placeholder="Search solutions, case studies, engineering essays, video episodes..." autocomplete="off"/>
         <button type="submit" class="btn btn--accent btn--sm">Search</button>
@@ -109,8 +109,8 @@
       <div class="search-panel__hints">
         <span>Quick jump:</span>
         <a href="{{ url('/work/nilepay') }}">NilePay Case Study</a>
-        <a href="{{ url('/blog/video') }}">5-Day Sprint Video</a>
-        <a href="{{ url('/blog/photos') }}">Qahwa Photo Essay</a>
+        <a href="{{ url('/blog/five-day-product-growth-sprint') }}">5-Day Sprint Video</a>
+        <a href="{{ url('/blog/behind-the-lens-qahwa-launch') }}">Qahwa Photo Essay</a>
         <a href="{{ url('/about') }}#founders">Meet the Founders</a>
         <a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif>Contact Us</a>
       </div>

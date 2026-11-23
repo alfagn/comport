@@ -108,6 +108,8 @@ class PageController extends Controller
             'job' => $job,
             // Remaining openings, for the "other positions" grid.
             'otherJobs' => $this->jobs->all()->where('is_active', true)->where('id', '!=', $job->id)->take(3),
+            // Real count of open positions, for the "all N open jobs" links.
+            'openCount' => $this->jobs->all()->where('is_active', true)->count(),
         ]);
     }
 
@@ -120,7 +122,14 @@ class PageController extends Controller
     /** Blog index: published posts. */
     public function blog(): View
     {
-        return view('pages.blog', ['posts' => $this->posts->published()]);
+        // The header search panel submits here with ?q=.
+        $q = trim((string) request('q', ''));
+        $posts = $this->posts->published();
+        if ($q !== '') {
+            $posts = $posts->filter(fn ($post) => str_contains(strtolower($post->title.' '.$post->excerpt.' '.$post->category), strtolower($q)))->values();
+        }
+
+        return view('pages.blog', ['posts' => $posts, 'q' => $q]);
     }
 
     /** Blog article page (article, video episode or photo essay). */

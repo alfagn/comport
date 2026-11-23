@@ -31,7 +31,7 @@ class JobPostController extends Controller
     /** Show the create form. */
     public function create(): View
     {
-        return view('admin.jobs.form', ['item' => null]);
+        return view('admin.jobs.form', ['item' => null, 'members' => \App\Models\Member::orderBy('name')->get(['id', 'name', 'role'])]);
     }
 
     /** Store a new record. */
@@ -45,7 +45,10 @@ class JobPostController extends Controller
     /** Show the edit form. */
     public function edit(int $id): View
     {
-        return view('admin.jobs.form', ['item' => $this->service->findForEdit($id)]);
+        return view('admin.jobs.form', [
+            'item' => $this->service->findForEdit($id),
+            'members' => \App\Models\Member::orderBy('name')->get(['id', 'name', 'role']),
+        ]);
     }
 
     /** Update a record. */

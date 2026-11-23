@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         Contracts\PostRepositoryInterface::class => Eloquent\PostRepository::class,
         Contracts\PartnerRepositoryInterface::class => Eloquent\PartnerRepository::class,
         Contracts\ContactMessageRepositoryInterface::class => Eloquent\ContactMessageRepository::class,
+        Contracts\JobApplicationRepositoryInterface::class => Eloquent\JobApplicationRepository::class,
         Contracts\SettingRepositoryInterface::class => Eloquent\SettingRepository::class,
         Contracts\NewsletterSubscriberRepositoryInterface::class => Eloquent\NewsletterSubscriberRepository::class,
         Contracts\PageSectionRepositoryInterface::class => Eloquent\PageSectionRepository::class,
