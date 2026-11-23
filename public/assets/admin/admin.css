@@ -14,20 +14,20 @@
   --accent: #FF4D1C;
   --accent-deep: #E03D10;
   --accent-soft: rgba(255, 77, 28, 0.14);
-  --surface: #0A1428;
-  --surface-2: #0E1B36;
-  --surface-3: #14264D;
-  --line: rgba(201, 210, 227, 0.09);
-  --line-strong: rgba(201, 210, 227, 0.16);
-  --text: #EDF1F8;
-  --text-body: #C9D2E3;
-  --text-muted: #8B99B2;
+  --surface: #FFFFFF;
+  --surface-2: #F6F4F1;
+  --surface-3: #EDEAE5;
+  --line: rgba(20, 18, 16, 0.08);
+  --line-strong: rgba(20, 18, 16, 0.15);
+  --text: #17140F;
+  --text-body: #45403A;
+  --text-muted: #837C72;
   --success: #34D399;
   --warning: #FBBF24;
   --danger: #F87171;
   --radius: 14px;
   --radius-lg: 20px;
-  --shadow: 0 12px 40px rgba(2, 6, 16, 0.45);
+  --shadow: 0 14px 44px rgba(24, 18, 12, 0.10);
   --font-display: "Archivo", "Public Sans", system-ui, sans-serif;
   --font-body: "Public Sans", system-ui, sans-serif;
 }
@@ -36,7 +36,7 @@
 
 body.admin {
   margin: 0;
-  background: var(--ink-950);
+  background: #F4F2EF;
   color: var(--text);
   font-family: var(--font-body);
   font-size: 15px;
@@ -44,15 +44,17 @@ body.admin {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ambient background glow */
+/* Ambient orange sweep accents (from the user's reference design):
+   soft organic glows top-right and bottom-right of the light canvas. */
 body.admin::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(720px 420px at 85% -10%, rgba(255, 77, 28, 0.10), transparent 60%),
-    radial-gradient(900px 600px at -10% 110%, rgba(47, 75, 128, 0.25), transparent 55%);
+    radial-gradient(760px 460px at 108% -18%, rgba(255, 77, 28, 0.20), transparent 62%),
+    radial-gradient(560px 300px at 96% 0%, rgba(255, 140, 90, 0.12), transparent 60%),
+    radial-gradient(880px 560px at 112% 118%, rgba(255, 77, 28, 0.14), transparent 60%);
   z-index: 0;
 }
 
@@ -672,3 +674,249 @@ table.table { width: 100%; border-collapse: collapse; }
 .sidebar::-webkit-scrollbar { width: 6px; }
 .sidebar::-webkit-scrollbar-thumb { background: var(--ink-700); border-radius: 6px; }
 .sidebar::-webkit-scrollbar-track { background: transparent; }
+
+/* ============================================================
+   Light redesign (user reference, 2026-11-23): black sidebar,
+   light canvas with orange sweeps, alternating stat cards.
+   These rules intentionally override the legacy dark rules above
+   where both target the same component.
+   ============================================================ */
+
+/* ---------- Sidebar: black rail, white text, orange pill ---------- */
+.sidebar {
+  background: #0E0C0A;
+  border-right: none;
+  color: #F5F1EC;
+  position: relative;
+  overflow: hidden;
+}
+/* Orange glow bleeding from the rail's bottom corner, as in the reference. */
+.sidebar::after {
+  content: "";
+  position: absolute;
+  right: -70px; bottom: -90px;
+  width: 260px; height: 260px;
+  background: radial-gradient(closest-side, rgba(255, 77, 28, 0.35), transparent 70%);
+  pointer-events: none;
+}
+.sidebar .sidebar__label { color: rgba(245, 241, 236, 0.45); }
+.sidebar .nav-item { color: rgba(245, 241, 236, 0.82); position: relative; z-index: 1; }
+.sidebar .nav-item:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+.sidebar .nav-item.is-active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(255, 77, 28, 0.35);
+}
+.sidebar__brand { border-bottom-color: rgba(255, 255, 255, 0.08); }
+.sidebar__brand small { color: rgba(245, 241, 236, 0.55); }
+.sidebar__foot { border-top-color: rgba(255, 255, 255, 0.08); position: relative; z-index: 1; }
+.sidebar .user-chip__name { color: #fff; }
+.sidebar .user-chip__role { color: rgba(245, 241, 236, 0.55); }
+.sidebar .user-chip__avatar { background: var(--accent); color: #fff; }
+.sidebar .badge { background: var(--accent); color: #fff; }
+.sidebar .btn--ghost { color: rgba(245, 241, 236, 0.8); border-color: rgba(255, 255, 255, 0.16); }
+.sidebar .btn--ghost:hover { background: rgba(255, 255, 255, 0.08); }
+
+/* ---------- Topbar ---------- */
+.topbar { background: transparent; border-bottom: none; padding-top: 26px; }
+.topbar__titles h1 { color: var(--text); }
+
+/* Search pill opening the quick-nav overlay. */
+.topbar-search {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-left: auto; margin-right: 14px;
+  background: #fff; border: 1px solid var(--line);
+  border-radius: 999px; padding: 9px 16px;
+  color: var(--text-muted); font: inherit; font-size: 13.5px;
+  cursor: pointer; box-shadow: 0 2px 10px rgba(24, 18, 12, 0.05);
+}
+.topbar-search svg { width: 16px; height: 16px; }
+.topbar-search kbd {
+  background: var(--surface-3); border-radius: 6px; padding: 2px 7px;
+  font-size: 11.5px; font-family: var(--font-body); color: var(--text-body);
+}
+@media (max-width: 900px) { .topbar-search span, .topbar-search kbd { display: none; } }
+
+/* Round icon button (bell) with real unread badge. */
+.icon-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #fff; border: 1px solid var(--line); color: var(--text-body);
+  box-shadow: 0 2px 10px rgba(24, 18, 12, 0.05);
+}
+.icon-btn:hover { border-color: var(--line-strong); color: var(--text); }
+.icon-btn svg { width: 19px; height: 19px; }
+.icon-btn__badge {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: 11px; font-weight: 700; line-height: 18px; text-align: center;
+}
+
+/* Avatar + dropdown account menu. */
+.avatar-menu { position: relative; }
+.avatar {
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff;
+  background: var(--accent); color: #fff; font-weight: 800; font-size: 15px;
+  cursor: pointer; box-shadow: 0 2px 10px rgba(24, 18, 12, 0.12);
+}
+.avatar-menu__drop {
+  display: none; position: absolute; right: 0; top: 48px; z-index: 60;
+  width: 230px; background: #fff; border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: var(--shadow); padding: 8px;
+}
+.avatar-menu.is-open .avatar-menu__drop { display: block; }
+.avatar-menu__head { padding: 10px 12px; border-bottom: 1px solid var(--line); margin-bottom: 6px; }
+.avatar-menu__head strong { display: block; font-size: 14px; }
+.avatar-menu__head span { font-size: 12.5px; color: var(--text-muted); word-break: break-all; }
+.avatar-menu__drop a, .avatar-menu__drop button {
+  display: block; width: 100%; text-align: left; padding: 9px 12px;
+  border: none; background: none; border-radius: 8px;
+  color: var(--text-body); font: inherit; font-size: 13.5px; cursor: pointer; text-decoration: none;
+}
+.avatar-menu__drop a:hover, .avatar-menu__drop button:hover { background: var(--surface-2); color: var(--text); }
+
+/* Quick-nav overlay (real client-side section filter). */
+.quicknav {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(20, 16, 12, 0.45); backdrop-filter: blur(3px);
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 12vh;
+}
+.quicknav__panel {
+  width: min(480px, 92vw); background: #fff; border-radius: 18px;
+  box-shadow: var(--shadow); padding: 12px;
+}
+.quicknav__panel input {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 14px; font: inherit; font-size: 14.5px; outline: none;
+}
+.quicknav__panel input:focus { border-color: var(--accent); }
+.quicknav__panel ul { list-style: none; margin: 8px 0 0; padding: 0; max-height: 320px; overflow: auto; }
+.quicknav__panel li a {
+  display: block; padding: 10px 12px; border-radius: 10px;
+  color: var(--text-body); text-decoration: none; font-size: 14px;
+}
+.quicknav__panel li a:hover { background: var(--accent-soft); color: var(--accent-deep); }
+
+/* ---------- Welcome pill + page subtitle ---------- */
+.welcome-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--accent-soft); color: var(--accent-deep);
+  border-radius: 999px; padding: 5px 13px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.01em;
+  margin-bottom: 10px;
+}
+.page-sub { color: var(--text-muted); margin: -6px 0 22px; font-size: 14.5px; }
+
+/* ---------- Stat cards: alternating black/white faces ---------- */
+.stat-grid {
+  display: grid; gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin-bottom: 22px;
+}
+.stat-card {
+  position: relative; display: block; text-decoration: none;
+  background: #fff; color: var(--text);
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 20px 20px 58px; overflow: hidden;
+  box-shadow: 0 3px 14px rgba(24, 18, 12, 0.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--line-strong); }
+.stat-card--dark { background: #12100D; border-color: #12100D; color: #F5F1EC; }
+.stat-card--dark .stat-card__label { color: rgba(245, 241, 236, 0.6); }
+
+.stat-card__head { display: flex; align-items: flex-start; justify-content: space-between; }
+.stat-card__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--accent-soft); color: var(--accent);
+}
+.stat-card--dark .stat-card__icon { background: rgba(255, 77, 28, 0.22); color: #FF7A50; }
+.stat-card__icon svg { width: 21px; height: 21px; }
+.stat-card__chev { color: var(--text-muted); }
+.stat-card__label { font-size: 13.5px; font-weight: 600; color: var(--text-muted); margin-top: 14px; }
+.stat-card__num {
+  font-family: var(--font-display); font-weight: 800; font-size: 34px;
+  line-height: 1.1; margin-top: 2px; display: inline-block;
+}
+.stat-card .delta-chip { margin-left: 10px; vertical-align: 8px; }
+.stat-card__foot { font-size: 11.5px; color: var(--text-muted); margin-top: 4px; }
+
+/* Delta chips: real week-over-week change. */
+.delta-chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  border-radius: 999px; padding: 3px 10px;
+  font-size: 12px; font-weight: 700;
+  background: var(--surface-3); color: var(--text-muted);
+}
+.delta-chip--up { background: rgba(52, 211, 153, 0.16); color: #0E9F6E; }
+.delta-chip--down { background: rgba(248, 113, 113, 0.14); color: #E02424; }
+.stat-card--dark .delta-chip { background: rgba(255, 255, 255, 0.12); color: rgba(245, 241, 236, 0.75); }
+.stat-card--dark .delta-chip--up { background: rgba(52, 211, 153, 0.22); color: #5EE9B5; }
+.stat-card--dark .delta-chip--down { background: rgba(248, 113, 113, 0.22); color: #FFA3A3; }
+
+/* Real 14-day activity wave anchored to the card's bottom-right. */
+.stat-card .sparkline {
+  position: absolute; right: 0; bottom: 0;
+  width: 62%; height: 46px; color: var(--accent); opacity: 0.85;
+}
+.stat-card--dark .sparkline { color: #FF6B3D; }
+
+/* ---------- Panels ---------- */
+.card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: 0 3px 14px rgba(24, 18, 12, 0.05); }
+.card--accent { position: relative; }
+/* Orange accent bar before the panel title, as in the reference. */
+.card--accent .card__title::before {
+  content: ""; display: inline-block; width: 5px; height: 20px;
+  background: var(--accent); border-radius: 3px; margin-right: 10px; vertical-align: -3px;
+}
+.card__bar { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+
+/* Pill "View All" link with accent chevron. */
+.pill-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  padding: 7px 15px; font-size: 13px; font-weight: 600;
+  color: var(--text-body); text-decoration: none; white-space: nowrap;
+}
+.pill-link::after { content: "›"; color: var(--accent); font-weight: 800; }
+.pill-link:hover { border-color: var(--accent); color: var(--accent-deep); }
+
+/* Illustrated empty state. */
+.empty--illustrated { padding: 34px 20px 30px; }
+.empty--illustrated svg { width: 180px; height: auto; display: block; margin: 0 auto 14px; }
+.empty--illustrated p { font-weight: 700; font-size: 16px; color: var(--text); margin: 0 0 4px; }
+.empty--illustrated .btn { margin-top: 16px; }
+
+/* Dashboard bottom row: briefs panel + brand quote panel. */
+.dash-split { display: grid; gap: 18px; grid-template-columns: 1.9fr 1fr; align-items: stretch; }
+@media (max-width: 1100px) { .dash-split { grid-template-columns: 1fr; } }
+.brand-panel {
+  border-radius: var(--radius-lg); padding: 26px 24px;
+  background: linear-gradient(150deg, #1B130E 0%, #2A1409 55%, #4A1E08 100%);
+  color: #F5F1EC; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 240px;
+}
+.brand-panel::before {
+  content: ""; position: absolute; right: -60px; top: -60px;
+  width: 220px; height: 220px;
+  background: radial-gradient(closest-side, rgba(255, 77, 28, 0.45), transparent 70%);
+}
+.brand-panel__mark { font-family: var(--font-display); font-size: 60px; line-height: 0.6; color: var(--accent); margin-bottom: 14px; }
+.brand-panel__quote { font-family: var(--font-display); font-weight: 800; font-size: 21px; margin: 0 0 4px; position: relative; }
+.brand-panel__by { color: rgba(245, 241, 236, 0.6); font-size: 13px; position: relative; }
+
+/* ---------- Tables on light cards ---------- */
+.table th { color: var(--text-muted); background: var(--surface-2); }
+.table-wrap { border-color: var(--line); }
+
+/* ---------- Forms, buttons, flash on light ---------- */
+.field input, .field select, .field textarea {
+  background: #fff; border: 1px solid var(--line-strong); color: var(--text);
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.flash { background: rgba(52, 211, 153, 0.12); border-color: rgba(52, 211, 153, 0.35); color: #0B7A55; }
+
+.quicknav[hidden] { display: none; }

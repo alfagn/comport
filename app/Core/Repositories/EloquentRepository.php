@@ -73,6 +73,26 @@ abstract class EloquentRepository implements RepositoryInterface
         return $this->query()->count();
     }
 
+    /** {@inheritdoc} */
+    public function dailyCreatedCounts(int $days): array
+    {
+        $since = now()->subDays($days - 1)->startOfDay();
+
+        return $this->query()
+            ->where('created_at', '>=', $since)
+            ->selectRaw('DATE(created_at) as day, COUNT(*) as total')
+            ->groupBy('day')
+            ->pluck('total', 'day')
+            ->map(fn ($total) => (int) $total)
+            ->all();
+    }
+
+    /** {@inheritdoc} */
+    public function countCreatedBetween(\DateTimeInterface $from, \DateTimeInterface $to): int
+    {
+        return $this->query()->where('created_at', '>=', $from)->where('created_at', '<', $to)->count();
+    }
+
     /**
      * A fresh query builder for the managed model. Protected so concrete
      * repositories can compose their own constraints on top of it.

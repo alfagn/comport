@@ -39,4 +39,17 @@ interface RepositoryInterface
 
     /** Total number of records, used by dashboard stat cards. */
     public function count(): int;
+
+    /**
+     * Records created per calendar day for the last $days days, as a
+     * date => count map. Feeds the real activity sparklines on the
+     * dashboard stat cards; empty days are simply absent from the map.
+     */
+    public function dailyCreatedCounts(int $days): array;
+
+    /**
+     * Records created inside a half-open window [$from, $to). Used to
+     * compute honest week-over-week deltas on the dashboard.
+     */
+    public function countCreatedBetween(\DateTimeInterface $from, \DateTimeInterface $to): int;
 }

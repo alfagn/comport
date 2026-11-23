@@ -7,7 +7,8 @@ use App\Services\DashboardService;
 use Illuminate\Contracts\View\View;
 
 /**
- * Dashboard home: stat cards and the latest inbox briefs.
+ * Dashboard home: real stat cards (totals, 14-day sparklines, week-over-week
+ * deltas) and the latest inbox briefs. All figures come from DashboardService.
  */
 class DashboardController extends Controller
 {
@@ -16,7 +17,7 @@ class DashboardController extends Controller
     public function __invoke(): View
     {
         return view('admin.dashboard', [
-            'stats' => $this->dashboard->stats(),
+            'cards' => $this->dashboard->statCards(),
             'latestMessages' => $this->dashboard->latestMessages(),
         ]);
     }

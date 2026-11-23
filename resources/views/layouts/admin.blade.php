@@ -29,7 +29,9 @@
     @php
       // Current route name drives the active nav state.
       $r = request()->route()->getName();
+      // Unread briefs feed both the sidebar badge and the topbar bell.
       $unread = \App\Models\ContactMessage::unread()->count();
+      $adminUser = auth()->user();
     @endphp
 
     <div class="sidebar__label">Overview</div>
@@ -101,10 +103,10 @@
 
     <div class="sidebar__foot">
       <div class="user-chip">
-        <div class="user-chip__avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        <div class="user-chip__avatar">{{ strtoupper(substr($adminUser->name, 0, 1)) }}</div>
         <div>
-          <div class="user-chip__name">{{ auth()->user()->name }}</div>
-          <div class="user-chip__role">{{ auth()->user()->email }}</div>
+          <div class="user-chip__name">{{ $adminUser->name }}</div>
+          <div class="user-chip__role">{{ $adminUser->email }}</div>
         </div>
       </div>
       <form method="post" action="{{ route('admin.logout') }}">
@@ -117,13 +119,94 @@
   {{-- ============ Main ============ --}}
   <div class="main">
     <div class="topbar">
-      <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('is-open')">☰</button>
+      <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('is-open')" aria-label="Toggle menu">☰</button>
       <div class="topbar__titles">
         <span class="crumb">@yield('crumb')</span>
         <h1>@yield('title', 'Dashboard')</h1>
       </div>
-      <div class="topbar__actions">@yield('actions')</div>
+
+      {{-- Quick-jump search: filters the admin sections client-side (opens with / or Cmd+K). --}}
+      <button class="topbar-search" id="quicknav-open" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span>Search sections…</span>
+        <kbd>⌘K</kbd>
+      </button>
+
+      <div class="topbar__actions">
+        @yield('actions')
+        {{-- Unread-briefs bell: the badge is the real unread count. --}}
+        <a class="icon-btn" href="{{ route('admin.inbox.index') }}" aria-label="Inbox, {{ $unread }} unread">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 16v-5a6 6 0 1112 0v5l1.5 2.5h-15z"/><path d="M10 21a2.2 2.2 0 004 0"/></svg>
+          @if($unread > 0)<span class="icon-btn__badge">{{ $unread }}</span>@endif
+        </a>
+        {{-- Account menu --}}
+        <div class="avatar-menu" id="avatar-menu">
+          <button class="avatar" type="button" aria-haspopup="true" aria-expanded="false"
+                  onclick="document.getElementById('avatar-menu').classList.toggle('is-open')">{{ strtoupper(substr($adminUser->name, 0, 1)) }}</button>
+          <div class="avatar-menu__drop">
+            <div class="avatar-menu__head">
+              <strong>{{ $adminUser->name }}</strong>
+              <span>{{ $adminUser->email }}</span>
+            </div>
+            <a href="{{ url('/') }}" target="_blank">View website</a>
+            <form method="post" action="{{ route('admin.logout') }}">@csrf<button type="submit">Sign out</button></form>
+          </div>
+        </div>
+      </div>
     </div>
+
+    {{-- Quick-nav overlay: real client-side filter over the sections below. --}}
+    <div class="quicknav" id="quicknav" hidden>
+      <div class="quicknav__panel">
+        <input type="search" id="quicknav-input" placeholder="Jump to a section…" autocomplete="off"/>
+        <ul id="quicknav-list">
+          <li data-name="dashboard overview"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+          <li data-name="inbox briefs messages contact"><a href="{{ route('admin.inbox.index') }}">Inbox</a></li>
+          <li data-name="pages content sections"><a href="{{ route('admin.pages.index') }}">Pages &amp; Content</a></li>
+          <li data-name="hero slides homepage"><a href="{{ route('admin.hero-slides.index') }}">Hero Slides</a></li>
+          <li data-name="services"><a href="{{ route('admin.services.index') }}">Services</a></li>
+          <li data-name="industries"><a href="{{ route('admin.industries.index') }}">Industries</a></li>
+          <li data-name="projects work portfolio"><a href="{{ route('admin.projects.index') }}">Projects</a></li>
+          <li data-name="team founders members"><a href="{{ route('admin.members.index') }}">Team &amp; Founders</a></li>
+          <li data-name="careers jobs roles hiring"><a href="{{ route('admin.jobs.index') }}">Careers</a></li>
+          <li data-name="blog media posts news"><a href="{{ route('admin.posts.index') }}">Blog &amp; Media</a></li>
+          <li data-name="partners clients logos"><a href="{{ route('admin.partners.index') }}">Partners</a></li>
+          <li data-name="navigation menu mega"><a href="{{ route('admin.navigation.index') }}">Navigation</a></li>
+          <li data-name="content lists about careers timeline"><a href="{{ route('admin.content-lists.index') }}">Content Lists</a></li>
+          <li data-name="settings site social contact"><a href="{{ route('admin.settings.edit') }}">Settings</a></li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      // Quick-nav: open with Cmd/Ctrl+K or the search pill, filter as you type,
+      // Enter follows the first visible section, Escape closes.
+      (function () {
+        var overlay = document.getElementById('quicknav');
+        var input = document.getElementById('quicknav-input');
+        var items = Array.prototype.slice.call(document.querySelectorAll('#quicknav-list li'));
+        function open() { overlay.hidden = false; input.value = ''; filter(''); input.focus(); }
+        function close() { overlay.hidden = true; }
+        function filter(q) {
+          q = q.trim().toLowerCase();
+          items.forEach(function (li) {
+            li.style.display = !q || li.dataset.name.indexOf(q) !== -1 ? '' : 'none';
+          });
+        }
+        document.getElementById('quicknav-open').addEventListener('click', open);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+        input.addEventListener('input', function () { filter(input.value); });
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            var first = items.find(function (li) { return li.style.display !== 'none'; });
+            if (first) window.location = first.querySelector('a').href;
+          }
+        });
+        document.addEventListener('keydown', function (e) {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); }
+          if (e.key === 'Escape') close();
+        });
+      })();
+    </script>
 
     <div class="content">
       @if(session('success'))
