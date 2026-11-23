@@ -24,14 +24,31 @@ dashboard controls the site's content.
 
 ## Setup
 
+Fresh install (empty database):
+
 ```bash
 composer install
 cp .env.example .env          # then set APP_KEY via `php artisan key:generate`
 touch database/database.sqlite
-php artisan migrate --seed    # seeds the real site content
+php artisan migrate --seed    # seeds the real site content (fresh installs only — see below)
 php artisan empetix:admin     # create your dashboard login (hidden password prompt)
 php artisan serve             # public site: http://127.0.0.1:8000  |  dashboard: /admin
 ```
+
+Upgrading an EXISTING install (database already has your content):
+
+```bash
+git pull origin laravel-13-dashboard
+php artisan migrate                          # adds new tables/columns, never touches your rows
+php artisan db:seed --class=PageSectionSeeder  # registers newly editable CMS blocks (additive only)
+```
+
+Do NOT run a bare `php artisan db:seed` (or `migrate --seed`) on an install where
+you have edited content in the dashboard: ContentSeeder, NavItemSeeder and
+ContentListSeeder use updateOrCreate and would replace your customized content
+with the seed defaults. PageSectionSeeder is the only seeder that is purely
+additive, so it is always safe. Never use `migrate:fresh` outside a throwaway
+database — it wipes every table.
 
 No default or generated password ever exists: `empetix:admin` asks for one
 interactively (typed hidden, min 12 chars), and `--reset` changes it later.
