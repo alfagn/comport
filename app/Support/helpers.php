@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Setting;
+use App\Services\ContentListItemService;
 use App\Services\NavItemService;
 use App\Services\SectionService;
 
@@ -36,5 +37,27 @@ if (! function_exists('nav_items')) {
     function nav_items(string $menu): \Illuminate\Support\Collection
     {
         return app(NavItemService::class)->menu($menu);
+    }
+}
+
+if (! function_exists('content_list')) {
+    /**
+     * Active cards of one repeating content list (principles, timeline,
+     * benefits, ...), dashboard-editable and cached by ContentListItemService.
+     */
+    function content_list(string $group): \Illuminate\Support\Collection
+    {
+        return app(ContentListItemService::class)->list($group);
+    }
+}
+
+if (! function_exists('nav_mega')) {
+    /**
+     * One mega-menu panel (columns with child links / feature cards),
+     * dashboard-editable under Navigation and cached by NavItemService.
+     */
+    function nav_mega(string $menu): \Illuminate\Support\Collection
+    {
+        return app(NavItemService::class)->mega($menu);
     }
 }

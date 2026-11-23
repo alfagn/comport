@@ -57,6 +57,54 @@ class NavItemService extends BaseService
         return collect($links)->map(fn (array $link) => (object) $link);
     }
 
+    /** Mega-menu panels managed in the dashboard (menu => heading). */
+    public const MEGA_MENUS = [
+        'mega-capabilities' => 'Mega menu — Capabilities',
+        'mega-journal' => 'Mega menu — Journal',
+    ];
+
+    /**
+     * One mega-menu panel for the public header: columns with their child
+     * links, cached as plain arrays for 5 minutes.
+     */
+    public function mega(string $menu): Collection
+    {
+        $columns = Cache::remember(self::CACHE_PREFIX.$menu, 300, function () use ($menu) {
+            return \App\Models\NavItem::query()
+                ->where('menu', $menu)
+                ->where('is_active', true)
+                ->whereNull('parent_id')
+                ->orderBy('sort_order')->orderBy('id')
+                ->with(['children' => fn ($q) => $q->where('is_active', true)])
+                ->get()
+                ->map(fn (\App\Models\NavItem $col) => [
+                    'label' => $col->label,
+                    'children' => $col->children->map(fn (\App\Models\NavItem $link) => [
+                        'label' => $link->label,
+                        'url' => $link->url,
+                        'sub' => $link->sub,
+                        'meta' => $link->meta,
+                        'image' => $link->image,
+                    ])->all(),
+                ])->all();
+        });
+
+        return collect($columns)->map(fn (array $col) => (object) [
+            'label' => $col['label'],
+            'children' => collect($col['children'])->map(fn (array $link) => (object) $link),
+        ]);
+    }
+
+    /** Mega-menu column options for the link form's parent select. */
+    public function megaColumns(): Collection
+    {
+        return \App\Models\NavItem::query()
+            ->whereIn('menu', array_keys(self::MEGA_MENUS))
+            ->whereNull('parent_id')
+            ->orderBy('menu')->orderBy('sort_order')
+            ->get();
+    }
+
     /** Create a link from validated input and refresh the cached menus. */
     public function create(NavItemData $data): Model
     {
@@ -93,7 +141,7 @@ class NavItemService extends BaseService
     /** Drop every cached menu after a write. */
     private function flushMenuCache(): void
     {
-        foreach (['utility', 'drawer'] as $menu) {
+        foreach (['utility', 'drawer', 'mega-capabilities', 'mega-journal'] as $menu) {
             Cache::forget(self::CACHE_PREFIX.$menu);
         }
     }

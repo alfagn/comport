@@ -16,7 +16,7 @@
         @forelse($items as $item)
           <tr>
             <td class="cell-title">{{ $item->label }}</td>
-            <td><span class="pill">{{ $item->menu === 'utility' ? 'Utility bar' : 'Mobile drawer' }}</span></td>
+            <td><span class="pill">{{ ['utility' => 'Utility bar', 'drawer' => 'Mobile drawer', 'mega-capabilities' => 'Mega · Capabilities', 'mega-journal' => 'Mega · Journal'][$item->menu] ?? $item->menu }}</span>@if($item->parent)<span class="pill">in {{ $item->parent->label }}</span>@endif</td>
             <td>{{ $item->url }}</td>
             <td>{{ $item->sort_order }}</td>
             <td><span class="pill {{ $item->is_active ? 'pill--on' : 'pill--off' }}">{{ $item->is_active ? 'Live' : 'Hidden' }}</span></td>

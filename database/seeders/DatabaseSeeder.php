@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ContentSeeder::class,
             PageSectionSeeder::class,
             NavItemSeeder::class,
+            ContentListSeeder::class,
         ]);
     }
 }

@@ -76,24 +76,12 @@
         </div>
 
         <ul class="overview-film__pillars" aria-label="Empetix Solution core pillars">
-          <li class="overview-film__pillar">
-            <h3 class="overview-film__pillar-title">Software engineering</h3>
-            <p class="overview-film__pillar-desc">
-              Full-stack web and mobile platforms built for reliability, speed, and long-term scale.
-            </p>
-          </li>
-          <li class="overview-film__pillar">
-            <h3 class="overview-film__pillar-title">Growth marketing</h3>
-            <p class="overview-film__pillar-desc">
-              Engineers and marketers working as one unified team to turn clean data into customer acquisition.
-            </p>
-          </li>
-          <li class="overview-film__pillar">
-            <h3 class="overview-film__pillar-title">Strategic investment</h3>
-            <p class="overview-film__pillar-desc">
-              Backing bold founders with capital, senior technical leadership, and go-to-market execution.
-            </p>
-          </li>
+          @foreach(content_list('about.pillars') as $pillar)
+            <li class="overview-film__pillar">
+              <h3 class="overview-film__pillar-title">{{ $pillar->title }}</h3>
+              <p class="overview-film__pillar-desc">{{ $pillar->body }}</p>
+            </li>
+          @endforeach
         </ul>
       </div>
     </section>
@@ -112,34 +100,13 @@
         </div>
 
         <div class="principles">
-          <div class="principle reveal">
-            <span class="principle__num">01</span>
-            <h3 class="principle__title">Code and campaigns share one scoreboard.</h3>
-            <p class="principle__text">
-              We don&rsquo;t measure engineering in story points and marketing in impressions. Both teams are accountable for activation, retention, and net revenue.
-            </p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle__num">02</span>
-            <h3 class="principle__title">Senior principals on the tools.</h3>
-            <p class="principle__text">
-              We don&rsquo;t bait-and-switch with senior pitch decks and junior execution. Our founders and staff engineers write production code and direct campaigns daily.
-            </p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle__num">03</span>
-            <h3 class="principle__title">Arabic and English as equal first-class citizens.</h3>
-            <p class="principle__text">
-              We engineer bidirectional RTL/LTR interfaces and bilingual brand systems natively—never as a rushed translation layer at the end.
-            </p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle__num">04</span>
-            <h3 class="principle__title">Full IP ownership and clean handovers.</h3>
-            <p class="principle__text">
-              Every line of Laravel/React code, Figma token, ad account, and raw camera file belongs to our client, documented so your internal team can run with it.
-            </p>
-          </div>
+          @foreach(content_list('about.principles') as $principle)
+            <div class="principle reveal">
+              <span class="principle__num">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+              <h3 class="principle__title">{{ $principle->title }}</h3>
+              <p class="principle__text">{{ $principle->body }}</p>
+            </div>
+          @endforeach
         </div>
       </div>
     </section>
@@ -155,26 +122,13 @@
         </div>
 
         <div class="timeline">
-          <div class="timeline__item reveal">
-            <span class="timeline__year">2018</span>
-            <h3 class="timeline__title">Founded in Downtown Cairo</h3>
-            <p class="timeline__text">Omar, Lina, Karim, and Sara launch Empetix in a two-room studio at the Greek Campus, shipping three FinTech and e-commerce platforms in year one.</p>
-          </div>
-          <div class="timeline__item reveal">
-            <span class="timeline__year">2021</span>
-            <h3 class="timeline__title">In-House Film &amp; Performance Lab</h3>
-            <p class="timeline__text">Added a dedicated commercial film crew, photo studio, and server-side attribution practice to close the loop between software launches and customer acquisition.</p>
-          </div>
-          <div class="timeline__item reveal">
-            <span class="timeline__year">2024</span>
-            <h3 class="timeline__title">Riyadh Studio &amp; London Desk</h3>
-            <p class="timeline__text">Expanded on-the-ground engineering and growth squads to KAFD in Riyadh and Shoreditch in London to support GCC and European enterprise clients.</p>
-          </div>
-          <div class="timeline__item reveal">
-            <span class="timeline__year">2026</span>
-            <h3 class="timeline__title">48 Specialists &amp; 64+ Shipped Products</h3>
-            <p class="timeline__text">Operating across 14 countries with audited client platforms processing over USD 1.9B in annual gross transaction volume.</p>
-          </div>
+          @foreach(content_list('about.timeline') as $milestone)
+            <div class="timeline__item reveal">
+              <span class="timeline__year">{{ $milestone->meta }}</span>
+              <h3 class="timeline__title">{{ $milestone->title }}</h3>
+              <p class="timeline__text">{{ $milestone->body }}</p>
+            </div>
+          @endforeach
         </div>
       </div>
     </section>

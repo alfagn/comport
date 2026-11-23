@@ -57,6 +57,12 @@ class PageSectionSeeder extends Seeder
             ['process_heading', "Hiring process heading", 'text'],
             ['other_jobs_heading', '"Other positions" heading (job page)', 'text'],
         ],
+        'mega' => [
+            ['capabilities_title', 'Mega menu: Capabilities intro title', 'text'],
+            ['capabilities_desc', 'Mega menu: Capabilities intro paragraph', 'textarea'],
+            ['journal_title', 'Mega menu: Journal intro title', 'text'],
+            ['journal_desc', 'Mega menu: Journal intro paragraph', 'textarea'],
+        ],
         'footer' => [
             ['banner_title', 'CTA banner title', 'text'],
             ['banner_sub', 'CTA banner subtitle', 'textarea'],

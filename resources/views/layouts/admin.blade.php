@@ -85,6 +85,10 @@
       <svg viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       Navigation
     </a>
+    <a class="nav-item {{ str_starts_with($r, 'admin.content-lists') ? 'is-active' : '' }}" href="{{ route('admin.content-lists.index') }}">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="11" width="14" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      Content Lists
+    </a>
     <div class="sidebar__label">Site</div>
     <a class="nav-item {{ str_starts_with($r, 'admin.settings') ? 'is-active' : '' }}" href="{{ route('admin.settings.edit') }}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.15-1.4l2-1.55-2-3.46-2.35.95a7 7 0 00-2.42-1.4L13.7 2.6h-3.4l-.38 2.54a7 7 0 00-2.42 1.4l-2.35-.95-2 3.46 2 1.55a7 7 0 000 2.8l-2 1.55 2 3.46 2.35-.95a7 7 0 002.42 1.4l.38 2.54h3.4l.38-2.54a7 7 0 002.42-1.4l2.35.95 2-3.46-2-1.55c.1-.45.15-.92.15-1.4z"/></svg>

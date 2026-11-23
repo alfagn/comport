@@ -10,11 +10,15 @@ use App\Core\DTOs\BaseData;
  */
 class NavItemData extends BaseData
 {
-    protected static array $fields = ['menu', 'label', 'url', 'sort_order', 'is_active'];
+    protected static array $fields = ['menu', 'parent_id', 'label', 'url', 'sub', 'meta', 'image', 'sort_order', 'is_active'];
 
     public mixed $menu = null;
+    public mixed $parent_id = null;
     public mixed $label = null;
     public mixed $url = null;
+    public mixed $sub = null;
+    public mixed $meta = null;
+    public mixed $image = null;
     public mixed $sort_order = null;
     public mixed $is_active = null;
 }

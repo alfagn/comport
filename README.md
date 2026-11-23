@@ -56,3 +56,21 @@ settings and page-section saves).
 - `app/DTOs`, `app/Http/Requests` — typed input carriers + validation
 - `database/seeders/data/content.json` — the seeded site content (reviewable without reading PHP)
 - `app/Support/helpers.php` — `sec()` (editable page block) and `setting()` helpers
+
+## What the dashboard controls
+
+Everything below is editable from `/admin` — no code changes needed:
+
+- **Navigation** — utility-bar and mobile-drawer links (label, URL, order, visibility) plus the full mega menu: columns, links with descriptions, and feature cards for both panels.
+- **Hero slides** — the homepage slider (eyebrow, title, subtitle, CTA, image, tabs).
+- **Services, Industries, Projects, Team & Founders, Careers, Blog & Media, Partners** — full CRUD with image uploads, slugs, ordering and publish toggles. Projects carry the whole case-study page (facts, stats, results, quotes, gallery); jobs carry sections, requirements and perks; members carry bios and social links.
+- **Pages & Content** — 34 editable text blocks: page heroes, section headings and mega-menu intro copy across home, about, team, careers, work, partners, blog, contact and the footer CTA.
+- **Content Lists** — the repeating card lists as structured records (no delimiter text areas): about pillars, principles and timeline milestones; team culture cards; careers practice tracks, benefits and hiring steps. Each card has title, body, labels, link, order and visibility.
+- **Settings** — public email/phone/address, social links, footer copy, SEO defaults.
+- **Inbox** — contact-form briefs and newsletter subscribers, with read/unread state.
+
+Layout-level markup (grids, section wrappers, decorative shells) stays in
+Blade — that is presentation structure, not content. Every piece of copy,
+link, card, image path and ordering listed above is editable from the
+dashboard.
+

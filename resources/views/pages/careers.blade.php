@@ -113,61 +113,19 @@
         </div>
 
         <div class="tracks-grid">
-          <button type="button" class="track-card reveal" data-track-filter="engineering">
-            <div>
-              <div class="track-card__top">
-                <span class="track-card__code">TRACK CODE</span>
-                <span class="track-card__count">3 ROLES</span>
+          @foreach(content_list('careers.tracks') as $track)
+            <button type="button" class="track-card reveal" data-track-filter="{{ $track->url }}">
+              <div>
+                <div class="track-card__top">
+                  <span class="track-card__code">{{ $track->meta }}</span>
+                  <span class="track-card__count">{{ $track->badge }}</span>
+                </div>
+                <h3 class="track-card__title">{{ $track->title }}</h3>
+                <p class="track-card__desc">{{ $track->body }}</p>
               </div>
-              <h3 class="track-card__title">Software Engineering &amp; Cloud</h3>
-              <p class="track-card__desc">
-                Backend (Laravel/Go), Frontend Architecture (Next.js/TS), Mobile (Flutter), and DevOps infrastructure.
-              </p>
-            </div>
-            <span class="track-card__cta">Filter Engineering Jobs &rarr;</span>
-          </button>
-
-          <button type="button" class="track-card reveal" data-track-filter="marketing">
-            <div>
-              <div class="track-card__top">
-                <span class="track-card__code">TRACK GROWTH</span>
-                <span class="track-card__count">2 ROLES</span>
-              </div>
-              <h3 class="track-card__title">Performance Marketing &amp; Film</h3>
-              <p class="track-card__desc">
-                Paid acquisition (Meta/Google/TikTok), server-side attribution, CRO analytics, and commercial video production.
-              </p>
-            </div>
-            <span class="track-card__cta">Filter Marketing Jobs &rarr;</span>
-          </button>
-
-          <button type="button" class="track-card reveal" data-track-filter="design">
-            <div>
-              <div class="track-card__top">
-                <span class="track-card__code">TRACK DESIGN</span>
-                <span class="track-card__count">1 ROLE</span>
-              </div>
-              <h3 class="track-card__title">Product Design &amp; Brand Systems</h3>
-              <p class="track-card__desc">
-                Bilingual RTL/LTR design systems, UX research, conversion prototyping, and brand identity architecture.
-              </p>
-            </div>
-            <span class="track-card__cta">Filter Design Jobs &rarr;</span>
-          </button>
-
-          <button type="button" class="track-card reveal" data-track-filter="all">
-            <div>
-              <div class="track-card__top">
-                <span class="track-card__code">TRACK ALL</span>
-                <span class="track-card__count">6 ROLES</span>
-              </div>
-              <h3 class="track-card__title">View All Open Requisitions</h3>
-              <p class="track-card__desc">
-                Browse all active openings across Cairo, Riyadh, London, and remote EMEA engineering and creative squads.
-              </p>
-            </div>
-            <span class="track-card__cta">Show All 6 Positions &rarr;</span>
-          </button>
+              <span class="track-card__cta">{{ $track->cta }} &rarr;</span>
+            </button>
+          @endforeach
         </div>
       </div>
     </section>
@@ -254,34 +212,13 @@
         </div>
 
         <div class="principles">
-          <div class="principle reveal">
-            <span class="principle__num">01</span>
-            <h3 class="principle__title">USD-indexed compensation &amp; profit share</h3>
-            <p class="principle__text">
-              Transparent salary bands benchmarked in USD against international standards, plus bi-annual studio profit-sharing distributions across every full-time role.
-            </p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle__num">02</span>
-            <h3 class="principle__title">Protected deep-work mornings</h3>
-            <p class="principle__text">
-              No internal standups or client calls before 1:00 PM Cairo time, giving engineers, designers, and writers four uninterrupted hours of flow every morning.
-            </p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle__num">03</span>
-            <h3 class="principle__title">M3 Max workstation &amp; USD 1,800 learning fund</h3>
-            <p class="principle__text">
-              Top-spec MacBook Pro, 4K display, ergonomic chair stipend, and an annual USD 1,800 budget for books, courses, conferences, or camera gear.
-            </p>
-          </div>
-          <div class="principle reveal">
-            <span class="principle__num">04</span>
-            <h3 class="principle__title">Tier-1 family medical &amp; 28 days paid leave</h3>
-            <p class="principle__text">
-              Comprehensive private medical insurance covering you and your family, 28 days of annual paid vacation, and paid parental leave.
-            </p>
-          </div>
+          @foreach(content_list('careers.benefits') as $benefit)
+            <div class="principle reveal">
+              <span class="principle__num">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+              <h3 class="principle__title">{{ $benefit->title }}</h3>
+              <p class="principle__text">{{ $benefit->body }}</p>
+            </div>
+          @endforeach
         </div>
       </div>
     </section>
@@ -297,26 +234,13 @@
         </div>
 
         <div class="steps">
-          <div class="step reveal">
-            <span class="step__num">STEP 30 MIN</span>
-            <h3 class="step__title">Intro Call with Practice Lead</h3>
-            <p class="step__text">A direct conversation with the hiring manager (not an external recruiter) covering your past work and salary expectations.</p>
-          </div>
-          <div class="step reveal">
-            <span class="step__num">STEP PAID EXERCISE</span>
-            <h3 class="step__title">Paid 3-Hour Craft Sample</h3>
-            <p class="step__text">No trick algorithm riddles. You complete a focused, paid 3-hour real-world architecture, design, or campaign exercise at your own pace.</p>
-          </div>
-          <div class="step reveal">
-            <span class="step__num">STEP 60 MIN</span>
-            <h3 class="step__title">Peer Walkthrough</h3>
-            <p class="step__text">Discuss your solution and engineering/creative trade-offs with two future teammates in a collaborative session.</p>
-          </div>
-          <div class="step reveal">
-            <span class="step__num">STEP 48 HOURS</span>
-            <h3 class="step__title">Founder Chat &amp; Written Offer</h3>
-            <p class="step__text">Meet one of our four co-founders and receive a clear written offer within 48 hours.</p>
-          </div>
+          @foreach(content_list('careers.process') as $step)
+            <div class="step reveal">
+              <span class="step__num">{{ $step->meta }}</span>
+              <h3 class="step__title">{{ $step->title }}</h3>
+              <p class="step__text">{{ $step->body }}</p>
+            </div>
+          @endforeach
         </div>
       </div>
     </section>

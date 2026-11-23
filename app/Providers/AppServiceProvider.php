@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         Contracts\NewsletterSubscriberRepositoryInterface::class => Eloquent\NewsletterSubscriberRepository::class,
         Contracts\PageSectionRepositoryInterface::class => Eloquent\PageSectionRepository::class,
         Contracts\NavItemRepositoryInterface::class => Eloquent\NavItemRepository::class,
+        Contracts\ContentListItemRepositoryInterface::class => Eloquent\ContentListItemRepository::class,
     ];
 
     /** Register any application services. */

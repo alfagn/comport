@@ -20,9 +20,13 @@ class NavItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'menu' => ['required', Rule::in(['utility', 'drawer'])],
+            'menu' => ['required', Rule::in(['utility', 'drawer', 'mega-capabilities', 'mega-journal'])],
             'label' => ['required', 'string', 'max:120'],
             'url' => ['required', 'string', 'max:255'],
+            'parent_id' => ['nullable', 'integer', 'exists:nav_items,id'],
+            'sub' => ['nullable', 'string', 'max:200'],
+            'meta' => ['nullable', 'string', 'max:160'],
+            'image' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ];

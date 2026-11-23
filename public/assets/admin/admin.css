@@ -664,3 +664,11 @@ table.table { width: 100%; border-collapse: collapse; }
   text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px;
   color: var(--text-muted); font-weight: 700;
 }
+
+
+/* Sidebar: keep the rail tidy on short viewports — thin dark scrollbar,
+   and the user chip (with logout) stays pinned and reachable at the bottom. */
+.sidebar { scrollbar-width: thin; scrollbar-color: var(--ink-700) transparent; }
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--ink-700); border-radius: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }

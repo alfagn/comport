@@ -28,7 +28,7 @@ class NavItemController extends Controller
     /** Show the create form. */
     public function create(): View
     {
-        return view('admin.navigation.form', ['item' => null]);
+        return view('admin.navigation.form', ['item' => null, 'columns' => $this->service->megaColumns()]);
     }
 
     /** Store a new link. */
@@ -42,7 +42,7 @@ class NavItemController extends Controller
     /** Show the edit form. */
     public function edit(int $id): View
     {
-        return view('admin.navigation.form', ['item' => $this->service->findForEdit($id)]);
+        return view('admin.navigation.form', ['item' => $this->service->findForEdit($id), 'columns' => $this->service->megaColumns()]);
     }
 
     /** Update a link. */

@@ -127,24 +127,12 @@
           </div>
 
           <ul class="team-culture__grid">
-            <li class="team-culture__item">
-              <h3 class="team-culture__title">Small senior squads</h3>
-              <p class="team-culture__text">
-                Projects are staffed with experienced engineers, designers, and marketers who work directly in the codebase and campaigns every day.
-              </p>
-            </li>
-            <li class="team-culture__item">
-              <h3 class="team-culture__title">Shared accountability</h3>
-              <p class="team-culture__text">
-                Product teams and growth specialists review the same activation, reliability, and retention metrics each week.
-              </p>
-            </li>
-            <li class="team-culture__item">
-              <h3 class="team-culture__title">One studio in New Cairo</h3>
-              <p class="team-culture__text">
-                Working side by side in our New Cairo headquarters keeps architecture reviews, design critiques, and launch shoots fast and direct.
-              </p>
-            </li>
+            @foreach(content_list('team.culture') as $card)
+              <li class="team-culture__item">
+                <h3 class="team-culture__title">{{ $card->title }}</h3>
+                <p class="team-culture__text">{{ $card->body }}</p>
+              </li>
+            @endforeach
           </ul>
 
           <div class="team-culture__media">

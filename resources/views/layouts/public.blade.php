@@ -192,10 +192,8 @@
       <div class="mega__intro">
         <div>
           <span class="eyebrow">01 / Capabilities</span>
-          <h2 class="mega__title">One studio. Code and growth under one roof.</h2>
-          <p class="mega__desc">
-            We pair senior software engineers with performance marketers and commercial directors so products ship fast and scale profitably.
-          </p>
+          <h2 class="mega__title">{{ sec('mega', 'capabilities_title', 'One studio. Code and growth under one roof.') }}</h2>
+          <p class="mega__desc">{{ sec('mega', 'capabilities_desc', 'We pair senior software engineers with performance marketers and commercial directors so products ship fast and scale profitably.') }}</p>
         </div>
         <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="arrow-link">
           <span>Explore All Case Studies</span>
@@ -205,83 +203,39 @@
         </a>
       </div>
 
-      <div class="mega__col">
-        <p class="mega__col-title">Software Engineering</p>
-        <ul>
-          <li>
-            <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="mega__link">
-              <span class="mega__link-title">
-                <span>Web &amp; Mobile Platforms</span>
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
-              </span>
-              <span class="mega__link-sub">Laravel, Next.js, Flutter &amp; high-concurrency APIs</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="mega__link">
-              <span class="mega__link-title">
-                <span>E-Commerce &amp; FinTech Core</span>
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
-              </span>
-              <span class="mega__link-sub">Custom checkouts, wallets, ERP &amp; payment gateways</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="mega__link">
-              <span class="mega__link-title">
-                <span>AI Automation &amp; Data Pipelines</span>
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
-              </span>
-              <span class="mega__link-sub">Internal copilots, CRM workflows &amp; BI telemetry</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="mega__col">
-        <p class="mega__col-title">Marketing &amp; Growth</p>
-        <ul>
-          <li>
-            <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="mega__link">
-              <span class="mega__link-title">
-                <span>Performance &amp; Paid Acquisition</span>
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
-              </span>
-              <span class="mega__link-sub">Full-funnel ROAS across Meta, Google, TikTok &amp; LinkedIn</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ url('/blog/photos') }}" class="mega__link">
-              <span class="mega__link-title">
-                <span>Brand Systems &amp; Campaign Production</span>
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
-              </span>
-              <span class="mega__link-sub">Visual identity, commercial video shoots &amp; art direction</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ url('/blog/post') }}" class="mega__link">
-              <span class="mega__link-title">
-                <span>CRO, SEO &amp; Lifecycle Retention</span>
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
-              </span>
-              <span class="mega__link-sub">Arabic/English technical SEO, A/B testing &amp; CRM flows</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="mega__col">
-        <p class="mega__col-title">Featured Case Study</p>
-        <a href="{{ url('/work/nilepay') }}" class="mega__feature">
-          <div class="frame frame--16x9 frame--zoom">
-            <img src="{{ asset('assets/img/work/nilepay.jpg') }}" alt="Woman paying with smartphone at a sunlit Cairo cafe counter" width="640" height="360"/>
-          </div>
-          <span class="t-meta">NILEPAY FINTECH &middot; +310% ACTIVATION</span>
-          <p class="mega__feature-title">Rebuilding mobile checkout and launch acquisition for 1.4M users.</p>
-        </a>
-      </div>
-    </div>
+      @foreach(nav_mega('mega-capabilities') as $column)
+        <div class="mega__col">
+          <p class="mega__col-title">{{ $column->label }}</p>
+          @if($column->children->contains(fn ($link) => $link->image))
+            @foreach($column->children as $link)
+              <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__feature">
+                @if($link->image)
+                  <div class="frame frame--16x9 frame--zoom">
+                    <img src="{{ asset($link->image) }}" alt="{{ $link->label }}" width="640" height="360"/>
+                  </div>
+                @endif
+                @if($link->meta)<span class="t-meta">{{ $link->meta }}</span>@endif
+                <p class="mega__feature-title">{{ $link->label }}</p>
+              </a>
+            @endforeach
+          @else
+            <ul>
+              @foreach($column->children as $link)
+                <li>
+                  <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__link">
+                    <span class="mega__link-title">
+                      <span>{{ $link->label }}</span>
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </span>
+                    @if($link->sub)<span class="mega__link-sub">{{ $link->sub }}</span>@endif
+                  </a>
+                </li>
+              @endforeach
+            </ul>
+          @endif
+        </div>
+      @endforeach
+</div>
   </div>
 
   <!-- Panel 2: Journal / Blogs Preview -->
@@ -290,10 +244,8 @@
       <div class="mega__intro">
         <div>
           <span class="eyebrow">02 / Empetix Journal</span>
-          <h2 class="mega__title">Articles, video episodes &amp; photo essays.</h2>
-          <p class="mega__desc">
-            Field notes from our engineers, product designers, and performance marketers.
-          </p>
+          <h2 class="mega__title">{{ sec('mega', 'journal_title', 'Articles, video episodes & photo essays.') }}</h2>
+          <p class="mega__desc">{{ sec('mega', 'journal_desc', 'Field notes from our engineers, product designers, and performance marketers.') }}</p>
         </div>
         <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="arrow-link">
           <span>Open Full Blog Archive</span>
@@ -303,40 +255,23 @@
         </a>
       </div>
 
-      <div class="mega__col">
-        <p class="mega__col-title">Full Article + Media</p>
-        <a href="{{ url('/blog/post') }}" class="mega__feature">
-          <div class="frame frame--3x2 frame--zoom">
-            <img src="{{ asset('assets/img/blog/arabic-first.jpg') }}" alt="Designer sketching Arabic RTL interface layouts on paper" width="600" height="400"/>
-          </div>
-          <span class="t-meta">DESIGN &amp; CRO &middot; 8 MIN READ</span>
-          <p class="mega__feature-title">Engineering Arabic-First Design Systems &amp; High-Conversion Funnels</p>
-        </a>
-      </div>
-
-      <div class="mega__col">
-        <p class="mega__col-title">Video Episode</p>
-        <a href="{{ url('/blog/video') }}" class="mega__feature">
-          <div class="frame frame--3x2 frame--zoom">
-            <img src="{{ asset('assets/img/blog/design-sprint.jpg') }}" alt="Team voting on product sprint sketches on studio wall" width="600" height="400"/>
-          </div>
-          <span class="t-meta">VIDEO + TRANSCRIPT &middot; 14:20</span>
-          <p class="mega__feature-title">Inside an Empetix 5-Day Product &amp; Growth Sprint</p>
-        </a>
-      </div>
-
-      <div class="mega__col">
-        <p class="mega__col-title">Photo Essay</p>
-        <a href="{{ url('/blog/photos') }}" class="mega__feature">
-          <div class="frame frame--3x2 frame--zoom">
-            <img src="{{ asset('assets/img/blog/behind-the-lens.jpg') }}" alt="Behind the scenes of a commercial specialty coffee shoot" width="600" height="400"/>
-          </div>
-          <span class="t-meta">PHOTO GALLERY + VIDEO &middot; CAMPAIGN</span>
-          <p class="mega__feature-title">Behind the Lens: Directing the Qahwa Roasters Launch Shoot</p>
-        </a>
-      </div>
-    </div>
-  </div>
+      @foreach(nav_mega('mega-journal') as $column)
+        <div class="mega__col">
+          <p class="mega__col-title">{{ $column->label }}</p>
+          @foreach($column->children as $link)
+            <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__feature">
+              @if($link->image)
+                <div class="frame frame--3x2 frame--zoom">
+                  <img src="{{ asset($link->image) }}" alt="{{ $link->label }}" width="600" height="400"/>
+                </div>
+              @endif
+              @if($link->meta)<span class="t-meta">{{ $link->meta }}</span>@endif
+              <p class="mega__feature-title">{{ $link->label }}</p>
+            </a>
+          @endforeach
+        </div>
+      @endforeach
+</div>
 </div>
 <!-- END PARTIAL: mega-menu -->
 </div>
