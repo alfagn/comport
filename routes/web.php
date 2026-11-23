@@ -64,6 +64,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('jobs', Admin\JobPostController::class)->except('show');
         Route::resource('posts', Admin\PostController::class)->except('show');
         Route::resource('partners', Admin\PartnerController::class)->except('show');
+        Route::resource('navigation', Admin\NavItemController::class)->except('show')->parameters(['navigation' => 'id']);
 
         // Inbox: contact briefs + newsletter subscribers.
         Route::get('/inbox', [Admin\InboxController::class, 'index'])->name('inbox.index');

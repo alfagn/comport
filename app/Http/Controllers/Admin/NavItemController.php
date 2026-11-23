@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\DTOs\NavItemData;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\NavItemRequest;
+use App\Services\NavItemService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+
+/**
+ * Dashboard CRUD for navigation links.
+ *
+ * Thin controller: the FormRequest validates, the service does the work,
+ * the controller only moves data between them and picks the next screen.
+ */
+class NavItemController extends Controller
+{
+    public function __construct(private NavItemService $service) {}
+
+    /** List links grouped by menu. */
+    public function index(): View
+    {
+        return view('admin.navigation.index', ['items' => $this->service->paginateForAdmin()]);
+    }
+
+    /** Show the create form. */
+    public function create(): View
+    {
+        return view('admin.navigation.form', ['item' => null]);
+    }
+
+    /** Store a new link. */
+    public function store(NavItemRequest $request): RedirectResponse
+    {
+        $this->service->create(NavItemData::fromArray($request->validated()));
+
+        return redirect()->route('admin.navigation.index')->with('success', 'Link created.');
+    }
+
+    /** Show the edit form. */
+    public function edit(int $id): View
+    {
+        return view('admin.navigation.form', ['item' => $this->service->findForEdit($id)]);
+    }
+
+    /** Update a link. */
+    public function update(NavItemRequest $request, int $id): RedirectResponse
+    {
+        $this->service->update($id, NavItemData::fromArray($request->validated()));
+
+        return redirect()->route('admin.navigation.index')->with('success', 'Link updated.');
+    }
+
+    /** Delete a link. */
+    public function destroy(int $id): RedirectResponse
+    {
+        $this->service->delete($id);
+
+        return redirect()->route('admin.navigation.index')->with('success', 'Link deleted.');
+    }
+}

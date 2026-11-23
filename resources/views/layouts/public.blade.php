@@ -82,16 +82,10 @@
   <div class="utility" role="region" aria-label="Secondary navigation">
     <div class="utility__inner">
       <ul class="utility__links">
-        <li class="utility__item"><a href="{{ url('/careers') }}"@if(($activePage ?? '') === 'careers') aria-current="page"@endif class="utility__link">Careers</a></li>
-        <li class="utility__item"><a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="utility__link">Projects</a></li>
-        <li class="utility__item"><a href="{{ url('/partners') }}"@if(($activePage ?? '') === 'partners') aria-current="page"@endif class="utility__link">Partners</a></li>
-        <li class="utility__item"><a href="{{ url('/team') }}"@if(($activePage ?? '') === 'team') aria-current="page"@endif class="utility__link">Team</a></li>
-        <li class="utility__item">
-          <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="utility__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">
-            <span>Blog</span>
-          </a>
-        </li>
-        <li class="utility__item"><a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif class="utility__link">Contact Us</a></li>
+        {{-- Dashboard-editable links (Navigation → Utility bar). --}}
+        @foreach(nav_items('utility') as $navItem)
+          <li class="utility__item"><a href="{{ str_starts_with($navItem->url, 'http') ? $navItem->url : url($navItem->url) }}" class="utility__link"@if($navItem->label === 'Blog') data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal"@endif>{{ $navItem->label }}</a></li>
+        @endforeach
       </ul>
 
       <button type="button" id="search-toggle" class="utility__search-block" aria-expanded="false" aria-controls="search-panel" aria-label="Open site search">
@@ -358,13 +352,10 @@
   <div class="container drawer__body">
     <ul class="drawer__list">
       <li><a href="{{ url('/') }}"@if(($activePage ?? '') === 'home') aria-current="page"@endif class="drawer__link">Home</a></li>
-      <li><a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="drawer__link">Projects &amp; Platforms</a></li>
-      <li><a href="{{ url('/about') }}"@if(($activePage ?? '') === 'about') aria-current="page"@endif class="drawer__link">About &amp; Founders</a></li>
-      <li><a href="{{ url('/team') }}"@if(($activePage ?? '') === 'team') aria-current="page"@endif class="drawer__link">Our Team</a></li>
-      <li><a href="{{ url('/partners') }}"@if(($activePage ?? '') === 'partners') aria-current="page"@endif class="drawer__link">Partners &amp; Industries</a></li>
-      <li><a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="drawer__link">Blogs &amp; Media</a></li>
-      <li><a href="{{ url('/careers') }}"@if(($activePage ?? '') === 'careers') aria-current="page"@endif class="drawer__link">Careers</a></li>
-      <li><a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif class="drawer__link">Contact Us</a></li>
+      {{-- Dashboard-editable links (Navigation → Mobile drawer). --}}
+      @foreach(nav_items('drawer') as $navItem)
+        <li><a href="{{ str_starts_with($navItem->url, 'http') ? $navItem->url : url($navItem->url) }}" class="drawer__link">{{ $navItem->label }}</a></li>
+      @endforeach
     </ul>
 
     <div class="drawer__meta">

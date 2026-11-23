@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Setting;
+use App\Services\NavItemService;
 use App\Services\SectionService;
 
 if (! function_exists('sec')) {
@@ -24,5 +25,16 @@ if (! function_exists('setting')) {
     function setting(string $key, ?string $default = null): ?string
     {
         return Setting::getValue($key, $default);
+    }
+}
+
+if (! function_exists('nav_items')) {
+    /**
+     * Active links of one public menu (utility bar, mobile drawer),
+     * dashboard-editable and cached by NavItemService.
+     */
+    function nav_items(string $menu): \Illuminate\Support\Collection
+    {
+        return app(NavItemService::class)->menu($menu);
     }
 }

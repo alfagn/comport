@@ -5,15 +5,13 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
- * Creates the initial dashboard login.
+ * Seeds a dashboard login ONLY when ADMIN_INITIAL_PASSWORD is set in the
+ * environment (CI/tests set it explicitly). For real installs, create the
+ * user interactively instead so no credential ever touches code or logs:
  *
- * The password comes from the ADMIN_INITIAL_PASSWORD environment
- * variable. When it is not set (local setup), a random one is generated
- * and printed once to the seeder console output. No default password is
- * ever shipped in the codebase.
+ *   php artisan empetix:admin
  */
 class AdminUserSeeder extends Seeder
 {
@@ -22,10 +20,9 @@ class AdminUserSeeder extends Seeder
         $password = env('ADMIN_INITIAL_PASSWORD');
 
         if (! $password) {
-            $password = Str::random(24);
-            $this->command->warn('No ADMIN_INITIAL_PASSWORD set. Generated a random admin password for this install:');
-            $this->command->line($password);
-            $this->command->warn('Save it now — it is shown only once. Set ADMIN_INITIAL_PASSWORD in .env to choose your own.');
+            $this->command->warn('ADMIN_INITIAL_PASSWORD not set — skipping admin seed. Run `php artisan empetix:admin` to create your dashboard login.');
+
+            return;
         }
 
         User::updateOrCreate(

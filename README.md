@@ -10,6 +10,7 @@ dashboard controls the site's content.
 
 - **Laravel 13** (PHP 8.2+), Blade templates, SQLite by default (any Laravel-supported DB works)
 - Architecture: Controllers → FormRequests → DTOs → Services → Repository contracts + Eloquent implementations → Models. Comments explain every layer.
+- Dashboard design: bespoke Empetix design system (`public/assets/admin/admin.css`), inspired by leading dark dashboard products (eyebrow page headings, uppercase stat labels, icon-chip cards, quiet bordered surfaces). No third-party template code or assets are used.
 - Frontend assets are the original site's static files under `public/assets` (no build step required); the dashboard has its own design system at `public/assets/admin/admin.css`.
 
 ## What the dashboard controls
@@ -26,16 +27,13 @@ dashboard controls the site's content.
 composer install
 cp .env.example .env          # then set APP_KEY via `php artisan key:generate`
 touch database/database.sqlite
-php artisan migrate --seed    # seeds the real site content + an admin login
+php artisan migrate --seed    # seeds the real site content
+php artisan empetix:admin     # create your dashboard login (hidden password prompt)
 php artisan serve             # public site: http://127.0.0.1:8000  |  dashboard: /admin
 ```
 
-The seeder prints the generated admin password once (or set your own first):
-
-```env
-ADMIN_EMAIL=admin@empetix.com
-ADMIN_INITIAL_PASSWORD=choose-a-strong-password
-```
+No default or generated password ever exists: `empetix:admin` asks for one
+interactively (typed hidden, min 12 chars), and `--reset` changes it later.
 
 For uploaded images to be served: `php artisan storage:link`.
 
