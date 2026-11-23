@@ -263,24 +263,69 @@ body.admin::before {
 
 .btn:active { transform: translateY(1px); }
 
+/* 3D button system: every button gets dimensional depth (lit top edge,
+   pressed bottom edge, ambient shadow). Combine .btn--3d with any variant
+   for the strongest raised treatment; primary/ghost/danger carry the
+   standard depth by default. */
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 .btn--primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  background: linear-gradient(180deg, #FF6B3D 0%, #F0430F 100%);
   color: #fff;
-  box-shadow: 0 6px 22px rgba(255, 77, 28, 0.28);
+  border-color: rgba(140, 30, 0, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -2px 0 rgba(140, 30, 0, 0.32),
+    0 8px 20px rgba(255, 77, 28, 0.30);
+  text-shadow: 0 1px 1px rgba(140, 30, 0, 0.3);
 }
 
-.btn--primary:hover { box-shadow: 0 8px 28px rgba(255, 77, 28, 0.42); transform: translateY(-1px); }
+.btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -2px 0 rgba(140, 30, 0, 0.32),
+    0 12px 28px rgba(255, 77, 28, 0.42);
+}
+
+.btn--primary:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(140, 30, 0, 0.32),
+    0 4px 12px rgba(255, 77, 28, 0.28);
+}
 
 .btn--ghost {
-  background: rgba(255, 255, 255, 0.04);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
   color: var(--text-body);
   border-color: var(--line-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.10),
+    0 3px 10px rgba(24, 18, 12, 0.06);
 }
 
-.btn--ghost:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); }
+.btn--ghost:hover { background: rgba(255, 255, 255, 0.10); color: var(--text); transform: translateY(-1px); }
+.btn--ghost:active { transform: translateY(1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 6px rgba(24,18,12,0.06); }
 
-.btn--danger { background: rgba(248, 113, 113, 0.12); color: var(--danger); border-color: rgba(248, 113, 113, 0.3); }
-.btn--danger:hover { background: rgba(248, 113, 113, 0.2); }
+.btn--danger {
+  background: linear-gradient(180deg, rgba(248, 113, 113, 0.18), rgba(248, 113, 113, 0.10));
+  color: var(--danger);
+  border-color: rgba(248, 113, 113, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -2px 0 rgba(224, 36, 36, 0.16);
+}
+.btn--danger:hover { background: rgba(248, 113, 113, 0.22); }
+.btn--danger:active { transform: translateY(1px); }
+
+/* Strongest raised treatment, e.g. hero CTAs: .btn--3d */
+.btn--3d { border-radius: 12px; font-weight: 700; letter-spacing: 0.01em; }
+.btn--3d.btn--primary {
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -3px 0 rgba(140, 30, 0, 0.38),
+    0 10px 26px rgba(255, 77, 28, 0.38);
+}
 
 .btn--sm { padding: 6px 12px; font-size: 13px; border-radius: 8px; }
 
@@ -327,13 +372,16 @@ body.admin::before {
 .stat-card::after {
   content: "";
   position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 110px;
-  height: 110px;
+  top: -52px;
+  right: -52px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+  opacity: 0.55;
+  pointer-events: none;
 }
+.stat-card--dark::after { opacity: 0.35; }
 
 .stat-card__icon {
   width: 38px;
@@ -925,20 +973,41 @@ table.table { width: 100%; border-collapse: collapse; }
 .stat-card--dark .delta-chip--up { background: rgba(52, 211, 153, 0.22); color: #5EE9B5; }
 .stat-card--dark .delta-chip--down { background: rgba(248, 113, 113, 0.22); color: #FFA3A3; }
 
-/* Real 14-day activity wave anchored to the card's bottom-right. */
+/* Real 14-day activity wave: full-width area wave across the card bottom,
+   per the reference design. Still the real daily-count series, just drawn
+   smoothed and gradient-filled. */
 .stat-card .sparkline {
-  position: absolute; right: 0; bottom: 0;
-  width: 52%; height: 66px; color: var(--accent); opacity: 0.9;
+  position: absolute; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 92px; color: #FF5A1F; opacity: 0.55;
+  pointer-events: none;
 }
-.stat-card--dark .sparkline { color: #FF6B3D; }
+.stat-card--dark .sparkline { color: #FF6B3D; opacity: 0.7; }
 
-/* Reference-fidelity pass (user review): card geometry, solid icon chips,
-   title-case labels with sub-caption, plain green/red deltas, larger wave. */
-.stat-card { border-radius: 22px; padding: 18px 20px 16px; }
-.stat-card__head { gap: 13px; margin-bottom: 10px; }
-.stat-card__icon { width: 46px; height: 46px; border-radius: 14px; background: #FFE9DC; color: #FF4D1C; margin-bottom: 0; }
-.stat-card--dark .stat-card__icon { background: rgba(255, 255, 255, 0.07); color: #FF5A2C; }
-.stat-card__icon svg { width: 25px; height: 25px; }
+/* Reference-fidelity pass (user review): card geometry, dimensional icon
+   chips (lit gradient + inner highlight + drop shadow, standing in for the
+   final 3D assets), title-case labels with sub-caption, plain green/red
+   deltas, full-width wave. */
+.stat-card { border-radius: 24px; padding: 18px 20px 16px; min-height: 188px; }
+.stat-card__head { gap: 13px; margin-bottom: 10px; position: relative; }
+.stat-card__num, .stat-card__meta { position: relative; }
+.stat-card__icon {
+  width: 46px; height: 46px; border-radius: 14px; margin-bottom: 0;
+  background: linear-gradient(160deg, #FFEDE2 0%, #FFD7BF 100%);
+  color: #FF4D1C;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -2px 3px rgba(224, 64, 15, 0.20),
+    0 4px 12px rgba(255, 77, 28, 0.20);
+}
+.stat-card--dark .stat-card__icon {
+  background: linear-gradient(160deg, rgba(255, 90, 44, 0.30), rgba(255, 90, 44, 0.12));
+  color: #FF7A50;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.38),
+    0 4px 12px rgba(0, 0, 0, 0.42);
+}
+.stat-card__icon svg { width: 25px; height: 25px; filter: drop-shadow(0 1.5px 1px rgba(140, 30, 0, 0.28)); }
 .stat-card__meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .stat-card__head .stat-card__label { text-transform: none; letter-spacing: 0; font-size: 15.5px; font-weight: 700; color: var(--text); }
 .stat-card--dark .stat-card__head .stat-card__label { color: #F5F1EC; }
