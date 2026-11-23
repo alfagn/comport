@@ -103,3 +103,62 @@ if (! function_exists('content_asset')) {
         return asset(str_starts_with($path, 'uploads/') ? 'storage/'.$path : $path);
     }
 }
+
+if (! function_exists('seo_meta_title')) {
+    /**
+     * Read the configured site title in the requested language (or fallback).
+     */
+    function seo_meta_title(string $lang = 'en'): string
+    {
+        $key = $lang === 'ar' ? 'seo_meta_title_ar' : 'seo_meta_title_en';
+        $default = $lang === 'ar'
+            ? 'حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي'
+            : 'Empetix Solutions — Software, SaaS & Digital Growth Studio';
+
+        return setting($key) ?: $default;
+    }
+}
+
+if (! function_exists('seo_meta_description')) {
+    /**
+     * Read the configured meta description in the requested language.
+     */
+    function seo_meta_description(string $lang = 'en'): string
+    {
+        $key = $lang === 'ar' ? 'seo_meta_description_ar' : 'seo_meta_description_en';
+        $default = $lang === 'ar'
+            ? 'إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)، المنصات السحابية، والتطبيقات الرقمية المتقدمة بتجربة مستخدم عربية وعالمية فائقة السرعة.'
+            : 'Empetix Solutions is a premier digital engineering studio architecting enterprise SaaS platforms, custom software, FinTech solutions, and high-conversion web & mobile apps.';
+
+        return setting($key) ?: $default;
+    }
+}
+
+if (! function_exists('seo_keywords')) {
+    /**
+     * Read combined bilingual SEO and AI search keywords.
+     */
+    function seo_keywords(): string
+    {
+        $en = setting('seo_keywords_en', 'Empetix, Empetix Solution, SaaS, Custom Software, Web Development, Mobile Apps, Flutter, Laravel, FinTech, Cairo, Riyadh, AI Engineering');
+        $ar = setting('seo_keywords_ar', 'إمبيتكس, حلول إمبيتكس, شركة إمبيتكس, شركة برمجة, تطوير ساس, برمجة مواقع, تصميم تطبيقات, تحول رقمي, مصر, السعودية');
+
+        return trim("{$en}, {$ar}", ', ');
+    }
+}
+
+if (! function_exists('seo_og_image')) {
+    /**
+     * Resolve default OpenGraph social sharing preview card image.
+     */
+    function seo_og_image(): string
+    {
+        $path = setting('seo_og_image');
+        if ($path) {
+            return asset('storage/'.$path);
+        }
+
+        return content_asset(sec('global', 'social_preview', 'assets/img/og/empetix-share.jpg'));
+    }
+}
+

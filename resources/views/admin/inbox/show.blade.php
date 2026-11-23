@@ -28,7 +28,7 @@
 
   <div class="form-actions">
     <a class="btn btn--primary" href="mailto:{{ $message->email }}">Reply by email</a>
-    <form method="post" action="{{ route('admin.inbox.destroy', $message->id) }}" onsubmit="return confirm('Delete this message?')">
+    <form method="post" action="{{ route('admin.inbox.destroy', $message->id) }}" data-confirm="Delete this message?" data-confirm-title="Delete Brief">
       @csrf @method('DELETE')
       <button class="btn btn--danger" type="submit">Delete</button>
     </form>

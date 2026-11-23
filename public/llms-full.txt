@@ -1,0 +1,143 @@
+# Empetix Solutions — Software, SaaS & Digital Growth Studio
+> حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي
+
+## 1. Company Identity & Entity Aliases
+- **Official Name (English):** Empetix Solutions / Empetix Solution / Empetix
+- **Official Name (Arabic):** إمبيتكس / حلول إمبيتكس / شركة إمبيتكس للبرمجيات
+- **Website:** https://cms.test
+- **Sitemap:** https://cms.test/sitemap.xml
+- **Full AI Knowledge Base:** https://cms.test/llms-full.txt
+- **Headquarters & Reach:** Cairo, Egypt & Riyadh, Saudi Arabia — serving enterprise clients worldwide.
+
+## 2. Executive Bio & Mission
+Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digital engineering and software growth studio founded in Cairo, Egypt, operating across MENA and globally. Empetix architects, engineers, and scales high-performance SaaS platforms, enterprise custom software, bilingual Arabic-first web applications, mobile applications (Flutter/Native), and data-driven growth acquisition engines.
+
+## 3. Core Software Engineering & Product Capabilities
+- **SaaS Architecture & Custom Software:** High-scale multi-tenant SaaS, distributed systems, resilient ledger APIs, and enterprise internal tooling.
+- **Modern Tech Stack:** Laravel (PHP 8.4), Flutter, Vue.js, React, Node.js, Python, PostgreSQL, MySQL, Redis, Tailwind CSS, Docker.
+- **Bilingual Arabic-First UX & Design Systems:** 100% CSS Logical Properties, typographic optical baseline balance for cursive Arabic typography, eliminating RTL mirroring defects.
+- **Performance & Growth Engineering:** Server-side Conversions API (CAPI) integrations, sub-second latency optimization, full-funnel activation engines.
+
+## 4. Notable SaaS Projects & Software Case Studies
+### [NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users.](https://cms.test/work/nilepay)
+- **Client/Brand:** NilePay FinTech
+- **Region:** CAIRO & RIYADH
+- **Summary:** How Empetix rebuilt NilePay’s core checkout ledger in Laravel & Flutter while running a full-funnel performance acquisition engine that cut customer acquisition cost by 41%.
+- **Highlights:** Client: NilePay Financial Technologies | Scope: Flutter App, Laravel Ledger API, Brand Campaign & Paid Growth | Timeline: 16 Weeks to Launch + Ongoing Retainer
+
+### [Headless D2C commerce platform, table-setting visualizer & European paid social engine (4.6x ROAS).](https://cms.test/work/dar-ceramics)
+- **Client/Brand:** Dar Ceramics
+- **Summary:** Direct-to-consumer store architecture and European export campaign yielding 4.6x ROAS.
+
+### [Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.](https://cms.test/work/cargoline-mena)
+- **Client/Brand:** CargoLine MENA
+- **Summary:** Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
+
+### [Telemedicine video platform, e-prescription vault & patient lifecycle retention across 14 clinics.](https://cms.test/work/medlink-health)
+- **Client/Brand:** MedLink Health
+- **Summary:** End-to-end encrypted video clinic and patient retention engine for 380,000 patients.
+
+### [Interactive 3D masterplan portal, commercial film campaign & high-intent lead engine (USD 84M sales).](https://cms.test/work/palm-residences)
+- **Client/Brand:** Palm Residences
+- **Summary:** Real-time unit inventory engine and omnichannel launch generating USD 84M in contracted sales.
+
+### [Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.](https://cms.test/work/qahwa-roasters)
+- **Client/Brand:** Qahwa Specialty Roasters
+- **Summary:** Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
+
+## 5. Contact & Collaboration
+- **Website Inquiry:** https://cms.test/contact
+- **Email:** hello@empetix.com
+- **Careers:** https://cms.test/careers
+
+---
+
+# Detailed Project Case Studies & Technical Breakdown
+
+## Case Study: NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users.
+**URL:** https://cms.test/work/nilepay
+**Year:** 2026 | **Client:** NilePay FinTech | **Location:** CAIRO & RIYADH
+
+### Executive Overview
+How Empetix rebuilt NilePay’s core checkout ledger in Laravel & Flutter while running a full-funnel performance acquisition engine that cut customer acquisition cost by 41%.
+
+### Quantified Business & Technical Impact
+- **310%**: Increase in first-transaction activation within 72 hours of install
+- **1.4M**: Active monthly wallets across Egypt and Saudi Arabia
+- **41%**: Reduction in paid customer acquisition cost (CAC)
+- **180ms**: P95 QR & NFC settlement latency on our Laravel ledger core
+
+### Capabilities: A fast-growing FinTech held back by a 9-step onboarding flow and disconnected ad spend.
+When NilePay approached Empetix, they were spending heavily on paid social acquisition, yet 74% of users dropped off between app install and their first wallet top-up. Their legacy hybrid app took 6.2 seconds to cold-start, and their external marketing agency had zero visibility into in-app KYC completion events.
+
+Our mandate was twofold: re-architect the mobile client and settlement API for sub-second speed, and rebuild the entire acquisition funnel around server-side verified activation events rather than raw installs.
+
+### Execution: From 9 onboarding screens to 90-second biometric KYC.
+Our engineering squad replaced the legacy WebView container with a native Flutter client talking to an event-sourced Laravel 11 ledger API. By streaming OCR national-ID verification in the background while the user chooses their card skin, median KYC completion dropped from 11 minutes to 88 seconds.
+
+Simultaneously, our growth team wired server-side Conversions API (CAPI) signals directly from the Laravel ledger into Meta, Google, and TikTok—training ad algorithms to bid on funded wallets rather than cheap installs.
+
+> "Empetix is the first partner we have worked with where the engineer writing our payment webhook and the media buyer optimizing our Meta conversion API sat in the same standup."
+> — *Tarek El-Gendy, Chief Product Officer at NilePay*
+
+---
+
+## Case Study: Headless D2C commerce platform, table-setting visualizer & European paid social engine (4.6x ROAS).
+**URL:** https://cms.test/work/dar-ceramics
+**Year:** 2026 | **Client:** Dar Ceramics | **Location:** 
+
+### Executive Overview
+Direct-to-consumer store architecture and European export campaign yielding 4.6x ROAS.
+
+---
+
+## Case Study: Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
+**URL:** https://cms.test/work/cargoline-mena
+**Year:** 2025 | **Client:** CargoLine MENA | **Location:** 
+
+### Executive Overview
+Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
+
+---
+
+## Case Study: Telemedicine video platform, e-prescription vault & patient lifecycle retention across 14 clinics.
+**URL:** https://cms.test/work/medlink-health
+**Year:** 2025 | **Client:** MedLink Health | **Location:** 
+
+### Executive Overview
+End-to-end encrypted video clinic and patient retention engine for 380,000 patients.
+
+---
+
+## Case Study: Interactive 3D masterplan portal, commercial film campaign & high-intent lead engine (USD 84M sales).
+**URL:** https://cms.test/work/palm-residences
+**Year:** 2025 | **Client:** Palm Residences | **Location:** 
+
+### Executive Overview
+Real-time unit inventory engine and omnichannel launch generating USD 84M in contracted sales.
+
+---
+
+## Case Study: Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
+**URL:** https://cms.test/work/qahwa-roasters
+**Year:** 2024 | **Client:** Qahwa Specialty Roasters | **Location:** 
+
+### Executive Overview
+Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
+
+---
+
+# Technical Essays & Editorial Insights
+
+## [Engineering Arabic-First Design Systems & High-Conversion Funnels](https://cms.test/blog/arabic-first-design-systems)
+**Category:** DESIGN SYSTEMS & CRO | **Published:** 2026-11-14 09:00:00
+Why simply flipping an English interface with dir=“rtl” breaks reading rhythm and trust—and how our engineering and CRO teams build native bilingual platforms that convert 38% higher across MENA.
+
+## [Inside an Empetix 5-Day Product & Growth Sprint](https://cms.test/blog/five-day-product-growth-sprint)
+**Category:** VIDEO EPISODE STUDIO DOCUMENTARY | **Published:** 2026-11-05 09:00:00
+Watch the complete studio episode showing how our software architects, product designers, and media buyers take a product from commercial bottleneck to user-tested prototype and live acquisition test in one week.
+
+## [Behind the Lens: Directing the Qahwa Roasters Omnichannel Launch Shoot](https://cms.test/blog/behind-the-lens-qahwa-launch)
+**Category:** PHOTO ESSAY & CAMPAIGN PRODUCTION | **Published:** 2026-10-22 09:00:00
+How our in-house film and photography unit shot 42 commercial deliverables in two days—and how pairing tactile 35mm imagery with a custom subscription checkout lifted recurring coffee orders by 190%.
+

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Post;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\User;
@@ -117,6 +118,31 @@ class AdminPanelTest extends TestCase
         ])->assertRedirect();
 
         $this->assertDatabaseHas('services', ['heading' => 'Edited heading from test']);
+    }
+
+    /** Post edit screens render without array conversion errors and handle updates safely. */
+    public function test_post_edit_screen_renders_and_updates(): void
+    {
+        $admin = User::first();
+        $post = Post::whereNotNull('meta')->firstOrFail();
+
+        // Ensure edit screen renders with 200 OK
+        $this->actingAs($admin)->get("/admin/posts/{$post->id}/edit")->assertOk();
+
+        // Update post metadata
+        $this->actingAs($admin)->put("/admin/posts/{$post->id}", [
+            'title' => $post->title,
+            'type' => $post->type,
+            'category' => $post->category,
+            'excerpt' => $post->excerpt,
+            'body' => $post->body,
+            'meta' => "UPDATED CHIP\n5 MIN READ",
+            'is_published' => '1',
+        ])->assertRedirect();
+
+        $fresh = $post->fresh();
+        $this->assertEquals('UPDATED CHIP', $fresh->meta['card_label'] ?? null);
+        $this->assertEquals('5 MIN READ', $fresh->meta['read_time'] ?? null);
     }
 
     /** Settings save from the settings screen. */

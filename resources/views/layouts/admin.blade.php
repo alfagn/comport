@@ -10,7 +10,7 @@
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/archivo-800.woff2') }}" crossorigin/>
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/public-sans-400.woff2') }}" crossorigin/>
   <link rel="stylesheet" href="{{ asset('assets/css/base/typography.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}?v={{ file_exists(public_path('assets/admin/admin.css')) ? filemtime(public_path('assets/admin/admin.css')) : time() }}"/>
   @livewireStyles
   <script>
     // Theme: persisted admin light/dark choice, applied before first paint.
@@ -113,13 +113,17 @@
   {{-- ============ Sidebar ============ --}}
   <aside class="sidebar" id="sidebar">
     <div class="sidebar__brand">
-      <a href="{{ route('admin.dashboard') }}" wire:navigate>
-        <img src="{{ brand_logo() }}" alt="Empetix"/>
+      <a class="sidebar__brand-link" href="{{ route('admin.dashboard') }}" wire:navigate onclick="if (document.body.classList.contains('sidebar-collapsed')) { event.preventDefault(); empetixToggleSidebar(); }" title="Empetix Dashboard">
+        <img class="sidebar__brand-logo" src="{{ brand_logo() }}" alt="Empetix"/>
         <span class="sidebar__brand-mark" aria-hidden="true">E</span>
       </a>
-      <div>
-        <small>Solutions</small>
-      </div>
+      <button class="sidebar__collapse-btn" type="button" onclick="empetixToggleSidebar()" aria-label="Toggle sidebar" title="Toggle sidebar">
+        <svg class="sidebar__collapse-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+          <path d="M9 3v18"/>
+          <path class="sidebar__collapse-arrow" d="m14 9-3 3 3 3"/>
+        </svg>
+      </button>
     </div>
 
     @php
@@ -227,6 +231,14 @@
     <a class="nav-item {{ str_starts_with($r, 'admin.settings') ? 'is-active' : '' }}" href="{{ route('admin.settings.edit') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-gear.png') }}" alt="" width="22" height="22"/>
       <span class="nav-item__text">Settings</span>
+    </a>
+    <a class="nav-item {{ str_starts_with($r, 'admin.seo') ? 'is-active' : '' }}" href="{{ route('admin.seo.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-magnifier.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">SEO &amp; AI Discovery</span>
+    </a>
+    <a class="nav-item {{ str_starts_with($r, 'admin.sitemap') ? 'is-active' : '' }}" href="{{ route('admin.sitemap.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-target.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Sitemap</span>
     </a>
     @endcan
     @role('owner')
@@ -385,6 +397,20 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
           {{ session('success') }}
         </div>
+        <script>
+          (function() {
+            var fireToast = function() {
+              if (window.empetixToast) {
+                window.empetixToast(@json(session('success')), 'success');
+              }
+            };
+            if (document.readyState === 'loading') {
+              window.addEventListener('DOMContentLoaded', fireToast);
+            } else {
+              fireToast();
+            }
+          })();
+        </script>
       @endif
 
       @yield('content')
@@ -396,6 +422,136 @@
      on every admin page; each listing pushes its init script here. --}}
 <script src="{{ asset('assets/admin/vendor/jquery.min.js') }}" data-navigate-once></script>
 <script src="{{ asset('assets/admin/vendor/jquery.dataTables.min.js') }}" data-navigate-once></script>
+<script src="{{ asset('assets/admin/vendor/sweetalert2.all.min.js') }}" data-navigate-once></script>
+<script data-navigate-once>
+  (function() {
+    // 1. VIP Glassmorphic SweetAlert Confirm Dialog
+    window.empetixConfirm = function(options) {
+      options = options || {};
+      var title = options.title || 'Delete Confirmation';
+      var text = options.text || 'Are you sure you want to delete this? This action cannot be undone.';
+      var confirmText = options.confirmText || 'Yes, Delete';
+      var cancelText = options.cancelText || 'Cancel';
+      var icon = options.icon || "{{ asset('assets/images/3d/3d-notification.png') }}";
+
+      return Swal.fire({
+        html: `
+          <div class="empetix-swal-hero">
+            <div class="empetix-swal-icon-halo">
+              <img src="${icon}" class="empetix-swal-icon-3d" alt="" width="56" height="56" />
+            </div>
+            <h2 class="empetix-swal-heading">${title}</h2>
+            <p class="empetix-swal-desc">${text}</p>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: `
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>${confirmText}</span>
+        `,
+        cancelButtonText: `<span>${cancelText}</span>`,
+        buttonsStyling: false,
+        reverseButtons: true,
+        focusCancel: true,
+        backdrop: 'rgba(10, 14, 22, 0.65)',
+        customClass: {
+          popup: 'empetix-swal-modal',
+          confirmButton: 'btn btn--danger btn--swal-confirm',
+          cancelButton: 'btn btn--ghost btn--swal-cancel',
+          actions: 'empetix-swal-actions'
+        },
+        showClass: {
+          popup: 'empetix-swal-anim-in'
+        },
+        hideClass: {
+          popup: 'empetix-swal-anim-out'
+        }
+      });
+    };
+
+    // 2. VIP Toast Notification
+    window.empetixToast = function(message, type) {
+      type = type || 'success';
+      var icon = type === 'success' 
+        ? "{{ asset('assets/images/3d/3d-checkmark.png') }}"
+        : "{{ asset('assets/images/3d/3d-notification.png') }}";
+
+      var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4500,
+        timerProgressBar: true,
+        backdrop: false,
+        customClass: {
+          popup: 'empetix-swal-toast'
+        }
+      });
+
+      Toast.fire({
+        html: `
+          <div class="empetix-toast-content">
+            <img src="${icon}" width="24" height="24" alt="" />
+            <span class="empetix-toast-msg">${message}</span>
+          </div>
+        `
+      });
+    };
+
+    // 3. Universal Capture-Phase Interceptor
+    // Catches clicks on ANY delete button or submission of delete forms before native confirm() can fire!
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('button[type="submit"], input[type="submit"]');
+      if (!btn) return;
+
+      var form = btn.closest('form');
+      if (!form) return;
+
+      var methodInput = form.querySelector('input[name="_method"]');
+      var isDeleteMethod = methodInput && methodInput.value.toUpperCase() === 'DELETE';
+      var isDangerBtn = btn.classList.contains('btn--danger');
+      var hasDataConfirm = form.hasAttribute('data-confirm');
+      var hasConfirmOnSubmit = form.getAttribute('onsubmit') && form.getAttribute('onsubmit').includes('confirm');
+
+      if (!isDeleteMethod && !isDangerBtn && !hasDataConfirm && !hasConfirmOnSubmit) {
+        return;
+      }
+
+      // If this submission was already approved by SweetAlert, let it pass!
+      if (form.__empetixConfirmed) {
+        form.__empetixConfirmed = false;
+        return;
+      }
+
+      // Prevent the form submission and native confirm()
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      // Temporarily strip onsubmit so no native popup appears
+      if (form.getAttribute('onsubmit')) {
+        form.__savedOnSubmit = form.getAttribute('onsubmit');
+        form.removeAttribute('onsubmit');
+      }
+
+      var confirmMsg = form.getAttribute('data-confirm') || 'Are you sure you want to delete this record?';
+      var confirmTitle = form.getAttribute('data-confirm-title') || 'Confirm Deletion';
+
+      window.empetixConfirm({
+        title: confirmTitle,
+        text: confirmMsg,
+        confirmText: 'Yes, Delete',
+        cancelText: 'Cancel'
+      }).then(function(result) {
+        if (result.isConfirmed) {
+          form.__empetixConfirmed = true;
+          form.submit();
+        } else if (form.__savedOnSubmit) {
+          form.setAttribute('onsubmit', form.__savedOnSubmit);
+        }
+      });
+    }, true); // Capture phase is essential!
+  })();
+</script>
 @stack('datatables')
 {{-- Livewire drives wire:navigate SPA swaps across the admin shell. --}}
 @livewireScripts

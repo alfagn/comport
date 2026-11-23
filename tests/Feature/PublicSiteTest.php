@@ -25,6 +25,13 @@ class PublicSiteTest extends TestCase
         }
     }
 
+    /** Blog listing renders cleanly even when there are zero posts in the database. */
+    public function test_blog_listing_renders_with_zero_posts(): void
+    {
+        \App\Models\Post::query()->delete();
+        $this->get('/blog')->assertOk()->assertSee('No publications yet');
+    }
+
     /** Every seeded detail page renders by slug. */
     public function test_detail_pages_render(): void
     {

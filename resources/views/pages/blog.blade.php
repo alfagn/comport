@@ -95,7 +95,7 @@
         </div>
 
         <div id="blog-archive" class="post-grid">
-          @foreach($posts as $post)
+          @forelse($posts as $post)
           <article class="post-card" data-category="{{ $post->type }} {{ \Illuminate\Support\Str::slug($post->category) }}">
             <a href="{{ route('blog.show', $post->slug) }}" class="post-card__link">
               <div class="frame post-card__frame frame--zoom">
@@ -111,8 +111,18 @@
               <p class="post-card__excerpt">{{ $post->excerpt }}</p>
             </a>
           </article>
-@endforeach
+          @empty
+          <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 64px 24px; background: rgba(255, 77, 28, 0.02); border: 1px dashed var(--line, #e2e8f0); border-radius: 16px;">
+            <p style="font-size: 18px; font-weight: 700; color: var(--text-heading, #0f172a); margin-bottom: 8px;">
+              No publications yet
+            </p>
+            <p style="font-size: 14px; color: var(--text-muted, #64748b); max-width: 440px; margin: 0 auto;">
+              Our engineering monographs, studio video breakdowns, and technical essays are currently being drafted. Check back soon!
+            </p>
+          </div>
+          @endforelse
         </div>
       </div>
     </section>
+</main>
 @endsection

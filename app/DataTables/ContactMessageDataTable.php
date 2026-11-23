@@ -51,7 +51,7 @@ class ContactMessageDataTable extends AdminDataTable
             ->addColumn('actions', function ($row) {
                 $open = '<a class="btn btn--ghost btn--sm" href="'.e(route('admin.inbox.show', $row->id)).'">Open</a>';
 
-                return $open.'<form method="post" action="'.e(route('admin.inbox.destroy', $row->id)).'" onsubmit="return confirm(\'Delete this brief?\')" style="display:inline">'
+                return $open.'<form method="post" action="'.e(route('admin.inbox.destroy', $row->id)).'" data-confirm="Delete this brief?" data-confirm-title="Delete Brief" style="display:inline">'
                     .csrf_field().method_field('DELETE')
                     .'<button class="btn btn--danger btn--sm" type="submit">Delete</button></form>';
             })

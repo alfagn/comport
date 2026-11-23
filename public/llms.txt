@@ -1,0 +1,51 @@
+# Empetix Solutions — Software, SaaS & Digital Growth Studio
+> حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي
+
+## 1. Company Identity & Entity Aliases
+- **Official Name (English):** Empetix Solutions / Empetix Solution / Empetix
+- **Official Name (Arabic):** إمبيتكس / حلول إمبيتكس / شركة إمبيتكس للبرمجيات
+- **Website:** https://cms.test
+- **Sitemap:** https://cms.test/sitemap.xml
+- **Full AI Knowledge Base:** https://cms.test/llms-full.txt
+- **Headquarters & Reach:** Cairo, Egypt & Riyadh, Saudi Arabia — serving enterprise clients worldwide.
+
+## 2. Executive Bio & Mission
+Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digital engineering and software growth studio founded in Cairo, Egypt, operating across MENA and globally. Empetix architects, engineers, and scales high-performance SaaS platforms, enterprise custom software, bilingual Arabic-first web applications, mobile applications (Flutter/Native), and data-driven growth acquisition engines.
+
+## 3. Core Software Engineering & Product Capabilities
+- **SaaS Architecture & Custom Software:** High-scale multi-tenant SaaS, distributed systems, resilient ledger APIs, and enterprise internal tooling.
+- **Modern Tech Stack:** Laravel (PHP 8.4), Flutter, Vue.js, React, Node.js, Python, PostgreSQL, MySQL, Redis, Tailwind CSS, Docker.
+- **Bilingual Arabic-First UX & Design Systems:** 100% CSS Logical Properties, typographic optical baseline balance for cursive Arabic typography, eliminating RTL mirroring defects.
+- **Performance & Growth Engineering:** Server-side Conversions API (CAPI) integrations, sub-second latency optimization, full-funnel activation engines.
+
+## 4. Notable SaaS Projects & Software Case Studies
+### [NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users.](https://cms.test/work/nilepay)
+- **Client/Brand:** NilePay FinTech
+- **Region:** CAIRO & RIYADH
+- **Summary:** How Empetix rebuilt NilePay’s core checkout ledger in Laravel & Flutter while running a full-funnel performance acquisition engine that cut customer acquisition cost by 41%.
+- **Highlights:** Client: NilePay Financial Technologies | Scope: Flutter App, Laravel Ledger API, Brand Campaign & Paid Growth | Timeline: 16 Weeks to Launch + Ongoing Retainer
+
+### [Headless D2C commerce platform, table-setting visualizer & European paid social engine (4.6x ROAS).](https://cms.test/work/dar-ceramics)
+- **Client/Brand:** Dar Ceramics
+- **Summary:** Direct-to-consumer store architecture and European export campaign yielding 4.6x ROAS.
+
+### [Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.](https://cms.test/work/cargoline-mena)
+- **Client/Brand:** CargoLine MENA
+- **Summary:** Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
+
+### [Telemedicine video platform, e-prescription vault & patient lifecycle retention across 14 clinics.](https://cms.test/work/medlink-health)
+- **Client/Brand:** MedLink Health
+- **Summary:** End-to-end encrypted video clinic and patient retention engine for 380,000 patients.
+
+### [Interactive 3D masterplan portal, commercial film campaign & high-intent lead engine (USD 84M sales).](https://cms.test/work/palm-residences)
+- **Client/Brand:** Palm Residences
+- **Summary:** Real-time unit inventory engine and omnichannel launch generating USD 84M in contracted sales.
+
+### [Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.](https://cms.test/work/qahwa-roasters)
+- **Client/Brand:** Qahwa Specialty Roasters
+- **Summary:** Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
+
+## 5. Contact & Collaboration
+- **Website Inquiry:** https://cms.test/contact
+- **Email:** hello@empetix.com
+- **Careers:** https://cms.test/careers

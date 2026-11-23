@@ -5,6 +5,7 @@ use App\Http\Controllers\Public\ContactMessageController;
 use App\Http\Controllers\Public\JobApplicationController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\PageController;
+use App\Http\Controllers\Public\SeoDiscoveryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,18 @@ Route::get('/blog/{slug}', [PageController::class, 'post'])->name('blog.show');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
 Route::post('/subscribe', [NewsletterController::class, 'store'])->name('subscribe');
+
+/*
+|--------------------------------------------------------------------------
+| SEO, Sitemap & AI Discovery Standards
+|--------------------------------------------------------------------------
+| Dynamic sitemap.xml, search-engine & AI-crawler robots.txt, and
+| llms.txt / llms-full.txt following modern AI ingestion standards.
+*/
+Route::get('/sitemap.xml', [SeoDiscoveryController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [SeoDiscoveryController::class, 'robots'])->name('robots');
+Route::get('/llms.txt', [SeoDiscoveryController::class, 'llms'])->name('llms');
+Route::get('/llms-full.txt', [SeoDiscoveryController::class, 'llmsFull'])->name('llms.full');
 
 /*
 |--------------------------------------------------------------------------
@@ -92,10 +105,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/applications/{id}', [Admin\ApplicationController::class, 'destroy'])->name('applications.destroy');
         });
 
-        // Site settings.
+        // Site settings, SEO & Sitemap.
         Route::middleware('permission:manage settings')->group(function () {
             Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('settings.edit');
             Route::put('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
+
+            // SEO & AI Search Discovery
+            Route::get('/seo', [Admin\SeoController::class, 'index'])->name('seo.index');
+            Route::put('/seo', [Admin\SeoController::class, 'update'])->name('seo.update');
+
+            // Dynamic XML Sitemap
+            Route::get('/sitemap', [Admin\SitemapController::class, 'index'])->name('sitemap.index');
+            Route::post('/sitemap/regenerate', [Admin\SitemapController::class, 'regenerate'])->name('sitemap.regenerate');
+            Route::post('/sitemap/ping', [Admin\SitemapController::class, 'ping'])->name('sitemap.ping');
         });
     });
 });

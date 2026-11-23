@@ -48,7 +48,7 @@ class JobApplicationDataTable extends AdminDataTable
                 $open = '<a class="btn btn--ghost btn--sm" href="'.e(route('admin.applications.show', $row->id)).'">Open</a>';
                 $cv = '<a class="btn btn--ghost btn--sm" href="'.e(route('admin.applications.cv', $row->id)).'">CV</a>';
 
-                return $open.$cv.'<form method="post" action="'.e(route('admin.applications.destroy', $row->id)).'" onsubmit="return confirm(\'Delete this application and its CV?\')" style="display:inline">'
+                return $open.$cv.'<form method="post" action="'.e(route('admin.applications.destroy', $row->id)).'" data-confirm="Delete this application and its CV?" data-confirm-title="Delete Application" style="display:inline">'
                     .csrf_field().method_field('DELETE')
                     .'<button class="btn btn--danger btn--sm" type="submit">Delete</button></form>';
             })

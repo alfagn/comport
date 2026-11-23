@@ -35,7 +35,7 @@
   <div class="message-body">{{ $application->achievement }}</div>
 
   <div class="form-actions">
-    <form method="post" action="{{ route('admin.applications.destroy', $application->id) }}" onsubmit="return confirm('Delete this application and its CV?')">
+    <form method="post" action="{{ route('admin.applications.destroy', $application->id) }}" data-confirm="Delete this application and its CV?" data-confirm-title="Delete Application">
       @csrf @method('DELETE')
       <button class="btn btn--danger" type="submit">Delete application</button>
     </form>

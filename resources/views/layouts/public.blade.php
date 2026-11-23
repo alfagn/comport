@@ -3,8 +3,25 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  @if(setting('seo_allow_indexing', '1') === '0')
+    <meta name="robots" content="noindex, nofollow"/>
+  @else
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+  @endif
+  <meta name="author" content="Empetix Solutions | حلول إمبيتكس"/>
+  <meta name="publisher" content="Empetix Solutions"/>
+  <meta name="keywords" content="{{ seo_keywords() }}"/>
+  <link rel="canonical" href="{{ url()->current() }}"/>
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}"/>
+  <link rel="alternate" hreflang="en" href="{{ url()->current() }}"/>
+  <link rel="alternate" hreflang="ar" href="{{ url()->current() }}"/>
+  <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}"/>
+
   @yield('meta')
   @yield('head_extra')
+
+  {{-- Comprehensive Schema.org JSON-LD: Google Knowledge Graph & AI Models (ChatGPT, Perplexity, Claude, Gemini) --}}
+  @include('partials.schema-org')
 
 
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/archivo-700.woff2') }}" crossorigin/>
