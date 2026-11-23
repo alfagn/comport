@@ -4,7 +4,7 @@
 @section('crumb', 'Site overview')
 
 @section('content')
-  <span class="welcome-pill">Welcome back, {{ auth()->user()->name }} 👋</span>
+  <span class="welcome-pill">Welcome back, {{ auth()->user()->name }}</span>
   <p class="page-sub">Here's what's happening with your website today.</p>
 
   {{--
@@ -47,12 +47,11 @@
         </div>
         <div class="stat-card__label">{{ $card['label'] }}</div>
         <div class="stat-card__num">{{ number_format($card['count']) }}@if($card['delta'] === null)<span class="delta-chip" title="No records last week to compare against">—</span>@else<span class="delta-chip {{ $card['delta'] >= 0 ? 'delta-chip--up' : 'delta-chip--down' }}" title="Created this week vs. last week">{{ $card['delta'] >= 0 ? '↑' : '↓' }} {{ abs($card['delta']) }}%</span>@endif</div>
-        <svg class="sparkline" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true">
+        <svg class="sparkline" viewBox="0 0 120 36" preserveAspectRatio="none" role="img" aria-label="Records created per day over the last 14 days">
+          <polygon points="0,36 {{ $polyline }} 120,36" fill="currentColor" opacity="0.12" stroke="none"/>
           <polyline points="{{ $polyline }}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        @unless($card['delta'] === null)
-          <div class="stat-card__foot">vs last week</div>
-        @endunless
+        <div class="stat-card__foot">{{ $card['delta'] === null ? 'New this period · 14-day activity' : 'vs last week · 14-day activity' }}</div>
       </a>
     @endforeach
   </div>

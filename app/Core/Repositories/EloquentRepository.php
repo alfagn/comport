@@ -74,6 +74,12 @@ abstract class EloquentRepository implements RepositoryInterface
     }
 
     /** {@inheritdoc} */
+    public function listingQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->query();
+    }
+
+    /** {@inheritdoc} */
     public function dailyCreatedCounts(int $days): array
     {
         $since = now()->subDays($days - 1)->startOfDay();

@@ -41,6 +41,13 @@ interface RepositoryInterface
     public function count(): int;
 
     /**
+     * Base Eloquent query for server-side dashboard listings (Yajra
+     * DataTables). Returned unconstrained: the DataTable applies the
+     * requested search/sort/pagination on top.
+     */
+    public function listingQuery(): \Illuminate\Database\Eloquent\Builder;
+
+    /**
      * Records created per calendar day for the last $days days, as a
      * date => count map. Feeds the real activity sparklines on the
      * dashboard stat cards; empty days are simply absent from the map.
