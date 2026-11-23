@@ -1170,3 +1170,8 @@ table.dt-table td.dataTables_empty { text-align: center; color: var(--text-muted
   body.sidebar-collapsed .user-chip { justify-content: center; }
   body.sidebar-collapsed .sidebar__signout { padding-left: 6px; padding-right: 6px; }
 }
+
+/* Collapsed sidebar: keep the brand mark inside the narrow rail. */
+@media (min-width: 981px) {
+  body.sidebar-collapsed .sidebar__brand img { max-width: 44px; object-fit: contain; }
+}
