@@ -164,9 +164,7 @@ class SeoService
             });
 
         // 5. Founders
-        Member::query()
-            ->where('is_founder', true)
-            ->where('is_active', true)
+        Member::founders()
             ->each(function (Member $founder) use ($urls) {
                 if ($founder->slug) {
                     $urls->push([
@@ -176,7 +174,7 @@ class SeoService
                         'priority' => '0.7',
                         'changefreq' => 'monthly',
                         'lastmod' => $founder->updated_at ? $founder->updated_at->toIso8601String() : now()->toIso8601String(),
-                        'image' => $founder->avatar ? content_asset($founder->avatar) : null,
+                        'image' => $founder->photo ? content_asset($founder->photo) : null,
                     ]);
                 }
             });
