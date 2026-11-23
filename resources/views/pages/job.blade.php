@@ -246,7 +246,7 @@
             <span class="eyebrow">Explore More Roles</span>
           </div>
           <div class="section-head__title">
-            <h2 id="other-jobs-heading" class="t-h3">Other open positions on jobs.empetix.com</h2>
+            <h2 id="other-jobs-heading" class="t-h3">{{ sec('careers', 'other_jobs_heading', 'Other open positions on jobs.empetix.com') }}</h2>
           </div>
           <div class="section-head__action">
             <a href="{{ url('/careers') }}#open-roles" class="arrow-link">View All 6 Jobs &rarr;</a>

@@ -60,7 +60,7 @@
     <section id="directory" class="team-band team-band--white" aria-labelledby="directory-heading">
       <div class="team-container">
         <div class="team-section-head">
-          <h2 id="directory-heading" class="team-heading">Practice teams</h2>
+          <h2 id="directory-heading" class="team-heading">{{ sec('team', 'practices_heading', 'Practice teams') }}</h2>
           <div class="team-section-head__body">
             <p class="team-section-head__lead">
               Senior specialists across software engineering, product design, and performance marketing working together in dedicated client squads.
@@ -118,7 +118,7 @@
       <div class="team-container">
         <div class="team-culture">
           <div class="team-section-head">
-            <h2 id="culture-heading" class="team-heading">How we work together</h2>
+            <h2 id="culture-heading" class="team-heading">{{ sec('team', 'culture_heading', 'How we work together') }}</h2>
             <div class="team-section-head__body">
               <p class="team-section-head__lead">
                 Every client engagement pairs engineering, design, and growth under one shared roadmap so software quality and commercial performance move together.
@@ -166,7 +166,7 @@
       <div class="team-container">
         <div class="team-join">
           <div class="team-join__main">
-            <h2 id="join-heading" class="team-heading">Join Empetix Solution</h2>
+            <h2 id="join-heading" class="team-heading">{{ sec('team', 'join_heading', 'Join Empetix Solution') }}</h2>
             <p class="team-join__copy">
               We hire engineers, designers, and marketers who care deeply about craft and measurable work. Explore open positions on our careers portal or reach out to our company desk.
             </p>

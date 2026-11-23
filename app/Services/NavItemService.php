@@ -6,6 +6,7 @@ use App\Core\Services\BaseService;
 use App\DTOs\NavItemData;
 use App\Repositories\Contracts\NavItemRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Models\NavItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -37,10 +38,23 @@ class NavItemService extends BaseService
         return $this->repository->find($id);
     }
 
-    /** Active links of one menu for the public header, cached for 5 minutes. */
+    /**
+     * Active links of one menu for the public header, cached for 5 minutes.
+     *
+     * Plain arrays are cached (never Eloquent models) so the cache payload
+     * stays a safe, framework-version-independent serialization.
+     */
     public function menu(string $menu): Collection
     {
-        return Cache::remember(self::CACHE_PREFIX.$menu, 300, fn () => $this->repository->activeForMenu($menu));
+        $links = Cache::remember(
+            self::CACHE_PREFIX.$menu,
+            300,
+            fn () => $this->repository->activeForMenu($menu)
+                ->map(fn (NavItem $item) => ['label' => $item->label, 'url' => $item->url])
+                ->all()
+        );
+
+        return collect($links)->map(fn (array $link) => (object) $link);
     }
 
     /** Create a link from validated input and refresh the cached menus. */

@@ -107,7 +107,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="tracks-heading" class="t-h2">Choose your practice area.</h2>
+            <h2 id="tracks-heading" class="t-h2">{{ sec('careers', 'tracks_heading', 'Choose your practice area.') }}</h2>
             <p class="t-lead">Click any department track below to filter open positions immediately.</p>
           </div>
         </div>
@@ -178,7 +178,7 @@
         <div class="jobs-toolbar">
           <div>
             <span class="eyebrow">02 / Open Requisitions</span>
-            <h2 id="roles-heading" class="t-h3">Select a role to view full qualifications, requirements &amp; apply</h2>
+            <h2 id="roles-heading" class="t-h3">{{ sec('careers', 'roles_heading', 'Select a role to view full qualifications, requirements & apply') }}</h2>
           </div>
           <p id="jobs-results-count" class="jobs-toolbar__count" aria-live="polite">
             Showing 6 of 6 open positions on jobs.empetix.com
@@ -249,7 +249,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="benefits-heading" class="t-h2">Built for people who take their craft seriously.</h2>
+            <h2 id="benefits-heading" class="t-h2">{{ sec('careers', 'benefits_heading', 'Built for people who take their craft seriously.') }}</h2>
           </div>
         </div>
 
@@ -292,7 +292,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="process-heading" class="t-h2">Four transparent steps from application to written offer.</h2>
+            <h2 id="process-heading" class="t-h2">{{ sec('careers', 'process_heading', 'Four transparent steps from application to written offer.') }}</h2>
           </div>
         </div>
 

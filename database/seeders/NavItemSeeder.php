@@ -30,6 +30,11 @@ class NavItemSeeder extends Seeder
         }
 
         $drawer = [
+            ['label' => 'Projects & Platforms', 'url' => '/work'],
+            ['label' => 'About & Founders', 'url' => '/about'],
+            ['label' => 'Our Team', 'url' => '/team'],
+            ['label' => 'Partners & Industries', 'url' => '/partners'],
+            ['label' => 'Blogs & Media', 'url' => '/blog'],
             ['label' => 'Careers', 'url' => '/careers'],
             ['label' => 'Contact Us', 'url' => '/contact'],
         ];

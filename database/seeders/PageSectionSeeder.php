@@ -27,12 +27,19 @@ class PageSectionSeeder extends Seeder
         ],
         'about' => [
             ['hero_title', 'Hero title', 'textarea'],
+            ['who_we_are_heading', '"Who we are" film section title', 'text'],
+            ['principles_heading', "Principles section heading", 'text'],
+            ['timeline_heading', "Timeline section heading", 'text'],
+            ['directory_heading', "Team directory heading", 'text'],
         ],
         'work' => [
             ['hero_title', 'Hero title', 'text'],
         ],
         'team' => [
             ['hero_title', 'Hero title', 'text'],
+            ['practices_heading', "Practice teams heading", 'text'],
+            ['culture_heading', "Culture section heading", 'text'],
+            ['join_heading', "Join-us section heading", 'text'],
         ],
         'blog' => [
             ['hero_title', 'Hero title', 'text'],
@@ -42,6 +49,13 @@ class PageSectionSeeder extends Seeder
         ],
         'contact' => [
             ['hero_title', 'Hero title', 'textarea'],
+        ],
+        'careers' => [
+            ['tracks_heading', "Practice areas heading", 'text'],
+            ['roles_heading', "Open roles heading", 'text'],
+            ['benefits_heading', "Benefits heading", 'text'],
+            ['process_heading', "Hiring process heading", 'text'],
+            ['other_jobs_heading', '"Other positions" heading (job page)', 'text'],
         ],
         'footer' => [
             ['banner_title', 'CTA banner title', 'text'],

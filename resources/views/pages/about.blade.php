@@ -54,7 +54,7 @@
     <section id="who-we-are" class="overview-film" aria-labelledby="who-we-are-heading">
       <div class="container">
         <header class="overview-film__header">
-          <h2 id="who-we-are-heading" class="overview-film__title">Who we are</h2>
+          <h2 id="who-we-are-heading" class="overview-film__title">{{ sec('about', 'who_we_are_heading', 'Who we are') }}</h2>
           <p class="overview-film__lead">
             Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses.
           </p>
@@ -107,7 +107,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="principles-heading" class="t-h2">How we work when the stakes are high.</h2>
+            <h2 id="principles-heading" class="t-h2">{{ sec('about', 'principles_heading', 'How we work when the stakes are high.') }}</h2>
           </div>
         </div>
 
@@ -150,7 +150,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="timeline-heading" class="t-h2">Eight years of compounding craft.</h2>
+            <h2 id="timeline-heading" class="t-h2">{{ sec('about', 'timeline_heading', 'Eight years of compounding craft.') }}</h2>
           </div>
         </div>
 
@@ -185,7 +185,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="directory-heading" class="t-h3">Senior Principals &amp; Discipline Heads</h2>
+            <h2 id="directory-heading" class="t-h3">{{ sec('about', 'directory_heading', 'Senior Principals & Discipline Heads') }}</h2>
           </div>
         </div>
 
