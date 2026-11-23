@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="robots" content="noindex, nofollow"/>
   <title>@yield('title', 'Dashboard') — Empetix Command</title>
-  <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/favicon.svg') }}"/>
+  <link rel="icon" href="{{ brand_favicon() }}"/>
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/archivo-800.woff2') }}" crossorigin/>
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/public-sans-400.woff2') }}" crossorigin/>
   <link rel="stylesheet" href="{{ asset('assets/css/base/typography.css') }}"/>
@@ -17,6 +17,18 @@
       var saved = null;
       try { saved = localStorage.getItem('empetix-admin-theme'); } catch (e) {}
       document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
+      window.empetixToggleSidebar = function () {
+      var sidebar = document.getElementById('sidebar');
+      var btn = document.getElementById('sidebar-toggle');
+      if (window.matchMedia('(max-width: 980px)').matches) {
+        var open = sidebar.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      } else {
+        var collapsed = document.body.classList.toggle('sidebar-collapsed');
+        try { localStorage.setItem('empetix-admin-sidebar', collapsed ? 'collapsed' : 'expanded'); } catch (e) {}
+        btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      }
+    };
       window.empetixToggleTheme = function () {
         var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
@@ -27,18 +39,31 @@
           btn.querySelector('.icon-sun').style.display = next === 'dark' ? '' : 'none';
         });
       };
-      document.addEventListener('DOMContentLoaded', function () {
+      window.empetixSyncThemeButtons = function () {
         var dark = document.documentElement.getAttribute('data-theme') === 'dark';
         document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
           btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
           btn.querySelector('.icon-moon').style.display = dark ? 'none' : '';
           btn.querySelector('.icon-sun').style.display = dark ? '' : 'none';
         });
-      });
+      };
+      document.addEventListener('DOMContentLoaded', window.empetixSyncThemeButtons);
+      // Livewire SPA navigation swaps the body: re-sync the freshly rendered buttons.
+      document.addEventListener('livewire:navigated', window.empetixSyncThemeButtons);
     })();
   </script>
 </head>
 <body class="admin">
+  <script>
+    // Sidebar: persisted desktop collapsed state, applied before first paint.
+    (function () {
+      try {
+        if (window.matchMedia('(min-width: 981px)').matches && localStorage.getItem('empetix-admin-sidebar') === 'collapsed') {
+          document.body.classList.add('sidebar-collapsed');
+        }
+      } catch (e) {}
+    })();
+  </script>
   {{-- Decorative orange ribbon sweeps from the user's reference design.
        Pure background artwork, kept separate from real data charts. --}}
   <svg class="bg-ribbon bg-ribbon--top" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true">
@@ -59,8 +84,8 @@
   {{-- ============ Sidebar ============ --}}
   <aside class="sidebar" id="sidebar">
     <div class="sidebar__brand">
-      <a href="{{ route('admin.dashboard') }}">
-        <img src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="Empetix"/>
+      <a href="{{ route('admin.dashboard') }}" wire:navigate>
+        <img src="{{ brand_logo() }}" alt="Empetix"/>
       </a>
       <div>
         <small>Solutions</small>
@@ -80,75 +105,115 @@
     {{-- Scrollable nav region: the brand and the profile footer stay pinned. --}}
     <nav class="sidebar__nav" aria-label="Dashboard sections">
     <div class="sidebar__label">Overview</div>
-    <a class="nav-item {{ $r === 'admin.dashboard' ? 'is-active' : '' }}" href="{{ route('admin.dashboard') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="8" height="10" rx="1.5"/><rect x="13" y="3" width="8" height="6" rx="1.5"/><rect x="13" y="11" width="8" height="10" rx="1.5"/><rect x="3" y="15" width="8" height="6" rx="1.5"/></svg>
-      Dashboard
+    <a class="nav-item {{ $r === 'admin.dashboard' ? 'is-active' : '' }}" href="{{ route('admin.dashboard') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-grid.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Dashboard</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.inbox') ? 'is-active' : '' }}" href="{{ route('admin.inbox.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
-      Inbox
+    @can('manage inbox')
+    <a class="nav-item {{ str_starts_with($r, 'admin.inbox') ? 'is-active' : '' }}" href="{{ route('admin.inbox.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-inbox.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Inbox</span>
       @if($unread > 0)<span class="badge">{{ $unread }}</span>@endif
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.pages') ? 'is-active' : '' }}" href="{{ route('admin.pages.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
-      Pages &amp; Content
+    @endcan
+    @can('manage pages')
+    <a class="nav-item {{ str_starts_with($r, 'admin.pages') ? 'is-active' : '' }}" href="{{ route('admin.pages.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-document.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Pages &amp; Content</span>
     </a>
+    @endcan
 
     <div class="sidebar__label">Content</div>
-    <a class="nav-item {{ str_starts_with($r, 'admin.hero-slides') ? 'is-active' : '' }}" href="{{ route('admin.hero-slides.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/></svg>
-      Hero Slides
+    @can('manage hero slides')
+    <a class="nav-item {{ str_starts_with($r, 'admin.hero-slides') ? 'is-active' : '' }}" href="{{ route('admin.hero-slides.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-image.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Hero Slides</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.services') ? 'is-active' : '' }}" href="{{ route('admin.services.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>
-      Services
+    @endcan
+    @can('manage services')
+    <a class="nav-item {{ str_starts_with($r, 'admin.services') ? 'is-active' : '' }}" href="{{ route('admin.services.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-headphones.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Services</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.industries') ? 'is-active' : '' }}" href="{{ route('admin.industries.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21V8l6 4V8l6 4V5l6 3v13z"/></svg>
-      Industries
+    @endcan
+    @can('manage industries')
+    <a class="nav-item {{ str_starts_with($r, 'admin.industries') ? 'is-active' : '' }}" href="{{ route('admin.industries.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-pie-chart.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Industries</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.projects') ? 'is-active' : '' }}" href="{{ route('admin.projects.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16v13H4z"/><path d="M9 7V4h6v3M4 12h16"/></svg>
-      Projects
+    @endcan
+    @can('manage projects')
+    <a class="nav-item {{ str_starts_with($r, 'admin.projects') ? 'is-active' : '' }}" href="{{ route('admin.projects.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-folder.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Projects</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.members') ? 'is-active' : '' }}" href="{{ route('admin.members.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c.6-3.4 2.8-5 5.5-5s4.9 1.6 5.5 5M16 5.5a3 3 0 010 5.8M17.5 15.6c1.7.6 2.7 2 3 4.4"/></svg>
-      Team &amp; Founders
+    @endcan
+    @can('manage members')
+    <a class="nav-item {{ str_starts_with($r, 'admin.members') ? 'is-active' : '' }}" href="{{ route('admin.members.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-puzzle-partners.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Team &amp; Founders</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.jobs') ? 'is-active' : '' }}" href="{{ route('admin.jobs.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
-      Careers
+    @endcan
+    @can('manage jobs')
+    <a class="nav-item {{ str_starts_with($r, 'admin.jobs') ? 'is-active' : '' }}" href="{{ route('admin.jobs.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-briefcase.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Careers</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.applications') ? 'is-active' : '' }}" href="{{ route('admin.applications.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h11l3 3v13H5z"/><path d="M9 12h6M9 16h6"/><circle cx="9" cy="8" r="1.6"/></svg>
-      Applications
+    @endcan
+    @can('manage applications')
+    <a class="nav-item {{ str_starts_with($r, 'admin.applications') ? 'is-active' : '' }}" href="{{ route('admin.applications.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-mailbox.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Applications</span>
       @if($newApplications)<span class="badge">{{ $newApplications }}</span>@endif
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.posts') ? 'is-active' : '' }}" href="{{ route('admin.posts.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
-      Blog &amp; Media
+    @endcan
+    @can('manage posts')
+    <a class="nav-item {{ str_starts_with($r, 'admin.posts') ? 'is-active' : '' }}" href="{{ route('admin.posts.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-megaphone.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Blog &amp; Media</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.partners') ? 'is-active' : '' }}" href="{{ route('admin.partners.index') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 12l3 3 5-6"/><circle cx="12" cy="12" r="9"/></svg>
-      Partners
+    @endcan
+    @can('manage partners')
+    <a class="nav-item {{ str_starts_with($r, 'admin.partners') ? 'is-active' : '' }}" href="{{ route('admin.partners.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-medal.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Partners</span>
     </a>
+    @endcan
 
-    <a class="nav-item {{ str_starts_with($r, 'admin.navigation') ? 'is-active' : '' }}" href="{{ route('admin.navigation.index') }}">
-      <svg viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      Navigation
+    @can('manage navigation')
+    <a class="nav-item {{ str_starts_with($r, 'admin.navigation') ? 'is-active' : '' }}" href="{{ route('admin.navigation.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-list.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Navigation</span>
     </a>
-    <a class="nav-item {{ str_starts_with($r, 'admin.content-lists') ? 'is-active' : '' }}" href="{{ route('admin.content-lists.index') }}">
-      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="11" width="14" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
-      Content Lists
+    @endcan
+    @can('manage content lists')
+    <a class="nav-item {{ str_starts_with($r, 'admin.content-lists') ? 'is-active' : '' }}" href="{{ route('admin.content-lists.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-clipboard.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Content Lists</span>
     </a>
+    @endcan
     <div class="sidebar__label">Site</div>
-    <a class="nav-item {{ str_starts_with($r, 'admin.settings') ? 'is-active' : '' }}" href="{{ route('admin.settings.edit') }}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.15-1.4l2-1.55-2-3.46-2.35.95a7 7 0 00-2.42-1.4L13.7 2.6h-3.4l-.38 2.54a7 7 0 00-2.42 1.4l-2.35-.95-2 3.46 2 1.55a7 7 0 000 2.8l-2 1.55 2 3.46 2.35-.95a7 7 0 002.42 1.4l.38 2.54h3.4l.38-2.54a7 7 0 002.42-1.4l2.35.95 2-3.46-2-1.55c.1-.45.15-.92.15-1.4z"/></svg>
-      Settings
+    @can('manage settings')
+    <a class="nav-item {{ str_starts_with($r, 'admin.settings') ? 'is-active' : '' }}" href="{{ route('admin.settings.edit') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-gear.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Settings</span>
     </a>
+    @endcan
+    @can('manage admins')
+    <div class="sidebar__label">System</div>
+    <a class="nav-item {{ str_starts_with($r, 'admin.admins') ? 'is-active' : '' }}" href="{{ route('admin.admins.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-shield.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Admins</span>
+    </a>
+    <a class="nav-item {{ str_starts_with($r, 'admin.roles') ? 'is-active' : '' }}" href="{{ route('admin.roles.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-sliders.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Roles</span>
+    </a>
+    @endcan
+
     <a class="nav-item" href="{{ url('/') }}" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 4h6v6M20 4L10 14M9 5H5a1 1 0 00-1 1v13a1 1 0 001 1h13a1 1 0 001-1v-4"/></svg>
-      View Website
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-eye.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">View Website</span>
     </a>
 
     </nav>
@@ -163,7 +228,10 @@
       </div>
       <form method="post" action="{{ route('admin.logout') }}">
         @csrf
-        <button type="submit" class="btn btn--ghost btn--sm" style="width:100%;justify-content:center;margin-top:10px;">Sign out</button>
+        <button type="submit" class="btn btn--ghost btn--sm sidebar__signout" style="width:100%;justify-content:center;margin-top:10px;" title="Sign out">
+          <img src="{{ asset('assets/images/3d/3d-power.png') }}" alt="" width="16" height="16"/>
+          <span class="nav-item__text">Sign out</span>
+        </button>
       </form>
     </div>
   </aside>
@@ -171,7 +239,9 @@
   {{-- ============ Main ============ --}}
   <div class="main">
     <div class="topbar">
-      <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('is-open')" aria-label="Toggle menu">☰</button>
+      <button class="menu-btn" type="button" onclick="empetixToggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true" aria-controls="sidebar" id="sidebar-toggle">
+        <img src="{{ asset('assets/images/3d/3d-menu.png') }}" alt="" width="20" height="20"/>
+      </button>
       <div class="topbar__titles">
         @if($__env->yieldContent('page_header') !== 'hide')
           <span class="crumb">@yield('crumb')</span>
@@ -181,7 +251,7 @@
 
       {{-- Quick-jump search: filters the admin sections client-side (opens with / or Cmd+K). --}}
       <button class="topbar-search" id="quicknav-open" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <img src="{{ asset('assets/images/3d/3d-magnifier.png') }}" alt="" width="16" height="16"/>
         <span>Search sections…</span>
         <kbd>⌘K</kbd>
       </button>
@@ -190,11 +260,11 @@
         @yield('actions')
         {{-- Unread-briefs bell: the badge is the real unread count. --}}
         <button class="icon-btn" type="button" data-theme-toggle onclick="empetixToggleTheme()" aria-label="Toggle dark mode" aria-pressed="false">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="18" height="18"><path d="M20 13.5A8.5 8.5 0 0 1 10.5 4 8.5 8.5 0 1 0 20 13.5z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="18" height="18" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <img class="icon-moon" src="{{ asset('assets/images/3d/3d-moon.png') }}" alt="" width="20" height="20"/>
+          <img class="icon-sun" src="{{ asset('assets/images/3d/3d-sun.png') }}" alt="" width="20" height="20" style="display:none"/>
         </button>
         <a class="icon-btn" href="{{ route('admin.inbox.index') }}" aria-label="Inbox, {{ $unread }} unread">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 16v-5a6 6 0 1112 0v5l1.5 2.5h-15z"/><path d="M10 21a2.2 2.2 0 004 0"/></svg>
+          <img src="{{ asset('assets/images/3d/3d-bell.png') }}" alt="" width="20" height="20"/>
           @if($unread > 0)<span class="icon-btn__badge">{{ $unread }}</span>@endif
         </a>
         {{-- Account menu --}}
@@ -218,21 +288,21 @@
       <div class="quicknav__panel">
         <input type="search" id="quicknav-input" placeholder="Jump to a section…" autocomplete="off"/>
         <ul id="quicknav-list">
-          <li data-name="dashboard overview"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-          <li data-name="inbox briefs messages contact"><a href="{{ route('admin.inbox.index') }}">Inbox</a></li>
-          <li data-name="pages content sections"><a href="{{ route('admin.pages.index') }}">Pages &amp; Content</a></li>
-          <li data-name="hero slides homepage"><a href="{{ route('admin.hero-slides.index') }}">Hero Slides</a></li>
-          <li data-name="services"><a href="{{ route('admin.services.index') }}">Services</a></li>
-          <li data-name="industries"><a href="{{ route('admin.industries.index') }}">Industries</a></li>
-          <li data-name="projects work portfolio"><a href="{{ route('admin.projects.index') }}">Projects</a></li>
-          <li data-name="team founders members"><a href="{{ route('admin.members.index') }}">Team &amp; Founders</a></li>
-          <li data-name="careers jobs roles hiring"><a href="{{ route('admin.jobs.index') }}">Careers</a></li>
-          <li data-name="applications candidates cvs resumes hiring"><a href="{{ route('admin.applications.index') }}">Applications</a></li>
-          <li data-name="blog media posts news"><a href="{{ route('admin.posts.index') }}">Blog &amp; Media</a></li>
-          <li data-name="partners clients logos"><a href="{{ route('admin.partners.index') }}">Partners</a></li>
-          <li data-name="navigation menu mega"><a href="{{ route('admin.navigation.index') }}">Navigation</a></li>
-          <li data-name="content lists about careers timeline"><a href="{{ route('admin.content-lists.index') }}">Content Lists</a></li>
-          <li data-name="settings site social contact"><a href="{{ route('admin.settings.edit') }}">Settings</a></li>
+          <li data-name="dashboard overview"><a href="{{ route('admin.dashboard') }}" wire:navigate>Dashboard</a></li>
+          <li data-name="inbox briefs messages contact"><a href="{{ route('admin.inbox.index') }}" wire:navigate>Inbox</a></li>
+          <li data-name="pages content sections"><a href="{{ route('admin.pages.index') }}" wire:navigate>Pages &amp; Content</a></li>
+          <li data-name="hero slides homepage"><a href="{{ route('admin.hero-slides.index') }}" wire:navigate>Hero Slides</a></li>
+          <li data-name="services"><a href="{{ route('admin.services.index') }}" wire:navigate>Services</a></li>
+          <li data-name="industries"><a href="{{ route('admin.industries.index') }}" wire:navigate>Industries</a></li>
+          <li data-name="projects work portfolio"><a href="{{ route('admin.projects.index') }}" wire:navigate>Projects</a></li>
+          <li data-name="team founders members"><a href="{{ route('admin.members.index') }}" wire:navigate>Team &amp; Founders</a></li>
+          <li data-name="careers jobs roles hiring"><a href="{{ route('admin.jobs.index') }}" wire:navigate>Careers</a></li>
+          <li data-name="applications candidates cvs resumes hiring"><a href="{{ route('admin.applications.index') }}" wire:navigate>Applications</a></li>
+          <li data-name="blog media posts news"><a href="{{ route('admin.posts.index') }}" wire:navigate>Blog &amp; Media</a></li>
+          <li data-name="partners clients logos"><a href="{{ route('admin.partners.index') }}" wire:navigate>Partners</a></li>
+          <li data-name="navigation menu mega"><a href="{{ route('admin.navigation.index') }}" wire:navigate>Navigation</a></li>
+          <li data-name="content lists about careers timeline"><a href="{{ route('admin.content-lists.index') }}" wire:navigate>Content Lists</a></li>
+          <li data-name="settings site social contact"><a href="{{ route('admin.settings.edit') }}" wire:navigate>Settings</a></li>
         </ul>
       </div>
     </div>
@@ -260,10 +330,22 @@
             if (first) window.location = first.querySelector('a').href;
           }
         });
-        document.addEventListener('keydown', function (e) {
-          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); }
-          if (e.key === 'Escape') close();
-        });
+        if (!window.__empetixQuicknavKeys) {
+          window.__empetixQuicknavKeys = true;
+          document.addEventListener('keydown', function (e) {
+            var liveOverlay = document.getElementById('quicknav');
+            if (!liveOverlay) return;
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+              e.preventDefault();
+              liveOverlay.hidden = false;
+              var liveInput = document.getElementById('quicknav-input');
+              liveInput.value = '';
+              liveInput.dispatchEvent(new Event('input'));
+              liveInput.focus();
+            }
+            if (e.key === 'Escape') liveOverlay.hidden = true;
+          });
+        }
       })();
     </script>
 

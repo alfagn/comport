@@ -28,7 +28,7 @@ class NavigationTest extends TestCase
     /** A link created in the dashboard appears on the public site (cache flushed). */
     public function test_created_link_renders_publicly(): void
     {
-        $admin = User::factory()->create();
+        $admin = $this->owner();
 
         $this->actingAs($admin)->post(route('admin.navigation.store'), [
             'menu' => 'utility',
@@ -46,7 +46,7 @@ class NavigationTest extends TestCase
     /** Hidden links disappear from the public header. */
     public function test_inactive_link_is_not_rendered(): void
     {
-        $admin = User::factory()->create();
+        $admin = $this->owner();
         $item = NavItem::create(['menu' => 'utility', 'label' => 'Secret Page', 'url' => '/secret', 'sort_order' => 1, 'is_active' => true]);
 
         $this->get('/')->assertSee('Secret Page');
@@ -65,7 +65,7 @@ class NavigationTest extends TestCase
     /** Validation rejects bad input and nothing is persisted. */
     public function test_validation_blocks_invalid_menu(): void
     {
-        $admin = User::factory()->create();
+        $admin = $this->owner();
 
         $this->actingAs($admin)->post(route('admin.navigation.store'), [
             'menu' => 'sidebar',

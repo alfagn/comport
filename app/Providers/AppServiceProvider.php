@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         Contracts\PageSectionRepositoryInterface::class => Eloquent\PageSectionRepository::class,
         Contracts\NavItemRepositoryInterface::class => Eloquent\NavItemRepository::class,
         Contracts\ContentListItemRepositoryInterface::class => Eloquent\ContentListItemRepository::class,
+        Contracts\AdminUserRepositoryInterface::class => Eloquent\AdminUserRepository::class,
     ];
 
     /** Register any application services. */
@@ -45,6 +46,10 @@ class AppServiceProvider extends ServiceProvider
     /** Bootstrap any application services. */
     public function boot(): void
     {
-        //
+        // RBAC: the owner role implicitly holds every permission. All other
+        // roles fall through to their granted permissions only.
+        \Illuminate\Support\Facades\Gate::before(function (\App\Models\User $user, string $ability) {
+            return $user->hasRole(\App\Support\Permissions::OWNER_ROLE) ? true : null;
+        });
     }
 }

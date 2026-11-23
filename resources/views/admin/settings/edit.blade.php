@@ -4,8 +4,18 @@
 @section('crumb', 'Global details used across the site')
 
 @section('content')
-<form method="post" action="{{ route('admin.settings.update') }}">
+<form method="post" enctype="multipart/form-data" action="{{ route('admin.settings.update') }}">
   @csrf @method('PUT')
+
+  <div class="card">
+    <h2 class="card__title">Brand assets</h2>
+    <p class="card__sub">Favicon and logos used across the site and this dashboard. Leave empty to keep the current ones.</p>
+    <div class="form-grid">
+      <div class="full"><x-admin.image name="brand_favicon" label="Favicon" :current="setting('brand_favicon') ?: 'assets/img/favicon.svg'" hint="PNG, SVG or ICO, square. Used as the browser tab icon everywhere."/></div>
+      <x-admin.image name="brand_logo" label="Site logo" :current="setting('brand_logo') ?: 'assets/img/logo/empetix-logo.png'"/>
+      <x-admin.image name="brand_logo_dark" label="Site logo (dark)" :current="setting('brand_logo_dark') ?: 'assets/img/logo/empetix-logo-dark.png'"/>
+    </div>
+  </div>
 
   @foreach($groups as $group => $settings)
     <div class="card">

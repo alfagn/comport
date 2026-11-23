@@ -14,7 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Admin is the only authenticated area: guests land on its login screen.
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
-        //
+
+        // RBAC: per-section permission checks on admin routes.
+        $middleware->alias([
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

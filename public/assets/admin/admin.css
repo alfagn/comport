@@ -1147,3 +1147,26 @@ table.dt-table td.dataTables_empty { text-align: center; color: var(--text-muted
   .table-wrap--dt { overflow-x: auto; }
   .table-wrap--dt .dt-table { min-width: 620px; }
 }
+
+/* ---------------- 3D nav/topbar icons ---------------- */
+.nav-item img.nav-ico { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+.nav-item.is-active img.nav-ico { filter: drop-shadow(0 3px 8px rgba(255, 77, 28, 0.4)); }
+.icon-btn img, .menu-btn img { object-fit: contain; }
+.sidebar__signout { display: inline-flex; align-items: center; gap: 8px; }
+.sidebar__signout img { object-fit: contain; }
+
+/* ---------------- Collapsible sidebar (desktop) ---------------- */
+@media (min-width: 981px) {
+  body.sidebar-collapsed .sidebar { width: 82px; }
+  body.sidebar-collapsed .sidebar__brand { justify-content: center; padding-left: 0; padding-right: 0; }
+  body.sidebar-collapsed .sidebar__brand small,
+  body.sidebar-collapsed .sidebar__label,
+  body.sidebar-collapsed .nav-item .nav-item__text,
+  body.sidebar-collapsed .nav-item .badge,
+  body.sidebar-collapsed .user-chip > div:not(.user-chip__avatar),
+  body.sidebar-collapsed .sidebar__signout .nav-item__text { display: none; }
+  body.sidebar-collapsed .nav-item { justify-content: center; padding-left: 8px; padding-right: 8px; }
+  body.sidebar-collapsed .nav-item.is-active { box-shadow: inset 0 0 0 1.5px var(--accent); }
+  body.sidebar-collapsed .user-chip { justify-content: center; }
+  body.sidebar-collapsed .sidebar__signout { padding-left: 6px; padding-right: 6px; }
+}

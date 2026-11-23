@@ -24,6 +24,10 @@ class SettingsRequest extends FormRequest
         return [
             'settings' => ['required', 'array'],
             'settings.*' => ['nullable', 'string', 'max:2000'],
+            // Brand assets: optional uploads; current files stay when absent.
+            'brand_favicon' => ['nullable', 'file', 'mimes:png,svg,ico,jpg', 'max:1024'],
+            'brand_logo' => ['nullable', 'image', 'max:2048'],
+            'brand_logo_dark' => ['nullable', 'image', 'max:2048'],
         ];
     }
 }

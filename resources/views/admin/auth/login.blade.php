@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="robots" content="noindex, nofollow"/>
   <title>Sign in — Empetix Command</title>
-  <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/favicon.svg') }}"/>
+  <link rel="icon" href="{{ brand_favicon() }}"/>
   <link rel="stylesheet" href="{{ asset('assets/css/base/typography.css') }}"/>
   <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}"/>
   <script>
@@ -39,7 +39,7 @@
 <body class="admin">
 <div class="login-wrap">
   <div class="login-brand">
-    <img src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="Empetix"/>
+    <img src="{{ brand_logo() }}" alt="Empetix"/>
     <h2>Run the whole site<br/>from <em>one command room.</em></h2>
     <p>Every word, image, project, job opening and brief across the Empetix website — editable from here.</p>
   </div>

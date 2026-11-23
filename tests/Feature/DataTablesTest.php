@@ -24,7 +24,7 @@ class DataTablesTest extends TestCase
 
     private function admin(): User
     {
-        return User::factory()->create();
+        return $this->owner();
     }
 
     public function test_guests_cannot_read_datatable_json(): void

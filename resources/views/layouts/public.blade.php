@@ -10,7 +10,7 @@
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/archivo-700.woff2') }}" crossorigin/>
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/public-sans-400.woff2') }}" crossorigin/>
 
-  <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/favicon.svg') }}"/>
+  <link rel="icon" href="{{ brand_favicon() }}"/>
   <link rel="preload" as="image" href="{{ asset('assets/img/logo/empetix-logo.png') }}" fetchpriority="high"/>
   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"/>
   <script src="{{ asset('assets/js/preloader-gate.js') }}"></script>
@@ -35,7 +35,7 @@
       <!-- 1. Dim Grayscale Base Silhouette -->
       <img
         class="preloader__logo preloader__logo--base"
-        src="{{ asset('assets/img/logo/empetix-logo.png') }}"
+        src="{{ brand_logo() }}"
         alt="Empetix Solution"
         width="881"
         height="302"
@@ -45,18 +45,18 @@
 
       <!-- 2. Precision 12-Piece Letter & Equalizer Assembly of the Official 881x302 Logo -->
       <div class="preloader__pieces" aria-hidden="true">
-        <img class="preloader__piece preloader__piece--e1" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--m1" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--m2" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--m3" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--m4" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--m5" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--p" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--e2" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--t" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--i" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--x" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
-        <img class="preloader__piece preloader__piece--solution" src="{{ asset('assets/img/logo/empetix-logo.png') }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--e1" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m1" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m2" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m3" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m4" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--m5" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--p" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--e2" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--t" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--i" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--x" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
+        <img class="preloader__piece preloader__piece--solution" src="{{ brand_logo() }}" alt="" width="881" height="302" fetchpriority="high" decoding="sync"/>
       </div>
 
       <!-- 3. Thin 2px Accent Scan Line following --p -->
@@ -123,7 +123,7 @@
       <a href="{{ url('/') }}"@if(($activePage ?? '') === 'home') aria-current="page"@endif class="brand" aria-label="Empetix Solution Home">
         <img
           class="brand__logo-img"
-          src="{{ asset('assets/img/logo/empetix-logo-dark.png') }}"
+          src="{{ brand_logo(dark: true) }}"
           alt="Empetix Solution"
           width="881"
           height="302"
@@ -338,7 +338,7 @@
         <a href="{{ url('/') }}" class="brand" aria-label="Empetix Solution Home">
           <img
             class="brand__logo-img"
-            src="{{ asset('assets/img/logo/empetix-logo.png') }}"
+            src="{{ brand_logo() }}"
             alt="Empetix Solution"
             width="881"
             height="302"

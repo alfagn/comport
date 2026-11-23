@@ -26,7 +26,7 @@ class ContentListTest extends TestCase
     /** A card created in the dashboard appears on the public site (cache flushed). */
     public function test_created_card_renders_publicly(): void
     {
-        $admin = User::factory()->create();
+        $admin = $this->owner();
 
         $this->actingAs($admin)->post(route('admin.content-lists.store'), [
             'group' => 'about.principles',
@@ -43,7 +43,7 @@ class ContentListTest extends TestCase
     /** Unknown groups are rejected and nothing is persisted. */
     public function test_invalid_group_is_rejected(): void
     {
-        $admin = User::factory()->create();
+        $admin = $this->owner();
 
         $this->actingAs($admin)->post(route('admin.content-lists.store'), [
             'group' => 'home.hero',
@@ -75,7 +75,7 @@ class ContentListTest extends TestCase
     public function test_created_mega_link_renders_publicly(): void
     {
         $this->seed(\Database\Seeders\NavItemSeeder::class);
-        $admin = User::factory()->create();
+        $admin = $this->owner();
         $column = \App\Models\NavItem::where('menu', 'mega-capabilities')->whereNull('parent_id')->firstOrFail();
 
         $this->actingAs($admin)->post(route('admin.navigation.store'), [

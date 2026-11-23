@@ -33,4 +33,20 @@ class SettingService extends BaseService
             \App\Models\Setting::setValue($key, $value);
         }
     }
+
+    /**
+     * Persist uploaded brand assets (favicon, logos) to the public disk and
+     * point the matching settings at them. Absent files keep the current
+     * asset, so partial saves never wipe the brand.
+     */
+    public function saveBrandAssets(array $files): void
+    {
+        foreach (['brand_favicon', 'brand_logo', 'brand_logo_dark'] as $key) {
+            $file = $files[$key] ?? null;
+            if ($file instanceof \Illuminate\Http\UploadedFile) {
+                $path = $file->store('uploads/brand', 'public');
+                \App\Models\Setting::setValue($key, $path, 'brand');
+            }
+        }
+    }
 }

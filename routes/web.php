@@ -53,36 +53,49 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', Admin\DashboardController::class)->name('dashboard');
 
         // Page content: every editable text/image block of the site.
-        Route::get('/pages', [Admin\PageSectionController::class, 'index'])->name('pages.index');
-        Route::get('/pages/{page}', [Admin\PageSectionController::class, 'edit'])->name('pages.edit');
-        Route::put('/pages/{page}', [Admin\PageSectionController::class, 'update'])->name('pages.update');
+        Route::middleware('permission:manage pages')->group(function () {
+            Route::get('/pages', [Admin\PageSectionController::class, 'index'])->name('pages.index');
+            Route::get('/pages/{page}', [Admin\PageSectionController::class, 'edit'])->name('pages.edit');
+            Route::put('/pages/{page}', [Admin\PageSectionController::class, 'update'])->name('pages.update');
+        });
 
-        // Content entities.
-        Route::resource('hero-slides', Admin\HeroSlideController::class)->except('show');
-        Route::resource('services', Admin\ServiceController::class)->except('show');
-        Route::resource('industries', Admin\IndustryController::class)->except('show');
-        Route::resource('projects', Admin\ProjectController::class)->except('show');
-        Route::resource('members', Admin\MemberController::class)->except('show');
-        Route::resource('jobs', Admin\JobPostController::class)->except('show');
-        Route::resource('posts', Admin\PostController::class)->except('show');
-        Route::resource('partners', Admin\PartnerController::class)->except('show');
-        Route::resource('navigation', Admin\NavItemController::class)->except('show')->parameters(['navigation' => 'id']);
-        Route::resource('content-lists', Admin\ContentListController::class)->except('show')->parameters(['content-lists' => 'id']);
+        // Content entities. Each section is enforced server-side by its
+        // permission; the sidebar only hides what the server already blocks.
+        Route::resource('hero-slides', Admin\HeroSlideController::class)->except('show')->middleware('permission:manage hero slides');
+        Route::resource('services', Admin\ServiceController::class)->except('show')->middleware('permission:manage services');
+        Route::resource('industries', Admin\IndustryController::class)->except('show')->middleware('permission:manage industries');
+        Route::resource('projects', Admin\ProjectController::class)->except('show')->middleware('permission:manage projects');
+        Route::resource('members', Admin\MemberController::class)->except('show')->middleware('permission:manage members');
+        Route::resource('jobs', Admin\JobPostController::class)->except('show')->middleware('permission:manage jobs');
+        Route::resource('posts', Admin\PostController::class)->except('show')->middleware('permission:manage posts');
+        Route::resource('partners', Admin\PartnerController::class)->except('show')->middleware('permission:manage partners');
+        Route::resource('navigation', Admin\NavItemController::class)->except('show')->parameters(['navigation' => 'id'])->middleware('permission:manage navigation');
+        Route::resource('content-lists', Admin\ContentListController::class)->except('show')->parameters(['content-lists' => 'id'])->middleware('permission:manage content lists');
+
+        // Admin accounts + roles/permissions (the "owner" role bypasses).
+        Route::resource('admins', Admin\AdminUserController::class)->except('show')->middleware('permission:manage admins');
+        Route::resource('roles', Admin\RoleController::class)->except('show')->middleware('permission:manage admins');
 
         // Inbox: contact briefs + newsletter subscribers.
-        Route::get('/inbox', [Admin\InboxController::class, 'index'])->name('inbox.index');
-        Route::get('/inbox/subscribers', [Admin\InboxController::class, 'subscribers'])->name('inbox.subscribers');
-        Route::get('/inbox/{id}', [Admin\InboxController::class, 'show'])->name('inbox.show');
-        Route::delete('/inbox/{id}', [Admin\InboxController::class, 'destroy'])->name('inbox.destroy');
+        Route::middleware('permission:manage inbox')->group(function () {
+            Route::get('/inbox', [Admin\InboxController::class, 'index'])->name('inbox.index');
+            Route::get('/inbox/subscribers', [Admin\InboxController::class, 'subscribers'])->name('inbox.subscribers');
+            Route::get('/inbox/{id}', [Admin\InboxController::class, 'show'])->name('inbox.show');
+            Route::delete('/inbox/{id}', [Admin\InboxController::class, 'destroy'])->name('inbox.destroy');
+        });
 
         // Job applications (CVs download only through this authenticated group).
-        Route::get('/applications', [Admin\ApplicationController::class, 'index'])->name('applications.index');
-        Route::get('/applications/{id}', [Admin\ApplicationController::class, 'show'])->name('applications.show');
-        Route::get('/applications/{application}/cv', [Admin\ApplicationController::class, 'cv'])->name('applications.cv');
-        Route::delete('/applications/{id}', [Admin\ApplicationController::class, 'destroy'])->name('applications.destroy');
+        Route::middleware('permission:manage applications')->group(function () {
+            Route::get('/applications', [Admin\ApplicationController::class, 'index'])->name('applications.index');
+            Route::get('/applications/{id}', [Admin\ApplicationController::class, 'show'])->name('applications.show');
+            Route::get('/applications/{application}/cv', [Admin\ApplicationController::class, 'cv'])->name('applications.cv');
+            Route::delete('/applications/{id}', [Admin\ApplicationController::class, 'destroy'])->name('applications.destroy');
+        });
 
         // Site settings.
-        Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('settings.edit');
-        Route::put('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
+        Route::middleware('permission:manage settings')->group(function () {
+            Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('settings.edit');
+            Route::put('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
+        });
     });
 });

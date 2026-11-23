@@ -61,3 +61,30 @@ if (! function_exists('nav_mega')) {
         return app(NavItemService::class)->mega($menu);
     }
 }
+
+if (! function_exists('brand_favicon')) {
+    /**
+     * Dashboard-uploaded favicon (Settings > Brand assets), falling back to
+     * the shipped Empetix mark until one is uploaded.
+     */
+    function brand_favicon(): string
+    {
+        $path = setting('brand_favicon');
+
+        return $path ? asset('storage/'.$path) : asset('assets/img/favicon.svg');
+    }
+}
+
+if (! function_exists('brand_logo')) {
+    /**
+     * Dashboard-uploaded site logo (Settings > Brand assets), falling back
+     * to the shipped Empetix logo until one is uploaded.
+     */
+    function brand_logo(bool $dark = false): string
+    {
+        $path = setting($dark ? 'brand_logo_dark' : 'brand_logo');
+        $default = $dark ? 'assets/img/logo/empetix-logo-dark.png' : 'assets/img/logo/empetix-logo.png';
+
+        return $path ? asset('storage/'.$path) : asset($default);
+    }
+}

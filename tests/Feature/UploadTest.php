@@ -20,7 +20,7 @@ class UploadTest extends TestCase
     public function test_partner_logo_upload_persists_and_renders(): void
     {
         Storage::fake('public');
-        $admin = User::factory()->create();
+        $admin = $this->owner();
 
         $this->actingAs($admin)->post(route('admin.partners.store'), [
             'name' => 'Acme Cloud',
@@ -42,7 +42,7 @@ class UploadTest extends TestCase
     public function test_non_image_upload_is_rejected(): void
     {
         Storage::fake('public');
-        $admin = User::factory()->create();
+        $admin = $this->owner();
 
         $this->actingAs($admin)->post(route('admin.partners.store'), [
             'name' => 'Bad Upload',
@@ -57,7 +57,7 @@ class UploadTest extends TestCase
     public function test_logo_replacement_on_update(): void
     {
         Storage::fake('public');
-        $admin = User::factory()->create();
+        $admin = $this->owner();
         $partner = \App\Models\Partner::create(['name' => 'Old', 'logo' => null, 'sort_order' => 0, 'is_active' => true]);
 
         $this->actingAs($admin)->put(route('admin.partners.update', $partner->id), [

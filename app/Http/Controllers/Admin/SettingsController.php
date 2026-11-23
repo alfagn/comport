@@ -25,6 +25,7 @@ class SettingsController extends Controller
     public function update(SettingsRequest $request): RedirectResponse
     {
         $this->settings->saveGroup($request->validated('settings'));
+        $this->settings->saveBrandAssets($request->safe()->only(['brand_favicon', 'brand_logo', 'brand_logo_dark']) + $request->allFiles());
 
         return back()->with('success', 'Settings saved.');
     }

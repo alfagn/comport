@@ -41,7 +41,12 @@ Upgrading an EXISTING install (database already has your content):
 git pull origin laravel-13-dashboard
 php artisan migrate                          # adds new tables/columns, never touches your rows
 php artisan db:seed --class=PageSectionSeeder  # registers newly editable CMS blocks (additive only)
+php artisan db:seed --class=RolesAndPermissionsSeeder  # adds roles/permissions (additive; keeps your login)
 ```
+
+RolesAndPermissionsSeeder only creates what is missing and gives every
+EXISTING admin account the `owner` role, so your login keeps full access.
+New admins created from the Admins screen get exactly the roles you pick.
 
 Do NOT run a bare `php artisan db:seed` (or `migrate --seed`) on an install where
 you have edited content in the dashboard: ContentSeeder, NavItemSeeder and
