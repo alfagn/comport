@@ -24,6 +24,16 @@
 @endsection
 
 @section('content')
+@php
+  // Do not infer a person's department from a role or their position in a seed.
+  $departments = [
+    'general' => sec('team', 'general_team', 'Team'),
+    'engineering' => sec('team', 'copy_865f5a4280b3'),
+    'design' => preg_replace('/\s*\(\d+\)\s*$/', '', sec('team', 'copy_9f3ba2584498') ?? ''),
+    'marketing' => preg_replace('/\s*\(\d+\)\s*$/', '', sec('team', 'copy_81990933b449') ?? ''),
+  ];
+  $memberGroups = $members->groupBy(fn ($member) => $member->department ?: 'general');
+@endphp
 <!-- 1. Breadcrumb & Editorial Hero -->
     <section class="team-band team-band--white team-hero-band" aria-labelledby="team-hero-heading">
       <div class="team-container">
@@ -66,32 +76,32 @@
               {{ sec('team', 'copy_42a38ba194b4') }}
             </p>
             <div class="team-filters" role="group" aria-label="Filter team by department">
-              <button type="button" class="team-filter" data-team-filter="all" aria-pressed="true">{{ sec('team', 'copy_e111c2849bae') }}</button>
-              <button type="button" class="team-filter" data-team-filter="engineering" aria-pressed="false">{{ sec('team', 'copy_bba41e68c87e') }}</button>
-              <button type="button" class="team-filter" data-team-filter="design" aria-pressed="false">{{ sec('team', 'copy_9f3ba2584498') }}</button>
-              <button type="button" class="team-filter" data-team-filter="marketing" aria-pressed="false">{{ sec('team', 'copy_81990933b449') }}</button>
+              <button type="button" class="team-filter" data-team-filter="all" aria-pressed="true">{{ preg_replace('/\s*\(\d+\)\s*$/', '', sec('team', 'copy_e111c2849bae') ?? '') }} ({{ $members->count() }})</button>
+              @foreach($memberGroups as $department => $people)
+                <button type="button" class="team-filter" data-team-filter="{{ $department }}" aria-pressed="false">{{ $departments[$department] ?? $departments['general'] }} ({{ $people->count() }})</button>
+              @endforeach
             </div>
           </div>
         </div>
 
-        <!-- Practice 1: Software Engineering -->
-        <div id="practice-engineering" class="team-practice" data-team-group="engineering">
+        @forelse($memberGroups as $department => $people)
+        <div class="team-practice" data-team-group="{{ $department }}">
           <div class="team-practice__head">
-            <h3 class="team-practice__title">{{ sec('team', 'copy_865f5a4280b3') }}</h3>
-            <p class="team-practice__desc">
-              {{ sec('team', 'copy_a588d0d2cd5f') }}
-            </p>
+            <h3 class="team-practice__title">{{ $departments[$department] ?? $departments['general'] }}</h3>
+            @if($department === 'engineering')
+              <p class="team-practice__desc">{{ sec('team', 'copy_a588d0d2cd5f') }}</p>
+            @endif
           </div>
 
           <ul class="team-cards">
             <!-- LOOP: team-member -->
-            @foreach($members as $member)
+            @foreach($people as $member)
           <li class="team-cards__item">
             <article class="team-card">
               <div class="team-card__media">
                 <img
                   class="team-card__photo"
-                  src="{{ str_starts_with((string) $member->photo, 'uploads/') ? asset('storage/'.$member->photo) : asset($member->photo ?: 'assets/img/team/placeholder.jpg') }}"
+                  src="{{ content_asset($member->photo ?: 'assets/img/team/placeholder.jpg') }}"
                   alt="Portrait of {{ $member->name }}, {{ $member->role }}"
                   width="640"
                   height="800"
@@ -110,6 +120,9 @@
 @endforeach
           </ul>
         </div>
+        @empty
+          <p class="team-section-head__lead">{{ sec('team', 'directory_empty', 'Our team directory will be updated soon.') }}</p>
+        @endforelse
       </div>
     </section>
 

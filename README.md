@@ -143,3 +143,14 @@ Pages & Content > Global shows shared navigation text. A runtime original-copy
 fallback also prevents missing registrations from blanking the public page.
 Explicit saved blank strings remain blank; those require a specific owner choice
 rather than blindly overwriting potentially intentional deletions.
+
+### Team layout and 404 update
+
+Run `php artisan migrate` and `php artisan optimize:clear` after pulling. This
+adds a nullable member department and registers editable recovery-page copy
+without assigning existing people to guessed departments or replacing edits.
+Team & Founders > Edit Person now includes Department. Unassigned people remain
+in Team; live filter counts are computed from active member records. Page copy
+and imagery remain under Pages & Content > Team; 404 copy is under Error.
+Unknown HTML routes and missing public entities return HTTP 404 using the branded
+recovery screen. API paths and requests accepting JSON retain JSON error responses.

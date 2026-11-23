@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     protected $fillable = [
-        'name', 'slug', 'role', 'kind', 'focus', 'lead', 'bio', 'expertise', 'photo',
+        'name', 'slug', 'role', 'kind', 'department', 'focus', 'lead', 'bio', 'expertise', 'photo',
         'email', 'linkedin', 'twitter', 'sort_order', 'is_active',
     ];
 

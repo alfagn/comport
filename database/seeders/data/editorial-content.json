@@ -2021,5 +2021,75 @@
     "label": "Social sharing preview image path",
     "type": "text",
     "value": "assets/img/og-empetix.jpg"
+  },
+  {
+    "page": "team",
+    "key": "general_team",
+    "label": "General Team",
+    "type": "text",
+    "value": "Team"
+  },
+  {
+    "page": "team",
+    "key": "directory_empty",
+    "label": "Directory Empty",
+    "type": "text",
+    "value": "Our team directory will be updated soon."
+  },
+  {
+    "page": "error",
+    "key": "meta_title",
+    "label": "Meta Title",
+    "type": "text",
+    "value": "Page not found | Empetix Solution"
+  },
+  {
+    "page": "error",
+    "key": "eyebrow",
+    "label": "Eyebrow",
+    "type": "text",
+    "value": "A small detour"
+  },
+  {
+    "page": "error",
+    "key": "title",
+    "label": "Title",
+    "type": "text",
+    "value": "This page is off the map."
+  },
+  {
+    "page": "error",
+    "key": "description",
+    "label": "Description",
+    "type": "text",
+    "value": "The page may have moved, or the link may be out of date. Let's get you back to what matters."
+  },
+  {
+    "page": "error",
+    "key": "home_label",
+    "label": "Home Label",
+    "type": "text",
+    "value": "Back to home"
+  },
+  {
+    "page": "error",
+    "key": "work_label",
+    "label": "Work Label",
+    "type": "text",
+    "value": "Explore our work"
+  },
+  {
+    "page": "error",
+    "key": "contact_label",
+    "label": "Contact Label",
+    "type": "text",
+    "value": "Need a hand? Contact us"
+  },
+  {
+    "page": "error",
+    "key": "status_label",
+    "label": "Status Label",
+    "type": "text",
+    "value": "Page not found"
   }
 ]

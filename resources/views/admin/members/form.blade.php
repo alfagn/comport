@@ -13,6 +13,7 @@
       <x-admin.input name="slug" label="Slug" :value="$item?->slug" hint="Used in the founder page URL. Leave empty to generate."/>
       <x-admin.input name="role" label="Role" :value="$item?->role" placeholder="Co-founder & CEO"/>
       <x-admin.select name="kind" label="Kind" :options="['member' => 'Team member', 'founder' => 'Founder (gets a profile page)']" :value="$item?->kind ?? 'member'"/>
+      <x-admin.select name="department" label="Department (team directory)" :options="['' => 'General team / not assigned', 'engineering' => 'Software engineering', 'design' => 'Product design', 'marketing' => 'Marketing and production']" :value="$item?->department ?? ''"/>
       <div class="full"><x-admin.input name="focus" label="Focus line" :value="$item?->focus" hint="One-line specialty shown on team cards."/></div>
       <div class="full"><x-admin.textarea name="lead" label="Lead paragraph" :value="$item?->lead" rows="2" hint="Founders only — shown under the role on the profile page."/></div>
       <div class="full"><x-admin.textarea name="bio" label="Bio paragraphs (one per line)" :value="$item ? implode(PHP_EOL, (array) $item->bio) : ''" rows="5" hint="Founders only — rendered on the profile page."/></div>
