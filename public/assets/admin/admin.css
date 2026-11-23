@@ -1023,7 +1023,7 @@ table.table { width: 100%; border-collapse: collapse; }
 .delta-chip--down { background: none; color: #E02424; padding: 3px 4px; }
 .stat-card--dark .delta-chip--up { background: none; color: #4ADE80; }
 .stat-card--dark .delta-chip--down { background: none; color: #FF8A8A; }
-.stat-card .sparkline { width: 56%; height: 74px; }
+.stat-card .sparkline { width: 100%; height: 70px; }
 
 /* ---------- Panels ---------- */
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: 0 3px 14px rgba(24, 18, 12, 0.05); }
