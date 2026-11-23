@@ -11,6 +11,7 @@
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/public-sans-400.woff2') }}" crossorigin/>
   <link rel="stylesheet" href="{{ asset('assets/css/base/typography.css') }}"/>
   <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}"/>
+  @livewireStyles
   <script>
     // Theme: persisted admin light/dark choice, applied before first paint.
     (function () {
@@ -50,6 +51,21 @@
       document.addEventListener('DOMContentLoaded', window.empetixSyncThemeButtons);
       // Livewire SPA navigation swaps the body: re-sync the freshly rendered buttons.
       document.addEventListener('livewire:navigated', window.empetixSyncThemeButtons);
+      // One-time SPA lifecycle hooks (head survives body swaps):
+      if (!window.__empetixNavHooks) {
+        window.__empetixNavHooks = true;
+        document.addEventListener('livewire:navigated', function () {
+          // The swap replaces <html> attributes: re-apply the persisted theme.
+          try {
+            var saved = localStorage.getItem('empetix-admin-theme');
+            document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
+          } catch (e) {}
+          if (window.empetixSyncThemeButtons) window.empetixSyncThemeButtons();
+          // Yajra DataTables initialise on DOMContentLoaded, which never
+          // refires after an SPA swap: re-dispatch so swapped-in tables boot.
+          document.dispatchEvent(new Event('DOMContentLoaded'));
+        });
+      }
     })();
   </script>
 </head>
@@ -367,5 +383,7 @@
 <script src="{{ asset('assets/admin/vendor/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/admin/vendor/jquery.dataTables.min.js') }}"></script>
 @stack('datatables')
+{{-- Livewire drives wire:navigate SPA swaps across the admin shell. --}}
+@livewireScripts
 </body>
 </html>
