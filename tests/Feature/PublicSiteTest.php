@@ -88,4 +88,15 @@ class PublicSiteTest extends TestCase
             ->assertSee('changed@empetix.com')
             ->assertSee('An edited banner title.');
     }
+
+    /** The public layout must ship the interaction modules (mega menu, reveal,
+        counters, careers) — the page is inert without them. */
+    public function test_layout_includes_interaction_scripts(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        foreach (['nav.js', 'reveal.js', 'counter.js', 'media.js', 'careers.js', 'main.js'] as $script) {
+            $this->assertStringContainsString($script, $html, "layout is missing {$script}");
+        }
+    }
 }

@@ -271,7 +271,8 @@
           @endforeach
         </div>
       @endforeach
-</div>
+    </div>
+  </div>
 </div>
 <!-- END PARTIAL: mega-menu -->
 </div>
@@ -462,6 +463,18 @@
 
 
 
+  {{-- Interaction modules: nav (mega menu, drawer), scroll reveal, animated
+       counters, media frames, careers filtering — same bundle the static
+       site shipped with. Without these the page renders but stays inert. --}}
+  <script defer src="{{ asset('assets/js/modules/nav.js') }}"></script>
+  <script defer src="{{ asset('assets/js/modules/reveal.js') }}"></script>
+  <script defer src="{{ asset('assets/js/modules/counter.js') }}"></script>
+  <script defer src="{{ asset('assets/js/modules/media.js') }}"></script>
+  <script defer src="{{ asset('assets/js/modules/careers.js') }}"></script>
+  @if(($activePage ?? '') === 'team')
+    <script defer src="{{ asset('assets/js/modules/team.js') }}"></script>
+  @endif
+  <script type="module" src="{{ asset('assets/js/main.js') }}"></script>
 @yield('scripts')
 </body>
 </html>
