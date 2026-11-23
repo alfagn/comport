@@ -31,23 +31,30 @@
         // 14-day series, smoothed (Catmull-Rom -> cubic Bezier) and drawn as
         // a full-width area wave in the reference card style.
         $points = $card['sparkline'];
-        $max = max(1, max($points));
-        $w = 300; $h = 92;
+        $max = max($points);
+        $total = array_sum($points);
+        $w = 300; $h = 70; $base = $h - 4;
         $step = $w / max(1, count($points) - 1);
         $pts = [];
         foreach ($points as $i => $v) {
-            $pts[] = [round($i * $step, 1), round($h - 6 - ($v / $max) * ($h - 30), 1)];
+            // Zero-count days sit exactly on the baseline; no fabricated lift.
+            $pts[] = [round($i * $step, 1), $max > 0 ? round($base - ($v / $max) * ($h - 22), 1) : $base];
         }
         $n = count($pts);
+        // Monotone-safe smoothing: Catmull-Rom control points clamped to the
+        // segment's y-range, so the curve can never dip below the baseline
+        // or peak above the data between two real points.
         $waveLine = 'M ' . $pts[0][0] . ',' . $pts[0][1];
         for ($i = 0; $i < $n - 1; $i++) {
             $p0 = $pts[max(0, $i - 1)]; $p1 = $pts[$i];
             $p2 = $pts[$i + 1];         $p3 = $pts[min($n - 1, $i + 2)];
-            $c1x = round($p1[0] + ($p2[0] - $p0[0]) / 6, 1); $c1y = round($p1[1] + ($p2[1] - $p0[1]) / 6, 1);
-            $c2x = round($p2[0] - ($p3[0] - $p1[0]) / 6, 1); $c2y = round($p2[1] - ($p3[1] - $p1[1]) / 6, 1);
+            $c1x = round($p1[0] + ($p2[0] - $p0[0]) / 6, 1);
+            $c1y = min(max(round($p1[1] + ($p2[1] - $p0[1]) / 6, 1), min($p1[1], $p2[1])), max($p1[1], $p2[1]));
+            $c2x = round($p2[0] - ($p3[0] - $p1[0]) / 6, 1);
+            $c2y = min(max(round($p2[1] - ($p3[1] - $p1[1]) / 6, 1), min($p1[1], $p2[1])), max($p1[1], $p2[1]));
             $waveLine .= " C $c1x,$c1y $c2x,$c2y {$p2[0]},{$p2[1]}";
         }
-        $waveArea = $waveLine . " L $w,$h L 0,$h Z";
+        $waveArea = $waveLine . " L $w,$base L 0,$base Z";
         $dark = $loop->index % 2 === 0; // alternating faces, starting dark
       @endphp
       <a class="stat-card {{ $dark ? 'stat-card--dark' : '' }}" href="{{ route($card['route']) }}">
@@ -71,7 +78,7 @@
           <span class="stat-card__chev" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
         </div>
         <div class="stat-card__num">{{ number_format($card['count']) }}@if($card['delta'] === null)<span class="delta-chip" title="No records last week to compare against">—</span>@else<span class="delta-chip {{ $card['delta'] >= 0 ? 'delta-chip--up' : 'delta-chip--down' }}" title="Created this week vs. last week">{{ $card['delta'] >= 0 ? '↑' : '↓' }} {{ abs($card['delta']) }}%</span>@endif</div>
-        <svg class="sparkline" viewBox="0 0 300 92" preserveAspectRatio="none" role="img" aria-label="Records created per day over the last 14 days">
+        <svg class="sparkline {{ $total === 0 ? 'sparkline--empty' : '' }}" viewBox="0 0 300 70" preserveAspectRatio="none" role="img" aria-label="{{ $total === 0 ? 'No new records in the last 14 days' : 'Records created per day over the last 14 days' }}">
           <defs>
             <linearGradient id="wave-g-{{ $loop->index }}" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stop-color="currentColor" stop-opacity="0.45"/>
