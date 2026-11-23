@@ -125,7 +125,7 @@
       </form>
       <div class="search-panel__hints">
         <span>{{ sec('footer', 'search_quickjump', 'Quick jump:') }}</span>
-        <a href="{{ url('/work/nilepay') }}">{{ sec('global', 'copy_99681c08acc5') }}</a>
+        <a href="{{ url('/work/alfagn') }}">{{ sec('global', 'copy_99681c08acc5') }}</a>
         <a href="{{ url('/blog/five-day-product-growth-sprint') }}">{{ sec('global', 'copy_9bd3315c2cda') }}</a>
         <a href="{{ url('/blog/behind-the-lens-qahwa-launch') }}">{{ sec('global', 'copy_c845f21a3cfc') }}</a>
         <a href="{{ url('/about') }}#founders">{{ sec('global', 'copy_56466eb90fcf') }}</a>
@@ -412,7 +412,7 @@
           <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_43f2d8ef5f41') }}</a></li>
           <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_1ffceb06c763') }}</a></li>
           <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_f0c7b48874fc') }}</a></li>
-          <li><a href="{{ url('/work/nilepay') }}">{{ sec('global', 'copy_e9d3ab4269dc') }}</a></li>
+          <li><a href="{{ url('/work/alfagn') }}">{{ sec('global', 'copy_e9d3ab4269dc') }}</a></li>
           <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_ca3c76e3e0a6') }}</a></li>
           <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_bcd691d43e8f') }}</a></li>
         </ul>

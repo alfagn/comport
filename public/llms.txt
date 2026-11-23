@@ -19,31 +19,17 @@ Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digita
 - **Performance & Growth Engineering:** Server-side Conversions API (CAPI) integrations, sub-second latency optimization, full-funnel activation engines.
 
 ## 4. Notable SaaS Projects & Software Case Studies
-### [NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users.](https://cms.test/work/nilepay)
-- **Client/Brand:** NilePay FinTech
+### [Alfagn: High-concurrency interactive learning & secure video streaming for 45,000+ students.](https://cms.test/work/alfagn)
+- **Client/Brand:** AlphaGen Educational Technologies (منصة ألفا جن)
 - **Region:** CAIRO & RIYADH
-- **Summary:** How Empetix rebuilt NilePay’s core checkout ledger in Laravel & Flutter while running a full-funnel performance acquisition engine that cut customer acquisition cost by 41%.
-- **Highlights:** Client: NilePay Financial Technologies | Scope: Flutter App, Laravel Ledger API, Brand Campaign & Paid Growth | Timeline: 16 Weeks to Launch + Ongoing Retainer
+- **Summary:** How Empetix engineered Alfagn’s high-throughput learning ecosystem—from dynamic forensic DRM video watermarking and asynchronous exam engines to native mobile apps—handling 12,000+ concurrent submissions with sub-180ms latency.
+- **Highlights:** Client: AlphaGen Educational Technologies (منصة وأكاديمية ألفا جن) | Scope: Cloud LMS Core, Forensic DRM Video Protection, Asynchronous Quiz Engine & Flutter Apps | Timeline: 14 Weeks to MVP + Scaled Infrastructure Retainer
 
-### [Headless D2C commerce platform, table-setting visualizer & European paid social engine (4.6x ROAS).](https://cms.test/work/dar-ceramics)
-- **Client/Brand:** Dar Ceramics
-- **Summary:** Direct-to-consumer store architecture and European export campaign yielding 4.6x ROAS.
-
-### [Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.](https://cms.test/work/cargoline-mena)
-- **Client/Brand:** CargoLine MENA
-- **Summary:** Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
-
-### [Telemedicine video platform, e-prescription vault & patient lifecycle retention across 14 clinics.](https://cms.test/work/medlink-health)
-- **Client/Brand:** MedLink Health
-- **Summary:** End-to-end encrypted video clinic and patient retention engine for 380,000 patients.
-
-### [Interactive 3D masterplan portal, commercial film campaign & high-intent lead engine (USD 84M sales).](https://cms.test/work/palm-residences)
-- **Client/Brand:** Palm Residences
-- **Summary:** Real-time unit inventory engine and omnichannel launch generating USD 84M in contracted sales.
-
-### [Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.](https://cms.test/work/qahwa-roasters)
-- **Client/Brand:** Qahwa Specialty Roasters
-- **Summary:** Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
+### [Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms & verified credentials.](https://cms.test/work/western-elearning-academy)
+- **Client/Brand:** Western International Academy for Distance Learning (أكاديمية ويسترن)
+- **Region:** CAIRO, DUBAI & LONDON
+- **Summary:** How Empetix architected Western eLearning Academy’s multi-tenant LMS—delivering WebRTC virtual lecture halls, AI-proctored certification exams, and automated cryptographic QR credential issuance across Egypt, the GCC, and the UK.
+- **Highlights:** Client: Western International Academy for Distance Learning (أكاديمية ويسترن) | Scope: Multi-Tenant LMS, WebRTC Live Lecture Halls, AI Exam Proctoring & Cryptographic QR Verification | Timeline: 18 Weeks to Multi-Campus Rollout + Enterprise SLA
 
 ## 5. Contact & Collaboration
 - **Website Inquiry:** https://cms.test/contact

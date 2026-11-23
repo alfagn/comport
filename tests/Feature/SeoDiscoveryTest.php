@@ -36,7 +36,7 @@ class SeoDiscoveryTest extends TestCase
         $this->assertStringContainsString('<?xml version="1.0" encoding="UTF-8"?>', $content);
         $this->assertStringContainsString('<urlset', $content);
         $this->assertStringContainsString(url('/'), $content);
-        $this->assertStringContainsString(url('/work/nilepay'), $content);
+        $this->assertStringContainsString(url('/work/alfagn'), $content);
         $this->assertStringContainsString(url('/blog/arabic-first-design-systems'), $content);
         $this->assertStringContainsString('hreflang="ar"', $content);
         $this->assertStringContainsString('hreflang="en"', $content);
@@ -71,8 +71,8 @@ class SeoDiscoveryTest extends TestCase
         $this->assertStringContainsString('Empetix Solutions', $content);
         $this->assertStringContainsString('إمبيتكس', $content);
         $this->assertStringContainsString('حلول إمبيتكس', $content);
-        $this->assertStringContainsString('NilePay', $content);
-        $this->assertStringContainsString(url('/work/nilepay'), $content);
+        $this->assertStringContainsString('Alfagn', $content);
+        $this->assertStringContainsString(url('/work/alfagn'), $content);
     }
 
     /** Public /llms-full.txt supplies detailed case studies and technical breakdowns. */
@@ -99,10 +99,10 @@ class SeoDiscoveryTest extends TestCase
         $homeResponse->assertSee('حلول إمبيتكس', false);
 
         // Project detail embeds SoftwareApplication schema
-        $projectResponse = $this->get('/work/nilepay');
+        $projectResponse = $this->get('/work/alfagn');
         $projectResponse->assertOk();
         $projectResponse->assertSee('SoftwareApplication', false);
-        $projectResponse->assertSee('NilePay', false);
+        $projectResponse->assertSee('Alfagn', false);
     }
 
     /** Guests cannot open the admin SEO or Sitemap control panels. */
@@ -152,7 +152,7 @@ class SeoDiscoveryTest extends TestCase
         $indexResponse->assertOk();
         $indexResponse->assertSee('XML Sitemap &amp; URL Inventory', false);
         $indexResponse->assertSee('Total URLs Indexed', false);
-        $indexResponse->assertSee('/work/nilepay', false);
+        $indexResponse->assertSee('/work/alfagn', false);
 
         // Regenerate action
         $regenResponse = $this->post('/admin/sitemap/regenerate');

@@ -1,1226 +1,1252 @@
 {
- "hero_slides": [
-  {
-   "tag": "SOFTWARE & GROWTH PARTNER",
-   "title": "We build web and mobile software and run growth marketing.",
-   "desc": "Empetix is an end-to-end software engineering and performance marketing partner. Our engineers and marketers work on the same team to build your software and grow your customer base.",
-   "cta_label": "Start a Project",
-   "cta_url": "/contact",
-   "image": "assets/img/home/hero.jpg",
-   "tab_label": "OVERVIEW",
-   "tab_title": "Software & Growth Studio",
-   "tab_sub": "End-to-end digital transformation",
-   "sort_order": 0,
-   "is_active": true
-  },
-  {
-   "tag": "PERFORMANCE MARKETING & CRO",
-   "title": "Paid media, video production, and conversion work for growing brands.",
-   "desc": "We replace guesswork with server-side Conversions API (CAPI) engineering, in-house commercial film shoots, and bilingual conversion optimization across MENA and Europe.",
-   "cta_label": "View Growth Case Studies",
-   "cta_url": "/contact",
-   "image": "assets/img/blog/performance-playbook.jpg",
-   "tab_label": "MARKETING",
-   "tab_title": "Performance & CRO Engine",
-   "tab_sub": "3.8x median ROAS & server-side CAPI",
-   "sort_order": 1,
-   "is_active": true
-  },
-  {
-   "tag": "SUCCESS STORY: NILEPAY",
-   "title": "How NilePay reached 1.4 million active mobile wallet users.",
-   "desc": "Pairing a 60fps Flutter mobile wallet and event-sourced Laravel 11 settlement core with a nationwide paid acquisition engine that lowered CAC by 41%.",
-   "cta_label": "Read Full Case Dossier",
-   "cta_url": "/contact",
-   "image": "assets/img/work/nilepay.jpg",
-   "tab_label": "CASE STUDY",
-   "tab_title": "NilePay FinTech Platform",
-   "tab_sub": "1.4M wallets · +310% activation",
-   "sort_order": 2,
-   "is_active": true
-  },
-  {
-   "tag": "STUDIO VIDEO DOCUMENTARY",
-   "title": "From product problem to tested prototype in five days.",
-   "desc": "Watch how our software architects, product designers, and media buyers take a product from commercial bottleneck to user-tested prototype in one week.",
-   "cta_label": "Watch Full Video Episode",
-   "cta_url": "/contact",
-   "image": "assets/img/blog/design-sprint.jpg",
-   "tab_label": "VIDEO EPISODE",
-   "tab_title": "Inside a 5-Day Sprint",
-   "tab_sub": "Watch 14:20 studio documentary",
-   "sort_order": 3,
-   "is_active": true
-  }
- ],
- "services": [
-  {
-   "num": "01",
-   "title": "Custom Web, SaaS & Cloud APIs",
-   "tag": "Engineering",
-   "kicker": "PILLAR SOFTWARE ARCHITECTURE",
-   "heading": "Enterprise Web Platforms, Laravel APIs & Cloud Modernization",
-   "desc": "We build modular web platforms, B2B portals, and multi-tenant SaaS products in Laravel 11, Next.js, and AWS—engineered for 99.96% uptime and clean ERP/CRM integration.",
-   "deliverables": [
-    "Domain-Driven Laravel & Node.js Microservices",
-    "Next.js / TypeScript SSR & Headless Storefronts",
-    "AWS ECS, RDS & Zero-Downtime CI/CD Pipelines",
-    "Automated Pest / PHPUnit & Security Audits"
-   ],
-   "metric_num": "99.96%",
-   "metric_label": "99.96% Audited production availability across deployed enterprise platforms",
-   "cta_label": "Explore Software Architecture",
-   "cta_url": "/contact",
-   "image": "assets/img/home/studio.jpg",
-   "sort_order": 0,
-   "is_active": true
-  },
-  {
-   "num": "02",
-   "title": "Mobile Apps & FinTech Ledgers",
-   "tag": "Flutter / Core",
-   "kicker": "PILLAR MOBILE & FINTECH",
-   "heading": "60fps Consumer Mobile Apps & Event-Sourced Payment Ledgers",
-   "desc": "From biometric KYC and NFC merchant checkouts to offline-first fleet logistics tablets, our Flutter and native iOS/Android squads build apps used by 1.4M+ monthly active users.",
-   "deliverables": [
-    "Flutter & Native Swift / Kotlin Mobile Clients",
-    "Double-Entry Payment Wallets & Regional Gateways",
-    "90-Second Biometric & OCR Onboarding Flows",
-    "Offline-First SQLite Sync for Field Operations"
-   ],
-   "metric_num": "+310%",
-   "metric_label": "+310% First-transaction wallet activation after onboarding rebuild",
-   "cta_label": "See NilePay Mobile Case Study",
-   "cta_url": "/contact",
-   "image": "assets/img/work/nilepay.jpg",
-   "sort_order": 1,
-   "is_active": true
-  },
-  {
-   "num": "03",
-   "title": "Performance Marketing & Paid Media",
-   "tag": "Growth",
-   "kicker": "PILLAR GROWTH & ACQUISITION",
-   "heading": "Full-Funnel Performance Media & Server-Side Attribution",
-   "desc": "We wire server-side Conversions API (CAPI) events straight from your backend database into Meta, Google, TikTok, and LinkedIn—bidding on real net revenue instead of vanity clicks.",
-   "deliverables": [
-    "Meta, Google PMax, TikTok & Snapchat Media Buying",
-    "First-Party Server-Side CAPI & CRM Attribution",
-    "Weekly Creative Hook & Angle Testing Matrices",
-    "Cohort LTV:CAC & Payback Period Dashboards"
-   ],
-   "metric_num": "3.8x",
-   "metric_label": "3.8x Audited median Return on Ad Spend across active growth retainers",
-   "cta_label": "Examine Growth Outcomes",
-   "cta_url": "/contact",
-   "image": "assets/img/blog/performance-playbook.jpg",
-   "sort_order": 2,
-   "is_active": true
-  },
-  {
-   "num": "04",
-   "title": "Brand Systems, Film & Photography",
-   "tag": "Creative",
-   "kicker": "PILLAR BRAND & PRODUCTION",
-   "heading": "Bilingual Brand Systems, Commercial Film & 35mm Photography",
-   "desc": "Our in-house cinema and design unit crafts authoritative Arabic/English brand identities, product launch films, and high-converting paid-social video assets.",
-   "deliverables": [
-    "Arabic & Latin Brand Identity & Design Guidelines",
-    "In-House Commercial Film & Documentary Crew",
-    "Product Tabletop & Editorial Lifestyle Photography",
-    "9:16 Paid Social Video Hook Variations"
-   ],
-   "metric_num": "+190%",
-   "metric_label": "+190% Lift in recurring D2C subscription orders post-campaign launch",
-   "cta_label": "View Qahwa Shoot Photo Essay",
-   "cta_url": "/contact",
-   "image": "assets/img/blog/behind-the-lens.jpg",
-   "sort_order": 3,
-   "is_active": true
-  },
-  {
-   "num": "05",
-   "title": "Conversion Optimization (CRO) & AI",
-   "tag": "Data / AI",
-   "kicker": "PILLAR CRO & AI AUTOMATION",
-   "heading": "Arabic-First Conversion Optimization & AI Workflow Agents",
-   "desc": "We eliminate checkout friction through native RTL/LTR design systems, multivariate A/B testing, and domain-trained AI assistants that automate customer triage and internal operations.",
-   "deliverables": [
-    "Bilingual Checkout & Onboarding CRO Experiments",
-    "100% CSS Logical Property Design Systems",
-    "Domain-Trained RAG AI Copilots & Support Triage",
-    "Executive BigQuery & Looker Telemetry Pipelines"
-   ],
-   "metric_num": "+38.4%",
-   "metric_label": "+38.4% Mobile checkout completion lift on Arabic-language sessions",
-   "cta_label": "Read Arabic-First CRO Essay",
-   "cta_url": "/contact",
-   "image": "assets/img/blog/arabic-first.jpg",
-   "sort_order": 4,
-   "is_active": true
-  }
- ],
- "industries": [
-  {
-   "num": "SECTOR 01",
-   "title": "FinTech & Digital Banking",
-   "sub": "Wallets, KYC & Ledgers",
-   "sort_order": 0,
-   "is_active": true
-  },
-  {
-   "num": "SECTOR 02",
-   "title": "Retail & D2C Commerce",
-   "sub": "Shopify Plus & Omnichannel",
-   "sort_order": 1,
-   "is_active": true
-  },
-  {
-   "num": "SECTOR 03",
-   "title": "Healthcare & MedTech",
-   "sub": "Telemedicine & Patient CRM",
-   "sort_order": 2,
-   "is_active": true
-  },
-  {
-   "num": "SECTOR 04",
-   "title": "Real Estate & PropTech",
-   "sub": "3D Portals & Demand Gen",
-   "sort_order": 3,
-   "is_active": true
-  },
-  {
-   "num": "SECTOR 05",
-   "title": "Logistics & Fleet",
-   "sub": "Control Towers & Telemetry",
-   "sort_order": 4,
-   "is_active": true
-  },
-  {
-   "num": "SECTOR 06",
-   "title": "Enterprise & SaaS",
-   "sub": "Cloud Modernization & AI",
-   "sort_order": 5,
-   "is_active": true
-  }
- ],
- "projects": [
-  {
-   "title": "NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users.",
-   "slug": "nilepay",
-   "client": "NilePay FinTech",
-   "kicker": "NILEPAY FINTECH",
-   "year": "2026",
-   "excerpt": "How Empetix rebuilt NilePay’s core checkout ledger in Laravel & Flutter while running a full-funnel performance acquisition engine that cut customer acquisition cost by 41%.",
-   "image": "assets/img/work/nilepay.jpg",
-   "tags": [
-    "Software",
-    "Marketing",
-    "Commerce"
-   ],
-   "is_featured": true,
-   "is_active": true,
-   "sort_order": 0,
-   "location": "CAIRO & RIYADH",
-   "facts": [
-    {
-     "label": "Client",
-     "value": "NilePay Financial Technologies"
-    },
-    {
-     "label": "Scope",
-     "value": "Flutter App, Laravel Ledger API, Brand Campaign & Paid Growth"
-    },
-    {
-     "label": "Timeline",
-     "value": "16 Weeks to Launch + Ongoing Retainer"
-    },
-    {
-     "label": "Verified Outcome",
-     "value": "1.4M Active Wallets · +310% Activation · -41% CAC"
-    }
-   ],
-   "stats": [
-    {
-     "target": "310",
-     "decimals": 0,
-     "suffix": "%",
-     "label": "Increase in first-transaction activation within 72 hours of install"
-    },
-    {
-     "target": "1.4",
-     "decimals": 1,
-     "suffix": "M",
-     "label": "Active monthly wallets across Egypt and Saudi Arabia"
-    },
-    {
-     "target": "41",
-     "decimals": 0,
-     "suffix": "%",
-     "label": "Reduction in paid customer acquisition cost (CAC)"
-    },
-    {
-     "target": "180",
-     "decimals": 0,
-     "suffix": "ms",
-     "label": "P95 QR & NFC settlement latency on our Laravel ledger core"
-    }
-   ],
-   "sections": [
-    {
-     "eyebrow": "Capabilities",
-     "heading": "A fast-growing FinTech held back by a 9-step onboarding flow and disconnected ad spend.",
-     "items": [
-      "When NilePay approached Empetix, they were spending heavily on paid social acquisition, yet 74% of users dropped off between app install and their first wallet top-up. Their legacy hybrid app took 6.2 seconds to cold-start, and their external marketing agency had zero visibility into in-app KYC completion events.",
-      "Our mandate was twofold: re-architect the mobile client and settlement API for sub-second speed, and rebuild the entire acquisition funnel around server-side verified activation events rather than raw installs."
-     ]
-    },
-    {
-     "eyebrow": "Execution",
-     "heading": "From 9 onboarding screens to 90-second biometric KYC.",
-     "items": [
-      "Our engineering squad replaced the legacy WebView container with a native Flutter client talking to an event-sourced Laravel 11 ledger API. By streaming OCR national-ID verification in the background while the user chooses their card skin, median KYC completion dropped from 11 minutes to 88 seconds.",
-      "Simultaneously, our growth team wired server-side Conversions API (CAPI) signals directly from the Laravel ledger into Meta, Google, and TikTok—training ad algorithms to bid on funded wallets rather than cheap installs."
-     ]
-    }
-   ],
-   "quote": "Empetix is the first partner we have worked with where the engineer writing our payment webhook and the media buyer optimizing our Meta conversion API sat in the same standup.",
-   "quote_cite": "Tarek El-Gendy, Chief Product Officer at NilePay",
-   "video_poster": "assets/img/work/nilepay-detail.jpg",
-   "video_src": "assets/video/design-sprint.mp4"
-  },
-  {
-   "title": "Headless D2C commerce platform, table-setting visualizer & European paid social engine (4.6x ROAS).",
-   "slug": "dar-ceramics",
-   "client": "Dar Ceramics",
-   "kicker": "DAR CERAMICS",
-   "year": "2026",
-   "excerpt": "Direct-to-consumer store architecture and European export campaign yielding 4.6x ROAS.",
-   "image": "assets/img/work/dar-ceramics.jpg",
-   "tags": [
-    "Software",
-    "Marketing",
-    "Commerce"
-   ],
-   "is_featured": true,
-   "is_active": true,
-   "sort_order": 1
-  },
-  {
-   "title": "Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.",
-   "slug": "cargoline-mena",
-   "client": "CargoLine MENA",
-   "kicker": "CARGOLINE MENA",
-   "year": "2025",
-   "excerpt": "Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.",
-   "image": "assets/img/work/cargoline.jpg",
-   "tags": [
-    "Software"
-   ],
-   "is_featured": false,
-   "is_active": true,
-   "sort_order": 2
-  },
-  {
-   "title": "Telemedicine video platform, e-prescription vault & patient lifecycle retention across 14 clinics.",
-   "slug": "medlink-health",
-   "client": "MedLink Health",
-   "kicker": "MEDLINK HEALTH",
-   "year": "2025",
-   "excerpt": "End-to-end encrypted video clinic and patient retention engine for 380,000 patients.",
-   "image": "assets/img/work/medlink.jpg",
-   "tags": [
-    "Software"
-   ],
-   "is_featured": true,
-   "is_active": true,
-   "sort_order": 3
-  },
-  {
-   "title": "Interactive 3D masterplan portal, commercial film campaign & high-intent lead engine (USD 84M sales).",
-   "slug": "palm-residences",
-   "client": "Palm Residences",
-   "kicker": "PALM RESIDENCES",
-   "year": "2025",
-   "excerpt": "Real-time unit inventory engine and omnichannel launch generating USD 84M in contracted sales.",
-   "image": "assets/img/work/palm-residences.jpg",
-   "tags": [
-    "Marketing"
-   ],
-   "is_featured": true,
-   "is_active": true,
-   "sort_order": 4
-  },
-  {
-   "title": "Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.",
-   "slug": "qahwa-roasters",
-   "client": "Qahwa Specialty Roasters",
-   "kicker": "QAHWA SPECIALTY ROASTERS",
-   "year": "2024",
-   "excerpt": "Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.",
-   "image": "assets/img/work/qahwa.jpg",
-   "tags": [
-    "Marketing",
-    "Commerce"
-   ],
-   "is_featured": false,
-   "is_active": true,
-   "sort_order": 5
-  }
- ],
- "members": [
-  {
-   "name": "Mohanad Ahmed Shehata",
-   "slug": "mohanad",
-   "role": "Co-founder and chief technology officer",
-   "kind": "founder",
-   "lead": "Mohanad leads software architecture, engineering standards, and technical infrastructure at Empetix Solution. He guides web, mobile, and backend teams to build fast, secure, and maintainable platforms engineered for scale.",
-   "bio": [
-    "As chief technology officer, Mohanad directs Empetix Solution’s engineering practice across custom web platforms, mobile applications, backend APIs, and cloud infrastructure from New Cairo.",
-    "He reviews core system blueprints, database designs, and deployment pipelines hands-on so production software stays resilient under real user load and straightforward for teams to evolve."
-   ],
-   "expertise": [
-    {
-     "title": "Web and mobile platform architecture",
-     "desc": "Designing full-stack systems across Laravel, modern web frameworks, and native-grade mobile applications."
-    },
-    {
-     "title": "Scalable APIs and backend systems",
-     "desc": "Engineering high-reliability transactional cores, payment integrations, and clean modular service boundaries."
-    },
-    {
-     "title": "Cloud infrastructure and DevOps",
-     "desc": "Establishing secure cloud environments, automated CI/CD pipelines, monitoring, and low-risk release workflows."
-    },
-    {
-     "title": "Technical reviews and code quality",
-     "desc": "Mentoring engineering squads through architecture reviews, performance optimization, and security standards."
-    }
-   ],
-   "photo": "assets/img/team/mohanad-shehata.jpg",
-   "email": "hello&#64;empetix.com",
-   "sort_order": 0,
-   "is_active": true
-  },
-  {
-   "name": "Ayman Ibrahim",
-   "slug": "ayman",
-   "role": "Co-founder and chief executive officer",
-   "kind": "founder",
-   "lead": "Ayman leads company vision, strategic partnerships, and investment direction at Empetix Solution. He works directly with founders and executive teams to align software engineering, growth marketing, and capital around durable business outcomes.",
-   "bio": [
-    "As chief executive officer, Ayman oversees Empetix Solution’s strategic direction across enterprise product delivery, growth partnerships, and venture investments from New Cairo.",
-    "He stays closely involved through executive discovery and governance so every software build and commercial expansion stays grounded in clear unit economics and long-term sustainability."
-   ],
-   "expertise": [
-    {
-     "title": "Executive strategy and partnerships",
-     "desc": "Aligning technology investments, commercial goals, and multi-phase roadmaps for enterprise and growth-stage partners."
-    },
-    {
-     "title": "Strategic venture investment",
-     "desc": "Backing ambitious founders with capital, senior technical leadership, and go-to-market execution under one roof."
-    },
-    {
-     "title": "Commercial scoping and governance",
-     "desc": "Turning complex business objectives into structured scopes, realistic timelines, and clear accountability."
-    },
-    {
-     "title": "Enterprise client advisory",
-     "desc": "Guiding executive leadership teams through digital transformation, platform launches, and market expansion."
-    }
-   ],
-   "photo": "assets/img/team/ayman-ibrahim.jpg",
-   "email": "hello&#64;empetix.com",
-   "sort_order": 1,
-   "is_active": true
-  },
-  {
-   "name": "Bishoy Magdy",
-   "slug": "bishoy",
-   "role": "Co-founder and chief operating officer",
-   "kind": "founder",
-   "lead": "Bishoy leads company operations, delivery governance, and cross-functional execution at Empetix Solution. He connects software squads, marketing teams, and client stakeholders so projects ship on schedule and scale smoothly.",
-   "bio": [
-    "As chief operating officer, Bishoy oversees day-to-day operations, squad planning, and execution standards across Empetix Solution’s engineering, product design, and growth marketing practices in New Cairo.",
-    "He builds clear operating rhythms between technical teams and commercial specialists so clients experience transparent communication, predictable milestones, and dependable delivery from kickoff to launch."
-   ],
-   "expertise": [
-    {
-     "title": "Delivery governance and execution",
-     "desc": "Running disciplined sprint cadences and milestone reviews that keep complex engineering and growth launches on schedule."
-    },
-    {
-     "title": "Cross-functional squad operations",
-     "desc": "Coordinating software engineers, designers, and performance marketers around one shared product roadmap."
-    },
-    {
-     "title": "Client onboarding and account health",
-     "desc": "Establishing transparent reporting, clear escalation paths, and sustained operational alignment with partner teams."
-    },
-    {
-     "title": "Scaling studio processes",
-     "desc": "Building repeatable workflows, hiring standards, and quality benchmarks that protect craft as teams expand."
-    }
-   ],
-   "photo": "assets/img/team/bishoy-magdy.jpg",
-   "email": "hello&#64;empetix.com",
-   "sort_order": 2,
-   "is_active": true
-  },
-  {
-   "name": "Tarek El-Shenawy",
-   "slug": "tarek-el-shenawy",
-   "role": "Principal backend engineer",
-   "kind": "member",
-   "focus": "Laravel, PostgreSQL, payment ledgers",
-   "photo": "assets/img/team/tarek-elshenawy.jpg",
-   "sort_order": 10,
-   "is_active": true
-  },
-  {
-   "name": "Nourhan Ibrahim",
-   "slug": "nourhan-ibrahim",
-   "role": "Staff frontend engineer",
-   "kind": "member",
-   "focus": "Next.js, TypeScript, accessibility",
-   "photo": "assets/img/team/nourhan-ibrahim.jpg",
-   "sort_order": 11,
-   "is_active": true
-  },
-  {
-   "name": "Youssef Abdelrahman",
-   "slug": "youssef-abdelrahman",
-   "role": "Lead mobile engineer",
-   "kind": "member",
-   "focus": "Flutter, iOS and Android performance",
-   "photo": "assets/img/team/youssef-abdelrahman.jpg",
-   "sort_order": 12,
-   "is_active": true
-  },
-  {
-   "name": "Mostafa Fawzy",
-   "slug": "mostafa-fawzy",
-   "role": "Cloud and DevOps lead",
-   "kind": "member",
-   "focus": "AWS infrastructure, CI/CD, observability",
-   "photo": "assets/img/team/mostafa-fawzy.jpg",
-   "sort_order": 13,
-   "is_active": true
-  },
-  {
-   "name": "Mariam Nabil",
-   "slug": "mariam-nabil",
-   "role": "Lead product designer",
-   "kind": "member",
-   "focus": "Bilingual RTL and LTR design systems",
-   "photo": "assets/img/team/mariam-nabil.jpg",
-   "sort_order": 14,
-   "is_active": true
-  },
-  {
-   "name": "Hossam Reda",
-   "slug": "hossam-reda",
-   "role": "Senior UX researcher",
-   "kind": "member",
-   "focus": "Usability testing, onboarding flows",
-   "photo": "assets/img/team/hossam-reda.jpg",
-   "sort_order": 15,
-   "is_active": true
-  },
-  {
-   "name": "Farida Zaki",
-   "slug": "farida-zaki",
-   "role": "Brand and visual designer",
-   "kind": "member",
-   "focus": "Identity systems, editorial typography",
-   "photo": "assets/img/team/farida-zaki.jpg",
-   "sort_order": 16,
-   "is_active": true
-  },
-  {
-   "name": "Ziad El-Banna",
-   "slug": "ziad-el-banna",
-   "role": "Senior UI and RTL systems designer",
-   "kind": "member",
-   "focus": "Arabic typography, WCAG AA accessibility",
-   "photo": "assets/img/team/ziad-elbanna.jpg",
-   "sort_order": 17,
-   "is_active": true
-  },
-  {
-   "name": "Khaled Mansour",
-   "slug": "khaled-mansour",
-   "role": "Performance marketing lead",
-   "kind": "member",
-   "focus": "Paid acquisition, multi-market scaling",
-   "photo": "assets/img/team/khaled-mansour.jpg",
-   "sort_order": 18,
-   "is_active": true
-  },
-  {
-   "name": "Seif El-Din Hany",
-   "slug": "seif-el-din-hany",
-   "role": "Analytics and attribution lead",
-   "kind": "member",
-   "focus": "Server-side tracking, cohort retention",
-   "photo": "assets/img/team/seif-hany.jpg",
-   "sort_order": 19,
-   "is_active": true
-  },
-  {
-   "name": "Ahmed El-Gamal",
-   "slug": "ahmed-el-gamal",
-   "role": "Commercial film producer",
-   "kind": "member",
-   "focus": "Launch films, product photography",
-   "photo": "assets/img/team/ahmed-elgamal.jpg",
-   "sort_order": 20,
-   "is_active": true
-  },
-  {
-   "name": "Ramy Tarek",
-   "slug": "ramy-tarek",
-   "role": "Technical SEO and content strategist",
-   "kind": "member",
-   "focus": "Arabic and English search architecture",
-   "photo": "assets/img/team/ramy-tarek.jpg",
-   "sort_order": 21,
-   "is_active": true
-  }
- ],
- "job_posts": [
-  {
-   "title": "Senior Laravel & Distributed Systems Engineer",
-   "slug": "laravel",
-   "ref_code": "REQ-2026-014",
-   "department": "Software Engineering",
-   "summary": "Architect high-concurrency Laravel 11 APIs, event-sourced FinTech payment ledgers, and multi-tenant SaaS backends serving 1.4M+ active monthly users.",
-   "pills": [
-    "Location: Cairo or Remote EMEA",
-    "Work Mode: Hybrid / Remote",
-    "Level: L5 / Senior Engineer",
-    "Compensation: USD 3,500 – 5,200 / mo + Profit Share"
-   ],
-   "sections": [
-    {
-     "heading": "Role Overview & Mission",
-     "items": [
-      "As a Senior Laravel & Distributed Systems Engineer at Empetix, you will lead the backend architecture for our flagship FinTech, e-commerce, and logistics platforms. You will work directly alongside CTO Mohanad Ahmed Shehata and a squad of senior product engineers—designing zero-downtime ledger migrations, idempotent webhook processors, and sub-100ms API endpoints.",
-      "Architect high-concurrency Laravel 11 APIs, event-sourced FinTech payment ledgers, and multi-tenant SaaS backends serving 1.4M+ active monthly users."
-     ]
-    },
-    {
-     "heading": "Key Responsibilities (What You Will Do)",
-     "items": [
-      "In your first 90 days and beyond, you will be responsible for:",
-      "Design, build, and maintain modular Laravel 11 applications using Domain-Driven Design (DDD), strict typing, and event-sourced ledger patterns.",
-      "Optimize PostgreSQL and Redis query paths to sustain P95 response latencies under 120ms during high-velocity campaign traffic spikes.",
-      "Integrate regional and global payment gateways, banking webhooks, ERP bridges, and server-side marketing attribution pipelines (Meta CAPI / Google Ads API).",
-      "Write deterministic automated test suites (Pest / PHPUnit) and lead architectural code reviews across the engineering practice.",
-      "Mentor mid-level engineers and collaborate with frontend and mobile squads on clean OpenAPI / GraphQL contracts."
-     ]
-    },
-    {
-     "heading": "Required Qualifications & Requirements",
-     "items": [
-      "We are looking for candidates who can demonstrate the following qualifications:",
-      "5+ years of production backend engineering experience, with at least 3+ years building large-scale systems in Laravel and modern PHP (8.2+).",
-      "Deep proficiency in relational database design (PostgreSQL or MySQL), indexing strategies, transaction isolation levels, and query profiling.",
-      "Proven experience with asynchronous job queues (Laravel Horizon / Redis / SQS), caching strategies, and webhook idempotency.",
-      "Strong grasp of automated testing, CI/CD pipelines (GitHub Actions), Docker containers, and Linux production debugging.",
-      "Clear written and verbal communication in Arabic and professional English."
-     ]
-    },
-    {
-     "heading": "Preferred Qualifications (Nice to Have)",
-     "items": [
-      "Prior experience building FinTech wallets, double-entry accounting ledgers, or high-volume multi-vendor e-commerce checkouts.",
-      "Familiarity with AWS infrastructure (ECS, RDS, CloudFront, S3) or Terraform.",
-      "Contributions to open-source Laravel packages or technical writing."
-     ]
-    },
-    {
-     "heading": "Compensation, Benefits & Working Model",
-     "items": [
-      "Salary Band: USD 3,500 – 5,200 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
-      "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
-      "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
-      "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
-     ]
-    }
-   ],
-   "tags": [
-    "Laravel 11",
-    "PHP 8.3",
-    "PostgreSQL",
-    "Redis / Horizon",
-    "AWS ECS",
-    "DDD / Event Sourcing"
-   ],
-   "is_active": true,
-   "sort_order": 0
-  },
-  {
-   "title": "Senior Frontend Architect (Next.js / TypeScript / Design Systems)",
-   "slug": "frontend",
-   "ref_code": "REQ-2026-018",
-   "department": "Software Engineering",
-   "summary": "Own the frontend architecture, bilingual RTL/LTR component libraries, and sub-second Core Web Vitals across our enterprise web and commerce platforms.",
-   "pills": [
-    "Location: Cairo (New Cairo / Downtown)",
-    "Work Mode: Hybrid (2 days in studio)",
-    "Level: L5 / Senior Architect",
-    "Compensation: USD 3,200 – 4,800 / mo + Profit Share"
-   ],
-   "sections": [
-    {
-     "heading": "Role Overview & Mission",
-     "items": [
-      "We are looking for a Senior Frontend Architect who treats HTML semantics, CSS architecture, and TypeScript performance as first-class engineering disciplines. You will partner with Chief Design Officer Bishoy Magdy and our backend squads to ship editorial-grade web platforms and headless commerce storefronts.",
-      "Own the frontend architecture, bilingual RTL/LTR component libraries, and sub-second Core Web Vitals across our enterprise web and commerce platforms."
-     ]
-    },
-    {
-     "heading": "Key Responsibilities (What You Will Do)",
-     "items": [
-      "In your first 90 days and beyond, you will be responsible for:",
-      "Architect scalable Next.js / React applications and Blade/Livewire enterprise portals with strict TypeScript contracts.",
-      "Build and document bidirectional (Arabic RTL / English LTR) design-system components using 100% CSS Logical Properties and zero layout shift.",
-      "Enforce Core Web Vitals budgets (LCP",
-      "Collaborate with the CRO & Growth team to instrument clean analytics events, A/B testing hooks, and high-converting checkout flows.",
-      "Ensure full WCAG 2.1 AA keyboard navigation, screen-reader semantics, and reduced-motion compliance."
-     ]
-    },
-    {
-     "heading": "Required Qualifications & Requirements",
-     "items": [
-      "We are looking for candidates who can demonstrate the following qualifications:",
-      "5+ years of production frontend engineering experience with deep mastery of semantic HTML5, modern CSS (Grid, Custom Properties, Logical Properties), and TypeScript.",
-      "3+ years architecting production React and Next.js applications (SSR, ISR, App Router, Server Actions).",
-      "Obsessive attention to typographic detail, micro-interactions, and 60fps animation performance.",
-      "Experience building and maintaining shared UI component libraries (Storybook / Figma Tokens).",
-      "Ability to collaborate closely with designers and backend engineers in a fast-paced studio environment."
-     ]
-    },
-    {
-     "heading": "Preferred Qualifications (Nice to Have)",
-     "items": [
-      "Experience with headless Shopify Plus storefronts, WebGL/Canvas interactions, or Laravel Blade integration.",
-      "Proven track record optimizing Arabic/English bilingual interfaces for MENA audiences."
-     ]
-    },
-    {
-     "heading": "Compensation, Benefits & Working Model",
-     "items": [
-      "Salary Band: USD 3,200 – 4,800 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
-      "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
-      "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
-      "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
-     ]
-    }
-   ],
-   "tags": [
-    "Next.js 15",
-    "React 19",
-    "TypeScript",
-    "CSS Logical Grid",
-    "Accessibility (WCAG AA)",
-    "Performance"
-   ],
-   "is_active": true,
-   "sort_order": 1
-  },
-  {
-   "title": "Lead Flutter Mobile Engineer (FinTech & Commerce)",
-   "slug": "flutter",
-   "ref_code": "REQ-2026-021",
-   "department": "Software Engineering",
-   "summary": "Lead mobile engineering for 60fps iOS & Android consumer apps in FinTech, telemedicine, and field logistics—with biometric KYC and offline-first sync.",
-   "pills": [
-    "Location: Cairo or Riyadh",
-    "Work Mode: Hybrid / Remote",
-    "Level: L6 / Lead Engineer",
-    "Compensation: USD 3,800 – 5,500 / mo + Profit Share"
-   ],
-   "sections": [
-    {
-     "heading": "Role Overview & Mission",
-     "items": [
-      "Our mobile applications are used daily by over 1.4 million consumers and field operators across Egypt and Saudi Arabia. As Lead Flutter Mobile Engineer, you will own the mobile architecture, release automation, and native platform integrations across our FinTech and commerce flagship apps.",
-      "Lead mobile engineering for 60fps iOS & Android consumer apps in FinTech, telemedicine, and field logistics—with biometric KYC and offline-first sync."
-     ]
-    },
-    {
-     "heading": "Key Responsibilities (What You Will Do)",
-     "items": [
-      "In your first 90 days and beyond, you will be responsible for:",
-      "Architect modular, testable Flutter applications using clean architecture, predictable state management (Riverpod / Bloc), and custom 60fps animations.",
-      "Build secure native platform bridges (Swift / Kotlin) for NFC tap-to-pay, biometric authentication, camera OCR, and background geolocation.",
-      "Design offline-first local storage and conflict-resolution sync engines for field-operations and logistics tablets.",
-      "Manage automated App Store, Google Play, and Huawei AppGallery CI/CD pipelines (Codemagic / Fastlane) and crash telemetry.",
-      "Partner with Product Design and Growth teams to optimize onboarding activation and mobile checkout conversion."
-     ]
-    },
-    {
-     "heading": "Required Qualifications & Requirements",
-     "items": [
-      "We are looking for candidates who can demonstrate the following qualifications:",
-      "5+ years of mobile development experience, including 3+ years shipping high-scale production apps in Flutter & Dart.",
-      "Published apps on both the Apple App Store and Google Play Store with 50,000+ active users.",
-      "Solid understanding of native iOS (Swift) or Android (Kotlin) fundamentals, memory profiling, and mobile security best practices.",
-      "Experience integrating REST/WebSocket APIs, push notification services (FCM/APNs), and mobile attribution SDKs.",
-      "Strong leadership skills with experience mentoring mobile engineers."
-     ]
-    },
-    {
-     "heading": "Preferred Qualifications (Nice to Have)",
-     "items": [
-      "Experience with FinTech wallets, PCI-DSS compliance, or WebRTC video streaming on mobile.",
-      "Familiarity with Arabic RTL layout nuances in Flutter."
-     ]
-    },
-    {
-     "heading": "Compensation, Benefits & Working Model",
-     "items": [
-      "Salary Band: USD 3,800 – 5,500 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
-      "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
-      "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
-      "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
-     ]
-    }
-   ],
-   "tags": [
-    "Flutter 3",
-    "Dart",
-    "iOS / Android Native Channels",
-    "Biometric KYC",
-    "Offline-First SQLite",
-    "CI/CD"
-   ],
-   "is_active": true,
-   "sort_order": 2
-  },
-  {
-   "title": "Performance Marketing & Paid Acquisition Lead (MENA / GCC)",
-   "slug": "marketing",
-   "ref_code": "REQ-2026-025",
-   "department": "Growth & Marketing",
-   "summary": "Direct multi-channel paid acquisition (Meta, Google, TikTok, LinkedIn), creative testing sprints, and server-side attribution for category-leading brands.",
-   "pills": [
-    "Location: Cairo or Riyadh",
-    "Work Mode: Hybrid",
-    "Level: L5 / Practice Lead",
-    "Compensation: USD 2,800 – 4,500 / mo + ROAS Bonus"
-   ],
-   "sections": [
-    {
-     "heading": "Role Overview & Mission",
-     "items": [
-      "At Empetix, performance marketers don't operate in the dark. You will sit alongside the software engineers who build our clients' checkout flows and the film directors who shoot our ad creatives—managing USD 150k to 500k/month in paid media budgets across Egypt, Saudi Arabia, the UAE, and Europe.",
-      "Direct multi-channel paid acquisition (Meta, Google, TikTok, LinkedIn), creative testing sprints, and server-side attribution for category-leading brands."
-     ]
-    },
-    {
-     "heading": "Key Responsibilities (What You Will Do)",
-     "items": [
-      "In your first 90 days and beyond, you will be responsible for:",
-      "Own full-funnel paid acquisition strategy, budget allocation, and ROAS/CAC targets across Meta, Google, TikTok, Snapchat, and LinkedIn.",
-      "Collaborate with our backend engineers to configure server-side Conversions API (CAPI), offline conversion imports, and first-party attribution dashboards.",
-      "Partner with our in-house video and design crew to run weekly structured creative testing sprints (hooks, angles, formats, and landing pages).",
-      "Analyze cohort retention, LTV:CAC ratios, and funnel drop-off telemetry to scale winning campaigns profitably.",
-      "Lead client growth reviews with clear, honest financial reporting—zero vanity metrics."
-     ]
-    },
-    {
-     "heading": "Required Qualifications & Requirements",
-     "items": [
-      "We are looking for candidates who can demonstrate the following qualifications:",
-      "4+ years hands-on experience managing performance marketing budgets exceeding USD 50,000/month with verifiable ROAS and CAC case studies.",
-      "Deep technical command of Meta Business Suite, Google Ads, TikTok/Snap Ads Manager, Google Tag Manager (Server-Side), and GA4.",
-      "Strong analytical foundation in unit economics (CAC, Payback Period, Contribution Margin, MER, and Cohort LTV).",
-      "Experience scaling e-commerce, FinTech, real estate, or mobile app campaigns in the GCC and Egyptian markets.",
-      "Fluency in Arabic and English copy evaluation and creative briefing."
-     ]
-    },
-    {
-     "heading": "Preferred Qualifications (Nice to Have)",
-     "items": [
-      "Experience with SQL/BigQuery, Looker Studio, or mobile MMP tools (Adjust / AppsFlyer).",
-      "Background in conversion rate optimization (A/B testing landing pages)."
-     ]
-    },
-    {
-     "heading": "Compensation, Benefits & Working Model",
-     "items": [
-      "Salary Band: USD 2,800 – 4,500 / mo + ROAS Bonus (benchmarked in USD and paid with zero currency delay).",
-      "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
-      "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
-      "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
-     ]
-    }
-   ],
-   "tags": [
-    "Meta Ads & CAPI",
-    "Google Ads / PMax",
-    "TikTok & Snap GCC",
-    "Server-Side Attribution",
-    "CRO & Unit Economics"
-   ],
-   "is_active": true,
-   "sort_order": 3
-  },
-  {
-   "title": "Senior Product Designer (Bilingual Design Systems & CRO)",
-   "slug": "designer",
-   "ref_code": "REQ-2026-029",
-   "department": "Product Design",
-   "summary": "Craft typographically rigorous Arabic/English design systems, complex SaaS & FinTech workflows, and high-converting e-commerce experiences.",
-   "pills": [
-    "Location: Cairo Studio",
-    "Work Mode: Hybrid (2 days in studio)",
-    "Level: L5 / Senior Designer",
-    "Compensation: USD 2,600 – 4,000 / mo + Profit Share"
-   ],
-   "sections": [
-    {
-     "heading": "Role Overview & Mission",
-     "items": [
-      "Working directly with Co-Founder & Chief Operating Officer Bishoy Magdy, you will lead end-to-end product design from 5-Day Sprint discovery and wireframing through tokenized Figma design systems and developer handoff.",
-      "Craft typographically rigorous Arabic/English design systems, complex SaaS & FinTech workflows, and high-converting e-commerce experiences."
-     ]
-    },
-    {
-     "heading": "Key Responsibilities (What You Will Do)",
-     "items": [
-      "In your first 90 days and beyond, you will be responsible for:",
-      "Lead product UX and visual design for web, SaaS, and mobile applications across FinTech, healthcare, logistics, and luxury commerce.",
-      "Architect and maintain multi-brand Figma design systems using variables, auto-layout, and bidirectional Arabic (RTL) and English (LTR) typography scales.",
-      "Conduct moderated usability testing, analyze heatmap/session-recording telemetry, and design CRO experiments that lift conversion rates.",
-      "Pair closely with our frontend and Flutter engineers during implementation to ensure pixel-level craft in production.",
-      "Facilitate client design sprint workshops in our Cairo studio."
-     ]
-    },
-    {
-     "heading": "Required Qualifications & Requirements",
-     "items": [
-      "We are looking for candidates who can demonstrate the following qualifications:",
-      "4+ years designing shipped digital products (web platforms and iOS/Android mobile apps)—not just Dribbble concept shots.",
-      "Mastery of Figma (Variables, Component Properties, Auto-Layout, Interactive Prototyping) and modern design-token workflows.",
-      "Strong command of both Latin and Arabic typography, grid systems, and editorial hierarchy.",
-      "Working knowledge of HTML/CSS constraints so your designs translate cleanly into code.",
-      "A portfolio demonstrating clear problem-solving, system thinking, and measurable commercial impact."
-     ]
-    },
-    {
-     "heading": "Preferred Qualifications (Nice to Have)",
-     "items": [
-      "Experience with motion design, brand identity systems, or front-end CSS implementation.",
-      "Prior experience facilitating 5-Day Design Sprints."
-     ]
-    },
-    {
-     "heading": "Compensation, Benefits & Working Model",
-     "items": [
-      "Salary Band: USD 2,600 – 4,000 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
-      "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
-      "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
-      "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
-     ]
-    }
-   ],
-   "tags": [
-    "Figma Variables & Tokens",
-    "Arabic/English RTL/LTR",
-    "Design Systems",
-    "UX Research & CRO",
-    "Prototyping"
-   ],
-   "is_active": true,
-   "sort_order": 4
-  },
-  {
-   "title": "Commercial Video Producer & Editor (Brand & Paid Social)",
-   "slug": "producer",
-   "ref_code": "REQ-2026-032",
-   "department": "Growth & Marketing",
-   "summary": "Direct, shoot, and edit documentary-style brand films, product launches, and high-converting paid social video variations in our Cairo production lab.",
-   "pills": [
-    "Location: Cairo Studio",
-    "Work Mode: On-Site / Hybrid",
-    "Level: L4 / Senior Producer",
-    "Compensation: USD 2,000 – 3,200 / mo + Production Bonus"
-   ],
-   "sections": [
-    {
-     "heading": "Role Overview & Mission",
-     "items": [
-      "Empetix produces all commercial video and photography in-house so our growth team can iterate at the speed of live campaign data. You will co-direct studio and on-location shoots and edit both flagship brand films and performance ad variations.",
-      "Direct, shoot, and edit documentary-style brand films, product launches, and high-converting paid social video variations in our Cairo production lab."
-     ]
-    },
-    {
-     "heading": "Key Responsibilities (What You Will Do)",
-     "items": [
-      "In your first 90 days and beyond, you will be responsible for:",
-      "Plan, light, shoot, and edit documentary-grade brand films, founder interviews, product demonstrations, and 9:16 paid-social video assets.",
-      "Collaborate weekly with our Paid Acquisition team to review hook-rate (3-second view %) and hold-rate telemetry, producing fresh creative variations.",
-      "Manage our Cairo studio equipment inventory, set styling, color grading (DaVinci Resolve), and sound design.",
-      "Direct on-location commercial shoots across Cairo and regional client sites."
-     ]
-    },
-    {
-     "heading": "Required Qualifications & Requirements",
-     "items": [
-      "We are looking for candidates who can demonstrate the following qualifications:",
-      "3+ years of professional commercial video production, cinematography, and post-production editing experience.",
-      "Proficiency in DaVinci Resolve and/or Adobe Premiere Pro, color grading, audio mixing, and clean motion titles.",
-      "Hands-on experience lighting and operating cinema/mirrorless camera systems (ARRI, RED, Sony FX, or Leica/Canon cinema lines).",
-      "Understanding of how commercial storytelling intersects with paid social conversion performance.",
-      "A reel demonstrating restrained, authentic documentary and commercial aesthetics (no cheesy stock templates)."
-     ]
-    },
-    {
-     "heading": "Preferred Qualifications (Nice to Have)",
-     "items": [
-      "Still photography and studio lighting experience (35mm editorial and product tabletop).",
-      "Motion graphics proficiency in After Effects."
-     ]
-    },
-    {
-     "heading": "Compensation, Benefits & Working Model",
-     "items": [
-      "Salary Band: USD 2,000 – 3,200 / mo + Production Bonus (benchmarked in USD and paid with zero currency delay).",
-      "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
-      "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
-      "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
-     ]
-    }
-   ],
-   "tags": [
-    "Commercial Directing",
-    "DaVinci Resolve / Premiere",
-    "Cinema Cameras & Lighting",
-    "Paid Social Hooks",
-    "Sound & Color"
-   ],
-   "is_active": true,
-   "sort_order": 5
-  }
- ],
- "posts": [
-  {
-   "title": "Engineering Arabic-First Design Systems & High-Conversion Funnels",
-   "slug": "arabic-first-design-systems",
-   "type": "article",
-   "category": "DESIGN SYSTEMS & CRO",
-   "excerpt": "Why simply flipping an English interface with dir=“rtl” breaks reading rhythm and trust—and how our engineering and CRO teams build native bilingual platforms that convert 38% higher across MENA.",
-   "body": "<h2 id=\"sec-optical\">01. Optical rhythm is not a mirror image</h2>\n          <p>\n            Across Egypt, Saudi Arabia, and the UAE, more than 78% of mobile commerce traffic interacts with bilingual products. Yet most software teams treat Arabic as a late-stage localization ticket: they design in English with tight negative letter-spacing, small uppercase eyebrows, and 1.1 line-height, then flip the DOM direction two weeks before launch.\n          </p>\n          <p>\n            The result looks immediately foreign to native Arabic readers. Arabic script connects cursively along a baseline with taller ascenders and deeper descenders (`ك`, `ل`, `ي`, `ح`). Applying negative letter-spacing (`letter-spacing: -0.04em`) fractures ligatures in Chromium and WebKit, while cramped line-heights clip vowel marks and diacritics.\n          </p>\n\n          <blockquote>\n            &ldquo;When an Arabic checkout screen feels like a translated foreign template, user trust drops at the exact moment you ask for a credit card or national ID.&rdquo;\n            <cite>&mdash; Bishoy Magdy, Chief Design Officer at Empetix</cite>\n          </blockquote>\n\n          <h2 id=\"sec-logical\">02. One stylesheet using 100% CSS Logical Properties</h2>\n          <p>\n            At Empetix, we never maintain a separate `rtl.css` override file. Maintaining two stylesheets guarantees visual drift within three sprints. Instead, our design token layer in `variables.css` and every component rule use native CSS Logical Properties:\n          </p>\n          <ul>\n            <li><strong>Inline flow instead of left/right:</strong> `margin-inline`, `padding-inline-start`, `inset-inline-end`, and `border-inline-start` automatically flip when `dir=\"rtl\"` is toggled on `&lt;html&gt;`.</li>\n            <li><strong>Direction-scoped typography tokens:</strong> Under `[dir=\"rtl\"]`, `--tracking-display` and `--tracking-caps` reset to `0`, while line-height expands by 12% to give Arabic script room to breathe.</li>\n            <li><strong>Tabular numerals (`tabular-nums`):</strong> Pricing tables, OTP codes, and IBAN fields retain consistent numeral alignment across both directions.</li>\n          </ul>\n\n          <!-- Embedded Video inside Blog Post -->\n          <h2 id=\"sec-video\">03. Watch the live engineering &amp; CRO walkthrough</h2>\n          <p>\n            In the 6-minute studio recording below, Bishoy Magdy and Principal Engineer Youssef Nabil walk through the actual Figma tokens, CSS logical grid, and checkout heatmap telemetry from our NilePay and Dar Ceramics launches:\n          </p>\n\n          <figure>\n            <div class=\"video\" data-video-player=\"post-video-1\">\n              <img class=\"video__poster\" src=\"/assets/img/blog/design-sprint.jpg\" alt=\"Empetix design system workshop video preview\" width=\"1200\" height=\"675\"/>\n              <video class=\"video__el\" preload=\"metadata\" poster=\"/assets/img/blog/design-sprint.jpg\">\n                <source src=\"/assets/video/design-sprint.mp4\" type=\"video/mp4\"/>\n              </video>\n              <button type=\"button\" class=\"video__btn\" data-video-play aria-label=\"Play design system walkthrough video\">\n                <span class=\"video__btn-inner\">\n                  <span class=\"video__btn-icon\">\n                    <svg viewBox=\"0 0 16 16\" fill=\"currentColor\" aria-hidden=\"true\"><polygon points=\"4,2 14,8 4,14\"/></svg>\n                  </span>\n                  <span>Watch Studio Walkthrough (06:40)</span>\n                </span>\n              </button>\n            </div>\n            <figcaption>VIDEO 01 &mdash; LIVE COMPARISON OF LTR/RTL CHECKOUT TELEMETRY &amp; CSS LOGICAL TOKENS</figcaption>\n          </figure>\n\n          <!-- Interactive Photo Gallery inside Blog Post -->\n          <h2 id=\"sec-gallery\">04. Studio photo gallery (Click any photo to zoom)</h2>\n          <p>\n            Photographs from our Cairo studio wall critique and usability testing sessions across Arabic and English mobile viewports:\n          </p>\n\n          <div class=\"gallery\" aria-label=\"Article photo gallery\">\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/arabic-first.jpg\" data-lightbox-caption=\"Fig 01 — Sketching right-to-left typographic hierarchy and baseline grids on paper.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/arabic-first.jpg\" alt=\"Sketching right-to-left typographic hierarchy on paper\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG RTL WIREFRAME STUDY</span>\n                  <span>CLICK TO ENLARGE +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/design-sprint.jpg\" data-lightbox-caption=\"Fig 02 — Product designers and growth engineers voting on checkout friction points.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/design-sprint.jpg\" alt=\"Team voting on checkout wireframes pinned to studio wall\" width=\"600\" height=\"750\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG CRITIQUE WALL</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/work/nilepay-detail.jpg\" data-lightbox-caption=\"Fig 03 — Field usability testing of one-handed thumb reach on Arabic mobile checkout.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/work/nilepay-detail.jpg\" alt=\"Hands testing mobile app on terracotta table\" width=\"750\" height=\"500\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG MOBILE THUMB-ZONE TEST</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/home/studio.jpg\" data-lightbox-caption=\"Fig 04 — Pair-programming the CSS logical token architecture and automated visual regression tests.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/home/studio.jpg\" alt=\"Two developers pair-programming at wooden desk\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG PAIR-PROGRAMMING TOKENS</span>\n                  <span>CLICK TO ENLARGE +</span>\n                </div>\n              </button>\n            </div>\n          </div>\n\n          <h2 id=\"sec-cro\">05. What happened to conversion rates after launch</h2>\n          <p>\n            Across four ecommerce and FinTech platforms where we replaced auto-translated RTL stylesheets with our native Arabic-first component architecture and micro-copy:\n          </p>\n          <ol>\n            <li><strong>+38.4% mobile checkout completion</strong> among Arabic-language sessions in Egypt and Saudi Arabia.</li>\n            <li><strong>-29% form validation errors</strong> on phone number, address, and payment card inputs by keeping numeric inputs LTR-isolated inside RTL forms.</li>\n            <li><strong>Zero duplicate CSS maintenance</strong> for the client&rsquo;s internal engineering team post-handover.</li>\n          </ol>\n\n          <!-- Author Card -->",
-   "cover_image": "assets/img/blog/arabic-first.jpg",
-   "published_at": "2026-11-14 09:00:00",
-   "is_published": true,
-   "sort_order": 2,
-   "meta": {
-    "read_time": "8 MIN READ · INCLUDES VIDEO & 4 PHOTOS",
-    "author_name": "Bishoy Magdy",
-    "author_role": "Co-Founder & Chief Operating Officer",
-    "author_avatar": "assets/img/team/bishoy-magdy.jpg",
-    "author_bio": "Bishoy leads studio operations, product delivery, and cross-functional design and growth execution at Empetix Solution.",
-    "author_profile": "founder-bishoy.html",
-    "toc": [
-     {
-      "id": "sec-optical",
-      "label": "01. Optical Rhythm vs. Mirroring"
-     },
-     {
-      "id": "sec-logical",
-      "label": "02. CSS Logical Properties Architecture"
-     },
-     {
-      "id": "sec-video",
-      "label": "03. Video Walkthrough (06:40)"
-     },
-     {
-      "id": "sec-gallery",
-      "label": "04. Studio Photo Gallery (4 Photos)"
-     },
-     {
-      "id": "sec-cro",
-      "label": "05. Checkout Conversion Telemetry"
-     },
-     {
-      "id": "main-content",
-      "label": "Back to Top ↑"
-     }
+    "hero_slides": [
+        {
+            "tag": "SOFTWARE & GROWTH PARTNER",
+            "title": "We build web and mobile software and run growth marketing.",
+            "desc": "Empetix is an end-to-end software engineering and performance marketing partner. Our engineers and marketers work on the same team to build your software and grow your customer base.",
+            "cta_label": "Start a Project",
+            "cta_url": "/contact",
+            "image": "assets/img/home/hero.jpg",
+            "tab_label": "OVERVIEW",
+            "tab_title": "Software & Growth Studio",
+            "tab_sub": "End-to-end digital transformation",
+            "sort_order": 0,
+            "is_active": true
+        },
+        {
+            "tag": "PERFORMANCE MARKETING & CRO",
+            "title": "Paid media, video production, and conversion work for growing brands.",
+            "desc": "We replace guesswork with server-side Conversions API (CAPI) engineering, in-house commercial film shoots, and bilingual conversion optimization across MENA and Europe.",
+            "cta_label": "View Growth Case Studies",
+            "cta_url": "/contact",
+            "image": "assets/img/blog/performance-playbook.jpg",
+            "tab_label": "MARKETING",
+            "tab_title": "Performance & CRO Engine",
+            "tab_sub": "3.8x median ROAS & server-side CAPI",
+            "sort_order": 1,
+            "is_active": true
+        },
+        {
+            "tag": "SUCCESS STORY: ALFAGN",
+            "title": "How Alfagn scaled to 45,000+ active students with sub-180ms exam latency.",
+            "desc": "Architecting a high-concurrency EdTech platform with dynamic forensic video watermarking, asynchronous quiz engine, and native Flutter apps.",
+            "cta_label": "Read Alfagn Case Dossier",
+            "cta_url": "/work/alfagn",
+            "image": "assets/img/work/alfagn/alfagn_seo.png",
+            "tab_label": "CASE STUDY",
+            "tab_title": "Alfagn EdTech Ecosystem",
+            "tab_sub": "45K+ students · 99.98% uptime",
+            "sort_order": 2,
+            "is_active": true
+        },
+        {
+            "tag": "STUDIO VIDEO DOCUMENTARY",
+            "title": "From product problem to tested prototype in five days.",
+            "desc": "Watch how our software architects, product designers, and media buyers take a product from commercial bottleneck to user-tested prototype in one week.",
+            "cta_label": "Watch Full Video Episode",
+            "cta_url": "/contact",
+            "image": "assets/img/blog/design-sprint.jpg",
+            "tab_label": "VIDEO EPISODE",
+            "tab_title": "Inside a 5-Day Sprint",
+            "tab_sub": "Watch 14:20 studio documentary",
+            "sort_order": 3,
+            "is_active": true
+        }
     ],
-    "card_label": "DEEP DIVE"
-   }
-  },
-  {
-   "title": "Inside an Empetix 5-Day Product & Growth Sprint",
-   "slug": "five-day-product-growth-sprint",
-   "type": "video",
-   "category": "VIDEO EPISODE STUDIO DOCUMENTARY",
-   "excerpt": "Watch the complete studio episode showing how our software architects, product designers, and media buyers take a product from commercial bottleneck to user-tested prototype and live acquisition test in one week.",
-   "body": "<h2>Why traditional design sprints fail without engineers and media buyers in the room</h2>\n          <p>\n            A standard UX design sprint produces a pretty prototype on Friday afternoon—only for the engineering team to declare it infeasible on Monday morning, or for the marketing team to discover that the core value proposition costs USD 95 per click to acquire.\n          </p>\n          <p>\n            In an Empetix Sprint, a Staff Laravel/Flutter Architect and a Performance Marketing Lead participate alongside the Product Designer and the client&rsquo;s founders for all five days.\n          </p>\n\n          <h3>Episode Stills Gallery (Click any frame to open in Lightbox)</h3>\n          <div class=\"gallery\">\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/design-sprint.jpg\" data-lightbox-caption=\"Day 3 — Silent dot-voting on candidate checkout architectures.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/design-sprint.jpg\" alt=\"Team placing coloured dot stickers on wireframe sketches\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 3 DOT VOTING</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/home/hero.jpg\" data-lightbox-caption=\"Day 1 — Founders and architects aligning on unit economics and API constraints.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/home/hero.jpg\" alt=\"Team gathered around long wooden table in Cairo studio\" width=\"600\" height=\"750\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 1 ALIGNMENT</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/work/medlink.jpg\" data-lightbox-caption=\"Day 2 — Reviewing low-fidelity user flows before writing a single line of UI code.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/work/medlink.jpg\" alt=\"Designers inspecting paper wireframes pinned to studio wall\" width=\"750\" height=\"500\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 2 WIREFRAMES</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/performance-playbook.jpg\" data-lightbox-caption=\"Day 5 — Analyzing live ad CTR and landing-page scroll depth from the 48-hour smoke test.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/performance-playbook.jpg\" alt=\"Analysts reviewing conversion telemetry on large monitors\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 5 TELEMETRY</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n          </div>\n\n          <h2>Full Episode Transcript Highlights</h2>\n          <p>\n            <strong>[00:42] Ayman Ibrahim (CEO):</strong> &ldquo;On Monday morning we lock the room with one rule: we are not here to debate opinions. By Friday at 4:00 PM we will have five real customers using a working prototype and real paid traffic hitting two competing value propositions.&rdquo;\n          </p>\n          <p>\n            <strong>[06:55] Mohanad Ahmed Shehata (CTO):</strong> &ldquo;While Lina&rsquo;s team sketches the merchant checkout flow on Tuesday, we map the exact payment gateway webhooks, latency budgets, and database indexes so there are zero surprises when sprint one of production engineering starts.&rdquo;\n          </p>\n          <p>\n            <strong>[12:18] Bishoy Magdy (VP Growth):</strong> &ldquo;By running a USD 1,500 micro-budget smoke test across three creative angles on Day 4, we walk into Friday&rsquo;s executive review knowing not only that users can complete the flow, but which headline delivers a 3.4% click-through rate.&rdquo;\n          </p>",
-   "cover_image": null,
-   "published_at": "2026-11-05 09:00:00",
-   "is_published": true,
-   "sort_order": 0,
-   "meta": {
-    "read_time": null,
-    "author_name": "Ayman Ibrahim",
-    "author_role": "Co-Founder & CEO",
-    "author_avatar": "assets/img/team/ayman-ibrahim.jpg",
-    "author_bio": null,
-    "author_profile": null,
-    "toc": [
-     {
-      "id": "main-content",
-      "label": "Back to Top ↑"
-     }
+    "services": [
+        {
+            "num": "01",
+            "title": "Custom Web, SaaS & Cloud APIs",
+            "tag": "Engineering",
+            "kicker": "PILLAR SOFTWARE ARCHITECTURE",
+            "heading": "Enterprise Web Platforms, Laravel APIs & Cloud Modernization",
+            "desc": "We build modular web platforms, B2B portals, and multi-tenant SaaS products in Laravel 11, Next.js, and AWS—engineered for 99.96% uptime and clean ERP/CRM integration.",
+            "deliverables": [
+                "Domain-Driven Laravel & Node.js Microservices",
+                "Next.js / TypeScript SSR & Headless Storefronts",
+                "AWS ECS, RDS & Zero-Downtime CI/CD Pipelines",
+                "Automated Pest / PHPUnit & Security Audits"
+            ],
+            "metric_num": "99.96%",
+            "metric_label": "99.96% Audited production availability across deployed enterprise platforms",
+            "cta_label": "Explore Software Architecture",
+            "cta_url": "/contact",
+            "image": "assets/img/home/studio.jpg",
+            "sort_order": 0,
+            "is_active": true
+        },
+        {
+            "num": "02",
+            "title": "Mobile Apps & FinTech Ledgers",
+            "tag": "Flutter / Core",
+            "kicker": "PILLAR MOBILE & FINTECH",
+            "heading": "60fps Consumer Mobile Apps & Event-Sourced Payment Ledgers",
+            "desc": "From biometric KYC and NFC merchant checkouts to offline-first fleet logistics tablets, our Flutter and native iOS/Android squads build apps used by 1.4M+ monthly active users.",
+            "deliverables": [
+                "Flutter & Native Swift / Kotlin Mobile Clients",
+                "Double-Entry Payment Wallets & Regional Gateways",
+                "90-Second Biometric & OCR Onboarding Flows",
+                "Offline-First SQLite Sync for Field Operations"
+            ],
+            "metric_num": "+310%",
+            "metric_label": "+310% First-transaction wallet activation after onboarding rebuild",
+            "cta_label": "See NilePay Mobile Case Study",
+            "cta_url": "/contact",
+            "image": "assets/img/work/nilepay.jpg",
+            "sort_order": 1,
+            "is_active": true
+        },
+        {
+            "num": "03",
+            "title": "Performance Marketing & Paid Media",
+            "tag": "Growth",
+            "kicker": "PILLAR GROWTH & ACQUISITION",
+            "heading": "Full-Funnel Performance Media & Server-Side Attribution",
+            "desc": "We wire server-side Conversions API (CAPI) events straight from your backend database into Meta, Google, TikTok, and LinkedIn—bidding on real net revenue instead of vanity clicks.",
+            "deliverables": [
+                "Meta, Google PMax, TikTok & Snapchat Media Buying",
+                "First-Party Server-Side CAPI & CRM Attribution",
+                "Weekly Creative Hook & Angle Testing Matrices",
+                "Cohort LTV:CAC & Payback Period Dashboards"
+            ],
+            "metric_num": "3.8x",
+            "metric_label": "3.8x Audited median Return on Ad Spend across active growth retainers",
+            "cta_label": "Examine Growth Outcomes",
+            "cta_url": "/contact",
+            "image": "assets/img/blog/performance-playbook.jpg",
+            "sort_order": 2,
+            "is_active": true
+        },
+        {
+            "num": "04",
+            "title": "Brand Systems, Film & Photography",
+            "tag": "Creative",
+            "kicker": "PILLAR BRAND & PRODUCTION",
+            "heading": "Bilingual Brand Systems, Commercial Film & 35mm Photography",
+            "desc": "Our in-house cinema and design unit crafts authoritative Arabic/English brand identities, product launch films, and high-converting paid-social video assets.",
+            "deliverables": [
+                "Arabic & Latin Brand Identity & Design Guidelines",
+                "In-House Commercial Film & Documentary Crew",
+                "Product Tabletop & Editorial Lifestyle Photography",
+                "9:16 Paid Social Video Hook Variations"
+            ],
+            "metric_num": "+190%",
+            "metric_label": "+190% Lift in recurring D2C subscription orders post-campaign launch",
+            "cta_label": "View Qahwa Shoot Photo Essay",
+            "cta_url": "/contact",
+            "image": "assets/img/blog/behind-the-lens.jpg",
+            "sort_order": 3,
+            "is_active": true
+        },
+        {
+            "num": "05",
+            "title": "Conversion Optimization (CRO) & AI",
+            "tag": "Data / AI",
+            "kicker": "PILLAR CRO & AI AUTOMATION",
+            "heading": "Arabic-First Conversion Optimization & AI Workflow Agents",
+            "desc": "We eliminate checkout friction through native RTL/LTR design systems, multivariate A/B testing, and domain-trained AI assistants that automate customer triage and internal operations.",
+            "deliverables": [
+                "Bilingual Checkout & Onboarding CRO Experiments",
+                "100% CSS Logical Property Design Systems",
+                "Domain-Trained RAG AI Copilots & Support Triage",
+                "Executive BigQuery & Looker Telemetry Pipelines"
+            ],
+            "metric_num": "+38.4%",
+            "metric_label": "+38.4% Mobile checkout completion lift on Arabic-language sessions",
+            "cta_label": "Read Arabic-First CRO Essay",
+            "cta_url": "/contact",
+            "image": "assets/img/blog/arabic-first.jpg",
+            "sort_order": 4,
+            "is_active": true
+        }
     ],
-    "card_label": "VIDEO EPISODE · 14:20"
-   }
-  },
-  {
-   "title": "Behind the Lens: Directing the Qahwa Roasters Omnichannel Launch Shoot",
-   "slug": "behind-the-lens-qahwa-launch",
-   "type": "photos",
-   "category": "PHOTO ESSAY & CAMPAIGN PRODUCTION",
-   "excerpt": "How our in-house film and photography unit shot 42 commercial deliverables in two days—and how pairing tactile 35mm imagery with a custom subscription checkout lifted recurring coffee orders by 190%.",
-   "body": "<h2>Designing every camera frame around where it lives in the conversion funnel</h2>\n          <p>\n            Most commercial shoots happen in a vacuum: a production house delivers a cinematic 60-second film, and the performance marketing team is left cropping vertical cuts that don&rsquo;t fit mobile safe zones or product detail pages.\n          </p>\n          <p>\n            Because Empetix engineered Qahwa&rsquo;s subscription e-commerce store AND directed the launch shoot, every frame on our shot list was mapped to a specific slot in the funnel:\n          </p>\n          <ul>\n            <li><strong>Top-of-funnel 9:16 hooks:</strong> Tactile close-ups of espresso extraction and ceramic craftsmanship timed to a 1.8-second visual hook window.</li>\n            <li><strong>Interactive Flavor Quiz visuals:</strong> Overhead macro plates of roast profiles integrated directly into our custom React subscription configurator.</li>\n            <li><strong>Retargeting founder vignettes:</strong> Candid documentary interviews with the head roaster addressing freshness and delivery speed.</li>\n          </ul>\n\n          <h3>Watch the Director&rsquo;s Cut Commercial Reel</h3>\n          <figure>\n            <div class=\"video\" data-video-player=\"qahwa-reel\">\n              <img class=\"video__poster\" src=\"/assets/img/blog/behind-the-lens.jpg\" alt=\"Qahwa Roasters commercial director's cut poster\" width=\"1200\" height=\"675\"/>\n              <video class=\"video__el\" preload=\"metadata\" poster=\"/assets/img/blog/behind-the-lens.jpg\">\n                <source src=\"/assets/video/engineering-talk.mp4\" type=\"video/mp4\"/>\n              </video>\n              <button type=\"button\" class=\"video__btn\" data-video-play aria-label=\"Play Qahwa Roasters director's cut video\">\n                <span class=\"video__btn-inner\">\n                  <span class=\"video__btn-icon\">\n                    <svg viewBox=\"0 0 16 16\" fill=\"currentColor\" aria-hidden=\"true\"><polygon points=\"4,2 14,8 4,14\"/></svg>\n                  </span>\n                  <span>Play Commercial Reel (01:45)</span>\n                </span>\n              </button>\n            </div>\n            <figcaption>VIDEO 01 &mdash; QAHWA ROASTERS LAUNCH FILM &amp; PAID SOCIAL MASTER CUT</figcaption>\n          </figure>",
-   "cover_image": null,
-   "published_at": "2026-10-22 09:00:00",
-   "is_published": true,
-   "sort_order": 1,
-   "meta": {
-    "read_time": null,
-    "author_name": "Bishoy Magdy",
-    "author_role": "Co-Founder & COO",
-    "author_avatar": "assets/img/team/bishoy-magdy.jpg",
-    "author_bio": null,
-    "author_profile": null,
-    "toc": [
-     {
-      "id": "main-content",
-      "label": "Back to Top ↑"
-     }
+    "industries": [
+        {
+            "num": "SECTOR 01",
+            "title": "FinTech & Digital Banking",
+            "sub": "Wallets, KYC & Ledgers",
+            "sort_order": 0,
+            "is_active": true
+        },
+        {
+            "num": "SECTOR 02",
+            "title": "Retail & D2C Commerce",
+            "sub": "Shopify Plus & Omnichannel",
+            "sort_order": 1,
+            "is_active": true
+        },
+        {
+            "num": "SECTOR 03",
+            "title": "Healthcare & MedTech",
+            "sub": "Telemedicine & Patient CRM",
+            "sort_order": 2,
+            "is_active": true
+        },
+        {
+            "num": "SECTOR 04",
+            "title": "Real Estate & PropTech",
+            "sub": "3D Portals & Demand Gen",
+            "sort_order": 3,
+            "is_active": true
+        },
+        {
+            "num": "SECTOR 05",
+            "title": "Logistics & Fleet",
+            "sub": "Control Towers & Telemetry",
+            "sort_order": 4,
+            "is_active": true
+        },
+        {
+            "num": "SECTOR 06",
+            "title": "Enterprise & SaaS",
+            "sub": "Cloud Modernization & AI",
+            "sort_order": 5,
+            "is_active": true
+        }
     ],
-    "card_label": "PHOTO ESSAY"
-   }
-  }
- ],
- "partners": [
-  {
-   "name": "NilePay FinTech",
-   "logo": "assets/img/partners/nilepay.svg",
-   "sort_order": 0,
-   "is_active": true
-  },
-  {
-   "name": "AWS Advanced Cloud",
-   "logo": "assets/img/partners/aws-partner.svg",
-   "sort_order": 1,
-   "is_active": true
-  },
-  {
-   "name": "Shopify Plus Enterprise",
-   "logo": "assets/img/partners/shopify-plus.svg",
-   "sort_order": 2,
-   "is_active": true
-  },
-  {
-   "name": "Meta Business Performance",
-   "logo": "assets/img/partners/meta-business.svg",
-   "sort_order": 3,
-   "is_active": true
-  },
-  {
-   "name": "Stripe Verified",
-   "logo": "assets/img/partners/stripe-partner.svg",
-   "sort_order": 4,
-   "is_active": true
-  },
-  {
-   "name": "MedLink Health",
-   "logo": "assets/img/partners/medlink.svg",
-   "sort_order": 5,
-   "is_active": true
-  },
-  {
-   "name": "CargoLine MENA",
-   "logo": "assets/img/partners/cargoline.svg",
-   "sort_order": 6,
-   "is_active": true
-  },
-  {
-   "name": "Palm Developments",
-   "logo": "assets/img/partners/palm-residences.svg",
-   "sort_order": 7,
-   "is_active": true
-  }
- ],
- "settings": [
-  {
-   "group": "contact",
-   "key": "email",
-   "value": "hello@empetix.com"
-  },
-  {
-   "group": "contact",
-   "key": "partners_email",
-   "value": "partners@empetix.com"
-  },
-  {
-   "group": "contact",
-   "key": "press_email",
-   "value": "press@empetix.com"
-  },
-  {
-   "group": "contact",
-   "key": "talent_email",
-   "value": "talent@empetix.com"
-  },
-  {
-   "group": "contact",
-   "key": "phone",
-   "value": "+20 2 2792 8400"
-  },
-  {
-   "group": "contact",
-   "key": "address",
-   "value": "Building 14, District 5 Campus, New Cairo, Cairo, Egypt"
-  },
-  {
-   "group": "social",
-   "key": "linkedin",
-   "value": "https://www.linkedin.com"
-  },
-  {
-   "group": "social",
-   "key": "instagram",
-   "value": "https://www.instagram.com"
-  },
-  {
-   "group": "social",
-   "key": "x",
-   "value": "https://x.com"
-  },
-  {
-   "group": "social",
-   "key": "youtube",
-   "value": "https://www.youtube.com"
-  },
-  {
-   "group": "general",
-   "key": "site_name",
-   "value": "Empetix Solution"
-  },
-  {
-   "group": "general",
-   "key": "tagline",
-   "value": "Software engineering and performance marketing, one team."
-  }
- ]
+    "projects": [
+        {
+            "title": "Alfagn: High-concurrency interactive learning & secure video streaming for 45,000+ students.",
+            "slug": "alfagn",
+            "client": "AlphaGen Educational Technologies (منصة ألفا جن)",
+            "kicker": "EDTECH & INTERACTIVE E-LEARNING",
+            "year": "2025",
+            "excerpt": "How Empetix engineered Alfagn’s high-throughput learning ecosystem—from dynamic forensic DRM video watermarking and asynchronous exam engines to native mobile apps—handling 12,000+ concurrent submissions with sub-180ms latency.",
+            "image": "assets/img/work/alfagn/alfagn_seo.png",
+            "tags": [
+                "Software",
+                "EdTech",
+                "SaaS",
+                "Mobile"
+            ],
+            "is_featured": true,
+            "is_active": true,
+            "sort_order": 0,
+            "location": "CAIRO & RIYADH",
+            "facts": [
+                {
+                    "label": "Client",
+                    "value": "AlphaGen Educational Technologies (منصة وأكاديمية ألفا جن)"
+                },
+                {
+                    "label": "Scope",
+                    "value": "Cloud LMS Core, Forensic DRM Video Protection, Asynchronous Quiz Engine & Flutter Apps"
+                },
+                {
+                    "label": "Timeline",
+                    "value": "14 Weeks to MVP + Scaled Infrastructure Retainer"
+                },
+                {
+                    "label": "Verified Outcome",
+                    "value": "45,000+ Active Students · 99.98% Peak Uptime · 100% Anti-Piracy Protection"
+                }
+            ],
+            "stats": [
+                {
+                    "target": "45",
+                    "decimals": 0,
+                    "suffix": "K+",
+                    "label": "Active enrolled students across Egypt & Saudi Arabia"
+                },
+                {
+                    "target": "99.98",
+                    "decimals": 2,
+                    "suffix": "%",
+                    "label": "System uptime during simultaneous nationwide exam peaks"
+                },
+                {
+                    "target": "180",
+                    "decimals": 0,
+                    "suffix": "ms",
+                    "label": "P95 automated question grading and live answer submission latency"
+                },
+                {
+                    "target": "100",
+                    "decimals": 0,
+                    "suffix": "%",
+                    "label": "Protection against unauthorized screen recordings & content scraping via dynamic forensic watermarking"
+                }
+            ],
+            "sections": [
+                {
+                    "eyebrow": "Architecture Challenge",
+                    "heading": "Eliminating server bottlenecks and content leaks during high-stakes nationwide exam peaks.",
+                    "items": [
+                        "Alfagn approached Empetix with an urgent scaling and intellectual property bottleneck: during peak exam periods for Thanaweya Amma and international diplomas (IGCSE & American Curriculum), over 12,000 students submitted timed quizzes in the exact same 3-minute window, causing database connection exhaustion and dropped results.",
+                        "Simultaneously, proprietary lecture videos were being recorded via third-party screen capturing tools and leaked onto unauthorized social channels within hours of publication, undermining instructor partnerships and revenue streams."
+                    ]
+                },
+                {
+                    "eyebrow": "Engineering Execution",
+                    "heading": "In-memory Redis buffers, forensic canvas watermarking, and resilient Cloudflare Stream integration.",
+                    "items": [
+                        "Our engineering team decoupled exam submission ingestion from database writes by routing student answers through an in-memory Redis cluster. Responses are immediately acknowledged to the student browser with local optimistic confirmation and queued for asynchronous batch-persistence into PostgreSQL, reducing write locks by 84% and maintaining sub-180ms response times.",
+                        "To protect video assets without degrading playback performance, we implemented dynamic forensic watermarking rendered directly onto an HTML5 canvas layer. The watermark invisibly embeds user IDs, timestamps, and session tokens across randomized intervals, enabling immediate identification and suspension of any leaking accounts within seconds."
+                    ]
+                },
+                {
+                    "eyebrow": "Cross-Platform Impact",
+                    "heading": "Native Flutter mobile applications with encrypted offline lecture caching and instant progress sync.",
+                    "items": [
+                        "Empetix designed and deployed native iOS and Android apps powered by Flutter, featuring AES-256 encrypted local caching for low-bandwidth environments. Students can study uninterrupted on regional cellular connections, while parents and teachers receive real-time telemetry on student quiz performance and attendance.",
+                        "Following the deployment, course completion rates grew by 68%, student ratings reached 4.9/5, and Alfagn successfully scaled to more than 45,000 active students across Egypt and the Gulf."
+                    ]
+                }
+            ],
+            "quote": "Empetix didn’t just build our platform; they solved our existential scaling and piracy challenges. During our largest 30,000-student live exam session, the servers barely blinked, and our content remains completely secure.",
+            "quote_cite": "Eng. Ahmed Mostafa, Technical Director at AlphaGen Academy (Alfagn)",
+            "video_poster": "assets/img/work/alfagn/alfagn_course1.png",
+            "video_src": "assets/video/design-sprint.mp4",
+            "body": "<h2 id=\"sec-architecture\">01. High-Concurrency EdTech Architecture & Queue Buffering</h2>\n<p>\n  Digital academies serving regional curricula face a unique load pattern: virtually quiet mornings punctuated by tens of thousands of simultaneous students entering timed mock exams at the exact same second. Traditional LAMP or monolithic architectures inevitably falter under concurrent write transactions when thousands of answer sheets hit MySQL simultaneously.\n</p>\n<p>\n  At Empetix, we architected Alfagn around an asynchronous memory ingestion pipeline. Student question responses are piped through Redis streams with optimistic client-side synchronization. The background worker cluster dequeues and persists results in batches into partitioned PostgreSQL tables, reducing connection contention and ensuring zero dropped student responses even at 15,000+ simultaneous connections.\n</p>\n\n<blockquote>\n  &ldquo;Empetix didn’t just write code; they eliminated our database crashes and protected our video intellectual property from day one.&rdquo;\n  <cite>&mdash; Eng. Ahmed Mostafa, Technical Director at AlphaGen Academy</cite>\n</blockquote>\n\n<h2 id=\"sec-drm\">02. Dynamic Forensic Watermarking & DRM Video Delivery</h2>\n<p>\n  Content leakage is the single greatest threat to online education creators in the MENA region. Standard video players and basic watermarks can be easily cropped, blurred, or bypassed. To provide absolute protection for Alfagn's educators, we implemented a multi-layered DRM strategy:\n</p>\n<ul>\n  <li><strong>Adaptive HLS Streaming:</strong> Encrypted AES-128 tokenized video streams distributed via global Cloudflare edge points.</li>\n  <li><strong>Invisible Canvas Watermarking:</strong> Micro-steganographic canvas overlays that project subtle, randomized student identifiers and timestamp hashes across frames.</li>\n  <li><strong>Instant Leak Attribution:</strong> Any unauthorized recording can be forensically attributed to the exact user account and IP address within 30 seconds.</li>\n</ul>\n\n<h2 id=\"sec-mobile\">03. Native Flutter Mobile App with Encrypted Local Storage</h2>\n<p>\n  Because student Internet connectivity can vary significantly across regional networks, the companion Flutter mobile app provides offline video playback via encrypted on-device blobs. Lessons are decrypted only in memory during active, authenticated playback sessions. The app also features automated push notifications for live revision workshops and interactive homework reminders.\n</p>"
+        },
+        {
+            "title": "Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms & verified credentials.",
+            "slug": "western-elearning-academy",
+            "client": "Western International Academy for Distance Learning (أكاديمية ويسترن)",
+            "kicker": "ENTERPRISE LMS & DISTANCE LEARNING",
+            "year": "2026",
+            "excerpt": "How Empetix architected Western eLearning Academy’s multi-tenant LMS—delivering WebRTC virtual lecture halls, AI-proctored certification exams, and automated cryptographic QR credential issuance across Egypt, the GCC, and the UK.",
+            "image": "assets/img/work/western-academy.jpg",
+            "tags": [
+                "Software",
+                "EdTech",
+                "SaaS",
+                "Cloud"
+            ],
+            "is_featured": true,
+            "is_active": true,
+            "sort_order": 1,
+            "location": "CAIRO, DUBAI & LONDON",
+            "facts": [
+                {
+                    "label": "Client",
+                    "value": "Western International Academy for Distance Learning (أكاديمية ويسترن)"
+                },
+                {
+                    "label": "Scope",
+                    "value": "Multi-Tenant LMS, WebRTC Live Lecture Halls, AI Exam Proctoring & Cryptographic QR Verification"
+                },
+                {
+                    "label": "Timeline",
+                    "value": "18 Weeks to Multi-Campus Rollout + Enterprise SLA"
+                },
+                {
+                    "label": "Verified Outcome",
+                    "value": "28,000+ Certified Graduates · 85+ Institutional Partners · 4.9/5 Satisfaction"
+                }
+            ],
+            "stats": [
+                {
+                    "target": "28",
+                    "decimals": 0,
+                    "suffix": "K+",
+                    "label": "Certified professionals and accredited diploma graduates"
+                },
+                {
+                    "target": "85",
+                    "decimals": 0,
+                    "suffix": "+",
+                    "label": "Corporate training partners & institutional university affiliations"
+                },
+                {
+                    "target": "4.9",
+                    "decimals": 1,
+                    "suffix": "/5",
+                    "label": "Student satisfaction score across 140+ accredited programs"
+                },
+                {
+                    "target": "65",
+                    "decimals": 0,
+                    "suffix": "%",
+                    "label": "Increase in course completion rates via interactive micro-learning pathways"
+                }
+            ],
+            "sections": [
+                {
+                    "eyebrow": "Institutional Challenge",
+                    "heading": "Unifying fragmented distance learning systems into an internationally accredited digital campus.",
+                    "items": [
+                        "Western eLearning Academy delivers accredited diplomas and professional certifications to corporate cohorts and adult learners across the Middle East and Europe. Their legacy setup relied on disparate tools: external video meeting links, manual attendance spreadsheets, and physical paper certificates that were vulnerable to tampering.",
+                        "They required a unified, enterprise-grade LMS capable of delivering interactive WebRTC lectures, automated grading rubrics, AI-proctored examinations, and cryptographic credential verification on a single resilient infrastructure."
+                    ]
+                },
+                {
+                    "eyebrow": "AI Proctoring & Cryptographic Credentials",
+                    "heading": "Tamper-proof certificate issuance and browser-based AI proctoring without invasive installs.",
+                    "items": [
+                        "Empetix engineered a lightweight, client-side proctoring engine that uses in-browser computer vision models to detect secondary device usage and candidate anomalies during high-stakes final exams, eliminating the need for invasive desktop client downloads.",
+                        "Upon graduation, certificates are minted with cryptographic SHA-256 signatures and verifiable QR codes. Prospective employers and accreditation institutions can instantly verify a student’s authenticity on a public verification ledger, completely preventing credential fraud."
+                    ]
+                },
+                {
+                    "eyebrow": "Multi-Tenant Scalability",
+                    "heading": "White-label enterprise portals with localized multi-currency payment workflows.",
+                    "items": [
+                        "Built on a containerized microservice backend, the platform supports multi-tenant white-labeling, allowing partner universities and corporate clients to launch fully customized learning portals within hours. Multi-currency billing integrates regional gateways (Fawry, Meeza, Mada, Apple Pay) alongside international Stripe checkouts.",
+                        "The platform has facilitated over 28,000 certified completions with an average completion increase of 65% across all cohorts."
+                    ]
+                }
+            ],
+            "quote": "Empetix transformed Western eLearning Academy into a truly global education powerhouse. The automated AI proctoring and verifiable QR diplomas gave our corporate partners complete confidence in our certification programs.",
+            "quote_cite": "Dr. Sherif El-Wakil, Dean of Academic Affairs at Western eLearning Academy",
+            "video_poster": "assets/img/work/western-academy-detail.jpg",
+            "video_src": "assets/video/design-sprint.mp4",
+            "body": "<h2 id=\"sec-enterprise-lms\">01. Enterprise Multi-Tenant Distance Learning Core</h2>\n<p>\n  Accredited vocational and postgraduate institutions require enterprise-grade tenant isolation, customized grading rubrics, and automated audit trails. For Western eLearning Academy, Empetix engineered a modular LMS architecture supporting multi-campus deployment across Egypt, Dubai, and the United Kingdom.\n</p>\n<p>\n  Each campus or corporate enterprise partner operates within an isolated tenant namespace with custom branding, custom certification requirements, and integrated multi-currency billing (EGP, SAR, AED, USD, and GBP).\n</p>\n\n<blockquote>\n  &ldquo;The cryptographic verification engine completely solved our international credential authentication challenges.&rdquo;\n  <cite>&mdash; Dr. Sherif El-Wakil, Dean of Academic Affairs at Western eLearning Academy</cite>\n</blockquote>\n\n<h2 id=\"sec-webrtc\">02. Low-Latency WebRTC Virtual Classrooms & Collaborative Whiteboards</h2>\n<p>\n  Instead of sending learners to third-party meeting apps, Empetix built embedded WebRTC virtual lecture rooms with sub-second audio/video latency, integrated live polling, breakout rooms, and session recording pipelines that automatically index transcripts into searchable course archives.\n</p>\n\n<h2 id=\"sec-ai-proctoring\">03. AI Proctoring & Verifiable Blockchain-Grade Credentials</h2>\n<p>\n  To guarantee diploma credibility, high-stakes qualification exams utilize our non-invasive browser proctoring module. Upon course completion and passing grade confirmation, the student's cryptographic diploma is generated with an immutable SHA-256 signature and dynamic QR code, allowing multinational employers and university admissions offices to verify graduate transcripts instantly.\n</p>"
+        }
+    ],
+    "members": [
+        {
+            "name": "Mohanad Ahmed Shehata",
+            "slug": "mohanad",
+            "role": "Co-founder and chief technology officer",
+            "kind": "founder",
+            "lead": "Mohanad leads software architecture, engineering standards, and technical infrastructure at Empetix Solution. He guides web, mobile, and backend teams to build fast, secure, and maintainable platforms engineered for scale.",
+            "bio": [
+                "As chief technology officer, Mohanad directs Empetix Solution’s engineering practice across custom web platforms, mobile applications, backend APIs, and cloud infrastructure from New Cairo.",
+                "He reviews core system blueprints, database designs, and deployment pipelines hands-on so production software stays resilient under real user load and straightforward for teams to evolve."
+            ],
+            "expertise": [
+                {
+                    "title": "Web and mobile platform architecture",
+                    "desc": "Designing full-stack systems across Laravel, modern web frameworks, and native-grade mobile applications."
+                },
+                {
+                    "title": "Scalable APIs and backend systems",
+                    "desc": "Engineering high-reliability transactional cores, payment integrations, and clean modular service boundaries."
+                },
+                {
+                    "title": "Cloud infrastructure and DevOps",
+                    "desc": "Establishing secure cloud environments, automated CI/CD pipelines, monitoring, and low-risk release workflows."
+                },
+                {
+                    "title": "Technical reviews and code quality",
+                    "desc": "Mentoring engineering squads through architecture reviews, performance optimization, and security standards."
+                }
+            ],
+            "photo": "assets/img/team/mohanad-shehata.jpg",
+            "email": "hello&#64;empetix.com",
+            "sort_order": 0,
+            "is_active": true
+        },
+        {
+            "name": "Ayman Ibrahim",
+            "slug": "ayman",
+            "role": "Co-founder and chief executive officer",
+            "kind": "founder",
+            "lead": "Ayman leads company vision, strategic partnerships, and investment direction at Empetix Solution. He works directly with founders and executive teams to align software engineering, growth marketing, and capital around durable business outcomes.",
+            "bio": [
+                "As chief executive officer, Ayman oversees Empetix Solution’s strategic direction across enterprise product delivery, growth partnerships, and venture investments from New Cairo.",
+                "He stays closely involved through executive discovery and governance so every software build and commercial expansion stays grounded in clear unit economics and long-term sustainability."
+            ],
+            "expertise": [
+                {
+                    "title": "Executive strategy and partnerships",
+                    "desc": "Aligning technology investments, commercial goals, and multi-phase roadmaps for enterprise and growth-stage partners."
+                },
+                {
+                    "title": "Strategic venture investment",
+                    "desc": "Backing ambitious founders with capital, senior technical leadership, and go-to-market execution under one roof."
+                },
+                {
+                    "title": "Commercial scoping and governance",
+                    "desc": "Turning complex business objectives into structured scopes, realistic timelines, and clear accountability."
+                },
+                {
+                    "title": "Enterprise client advisory",
+                    "desc": "Guiding executive leadership teams through digital transformation, platform launches, and market expansion."
+                }
+            ],
+            "photo": "assets/img/team/ayman-ibrahim.jpg",
+            "email": "hello&#64;empetix.com",
+            "sort_order": 1,
+            "is_active": true
+        },
+        {
+            "name": "Bishoy Magdy",
+            "slug": "bishoy",
+            "role": "Co-founder and chief operating officer",
+            "kind": "founder",
+            "lead": "Bishoy leads company operations, delivery governance, and cross-functional execution at Empetix Solution. He connects software squads, marketing teams, and client stakeholders so projects ship on schedule and scale smoothly.",
+            "bio": [
+                "As chief operating officer, Bishoy oversees day-to-day operations, squad planning, and execution standards across Empetix Solution’s engineering, product design, and growth marketing practices in New Cairo.",
+                "He builds clear operating rhythms between technical teams and commercial specialists so clients experience transparent communication, predictable milestones, and dependable delivery from kickoff to launch."
+            ],
+            "expertise": [
+                {
+                    "title": "Delivery governance and execution",
+                    "desc": "Running disciplined sprint cadences and milestone reviews that keep complex engineering and growth launches on schedule."
+                },
+                {
+                    "title": "Cross-functional squad operations",
+                    "desc": "Coordinating software engineers, designers, and performance marketers around one shared product roadmap."
+                },
+                {
+                    "title": "Client onboarding and account health",
+                    "desc": "Establishing transparent reporting, clear escalation paths, and sustained operational alignment with partner teams."
+                },
+                {
+                    "title": "Scaling studio processes",
+                    "desc": "Building repeatable workflows, hiring standards, and quality benchmarks that protect craft as teams expand."
+                }
+            ],
+            "photo": "assets/img/team/bishoy-magdy.jpg",
+            "email": "hello&#64;empetix.com",
+            "sort_order": 2,
+            "is_active": true
+        },
+        {
+            "name": "Tarek El-Shenawy",
+            "slug": "tarek-el-shenawy",
+            "role": "Principal backend engineer",
+            "kind": "member",
+            "focus": "Laravel, PostgreSQL, payment ledgers",
+            "photo": "assets/img/team/tarek-elshenawy.jpg",
+            "sort_order": 10,
+            "is_active": true
+        },
+        {
+            "name": "Nourhan Ibrahim",
+            "slug": "nourhan-ibrahim",
+            "role": "Staff frontend engineer",
+            "kind": "member",
+            "focus": "Next.js, TypeScript, accessibility",
+            "photo": "assets/img/team/nourhan-ibrahim.jpg",
+            "sort_order": 11,
+            "is_active": true
+        },
+        {
+            "name": "Youssef Abdelrahman",
+            "slug": "youssef-abdelrahman",
+            "role": "Lead mobile engineer",
+            "kind": "member",
+            "focus": "Flutter, iOS and Android performance",
+            "photo": "assets/img/team/youssef-abdelrahman.jpg",
+            "sort_order": 12,
+            "is_active": true
+        },
+        {
+            "name": "Mostafa Fawzy",
+            "slug": "mostafa-fawzy",
+            "role": "Cloud and DevOps lead",
+            "kind": "member",
+            "focus": "AWS infrastructure, CI/CD, observability",
+            "photo": "assets/img/team/mostafa-fawzy.jpg",
+            "sort_order": 13,
+            "is_active": true
+        },
+        {
+            "name": "Mariam Nabil",
+            "slug": "mariam-nabil",
+            "role": "Lead product designer",
+            "kind": "member",
+            "focus": "Bilingual RTL and LTR design systems",
+            "photo": "assets/img/team/mariam-nabil.jpg",
+            "sort_order": 14,
+            "is_active": true
+        },
+        {
+            "name": "Hossam Reda",
+            "slug": "hossam-reda",
+            "role": "Senior UX researcher",
+            "kind": "member",
+            "focus": "Usability testing, onboarding flows",
+            "photo": "assets/img/team/hossam-reda.jpg",
+            "sort_order": 15,
+            "is_active": true
+        },
+        {
+            "name": "Farida Zaki",
+            "slug": "farida-zaki",
+            "role": "Brand and visual designer",
+            "kind": "member",
+            "focus": "Identity systems, editorial typography",
+            "photo": "assets/img/team/farida-zaki.jpg",
+            "sort_order": 16,
+            "is_active": true
+        },
+        {
+            "name": "Ziad El-Banna",
+            "slug": "ziad-el-banna",
+            "role": "Senior UI and RTL systems designer",
+            "kind": "member",
+            "focus": "Arabic typography, WCAG AA accessibility",
+            "photo": "assets/img/team/ziad-elbanna.jpg",
+            "sort_order": 17,
+            "is_active": true
+        },
+        {
+            "name": "Khaled Mansour",
+            "slug": "khaled-mansour",
+            "role": "Performance marketing lead",
+            "kind": "member",
+            "focus": "Paid acquisition, multi-market scaling",
+            "photo": "assets/img/team/khaled-mansour.jpg",
+            "sort_order": 18,
+            "is_active": true
+        },
+        {
+            "name": "Seif El-Din Hany",
+            "slug": "seif-el-din-hany",
+            "role": "Analytics and attribution lead",
+            "kind": "member",
+            "focus": "Server-side tracking, cohort retention",
+            "photo": "assets/img/team/seif-hany.jpg",
+            "sort_order": 19,
+            "is_active": true
+        },
+        {
+            "name": "Ahmed El-Gamal",
+            "slug": "ahmed-el-gamal",
+            "role": "Commercial film producer",
+            "kind": "member",
+            "focus": "Launch films, product photography",
+            "photo": "assets/img/team/ahmed-elgamal.jpg",
+            "sort_order": 20,
+            "is_active": true
+        },
+        {
+            "name": "Ramy Tarek",
+            "slug": "ramy-tarek",
+            "role": "Technical SEO and content strategist",
+            "kind": "member",
+            "focus": "Arabic and English search architecture",
+            "photo": "assets/img/team/ramy-tarek.jpg",
+            "sort_order": 21,
+            "is_active": true
+        }
+    ],
+    "job_posts": [
+        {
+            "title": "Senior Laravel & Distributed Systems Engineer",
+            "slug": "laravel",
+            "ref_code": "REQ-2026-014",
+            "department": "Software Engineering",
+            "summary": "Architect high-concurrency Laravel 11 APIs, event-sourced FinTech payment ledgers, and multi-tenant SaaS backends serving 1.4M+ active monthly users.",
+            "pills": [
+                "Location: Cairo or Remote EMEA",
+                "Work Mode: Hybrid / Remote",
+                "Level: L5 / Senior Engineer",
+                "Compensation: USD 3,500 – 5,200 / mo + Profit Share"
+            ],
+            "sections": [
+                {
+                    "heading": "Role Overview & Mission",
+                    "items": [
+                        "As a Senior Laravel & Distributed Systems Engineer at Empetix, you will lead the backend architecture for our flagship FinTech, e-commerce, and logistics platforms. You will work directly alongside CTO Mohanad Ahmed Shehata and a squad of senior product engineers—designing zero-downtime ledger migrations, idempotent webhook processors, and sub-100ms API endpoints.",
+                        "Architect high-concurrency Laravel 11 APIs, event-sourced FinTech payment ledgers, and multi-tenant SaaS backends serving 1.4M+ active monthly users."
+                    ]
+                },
+                {
+                    "heading": "Key Responsibilities (What You Will Do)",
+                    "items": [
+                        "In your first 90 days and beyond, you will be responsible for:",
+                        "Design, build, and maintain modular Laravel 11 applications using Domain-Driven Design (DDD), strict typing, and event-sourced ledger patterns.",
+                        "Optimize PostgreSQL and Redis query paths to sustain P95 response latencies under 120ms during high-velocity campaign traffic spikes.",
+                        "Integrate regional and global payment gateways, banking webhooks, ERP bridges, and server-side marketing attribution pipelines (Meta CAPI / Google Ads API).",
+                        "Write deterministic automated test suites (Pest / PHPUnit) and lead architectural code reviews across the engineering practice.",
+                        "Mentor mid-level engineers and collaborate with frontend and mobile squads on clean OpenAPI / GraphQL contracts."
+                    ]
+                },
+                {
+                    "heading": "Required Qualifications & Requirements",
+                    "items": [
+                        "We are looking for candidates who can demonstrate the following qualifications:",
+                        "5+ years of production backend engineering experience, with at least 3+ years building large-scale systems in Laravel and modern PHP (8.2+).",
+                        "Deep proficiency in relational database design (PostgreSQL or MySQL), indexing strategies, transaction isolation levels, and query profiling.",
+                        "Proven experience with asynchronous job queues (Laravel Horizon / Redis / SQS), caching strategies, and webhook idempotency.",
+                        "Strong grasp of automated testing, CI/CD pipelines (GitHub Actions), Docker containers, and Linux production debugging.",
+                        "Clear written and verbal communication in Arabic and professional English."
+                    ]
+                },
+                {
+                    "heading": "Preferred Qualifications (Nice to Have)",
+                    "items": [
+                        "Prior experience building FinTech wallets, double-entry accounting ledgers, or high-volume multi-vendor e-commerce checkouts.",
+                        "Familiarity with AWS infrastructure (ECS, RDS, CloudFront, S3) or Terraform.",
+                        "Contributions to open-source Laravel packages or technical writing."
+                    ]
+                },
+                {
+                    "heading": "Compensation, Benefits & Working Model",
+                    "items": [
+                        "Salary Band: USD 3,500 – 5,200 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
+                        "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
+                        "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
+                        "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
+                    ]
+                }
+            ],
+            "tags": [
+                "Laravel 11",
+                "PHP 8.3",
+                "PostgreSQL",
+                "Redis / Horizon",
+                "AWS ECS",
+                "DDD / Event Sourcing"
+            ],
+            "is_active": true,
+            "sort_order": 0
+        },
+        {
+            "title": "Senior Frontend Architect (Next.js / TypeScript / Design Systems)",
+            "slug": "frontend",
+            "ref_code": "REQ-2026-018",
+            "department": "Software Engineering",
+            "summary": "Own the frontend architecture, bilingual RTL/LTR component libraries, and sub-second Core Web Vitals across our enterprise web and commerce platforms.",
+            "pills": [
+                "Location: Cairo (New Cairo / Downtown)",
+                "Work Mode: Hybrid (2 days in studio)",
+                "Level: L5 / Senior Architect",
+                "Compensation: USD 3,200 – 4,800 / mo + Profit Share"
+            ],
+            "sections": [
+                {
+                    "heading": "Role Overview & Mission",
+                    "items": [
+                        "We are looking for a Senior Frontend Architect who treats HTML semantics, CSS architecture, and TypeScript performance as first-class engineering disciplines. You will partner with Chief Design Officer Bishoy Magdy and our backend squads to ship editorial-grade web platforms and headless commerce storefronts.",
+                        "Own the frontend architecture, bilingual RTL/LTR component libraries, and sub-second Core Web Vitals across our enterprise web and commerce platforms."
+                    ]
+                },
+                {
+                    "heading": "Key Responsibilities (What You Will Do)",
+                    "items": [
+                        "In your first 90 days and beyond, you will be responsible for:",
+                        "Architect scalable Next.js / React applications and Blade/Livewire enterprise portals with strict TypeScript contracts.",
+                        "Build and document bidirectional (Arabic RTL / English LTR) design-system components using 100% CSS Logical Properties and zero layout shift.",
+                        "Enforce Core Web Vitals budgets (LCP",
+                        "Collaborate with the CRO & Growth team to instrument clean analytics events, A/B testing hooks, and high-converting checkout flows.",
+                        "Ensure full WCAG 2.1 AA keyboard navigation, screen-reader semantics, and reduced-motion compliance."
+                    ]
+                },
+                {
+                    "heading": "Required Qualifications & Requirements",
+                    "items": [
+                        "We are looking for candidates who can demonstrate the following qualifications:",
+                        "5+ years of production frontend engineering experience with deep mastery of semantic HTML5, modern CSS (Grid, Custom Properties, Logical Properties), and TypeScript.",
+                        "3+ years architecting production React and Next.js applications (SSR, ISR, App Router, Server Actions).",
+                        "Obsessive attention to typographic detail, micro-interactions, and 60fps animation performance.",
+                        "Experience building and maintaining shared UI component libraries (Storybook / Figma Tokens).",
+                        "Ability to collaborate closely with designers and backend engineers in a fast-paced studio environment."
+                    ]
+                },
+                {
+                    "heading": "Preferred Qualifications (Nice to Have)",
+                    "items": [
+                        "Experience with headless Shopify Plus storefronts, WebGL/Canvas interactions, or Laravel Blade integration.",
+                        "Proven track record optimizing Arabic/English bilingual interfaces for MENA audiences."
+                    ]
+                },
+                {
+                    "heading": "Compensation, Benefits & Working Model",
+                    "items": [
+                        "Salary Band: USD 3,200 – 4,800 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
+                        "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
+                        "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
+                        "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
+                    ]
+                }
+            ],
+            "tags": [
+                "Next.js 15",
+                "React 19",
+                "TypeScript",
+                "CSS Logical Grid",
+                "Accessibility (WCAG AA)",
+                "Performance"
+            ],
+            "is_active": true,
+            "sort_order": 1
+        },
+        {
+            "title": "Lead Flutter Mobile Engineer (FinTech & Commerce)",
+            "slug": "flutter",
+            "ref_code": "REQ-2026-021",
+            "department": "Software Engineering",
+            "summary": "Lead mobile engineering for 60fps iOS & Android consumer apps in FinTech, telemedicine, and field logistics—with biometric KYC and offline-first sync.",
+            "pills": [
+                "Location: Cairo or Riyadh",
+                "Work Mode: Hybrid / Remote",
+                "Level: L6 / Lead Engineer",
+                "Compensation: USD 3,800 – 5,500 / mo + Profit Share"
+            ],
+            "sections": [
+                {
+                    "heading": "Role Overview & Mission",
+                    "items": [
+                        "Our mobile applications are used daily by over 1.4 million consumers and field operators across Egypt and Saudi Arabia. As Lead Flutter Mobile Engineer, you will own the mobile architecture, release automation, and native platform integrations across our FinTech and commerce flagship apps.",
+                        "Lead mobile engineering for 60fps iOS & Android consumer apps in FinTech, telemedicine, and field logistics—with biometric KYC and offline-first sync."
+                    ]
+                },
+                {
+                    "heading": "Key Responsibilities (What You Will Do)",
+                    "items": [
+                        "In your first 90 days and beyond, you will be responsible for:",
+                        "Architect modular, testable Flutter applications using clean architecture, predictable state management (Riverpod / Bloc), and custom 60fps animations.",
+                        "Build secure native platform bridges (Swift / Kotlin) for NFC tap-to-pay, biometric authentication, camera OCR, and background geolocation.",
+                        "Design offline-first local storage and conflict-resolution sync engines for field-operations and logistics tablets.",
+                        "Manage automated App Store, Google Play, and Huawei AppGallery CI/CD pipelines (Codemagic / Fastlane) and crash telemetry.",
+                        "Partner with Product Design and Growth teams to optimize onboarding activation and mobile checkout conversion."
+                    ]
+                },
+                {
+                    "heading": "Required Qualifications & Requirements",
+                    "items": [
+                        "We are looking for candidates who can demonstrate the following qualifications:",
+                        "5+ years of mobile development experience, including 3+ years shipping high-scale production apps in Flutter & Dart.",
+                        "Published apps on both the Apple App Store and Google Play Store with 50,000+ active users.",
+                        "Solid understanding of native iOS (Swift) or Android (Kotlin) fundamentals, memory profiling, and mobile security best practices.",
+                        "Experience integrating REST/WebSocket APIs, push notification services (FCM/APNs), and mobile attribution SDKs.",
+                        "Strong leadership skills with experience mentoring mobile engineers."
+                    ]
+                },
+                {
+                    "heading": "Preferred Qualifications (Nice to Have)",
+                    "items": [
+                        "Experience with FinTech wallets, PCI-DSS compliance, or WebRTC video streaming on mobile.",
+                        "Familiarity with Arabic RTL layout nuances in Flutter."
+                    ]
+                },
+                {
+                    "heading": "Compensation, Benefits & Working Model",
+                    "items": [
+                        "Salary Band: USD 3,800 – 5,500 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
+                        "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
+                        "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
+                        "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
+                    ]
+                }
+            ],
+            "tags": [
+                "Flutter 3",
+                "Dart",
+                "iOS / Android Native Channels",
+                "Biometric KYC",
+                "Offline-First SQLite",
+                "CI/CD"
+            ],
+            "is_active": true,
+            "sort_order": 2
+        },
+        {
+            "title": "Performance Marketing & Paid Acquisition Lead (MENA / GCC)",
+            "slug": "marketing",
+            "ref_code": "REQ-2026-025",
+            "department": "Growth & Marketing",
+            "summary": "Direct multi-channel paid acquisition (Meta, Google, TikTok, LinkedIn), creative testing sprints, and server-side attribution for category-leading brands.",
+            "pills": [
+                "Location: Cairo or Riyadh",
+                "Work Mode: Hybrid",
+                "Level: L5 / Practice Lead",
+                "Compensation: USD 2,800 – 4,500 / mo + ROAS Bonus"
+            ],
+            "sections": [
+                {
+                    "heading": "Role Overview & Mission",
+                    "items": [
+                        "At Empetix, performance marketers don't operate in the dark. You will sit alongside the software engineers who build our clients' checkout flows and the film directors who shoot our ad creatives—managing USD 150k to 500k/month in paid media budgets across Egypt, Saudi Arabia, the UAE, and Europe.",
+                        "Direct multi-channel paid acquisition (Meta, Google, TikTok, LinkedIn), creative testing sprints, and server-side attribution for category-leading brands."
+                    ]
+                },
+                {
+                    "heading": "Key Responsibilities (What You Will Do)",
+                    "items": [
+                        "In your first 90 days and beyond, you will be responsible for:",
+                        "Own full-funnel paid acquisition strategy, budget allocation, and ROAS/CAC targets across Meta, Google, TikTok, Snapchat, and LinkedIn.",
+                        "Collaborate with our backend engineers to configure server-side Conversions API (CAPI), offline conversion imports, and first-party attribution dashboards.",
+                        "Partner with our in-house video and design crew to run weekly structured creative testing sprints (hooks, angles, formats, and landing pages).",
+                        "Analyze cohort retention, LTV:CAC ratios, and funnel drop-off telemetry to scale winning campaigns profitably.",
+                        "Lead client growth reviews with clear, honest financial reporting—zero vanity metrics."
+                    ]
+                },
+                {
+                    "heading": "Required Qualifications & Requirements",
+                    "items": [
+                        "We are looking for candidates who can demonstrate the following qualifications:",
+                        "4+ years hands-on experience managing performance marketing budgets exceeding USD 50,000/month with verifiable ROAS and CAC case studies.",
+                        "Deep technical command of Meta Business Suite, Google Ads, TikTok/Snap Ads Manager, Google Tag Manager (Server-Side), and GA4.",
+                        "Strong analytical foundation in unit economics (CAC, Payback Period, Contribution Margin, MER, and Cohort LTV).",
+                        "Experience scaling e-commerce, FinTech, real estate, or mobile app campaigns in the GCC and Egyptian markets.",
+                        "Fluency in Arabic and English copy evaluation and creative briefing."
+                    ]
+                },
+                {
+                    "heading": "Preferred Qualifications (Nice to Have)",
+                    "items": [
+                        "Experience with SQL/BigQuery, Looker Studio, or mobile MMP tools (Adjust / AppsFlyer).",
+                        "Background in conversion rate optimization (A/B testing landing pages)."
+                    ]
+                },
+                {
+                    "heading": "Compensation, Benefits & Working Model",
+                    "items": [
+                        "Salary Band: USD 2,800 – 4,500 / mo + ROAS Bonus (benchmarked in USD and paid with zero currency delay).",
+                        "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
+                        "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
+                        "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
+                    ]
+                }
+            ],
+            "tags": [
+                "Meta Ads & CAPI",
+                "Google Ads / PMax",
+                "TikTok & Snap GCC",
+                "Server-Side Attribution",
+                "CRO & Unit Economics"
+            ],
+            "is_active": true,
+            "sort_order": 3
+        },
+        {
+            "title": "Senior Product Designer (Bilingual Design Systems & CRO)",
+            "slug": "designer",
+            "ref_code": "REQ-2026-029",
+            "department": "Product Design",
+            "summary": "Craft typographically rigorous Arabic/English design systems, complex SaaS & FinTech workflows, and high-converting e-commerce experiences.",
+            "pills": [
+                "Location: Cairo Studio",
+                "Work Mode: Hybrid (2 days in studio)",
+                "Level: L5 / Senior Designer",
+                "Compensation: USD 2,600 – 4,000 / mo + Profit Share"
+            ],
+            "sections": [
+                {
+                    "heading": "Role Overview & Mission",
+                    "items": [
+                        "Working directly with Co-Founder & Chief Operating Officer Bishoy Magdy, you will lead end-to-end product design from 5-Day Sprint discovery and wireframing through tokenized Figma design systems and developer handoff.",
+                        "Craft typographically rigorous Arabic/English design systems, complex SaaS & FinTech workflows, and high-converting e-commerce experiences."
+                    ]
+                },
+                {
+                    "heading": "Key Responsibilities (What You Will Do)",
+                    "items": [
+                        "In your first 90 days and beyond, you will be responsible for:",
+                        "Lead product UX and visual design for web, SaaS, and mobile applications across FinTech, healthcare, logistics, and luxury commerce.",
+                        "Architect and maintain multi-brand Figma design systems using variables, auto-layout, and bidirectional Arabic (RTL) and English (LTR) typography scales.",
+                        "Conduct moderated usability testing, analyze heatmap/session-recording telemetry, and design CRO experiments that lift conversion rates.",
+                        "Pair closely with our frontend and Flutter engineers during implementation to ensure pixel-level craft in production.",
+                        "Facilitate client design sprint workshops in our Cairo studio."
+                    ]
+                },
+                {
+                    "heading": "Required Qualifications & Requirements",
+                    "items": [
+                        "We are looking for candidates who can demonstrate the following qualifications:",
+                        "4+ years designing shipped digital products (web platforms and iOS/Android mobile apps)—not just Dribbble concept shots.",
+                        "Mastery of Figma (Variables, Component Properties, Auto-Layout, Interactive Prototyping) and modern design-token workflows.",
+                        "Strong command of both Latin and Arabic typography, grid systems, and editorial hierarchy.",
+                        "Working knowledge of HTML/CSS constraints so your designs translate cleanly into code.",
+                        "A portfolio demonstrating clear problem-solving, system thinking, and measurable commercial impact."
+                    ]
+                },
+                {
+                    "heading": "Preferred Qualifications (Nice to Have)",
+                    "items": [
+                        "Experience with motion design, brand identity systems, or front-end CSS implementation.",
+                        "Prior experience facilitating 5-Day Design Sprints."
+                    ]
+                },
+                {
+                    "heading": "Compensation, Benefits & Working Model",
+                    "items": [
+                        "Salary Band: USD 2,600 – 4,000 / mo + Profit Share (benchmarked in USD and paid with zero currency delay).",
+                        "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
+                        "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
+                        "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
+                    ]
+                }
+            ],
+            "tags": [
+                "Figma Variables & Tokens",
+                "Arabic/English RTL/LTR",
+                "Design Systems",
+                "UX Research & CRO",
+                "Prototyping"
+            ],
+            "is_active": true,
+            "sort_order": 4
+        },
+        {
+            "title": "Commercial Video Producer & Editor (Brand & Paid Social)",
+            "slug": "producer",
+            "ref_code": "REQ-2026-032",
+            "department": "Growth & Marketing",
+            "summary": "Direct, shoot, and edit documentary-style brand films, product launches, and high-converting paid social video variations in our Cairo production lab.",
+            "pills": [
+                "Location: Cairo Studio",
+                "Work Mode: On-Site / Hybrid",
+                "Level: L4 / Senior Producer",
+                "Compensation: USD 2,000 – 3,200 / mo + Production Bonus"
+            ],
+            "sections": [
+                {
+                    "heading": "Role Overview & Mission",
+                    "items": [
+                        "Empetix produces all commercial video and photography in-house so our growth team can iterate at the speed of live campaign data. You will co-direct studio and on-location shoots and edit both flagship brand films and performance ad variations.",
+                        "Direct, shoot, and edit documentary-style brand films, product launches, and high-converting paid social video variations in our Cairo production lab."
+                    ]
+                },
+                {
+                    "heading": "Key Responsibilities (What You Will Do)",
+                    "items": [
+                        "In your first 90 days and beyond, you will be responsible for:",
+                        "Plan, light, shoot, and edit documentary-grade brand films, founder interviews, product demonstrations, and 9:16 paid-social video assets.",
+                        "Collaborate weekly with our Paid Acquisition team to review hook-rate (3-second view %) and hold-rate telemetry, producing fresh creative variations.",
+                        "Manage our Cairo studio equipment inventory, set styling, color grading (DaVinci Resolve), and sound design.",
+                        "Direct on-location commercial shoots across Cairo and regional client sites."
+                    ]
+                },
+                {
+                    "heading": "Required Qualifications & Requirements",
+                    "items": [
+                        "We are looking for candidates who can demonstrate the following qualifications:",
+                        "3+ years of professional commercial video production, cinematography, and post-production editing experience.",
+                        "Proficiency in DaVinci Resolve and/or Adobe Premiere Pro, color grading, audio mixing, and clean motion titles.",
+                        "Hands-on experience lighting and operating cinema/mirrorless camera systems (ARRI, RED, Sony FX, or Leica/Canon cinema lines).",
+                        "Understanding of how commercial storytelling intersects with paid social conversion performance.",
+                        "A reel demonstrating restrained, authentic documentary and commercial aesthetics (no cheesy stock templates)."
+                    ]
+                },
+                {
+                    "heading": "Preferred Qualifications (Nice to Have)",
+                    "items": [
+                        "Still photography and studio lighting experience (35mm editorial and product tabletop).",
+                        "Motion graphics proficiency in After Effects."
+                    ]
+                },
+                {
+                    "heading": "Compensation, Benefits & Working Model",
+                    "items": [
+                        "Salary Band: USD 2,000 – 3,200 / mo + Production Bonus (benchmarked in USD and paid with zero currency delay).",
+                        "Hardware & Setup: M3 Max MacBook Pro, 4K display, and home-office ergonomic stipend.",
+                        "Health & Time Off: Tier-1 private medical insurance for you and your family + 28 days paid annual leave.",
+                        "Learning Budget: USD 1,800/year for books, courses, certifications, and international conferences."
+                    ]
+                }
+            ],
+            "tags": [
+                "Commercial Directing",
+                "DaVinci Resolve / Premiere",
+                "Cinema Cameras & Lighting",
+                "Paid Social Hooks",
+                "Sound & Color"
+            ],
+            "is_active": true,
+            "sort_order": 5
+        }
+    ],
+    "posts": [
+        {
+            "title": "Engineering Arabic-First Design Systems & High-Conversion Funnels",
+            "slug": "arabic-first-design-systems",
+            "type": "article",
+            "category": "DESIGN SYSTEMS & CRO",
+            "excerpt": "Why simply flipping an English interface with dir=“rtl” breaks reading rhythm and trust—and how our engineering and CRO teams build native bilingual platforms that convert 38% higher across MENA.",
+            "body": "<h2 id=\"sec-optical\">01. Optical rhythm is not a mirror image</h2>\n          <p>\n            Across Egypt, Saudi Arabia, and the UAE, more than 78% of mobile commerce traffic interacts with bilingual products. Yet most software teams treat Arabic as a late-stage localization ticket: they design in English with tight negative letter-spacing, small uppercase eyebrows, and 1.1 line-height, then flip the DOM direction two weeks before launch.\n          </p>\n          <p>\n            The result looks immediately foreign to native Arabic readers. Arabic script connects cursively along a baseline with taller ascenders and deeper descenders (`ك`, `ل`, `ي`, `ح`). Applying negative letter-spacing (`letter-spacing: -0.04em`) fractures ligatures in Chromium and WebKit, while cramped line-heights clip vowel marks and diacritics.\n          </p>\n\n          <blockquote>\n            &ldquo;When an Arabic checkout screen feels like a translated foreign template, user trust drops at the exact moment you ask for a credit card or national ID.&rdquo;\n            <cite>&mdash; Bishoy Magdy, Chief Design Officer at Empetix</cite>\n          </blockquote>\n\n          <h2 id=\"sec-logical\">02. One stylesheet using 100% CSS Logical Properties</h2>\n          <p>\n            At Empetix, we never maintain a separate `rtl.css` override file. Maintaining two stylesheets guarantees visual drift within three sprints. Instead, our design token layer in `variables.css` and every component rule use native CSS Logical Properties:\n          </p>\n          <ul>\n            <li><strong>Inline flow instead of left/right:</strong> `margin-inline`, `padding-inline-start`, `inset-inline-end`, and `border-inline-start` automatically flip when `dir=\"rtl\"` is toggled on `&lt;html&gt;`.</li>\n            <li><strong>Direction-scoped typography tokens:</strong> Under `[dir=\"rtl\"]`, `--tracking-display` and `--tracking-caps` reset to `0`, while line-height expands by 12% to give Arabic script room to breathe.</li>\n            <li><strong>Tabular numerals (`tabular-nums`):</strong> Pricing tables, OTP codes, and IBAN fields retain consistent numeral alignment across both directions.</li>\n          </ul>\n\n          <!-- Embedded Video inside Blog Post -->\n          <h2 id=\"sec-video\">03. Watch the live engineering &amp; CRO walkthrough</h2>\n          <p>\n            In the 6-minute studio recording below, Bishoy Magdy and Principal Engineer Youssef Nabil walk through the actual Figma tokens, CSS logical grid, and checkout heatmap telemetry from our NilePay and Dar Ceramics launches:\n          </p>\n\n          <figure>\n            <div class=\"video\" data-video-player=\"post-video-1\">\n              <img class=\"video__poster\" src=\"/assets/img/blog/design-sprint.jpg\" alt=\"Empetix design system workshop video preview\" width=\"1200\" height=\"675\"/>\n              <video class=\"video__el\" preload=\"metadata\" poster=\"/assets/img/blog/design-sprint.jpg\">\n                <source src=\"/assets/video/design-sprint.mp4\" type=\"video/mp4\"/>\n              </video>\n              <button type=\"button\" class=\"video__btn\" data-video-play aria-label=\"Play design system walkthrough video\">\n                <span class=\"video__btn-inner\">\n                  <span class=\"video__btn-icon\">\n                    <svg viewBox=\"0 0 16 16\" fill=\"currentColor\" aria-hidden=\"true\"><polygon points=\"4,2 14,8 4,14\"/></svg>\n                  </span>\n                  <span>Watch Studio Walkthrough (06:40)</span>\n                </span>\n              </button>\n            </div>\n            <figcaption>VIDEO 01 &mdash; LIVE COMPARISON OF LTR/RTL CHECKOUT TELEMETRY &amp; CSS LOGICAL TOKENS</figcaption>\n          </figure>\n\n          <!-- Interactive Photo Gallery inside Blog Post -->\n          <h2 id=\"sec-gallery\">04. Studio photo gallery (Click any photo to zoom)</h2>\n          <p>\n            Photographs from our Cairo studio wall critique and usability testing sessions across Arabic and English mobile viewports:\n          </p>\n\n          <div class=\"gallery\" aria-label=\"Article photo gallery\">\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/arabic-first.jpg\" data-lightbox-caption=\"Fig 01 — Sketching right-to-left typographic hierarchy and baseline grids on paper.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/arabic-first.jpg\" alt=\"Sketching right-to-left typographic hierarchy on paper\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG RTL WIREFRAME STUDY</span>\n                  <span>CLICK TO ENLARGE +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/design-sprint.jpg\" data-lightbox-caption=\"Fig 02 — Product designers and growth engineers voting on checkout friction points.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/design-sprint.jpg\" alt=\"Team voting on checkout wireframes pinned to studio wall\" width=\"600\" height=\"750\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG CRITIQUE WALL</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/work/nilepay-detail.jpg\" data-lightbox-caption=\"Fig 03 — Field usability testing of one-handed thumb reach on Arabic mobile checkout.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/work/nilepay-detail.jpg\" alt=\"Hands testing mobile app on terracotta table\" width=\"750\" height=\"500\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG MOBILE THUMB-ZONE TEST</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/home/studio.jpg\" data-lightbox-caption=\"Fig 04 — Pair-programming the CSS logical token architecture and automated visual regression tests.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/home/studio.jpg\" alt=\"Two developers pair-programming at wooden desk\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>FIG PAIR-PROGRAMMING TOKENS</span>\n                  <span>CLICK TO ENLARGE +</span>\n                </div>\n              </button>\n            </div>\n          </div>\n\n          <h2 id=\"sec-cro\">05. What happened to conversion rates after launch</h2>\n          <p>\n            Across four ecommerce and FinTech platforms where we replaced auto-translated RTL stylesheets with our native Arabic-first component architecture and micro-copy:\n          </p>\n          <ol>\n            <li><strong>+38.4% mobile checkout completion</strong> among Arabic-language sessions in Egypt and Saudi Arabia.</li>\n            <li><strong>-29% form validation errors</strong> on phone number, address, and payment card inputs by keeping numeric inputs LTR-isolated inside RTL forms.</li>\n            <li><strong>Zero duplicate CSS maintenance</strong> for the client&rsquo;s internal engineering team post-handover.</li>\n          </ol>\n\n          <!-- Author Card -->",
+            "cover_image": "assets/img/blog/arabic-first.jpg",
+            "published_at": "2026-11-14 09:00:00",
+            "is_published": true,
+            "sort_order": 2,
+            "meta": {
+                "read_time": "8 MIN READ · INCLUDES VIDEO & 4 PHOTOS",
+                "author_name": "Bishoy Magdy",
+                "author_role": "Co-Founder & Chief Operating Officer",
+                "author_avatar": "assets/img/team/bishoy-magdy.jpg",
+                "author_bio": "Bishoy leads studio operations, product delivery, and cross-functional design and growth execution at Empetix Solution.",
+                "author_profile": "founder-bishoy.html",
+                "toc": [
+                    {
+                        "id": "sec-optical",
+                        "label": "01. Optical Rhythm vs. Mirroring"
+                    },
+                    {
+                        "id": "sec-logical",
+                        "label": "02. CSS Logical Properties Architecture"
+                    },
+                    {
+                        "id": "sec-video",
+                        "label": "03. Video Walkthrough (06:40)"
+                    },
+                    {
+                        "id": "sec-gallery",
+                        "label": "04. Studio Photo Gallery (4 Photos)"
+                    },
+                    {
+                        "id": "sec-cro",
+                        "label": "05. Checkout Conversion Telemetry"
+                    },
+                    {
+                        "id": "main-content",
+                        "label": "Back to Top ↑"
+                    }
+                ],
+                "card_label": "DEEP DIVE"
+            }
+        },
+        {
+            "title": "Inside an Empetix 5-Day Product & Growth Sprint",
+            "slug": "five-day-product-growth-sprint",
+            "type": "video",
+            "category": "VIDEO EPISODE STUDIO DOCUMENTARY",
+            "excerpt": "Watch the complete studio episode showing how our software architects, product designers, and media buyers take a product from commercial bottleneck to user-tested prototype and live acquisition test in one week.",
+            "body": "<h2>Why traditional design sprints fail without engineers and media buyers in the room</h2>\n          <p>\n            A standard UX design sprint produces a pretty prototype on Friday afternoon—only for the engineering team to declare it infeasible on Monday morning, or for the marketing team to discover that the core value proposition costs USD 95 per click to acquire.\n          </p>\n          <p>\n            In an Empetix Sprint, a Staff Laravel/Flutter Architect and a Performance Marketing Lead participate alongside the Product Designer and the client&rsquo;s founders for all five days.\n          </p>\n\n          <h3>Episode Stills Gallery (Click any frame to open in Lightbox)</h3>\n          <div class=\"gallery\">\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/design-sprint.jpg\" data-lightbox-caption=\"Day 3 — Silent dot-voting on candidate checkout architectures.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/design-sprint.jpg\" alt=\"Team placing coloured dot stickers on wireframe sketches\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 3 DOT VOTING</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/home/hero.jpg\" data-lightbox-caption=\"Day 1 — Founders and architects aligning on unit economics and API constraints.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/home/hero.jpg\" alt=\"Team gathered around long wooden table in Cairo studio\" width=\"600\" height=\"750\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 1 ALIGNMENT</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/work/medlink.jpg\" data-lightbox-caption=\"Day 2 — Reviewing low-fidelity user flows before writing a single line of UI code.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/work/medlink.jpg\" alt=\"Designers inspecting paper wireframes pinned to studio wall\" width=\"750\" height=\"500\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 2 WIREFRAMES</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n\n            <div class=\"gallery__item\">\n              <button type=\"button\" class=\"gallery__btn\" data-lightbox-src=\"/assets/img/blog/performance-playbook.jpg\" data-lightbox-caption=\"Day 5 — Analyzing live ad CTR and landing-page scroll depth from the 48-hour smoke test.\">\n                <div class=\"frame frame--zoom\">\n                  <img src=\"/assets/img/blog/performance-playbook.jpg\" alt=\"Analysts reviewing conversion telemetry on large monitors\" width=\"900\" height=\"600\"/>\n                </div>\n                <div class=\"gallery__caption\">\n                  <span>STILL DAY 5 TELEMETRY</span>\n                  <span>ZOOM +</span>\n                </div>\n              </button>\n            </div>\n          </div>\n\n          <h2>Full Episode Transcript Highlights</h2>\n          <p>\n            <strong>[00:42] Ayman Ibrahim (CEO):</strong> &ldquo;On Monday morning we lock the room with one rule: we are not here to debate opinions. By Friday at 4:00 PM we will have five real customers using a working prototype and real paid traffic hitting two competing value propositions.&rdquo;\n          </p>\n          <p>\n            <strong>[06:55] Mohanad Ahmed Shehata (CTO):</strong> &ldquo;While Lina&rsquo;s team sketches the merchant checkout flow on Tuesday, we map the exact payment gateway webhooks, latency budgets, and database indexes so there are zero surprises when sprint one of production engineering starts.&rdquo;\n          </p>\n          <p>\n            <strong>[12:18] Bishoy Magdy (VP Growth):</strong> &ldquo;By running a USD 1,500 micro-budget smoke test across three creative angles on Day 4, we walk into Friday&rsquo;s executive review knowing not only that users can complete the flow, but which headline delivers a 3.4% click-through rate.&rdquo;\n          </p>",
+            "cover_image": null,
+            "published_at": "2026-11-05 09:00:00",
+            "is_published": true,
+            "sort_order": 0,
+            "meta": {
+                "read_time": null,
+                "author_name": "Ayman Ibrahim",
+                "author_role": "Co-Founder & CEO",
+                "author_avatar": "assets/img/team/ayman-ibrahim.jpg",
+                "author_bio": null,
+                "author_profile": null,
+                "toc": [
+                    {
+                        "id": "main-content",
+                        "label": "Back to Top ↑"
+                    }
+                ],
+                "card_label": "VIDEO EPISODE · 14:20"
+            }
+        },
+        {
+            "title": "Behind the Lens: Directing the Qahwa Roasters Omnichannel Launch Shoot",
+            "slug": "behind-the-lens-qahwa-launch",
+            "type": "photos",
+            "category": "PHOTO ESSAY & CAMPAIGN PRODUCTION",
+            "excerpt": "How our in-house film and photography unit shot 42 commercial deliverables in two days—and how pairing tactile 35mm imagery with a custom subscription checkout lifted recurring coffee orders by 190%.",
+            "body": "<h2>Designing every camera frame around where it lives in the conversion funnel</h2>\n          <p>\n            Most commercial shoots happen in a vacuum: a production house delivers a cinematic 60-second film, and the performance marketing team is left cropping vertical cuts that don&rsquo;t fit mobile safe zones or product detail pages.\n          </p>\n          <p>\n            Because Empetix engineered Qahwa&rsquo;s subscription e-commerce store AND directed the launch shoot, every frame on our shot list was mapped to a specific slot in the funnel:\n          </p>\n          <ul>\n            <li><strong>Top-of-funnel 9:16 hooks:</strong> Tactile close-ups of espresso extraction and ceramic craftsmanship timed to a 1.8-second visual hook window.</li>\n            <li><strong>Interactive Flavor Quiz visuals:</strong> Overhead macro plates of roast profiles integrated directly into our custom React subscription configurator.</li>\n            <li><strong>Retargeting founder vignettes:</strong> Candid documentary interviews with the head roaster addressing freshness and delivery speed.</li>\n          </ul>\n\n          <h3>Watch the Director&rsquo;s Cut Commercial Reel</h3>\n          <figure>\n            <div class=\"video\" data-video-player=\"qahwa-reel\">\n              <img class=\"video__poster\" src=\"/assets/img/blog/behind-the-lens.jpg\" alt=\"Qahwa Roasters commercial director's cut poster\" width=\"1200\" height=\"675\"/>\n              <video class=\"video__el\" preload=\"metadata\" poster=\"/assets/img/blog/behind-the-lens.jpg\">\n                <source src=\"/assets/video/engineering-talk.mp4\" type=\"video/mp4\"/>\n              </video>\n              <button type=\"button\" class=\"video__btn\" data-video-play aria-label=\"Play Qahwa Roasters director's cut video\">\n                <span class=\"video__btn-inner\">\n                  <span class=\"video__btn-icon\">\n                    <svg viewBox=\"0 0 16 16\" fill=\"currentColor\" aria-hidden=\"true\"><polygon points=\"4,2 14,8 4,14\"/></svg>\n                  </span>\n                  <span>Play Commercial Reel (01:45)</span>\n                </span>\n              </button>\n            </div>\n            <figcaption>VIDEO 01 &mdash; QAHWA ROASTERS LAUNCH FILM &amp; PAID SOCIAL MASTER CUT</figcaption>\n          </figure>",
+            "cover_image": null,
+            "published_at": "2026-10-22 09:00:00",
+            "is_published": true,
+            "sort_order": 1,
+            "meta": {
+                "read_time": null,
+                "author_name": "Bishoy Magdy",
+                "author_role": "Co-Founder & COO",
+                "author_avatar": "assets/img/team/bishoy-magdy.jpg",
+                "author_bio": null,
+                "author_profile": null,
+                "toc": [
+                    {
+                        "id": "main-content",
+                        "label": "Back to Top ↑"
+                    }
+                ],
+                "card_label": "PHOTO ESSAY"
+            }
+        }
+    ],
+    "partners": [
+        {
+            "name": "NilePay FinTech",
+            "logo": "assets/img/partners/nilepay.svg",
+            "sort_order": 0,
+            "is_active": true
+        },
+        {
+            "name": "AWS Advanced Cloud",
+            "logo": "assets/img/partners/aws-partner.svg",
+            "sort_order": 1,
+            "is_active": true
+        },
+        {
+            "name": "Shopify Plus Enterprise",
+            "logo": "assets/img/partners/shopify-plus.svg",
+            "sort_order": 2,
+            "is_active": true
+        },
+        {
+            "name": "Meta Business Performance",
+            "logo": "assets/img/partners/meta-business.svg",
+            "sort_order": 3,
+            "is_active": true
+        },
+        {
+            "name": "Stripe Verified",
+            "logo": "assets/img/partners/stripe-partner.svg",
+            "sort_order": 4,
+            "is_active": true
+        },
+        {
+            "name": "MedLink Health",
+            "logo": "assets/img/partners/medlink.svg",
+            "sort_order": 5,
+            "is_active": true
+        },
+        {
+            "name": "CargoLine MENA",
+            "logo": "assets/img/partners/cargoline.svg",
+            "sort_order": 6,
+            "is_active": true
+        },
+        {
+            "name": "Palm Developments",
+            "logo": "assets/img/partners/palm-residences.svg",
+            "sort_order": 7,
+            "is_active": true
+        }
+    ],
+    "settings": [
+        {
+            "group": "contact",
+            "key": "email",
+            "value": "hello@empetix.com"
+        },
+        {
+            "group": "contact",
+            "key": "partners_email",
+            "value": "partners@empetix.com"
+        },
+        {
+            "group": "contact",
+            "key": "press_email",
+            "value": "press@empetix.com"
+        },
+        {
+            "group": "contact",
+            "key": "talent_email",
+            "value": "talent@empetix.com"
+        },
+        {
+            "group": "contact",
+            "key": "phone",
+            "value": "+20 2 2792 8400"
+        },
+        {
+            "group": "contact",
+            "key": "address",
+            "value": "Building 14, District 5 Campus, New Cairo, Cairo, Egypt"
+        },
+        {
+            "group": "social",
+            "key": "linkedin",
+            "value": "https://www.linkedin.com"
+        },
+        {
+            "group": "social",
+            "key": "instagram",
+            "value": "https://www.instagram.com"
+        },
+        {
+            "group": "social",
+            "key": "x",
+            "value": "https://x.com"
+        },
+        {
+            "group": "social",
+            "key": "youtube",
+            "value": "https://www.youtube.com"
+        },
+        {
+            "group": "general",
+            "key": "site_name",
+            "value": "Empetix Solution"
+        },
+        {
+            "group": "general",
+            "key": "tagline",
+            "value": "Software engineering and performance marketing, one team."
+        }
+    ]
 }

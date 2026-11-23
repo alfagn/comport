@@ -19,31 +19,17 @@ Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digita
 - **Performance & Growth Engineering:** Server-side Conversions API (CAPI) integrations, sub-second latency optimization, full-funnel activation engines.
 
 ## 4. Notable SaaS Projects & Software Case Studies
-### [NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users.](https://cms.test/work/nilepay)
-- **Client/Brand:** NilePay FinTech
+### [Alfagn: High-concurrency interactive learning & secure video streaming for 45,000+ students.](https://cms.test/work/alfagn)
+- **Client/Brand:** AlphaGen Educational Technologies (منصة ألفا جن)
 - **Region:** CAIRO & RIYADH
-- **Summary:** How Empetix rebuilt NilePay’s core checkout ledger in Laravel & Flutter while running a full-funnel performance acquisition engine that cut customer acquisition cost by 41%.
-- **Highlights:** Client: NilePay Financial Technologies | Scope: Flutter App, Laravel Ledger API, Brand Campaign & Paid Growth | Timeline: 16 Weeks to Launch + Ongoing Retainer
+- **Summary:** How Empetix engineered Alfagn’s high-throughput learning ecosystem—from dynamic forensic DRM video watermarking and asynchronous exam engines to native mobile apps—handling 12,000+ concurrent submissions with sub-180ms latency.
+- **Highlights:** Client: AlphaGen Educational Technologies (منصة وأكاديمية ألفا جن) | Scope: Cloud LMS Core, Forensic DRM Video Protection, Asynchronous Quiz Engine & Flutter Apps | Timeline: 14 Weeks to MVP + Scaled Infrastructure Retainer
 
-### [Headless D2C commerce platform, table-setting visualizer & European paid social engine (4.6x ROAS).](https://cms.test/work/dar-ceramics)
-- **Client/Brand:** Dar Ceramics
-- **Summary:** Direct-to-consumer store architecture and European export campaign yielding 4.6x ROAS.
-
-### [Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.](https://cms.test/work/cargoline-mena)
-- **Client/Brand:** CargoLine MENA
-- **Summary:** Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
-
-### [Telemedicine video platform, e-prescription vault & patient lifecycle retention across 14 clinics.](https://cms.test/work/medlink-health)
-- **Client/Brand:** MedLink Health
-- **Summary:** End-to-end encrypted video clinic and patient retention engine for 380,000 patients.
-
-### [Interactive 3D masterplan portal, commercial film campaign & high-intent lead engine (USD 84M sales).](https://cms.test/work/palm-residences)
-- **Client/Brand:** Palm Residences
-- **Summary:** Real-time unit inventory engine and omnichannel launch generating USD 84M in contracted sales.
-
-### [Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.](https://cms.test/work/qahwa-roasters)
-- **Client/Brand:** Qahwa Specialty Roasters
-- **Summary:** Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
+### [Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms & verified credentials.](https://cms.test/work/western-elearning-academy)
+- **Client/Brand:** Western International Academy for Distance Learning (أكاديمية ويسترن)
+- **Region:** CAIRO, DUBAI & LONDON
+- **Summary:** How Empetix architected Western eLearning Academy’s multi-tenant LMS—delivering WebRTC virtual lecture halls, AI-proctored certification exams, and automated cryptographic QR credential issuance across Egypt, the GCC, and the UK.
+- **Highlights:** Client: Western International Academy for Distance Learning (أكاديمية ويسترن) | Scope: Multi-Tenant LMS, WebRTC Live Lecture Halls, AI Exam Proctoring & Cryptographic QR Verification | Timeline: 18 Weeks to Multi-Campus Rollout + Enterprise SLA
 
 ## 5. Contact & Collaboration
 - **Website Inquiry:** https://cms.test/contact
@@ -54,76 +40,69 @@ Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digita
 
 # Detailed Project Case Studies & Technical Breakdown
 
-## Case Study: NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users.
-**URL:** https://cms.test/work/nilepay
-**Year:** 2026 | **Client:** NilePay FinTech | **Location:** CAIRO & RIYADH
+## Case Study: Alfagn: High-concurrency interactive learning & secure video streaming for 45,000+ students.
+**URL:** https://cms.test/work/alfagn
+**Year:** 2025 | **Client:** AlphaGen Educational Technologies (منصة ألفا جن) | **Location:** CAIRO & RIYADH
 
 ### Executive Overview
-How Empetix rebuilt NilePay’s core checkout ledger in Laravel & Flutter while running a full-funnel performance acquisition engine that cut customer acquisition cost by 41%.
+How Empetix engineered Alfagn’s high-throughput learning ecosystem—from dynamic forensic DRM video watermarking and asynchronous exam engines to native mobile apps—handling 12,000+ concurrent submissions with sub-180ms latency.
 
 ### Quantified Business & Technical Impact
-- **310%**: Increase in first-transaction activation within 72 hours of install
-- **1.4M**: Active monthly wallets across Egypt and Saudi Arabia
-- **41%**: Reduction in paid customer acquisition cost (CAC)
-- **180ms**: P95 QR & NFC settlement latency on our Laravel ledger core
+- **45K+**: Active enrolled students across Egypt & Saudi Arabia
+- **99.98%**: System uptime during simultaneous nationwide exam peaks
+- **180ms**: P95 automated question grading and live answer submission latency
+- **100%**: Protection against unauthorized screen recordings & content scraping via dynamic forensic watermarking
 
-### Capabilities: A fast-growing FinTech held back by a 9-step onboarding flow and disconnected ad spend.
-When NilePay approached Empetix, they were spending heavily on paid social acquisition, yet 74% of users dropped off between app install and their first wallet top-up. Their legacy hybrid app took 6.2 seconds to cold-start, and their external marketing agency had zero visibility into in-app KYC completion events.
+### Architecture Challenge: Eliminating server bottlenecks and content leaks during high-stakes nationwide exam peaks.
+Alfagn approached Empetix with an urgent scaling and intellectual property bottleneck: during peak exam periods for Thanaweya Amma and international diplomas (IGCSE & American Curriculum), over 12,000 students submitted timed quizzes in the exact same 3-minute window, causing database connection exhaustion and dropped results.
 
-Our mandate was twofold: re-architect the mobile client and settlement API for sub-second speed, and rebuild the entire acquisition funnel around server-side verified activation events rather than raw installs.
+Simultaneously, proprietary lecture videos were being recorded via third-party screen capturing tools and leaked onto unauthorized social channels within hours of publication, undermining instructor partnerships and revenue streams.
 
-### Execution: From 9 onboarding screens to 90-second biometric KYC.
-Our engineering squad replaced the legacy WebView container with a native Flutter client talking to an event-sourced Laravel 11 ledger API. By streaming OCR national-ID verification in the background while the user chooses their card skin, median KYC completion dropped from 11 minutes to 88 seconds.
+### Engineering Execution: In-memory Redis buffers, forensic canvas watermarking, and resilient Cloudflare Stream integration.
+Our engineering team decoupled exam submission ingestion from database writes by routing student answers through an in-memory Redis cluster. Responses are immediately acknowledged to the student browser with local optimistic confirmation and queued for asynchronous batch-persistence into PostgreSQL, reducing write locks by 84% and maintaining sub-180ms response times.
 
-Simultaneously, our growth team wired server-side Conversions API (CAPI) signals directly from the Laravel ledger into Meta, Google, and TikTok—training ad algorithms to bid on funded wallets rather than cheap installs.
+To protect video assets without degrading playback performance, we implemented dynamic forensic watermarking rendered directly onto an HTML5 canvas layer. The watermark invisibly embeds user IDs, timestamps, and session tokens across randomized intervals, enabling immediate identification and suspension of any leaking accounts within seconds.
 
-> "Empetix is the first partner we have worked with where the engineer writing our payment webhook and the media buyer optimizing our Meta conversion API sat in the same standup."
-> — *Tarek El-Gendy, Chief Product Officer at NilePay*
+### Cross-Platform Impact: Native Flutter mobile applications with encrypted offline lecture caching and instant progress sync.
+Empetix designed and deployed native iOS and Android apps powered by Flutter, featuring AES-256 encrypted local caching for low-bandwidth environments. Students can study uninterrupted on regional cellular connections, while parents and teachers receive real-time telemetry on student quiz performance and attendance.
 
----
+Following the deployment, course completion rates grew by 68%, student ratings reached 4.9/5, and Alfagn successfully scaled to more than 45,000 active students across Egypt and the Gulf.
 
-## Case Study: Headless D2C commerce platform, table-setting visualizer & European paid social engine (4.6x ROAS).
-**URL:** https://cms.test/work/dar-ceramics
-**Year:** 2026 | **Client:** Dar Ceramics | **Location:** 
-
-### Executive Overview
-Direct-to-consumer store architecture and European export campaign yielding 4.6x ROAS.
+> "Empetix didn’t just build our platform; they solved our existential scaling and piracy challenges. During our largest 30,000-student live exam session, the servers barely blinked, and our content remains completely secure."
+> — *Eng. Ahmed Mostafa, Technical Director at AlphaGen Academy (Alfagn)*
 
 ---
 
-## Case Study: Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
-**URL:** https://cms.test/work/cargoline-mena
-**Year:** 2025 | **Client:** CargoLine MENA | **Location:** 
+## Case Study: Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms & verified credentials.
+**URL:** https://cms.test/work/western-elearning-academy
+**Year:** 2026 | **Client:** Western International Academy for Distance Learning (أكاديمية ويسترن) | **Location:** CAIRO, DUBAI & LONDON
 
 ### Executive Overview
-Real-time fleet dispatch control tower, driver Android telemetry & automated customs brokerage for 4,200 trucks.
+How Empetix architected Western eLearning Academy’s multi-tenant LMS—delivering WebRTC virtual lecture halls, AI-proctored certification exams, and automated cryptographic QR credential issuance across Egypt, the GCC, and the UK.
 
----
+### Quantified Business & Technical Impact
+- **28K+**: Certified professionals and accredited diploma graduates
+- **85+**: Corporate training partners & institutional university affiliations
+- **4.9/5**: Student satisfaction score across 140+ accredited programs
+- **65%**: Increase in course completion rates via interactive micro-learning pathways
 
-## Case Study: Telemedicine video platform, e-prescription vault & patient lifecycle retention across 14 clinics.
-**URL:** https://cms.test/work/medlink-health
-**Year:** 2025 | **Client:** MedLink Health | **Location:** 
+### Institutional Challenge: Unifying fragmented distance learning systems into an internationally accredited digital campus.
+Western eLearning Academy delivers accredited diplomas and professional certifications to corporate cohorts and adult learners across the Middle East and Europe. Their legacy setup relied on disparate tools: external video meeting links, manual attendance spreadsheets, and physical paper certificates that were vulnerable to tampering.
 
-### Executive Overview
-End-to-end encrypted video clinic and patient retention engine for 380,000 patients.
+They required a unified, enterprise-grade LMS capable of delivering interactive WebRTC lectures, automated grading rubrics, AI-proctored examinations, and cryptographic credential verification on a single resilient infrastructure.
 
----
+### AI Proctoring & Cryptographic Credentials: Tamper-proof certificate issuance and browser-based AI proctoring without invasive installs.
+Empetix engineered a lightweight, client-side proctoring engine that uses in-browser computer vision models to detect secondary device usage and candidate anomalies during high-stakes final exams, eliminating the need for invasive desktop client downloads.
 
-## Case Study: Interactive 3D masterplan portal, commercial film campaign & high-intent lead engine (USD 84M sales).
-**URL:** https://cms.test/work/palm-residences
-**Year:** 2025 | **Client:** Palm Residences | **Location:** 
+Upon graduation, certificates are minted with cryptographic SHA-256 signatures and verifiable QR codes. Prospective employers and accreditation institutions can instantly verify a student’s authenticity on a public verification ledger, completely preventing credential fraud.
 
-### Executive Overview
-Real-time unit inventory engine and omnichannel launch generating USD 84M in contracted sales.
+### Multi-Tenant Scalability: White-label enterprise portals with localized multi-currency payment workflows.
+Built on a containerized microservice backend, the platform supports multi-tenant white-labeling, allowing partner universities and corporate clients to launch fully customized learning portals within hours. Multi-currency billing integrates regional gateways (Fawry, Meeza, Mada, Apple Pay) alongside international Stripe checkouts.
 
----
+The platform has facilitated over 28,000 certified completions with an average completion increase of 65% across all cohorts.
 
-## Case Study: Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
-**URL:** https://cms.test/work/qahwa-roasters
-**Year:** 2024 | **Client:** Qahwa Specialty Roasters | **Location:** 
-
-### Executive Overview
-Subscription coffee e-commerce store, packaging rebrand & commercial film/photo launch.
+> "Empetix transformed Western eLearning Academy into a truly global education powerhouse. The automated AI proctoring and verifiable QR diplomas gave our corporate partners complete confidence in our certification programs."
+> — *Dr. Sherif El-Wakil, Dean of Academic Affairs at Western eLearning Academy*
 
 ---
 

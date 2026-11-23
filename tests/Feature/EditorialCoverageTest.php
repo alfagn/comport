@@ -32,7 +32,7 @@ class EditorialCoverageTest extends TestCase
     {
         $owner = User::first();
         $owner->assignRole(Permissions::OWNER_ROLE);
-        foreach (['home' => '/', 'about' => '/about', 'work' => '/work', 'team' => '/team', 'careers' => '/careers', 'partners' => '/partners', 'blog' => '/blog', 'contact' => '/contact', 'founder' => '/founders/mohanad', 'project' => '/work/nilepay', 'job' => '/careers/laravel', 'post' => '/blog/arabic-first-design-systems', 'global' => '/'] as $page => $url) {
+        foreach (['home' => '/', 'about' => '/about', 'work' => '/work', 'team' => '/team', 'careers' => '/careers', 'partners' => '/partners', 'blog' => '/blog', 'contact' => '/contact', 'founder' => '/founders/mohanad', 'project' => '/work/alfagn', 'job' => '/careers/laravel', 'post' => '/blog/arabic-first-design-systems', 'global' => '/'] as $page => $url) {
             $section = PageSection::where('page', $page)->where('key', 'like', 'copy_%')->where('type', 'text')->firstOrFail();
             $marker = 'EDIT-'.strtoupper($page).'-VERIFIED';
             $this->actingAs($owner)->put('/admin/pages/'.$page, ['sections' => [$section->key => $marker]])->assertRedirect();
@@ -84,7 +84,7 @@ class EditorialCoverageTest extends TestCase
     public function test_projects_and_platforms_listing_and_detailed_case_study_controls_render(): void
     {
         $owner = User::first(); $owner->assignRole(Permissions::OWNER_ROLE);
-        $project = \App\Models\Project::where('slug', 'nilepay')->firstOrFail();
+        $project = \App\Models\Project::where('slug', 'alfagn')->firstOrFail();
         $this->actingAs($owner)->put('/admin/pages/work', ['sections' => ['hero_title' => 'Updated Projects and Platforms introduction']])->assertRedirect();
         $this->actingAs($owner)->put('/admin/projects/'.$project->id, [
             'title' => 'Edited Platform Case Study', 'slug' => $project->slug,
@@ -95,7 +95,7 @@ class EditorialCoverageTest extends TestCase
             'sections' => 'Delivery || Platform narrative heading || Platform narrative paragraph',
             'quote' => 'Platform client quotation', 'quote_cite' => 'Platform client leader',
             'body' => '<p>Platform detailed body</p>',
-            'video_src' => 'https://example.com/platform.mp4', 'video_poster' => 'assets/img/work/nilepay-detail.jpg',
+            'video_src' => 'https://example.com/platform.mp4', 'video_poster' => 'assets/img/work/alfagn/alfagn_course1.png',
             'tags' => 'Platform, Engineering', 'is_active' => true, 'is_featured' => true,
         ])->assertRedirect();
         $this->get('/work')->assertOk()->assertSee('Updated Projects and Platforms introduction')->assertSee('Edited Platform Case Study')->assertSee('Platform Delivery');

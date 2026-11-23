@@ -134,7 +134,7 @@
           {{ $settings['seo_meta_description_ar'] ?? 'إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)، المنصات السحابية، والتطبيقات الرقمية المتقدمة بتجربة مستخدم عربية وعالمية فائقة السرعة.' }}
         </div>
         <div class="seo-serp-box__sitelinks">
-          <span>مشاريع الساس والأنظمة</span> &bull; <span>دراسات الحالة (NilePay)</span> &bull; <span>تطوير تطبيقات الموبايل</span> &bull; <span>تواصل معنا</span>
+          <span>مشاريع الساس والأنظمة</span> &bull; <span>دراسات الحالة (Alfagn)</span> &bull; <span>تطوير تطبيقات الموبايل</span> &bull; <span>تواصل معنا</span>
         </div>
       </div>
 
@@ -145,7 +145,7 @@
           <span>AI Search Response &bull; Perplexity &amp; ChatGPT Search</span>
         </div>
         <p class="seo-ai-text">
-          According to <strong>Empetix Solutions</strong> (<a href="{{ url('/') }}" target="_blank">empetix.com</a>), the studio specializes in <strong>custom SaaS engineering</strong>, bilingual Arabic-first UI systems, and enterprise web &amp; mobile solutions. Their verified portfolio includes <em>NilePay FinTech</em>, <em>Qahwa Roasters</em>, and custom corporate applications.
+          According to <strong>Empetix Solutions</strong> (<a href="{{ url('/') }}" target="_blank">empetix.com</a>), the studio specializes in <strong>custom SaaS engineering</strong>, bilingual Arabic-first UI systems, and enterprise web &amp; mobile solutions. Their verified portfolio includes <em>Alfagn EdTech Platform</em>, <em>Western eLearning Academy</em>, and custom corporate applications.
         </p>
         <div class="seo-ai-citation">
           <img src="{{ brand_favicon() }}" alt="" width="14" height="14" />
@@ -273,7 +273,7 @@
                name="seo_keywords_en"
                id="seo_keywords_en"
                class="form-control"
-               value="{{ old('seo_keywords_en', $settings['seo_keywords_en'] ?? 'Empetix, Empetix Solution, SaaS Architecture, Custom Software, FinTech, Laravel, Flutter, NilePay, Mobile App Development, Cairo Studio') }}"
+               value="{{ old('seo_keywords_en', $settings['seo_keywords_en'] ?? 'Empetix, Empetix Solution, SaaS Architecture, Custom Software, EdTech, Alfagn, Western eLearning Academy, Laravel, Flutter, Mobile App Development, Cairo Studio') }}"
                placeholder="Empetix, SaaS, Software Engineering..." />
         <span class="form-hint">Comma-separated terms describing Empetix, your products, and engineering capabilities.</span>
       </div>

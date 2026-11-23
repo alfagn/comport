@@ -25,7 +25,7 @@ class NavItemSeeder extends Seeder
                 ['CRO, SEO & Lifecycle Retention', '/blog/post', 'Arabic/English technical SEO, A/B testing & CRM flows', null, null],
             ]],
             ['Featured Case Study', [
-                ['Rebuilding mobile checkout and launch acquisition for 1.4M users.', '/work/nilepay', null, 'NILEPAY FINTECH · +310% ACTIVATION', 'assets/img/work/nilepay.jpg'],
+                ['High-concurrency EdTech platform serving 45,000+ active students.', '/work/alfagn', null, 'ALFAGN EDTECH · 45K+ STUDENTS', 'assets/img/work/alfagn/alfagn_seo.png'],
             ]],
         ],
         'mega-journal' => [

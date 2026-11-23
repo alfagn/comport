@@ -35,8 +35,8 @@ class PublicSiteTest extends TestCase
     /** Every seeded detail page renders by slug. */
     public function test_detail_pages_render(): void
     {
-        $this->get('/work/nilepay')->assertOk()->assertSee('NilePay');
-        $this->get('/work/qahwa-roasters')->assertOk();
+        $this->get('/work/alfagn')->assertOk()->assertSee('Alfagn');
+        $this->get('/work/western-elearning-academy')->assertOk()->assertSee('Western eLearning');
         $this->get('/founders/mohanad')->assertOk()->assertSee('Mohanad');
         $this->get('/founders/ayman')->assertOk();
         $this->get('/founders/bishoy')->assertOk();

@@ -4,7 +4,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://cms.test</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test"/>
@@ -16,7 +16,7 @@
   </url>
   <url>
     <loc>https://cms.test/work</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work"/>
@@ -24,7 +24,7 @@
   </url>
   <url>
     <loc>https://cms.test/about</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/about"/>
@@ -32,7 +32,7 @@
   </url>
   <url>
     <loc>https://cms.test/team</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/team"/>
@@ -40,7 +40,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers"/>
@@ -48,7 +48,7 @@
   </url>
   <url>
     <loc>https://cms.test/partners</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/partners"/>
@@ -56,7 +56,7 @@
   </url>
   <url>
     <loc>https://cms.test/blog</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog"/>
@@ -64,87 +64,39 @@
   </url>
   <url>
     <loc>https://cms.test/contact</loc>
-    <lastmod>2026-11-23T04:35:44+00:00</lastmod>
+    <lastmod>2026-11-23T04:51:14+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/contact"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/contact"/>
   </url>
   <url>
-    <loc>https://cms.test/work/nilepay</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <loc>https://cms.test/work/alfagn</loc>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/nilepay"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/nilepay"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/alfagn"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/alfagn"/>
     <image:image>
-      <image:loc>https://cms.test/assets/img/work/nilepay.jpg</image:loc>
-      <image:title>NilePay: Engineering a 60fps mobile wallet and scaling to 1.4M active users. — NilePay FinTech</image:title>
+      <image:loc>https://cms.test/assets/img/work/alfagn/alfagn_seo.png</image:loc>
+      <image:title>Alfagn: High-concurrency interactive learning &amp; secure video streaming for 45,000+ students. — AlphaGen Educational Technologies (منصة ألفا جن)</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://cms.test/work/dar-ceramics</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <loc>https://cms.test/work/western-elearning-academy</loc>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/dar-ceramics"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/dar-ceramics"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/western-elearning-academy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/western-elearning-academy"/>
     <image:image>
-      <image:loc>https://cms.test/assets/img/work/dar-ceramics.jpg</image:loc>
-      <image:title>Headless D2C commerce platform, table-setting visualizer &amp; European paid social engine (4.6x ROAS). — Dar Ceramics</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://cms.test/work/cargoline-mena</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/cargoline-mena"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/cargoline-mena"/>
-    <image:image>
-      <image:loc>https://cms.test/assets/img/work/cargoline.jpg</image:loc>
-      <image:title>Real-time fleet dispatch control tower, driver Android telemetry &amp; automated customs brokerage for 4,200 trucks. — CargoLine MENA</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://cms.test/work/medlink-health</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/medlink-health"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/medlink-health"/>
-    <image:image>
-      <image:loc>https://cms.test/assets/img/work/medlink.jpg</image:loc>
-      <image:title>Telemedicine video platform, e-prescription vault &amp; patient lifecycle retention across 14 clinics. — MedLink Health</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://cms.test/work/palm-residences</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/palm-residences"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/palm-residences"/>
-    <image:image>
-      <image:loc>https://cms.test/assets/img/work/palm-residences.jpg</image:loc>
-      <image:title>Interactive 3D masterplan portal, commercial film campaign &amp; high-intent lead engine (USD 84M sales). — Palm Residences</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://cms.test/work/qahwa-roasters</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/work/qahwa-roasters"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cms.test/work/qahwa-roasters"/>
-    <image:image>
-      <image:loc>https://cms.test/assets/img/work/qahwa.jpg</image:loc>
-      <image:title>Subscription coffee e-commerce store, packaging rebrand &amp; commercial film/photo launch. — Qahwa Specialty Roasters</image:title>
+      <image:loc>https://cms.test/assets/img/work/western-academy.jpg</image:loc>
+      <image:title>Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms &amp; verified credentials. — Western International Academy for Distance Learning (أكاديمية ويسترن)</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://cms.test/blog/arabic-first-design-systems</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog/arabic-first-design-systems"/>
@@ -156,7 +108,7 @@
   </url>
   <url>
     <loc>https://cms.test/blog/five-day-product-growth-sprint</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog/five-day-product-growth-sprint"/>
@@ -164,7 +116,7 @@
   </url>
   <url>
     <loc>https://cms.test/blog/behind-the-lens-qahwa-launch</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/blog/behind-the-lens-qahwa-launch"/>
@@ -172,7 +124,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/laravel</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/laravel"/>
@@ -180,7 +132,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/frontend</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/frontend"/>
@@ -188,7 +140,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/flutter</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/flutter"/>
@@ -196,7 +148,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/marketing</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/marketing"/>
@@ -204,7 +156,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/designer</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/designer"/>
@@ -212,7 +164,7 @@
   </url>
   <url>
     <loc>https://cms.test/careers/producer</loc>
-    <lastmod>2026-11-23T04:35:22+00:00</lastmod>
+    <lastmod>2026-11-23T04:50:40+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://cms.test/careers/producer"/>
