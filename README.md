@@ -8,8 +8,9 @@ dashboard controls the site's content.
 
 ## Stack
 
-- **Laravel 13** (PHP 8.2+), Blade templates, SQLite by default (any Laravel-supported DB works)
+- **Laravel 13** (PHP 8.3–8.5, per the official Laravel 13 release notes), Blade templates, SQLite by default (any Laravel-supported DB works)
 - Architecture: Controllers → FormRequests → DTOs → Services → Repository contracts + Eloquent implementations → Models. Comments explain every layer.
+- Dashboard listings use **Yajra DataTables v13** (server-side): `app/DataTables` classes on a shared `app/Core/DataTables/AdminDataTable.php` base; search, sort and pagination run in SQL through each entity's repository. jQuery + DataTables.net (both MIT) are vendored in `public/assets/admin/vendor`.
 - Dashboard design: bespoke Empetix design system (`public/assets/admin/admin.css`), inspired by leading dark dashboard products (eyebrow page headings, uppercase stat labels, icon-chip cards, quiet bordered surfaces). No third-party template code or assets are used.
 - Frontend assets are the original site's static files under `public/assets` (no build step required); the dashboard has its own design system at `public/assets/admin/admin.css`.
 
@@ -51,6 +52,7 @@ settings and page-section saves).
 ## Repo layout worth knowing
 
 - `app/Core` — base repository/service/DTO abstractions
+- `app/DataTables` — one server-side Yajra table per dashboard listing
 - `app/Repositories/{Contracts,Eloquent}` — persistence contracts + implementations
 - `app/Services` — business logic (uploads, JSON line normalization, tag sync, cache busting)
 - `app/DTOs`, `app/Http/Requests` — typed input carriers + validation

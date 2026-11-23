@@ -687,8 +687,14 @@ table.table { width: 100%; border-collapse: collapse; }
   background: #0E0C0A;
   border-right: none;
   color: #F5F1EC;
-  position: relative;
-  overflow: hidden;
+}
+/* The corner glow needs clipping; clip only on desktop so the mobile
+   off-canvas rail keeps its fixed positioning and scroll. */
+@media (min-width: 981px) {
+  .sidebar { overflow: hidden; }
+}
+@media (max-width: 980px) {
+  .sidebar::after { display: none; }
 }
 /* Orange glow bleeding from the rail's bottom corner, as in the reference. */
 .sidebar::after {
@@ -968,3 +974,9 @@ table.dt-table thead .sorting_asc::after { content: "↑"; color: var(--accent);
 table.dt-table thead .sorting_desc::after { content: "↓"; color: var(--accent); }
 table.dt-table td.dataTables_empty { text-align: center; color: var(--text-muted); padding: 30px; }
 .dataTables_processing { color: var(--text-muted); }
+
+/* Small screens: keep columns readable, scroll the table horizontally. */
+@media (max-width: 700px) {
+  .table-wrap--dt { overflow-x: auto; }
+  .table-wrap--dt .dt-table { min-width: 620px; }
+}
