@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\ServiceData;
+use App\DataTables\ServiceDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ServiceRequest;
 use App\Services\ServiceService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class ServiceController extends Controller
     public function __construct(private ServiceService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(ServiceDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.services.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.services.index');
     }
 
     /** Show the create form. */

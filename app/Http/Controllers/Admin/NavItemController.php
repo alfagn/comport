@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\NavItemData;
+use App\DataTables\NavItemDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\NavItemRequest;
 use App\Services\NavItemService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -20,9 +22,9 @@ class NavItemController extends Controller
     public function __construct(private NavItemService $service) {}
 
     /** List links grouped by menu. */
-    public function index(): View
+    public function index(NavItemDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.navigation.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.navigation.index');
     }
 
     /** Show the create form. */

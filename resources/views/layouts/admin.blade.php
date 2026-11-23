@@ -220,5 +220,11 @@
     </div>
   </div>
 </div>
+
+{{-- DataTables stack: jQuery + DataTables.net (MIT, vendored locally) load
+     on every admin page; each listing pushes its init script here. --}}
+<script src="{{ asset('assets/admin/vendor/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/admin/vendor/jquery.dataTables.min.js') }}"></script>
+@stack('datatables')
 </body>
 </html>

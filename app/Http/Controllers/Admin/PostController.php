@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\PostData;
+use App\DataTables\PostDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PostRequest;
 use App\Services\PostService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class PostController extends Controller
     public function __construct(private PostService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(PostDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.posts.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.posts.index');
     }
 
     /** Show the create form. */

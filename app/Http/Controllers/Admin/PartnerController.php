@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\PartnerData;
+use App\DataTables\PartnerDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PartnerRequest;
 use App\Services\PartnerService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class PartnerController extends Controller
     public function __construct(private PartnerService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(PartnerDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.partners.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.partners.index');
     }
 
     /** Show the create form. */

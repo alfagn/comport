@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 
@@ -94,7 +94,7 @@ abstract class AdminDataTable
         return $this->html
             ->columns($this->columns())
             ->ajax(route($this->routePrefix() . '.index'))
-            ->orderBy(0, 'asc')
+            ->orderBy(...$this->defaultOrder())
             ->parameters([
                 'pageLength' => 15,
                 'lengthMenu' => [15, 30, 50],
@@ -106,6 +106,16 @@ abstract class AdminDataTable
                     'zeroRecords' => 'No rows match that filter.',
                 ],
             ]);
+    }
+
+    /**
+     * Default sort applied when the visitor hasn't clicked a header:
+     * [column index, direction]. Content tables override this to their
+     * natural display order.
+     */
+    protected function defaultOrder(): array
+    {
+        return [0, 'asc'];
     }
 
     /**

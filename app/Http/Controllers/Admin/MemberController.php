@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\MemberData;
+use App\DataTables\MemberDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\MemberRequest;
 use App\Services\MemberService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class MemberController extends Controller
     public function __construct(private MemberService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(MemberDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.members.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.members.index');
     }
 
     /** Show the create form. */

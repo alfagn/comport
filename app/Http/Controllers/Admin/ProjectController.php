@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\ProjectData;
+use App\DataTables\ProjectDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProjectRequest;
 use App\Services\ProjectService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class ProjectController extends Controller
     public function __construct(private ProjectService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(ProjectDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.projects.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.projects.index');
     }
 
     /** Show the create form. */

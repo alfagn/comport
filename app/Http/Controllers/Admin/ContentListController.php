@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ContentListItemRequest;
 use App\Services\ContentListItemService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -20,10 +21,9 @@ class ContentListController extends Controller
     public function __construct(private ContentListItemService $service) {}
 
     /** List cards across all lists. */
-    public function index(): View
+    public function index(\App\DataTables\ContentListItemDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.content-lists.index', [
-            'items' => $this->service->paginateForAdmin(),
+        return $dataTable->handle('admin.content-lists.index', [
             'groups' => ContentListItemService::GROUPS,
         ]);
     }

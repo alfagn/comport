@@ -921,3 +921,50 @@ table.table { width: 100%; border-collapse: collapse; }
 .flash { background: rgba(52, 211, 153, 0.12); border-color: rgba(52, 211, 153, 0.35); color: #0B7A55; }
 
 .quicknav[hidden] { display: none; }
+
+/* ---------- DataTables.net controls, themed to Empetix Command ---------- */
+.table-wrap--dt { padding: 10px 16px 16px; }
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 8px 0 14px; color: var(--text-muted); font-size: 13px;
+}
+.dataTables_wrapper .dataTables_filter { float: right; }
+.dataTables_wrapper .dataTables_filter input {
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  padding: 8px 15px; font: inherit; font-size: 13.5px; background: #fff; color: var(--text);
+  width: 220px; outline: none;
+}
+.dataTables_wrapper .dataTables_filter input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.dataTables_wrapper .dataTables_length select {
+  border: 1px solid var(--line-strong); border-radius: 8px; padding: 6px 8px;
+  font: inherit; background: #fff; color: var(--text);
+}
+.dataTables_wrapper .dataTables_info { color: var(--text-muted); font-size: 12.5px; padding-top: 14px; }
+.dataTables_wrapper .dataTables_paginate { float: right; padding-top: 10px; }
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  display: inline-block; padding: 6px 12px; margin-left: 4px;
+  border: 1px solid var(--line); border-radius: 8px;
+  color: var(--text-body) !important; font-size: 13px; cursor: pointer;
+  background: #fff;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  border-color: var(--accent); color: var(--accent-deep) !important; background: var(--accent-soft);
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  background: var(--accent); border-color: var(--accent); color: #fff !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+  opacity: 0.45; cursor: default; pointer-events: none;
+}
+table.dt-table thead th { cursor: pointer; white-space: nowrap; }
+table.dt-table thead .sorting::after,
+table.dt-table thead .sorting_asc::after,
+table.dt-table thead .sorting_desc::after {
+  content: "⇅"; margin-left: 6px; color: var(--text-muted); font-size: 11px;
+}
+table.dt-table thead .sorting_asc::after { content: "↑"; color: var(--accent); }
+table.dt-table thead .sorting_desc::after { content: "↓"; color: var(--accent); }
+table.dt-table td.dataTables_empty { text-align: center; color: var(--text-muted); padding: 30px; }
+.dataTables_processing { color: var(--text-muted); }

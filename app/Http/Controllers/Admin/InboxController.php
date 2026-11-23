@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\NewsletterSubscriber;
 use App\Services\ContactMessageService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -16,9 +17,9 @@ class InboxController extends Controller
     public function __construct(private ContactMessageService $messages) {}
 
     /** List briefs, unread first. */
-    public function index(): View
+    public function index(\App\DataTables\ContactMessageDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.inbox.index', ['items' => $this->messages->inbox()]);
+        return $dataTable->handle('admin.inbox.index');
     }
 
     /** Open one brief (marks it read). */
@@ -36,8 +37,8 @@ class InboxController extends Controller
     }
 
     /** List newsletter subscribers. */
-    public function subscribers(): View
+    public function subscribers(\App\DataTables\NewsletterSubscriberDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.inbox.subscribers', ['items' => NewsletterSubscriber::latest()->paginate(20)]);
+        return $dataTable->handle('admin.inbox.subscribers');
     }
 }

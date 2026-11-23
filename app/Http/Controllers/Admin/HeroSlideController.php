@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\HeroSlideData;
+use App\DataTables\HeroSlideDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\HeroSlideRequest;
 use App\Services\HeroSlideService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class HeroSlideController extends Controller
     public function __construct(private HeroSlideService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(HeroSlideDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.hero-slides.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.hero-slides.index');
     }
 
     /** Show the create form. */

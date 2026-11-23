@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\IndustryData;
+use App\DataTables\IndustryDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\IndustryRequest;
 use App\Services\IndustryService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class IndustryController extends Controller
     public function __construct(private IndustryService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(IndustryDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.industries.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.industries.index');
     }
 
     /** Show the create form. */

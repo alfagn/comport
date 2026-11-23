@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DTOs\JobPostData;
+use App\DataTables\JobPostDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\JobPostRequest;
 use App\Services\JobPostService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -21,9 +23,9 @@ class JobPostController extends Controller
     public function __construct(private JobPostService $service) {}
 
     /** List records. */
-    public function index(): View
+    public function index(JobPostDataTable $dataTable): View|JsonResponse
     {
-        return view('admin.jobs.index', ['items' => $this->service->paginateForAdmin()]);
+        return $dataTable->handle('admin.jobs.index');
     }
 
     /** Show the create form. */
