@@ -54,6 +54,11 @@
       // One-time SPA lifecycle hooks (head survives body swaps):
       if (!window.__empetixNavHooks) {
         window.__empetixNavHooks = true;
+        document.addEventListener('livewire:navigating', function () {
+          if (window.jQuery && jQuery.fn.dataTable) {
+            jQuery.fn.dataTable.tables({ api: true }).destroy();
+          }
+        });
         document.addEventListener('livewire:navigated', function () {
           // The swap replaces <html> attributes: re-apply the persisted theme.
           try {
@@ -61,9 +66,7 @@
             document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
           } catch (e) {}
           if (window.empetixSyncThemeButtons) window.empetixSyncThemeButtons();
-          // Yajra DataTables initialise on DOMContentLoaded, which never
-          // refires after an SPA swap: re-dispatch so swapped-in tables boot.
-          document.dispatchEvent(new Event('DOMContentLoaded'));
+          // Tables use their page-scoped Livewire lifecycle initializer.
         });
       }
     })();
@@ -216,7 +219,7 @@
       <span class="nav-item__text">Settings</span>
     </a>
     @endcan
-    @can('manage admins')
+    @role('owner')
     <div class="sidebar__label">System</div>
     <a class="nav-item {{ str_starts_with($r, 'admin.admins') ? 'is-active' : '' }}" href="{{ route('admin.admins.index') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-shield.png') }}" alt="" width="22" height="22"/>
@@ -226,7 +229,7 @@
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-sliders.png') }}" alt="" width="22" height="22"/>
       <span class="nav-item__text">Roles</span>
     </a>
-    @endcan
+    @endrole
 
     <a class="nav-item" href="{{ url('/') }}" target="_blank">
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-eye.png') }}" alt="" width="22" height="22"/>
@@ -381,8 +384,8 @@
 
 {{-- DataTables stack: jQuery + DataTables.net (MIT, vendored locally) load
      on every admin page; each listing pushes its init script here. --}}
-<script src="{{ asset('assets/admin/vendor/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/admin/vendor/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/admin/vendor/jquery.min.js') }}" data-navigate-once></script>
+<script src="{{ asset('assets/admin/vendor/jquery.dataTables.min.js') }}" data-navigate-once></script>
 @stack('datatables')
 {{-- Livewire drives wire:navigate SPA swaps across the admin shell. --}}
 @livewireScripts

@@ -1186,3 +1186,9 @@ table.dt-table td.dataTables_empty { text-align: center; color: var(--text-muted
     box-shadow: 0 4px 14px rgba(255, 77, 28, 0.35);
   }
 }
+
+/* The sidebar toggle must remain reachable on desktop and mobile. */
+.menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+
+/* Brand upload previews must show the full supplied logo, never a crop. */
+.image-field img[id^="brand_"] { object-fit: contain; padding: 6px; }

@@ -80,7 +80,7 @@ class RbacTest extends TestCase
             'password' => 'password-123',
             'password_confirmation' => 'password-123',
             'roles' => [Permissions::OWNER_ROLE],
-        ])->assertSessionHasErrors('roles');
+        ])->assertForbidden();
     }
 
     public function test_last_owner_cannot_be_demoted_or_deleted(): void
@@ -162,4 +162,48 @@ class RbacTest extends TestCase
             $this->actingAs($user)->get($url)->assertForbidden();
         }
     }
+    public function test_manager_cannot_edit_owner_password_roles_or_delete_owner(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole(Permissions::OWNER_ROLE);
+        $beforePassword = $owner->password;
+        $manager = User::factory()->create();
+        $manager->givePermissionTo('manage admins');
+        $editor = Role::create(['name' => 'limited']);
+        $editor->givePermissionTo('manage posts');
+        $this->actingAs($manager)->put('/admin/admins/'.$owner->id, [
+            'name' => $owner->name, 'email' => $owner->email,
+            'password' => 'crafted-password', 'password_confirmation' => 'crafted-password',
+            'roles' => ['limited'],
+        ])->assertForbidden();
+        $this->actingAs($manager)->delete('/admin/admins/'.$owner->id)->assertForbidden();
+        $this->assertSame($beforePassword, $owner->fresh()->password);
+        $this->assertTrue($owner->fresh()->hasRole(Permissions::OWNER_ROLE));
+    }
+
+    public function test_manager_cannot_grant_unheld_permissions_by_crafted_role_or_account_requests(): void
+    {
+        $manager = User::factory()->create();
+        $manager->givePermissionTo('manage admins');
+        $power = Role::create(['name' => 'power']);
+        $power->givePermissionTo('manage settings');
+        $this->actingAs($manager)->post('/admin/roles', [
+            'name' => 'crafted', 'permissions' => ['manage settings'],
+        ])->assertForbidden();
+        $this->actingAs($manager)->put('/admin/roles/'.$power->id, [
+            'name' => 'power', 'permissions' => ['manage settings', 'manage projects'],
+        ])->assertForbidden();
+        $this->actingAs($manager)->post('/admin/admins', [
+            'name' => 'Crafted', 'email' => 'crafted@example.com',
+            'password' => 'crafted-password', 'password_confirmation' => 'crafted-password',
+            'roles' => ['power'],
+        ])->assertForbidden();
+        $this->actingAs($manager)->put('/admin/admins/'.$manager->id, [
+            'name' => $manager->name, 'email' => $manager->email, 'roles' => ['power'],
+        ])->assertForbidden();
+        $this->assertFalse($manager->fresh()->can('manage settings'));
+        $this->assertDatabaseMissing('roles', ['name' => 'crafted']);
+        $this->assertDatabaseMissing('users', ['email' => 'crafted@example.com']);
+    }
+
 }

@@ -73,8 +73,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('content-lists', Admin\ContentListController::class)->except('show')->parameters(['content-lists' => 'id'])->middleware('permission:manage content lists');
 
         // Admin accounts + roles/permissions (the "owner" role bypasses).
-        Route::resource('admins', Admin\AdminUserController::class)->except('show')->middleware('permission:manage admins');
-        Route::resource('roles', Admin\RoleController::class)->except('show')->middleware('permission:manage admins');
+        Route::resource('admins', Admin\AdminUserController::class)->except('show')->middleware(['permission:manage admins', 'role:owner']);
+        Route::resource('roles', Admin\RoleController::class)->except('show')->middleware(['permission:manage admins', 'role:owner']);
 
         // Inbox: contact briefs + newsletter subscribers.
         Route::middleware('permission:manage inbox')->group(function () {

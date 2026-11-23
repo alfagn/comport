@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // RBAC: per-section permission checks on admin routes.
         $middleware->alias([
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

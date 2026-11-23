@@ -23,6 +23,7 @@ class AdminUserService
     /** Create an admin account and attach the chosen roles. */
     public function create(array $attributes, array $roleNames, User $actor): User
     {
+        abort_unless($actor->hasRole(Permissions::OWNER_ROLE), 403);
         $this->guardOwnerGrant($roleNames, $actor);
 
         $user = $this->repository->create($attributes);
@@ -36,6 +37,7 @@ class AdminUserService
     {
         $user = $this->repository->find($id);
 
+        abort_unless($actor->hasRole(Permissions::OWNER_ROLE), 403);
         $this->guardOwnerGrant($roleNames, $actor);
         $this->guardLastOwner($user, $roleNames);
 
@@ -53,6 +55,7 @@ class AdminUserService
     /** Delete an admin account. */
     public function delete(int $id, User $actor): void
     {
+        abort_unless($actor->hasRole(Permissions::OWNER_ROLE), 403);
         $user = $this->repository->find($id);
 
         if ($user->is($actor)) {

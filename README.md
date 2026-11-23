@@ -38,7 +38,7 @@ php artisan serve             # public site: http://127.0.0.1:8000  |  dashboard
 Upgrading an EXISTING install (database already has your content):
 
 Back up first (non-destructive habit, one minute): copy `database/database.sqlite`
-and your `storage/app/public` uploads somewhere safe. If you edited project
+and your `storage/app/public` uploads somewhere safe. For MySQL, export your database with your normal backup tool instead of copying SQLite. Keep a private backup of `.env` too. If you edited project
 files locally, commit or `git stash` them before pulling.
 
 ```bash
@@ -47,6 +47,7 @@ composer install                           # picks up new packages (Livewire, pe
 php artisan migrate                          # adds new tables/columns, never touches your rows
 php artisan db:seed --class=PageSectionSeeder  # registers newly editable CMS blocks (additive only)
 php artisan empetix:owner you@example.com    # grant owner to YOUR account (use your real login email)
+php artisan storage:link                     # if the public/storage link does not already exist
 ```
 
 `empetix:owner` creates the roles/permissions tables content (additively)
@@ -54,7 +55,7 @@ and grants the `owner` role to exactly the one account you name. Nothing
 grants roles in bulk or implicitly: until an account is granted a role it
 can reach the dashboard home only, and every section is enforced
 server-side. New admins created from the Admins screen get exactly the
-roles you pick. `empetix:admin` also asks, per account, whether the new
+roles you pick. Account and role administration is owner-only; a custom section manager cannot change another account or escalate permissions. `empetix:admin` also asks, per account, whether the new
 login should be an owner.
 
 Do NOT run a bare `php artisan db:seed` (or `migrate --seed`) on an install where
