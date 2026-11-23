@@ -37,6 +37,10 @@ php artisan serve             # public site: http://127.0.0.1:8000  |  dashboard
 
 Upgrading an EXISTING install (database already has your content):
 
+Back up first (non-destructive habit, one minute): copy `database/database.sqlite`
+and your `storage/app/public` uploads somewhere safe. If you edited project
+files locally, commit or `git stash` them before pulling.
+
 ```bash
 git pull origin laravel-13-dashboard
 composer install                           # picks up new packages (Livewire, permissions)
