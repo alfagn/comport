@@ -41,6 +41,11 @@ class ProjectService extends BaseService
      */
     private function normalizeCaseStudy(array $attributes): array
     {
+        foreach (['facts', 'stats', 'sections'] as $field) {
+            if (isset($attributes[$field]) && is_string($attributes[$field])) {
+                $attributes[$field] = array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $attributes[$field]))));
+            }
+        }
         if (isset($attributes['facts']) && is_array($attributes['facts'])) {
             $attributes['facts'] = array_values(array_map(function (string $line) {
                 $p = array_map('trim', explode('|', $line, 2));

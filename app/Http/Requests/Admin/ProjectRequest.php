@@ -24,6 +24,7 @@ class ProjectRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:200'],
             'slug' => ['nullable', 'string', 'max:220', 'alpha_dash'],
+            'location' => ['nullable', 'string', 'max:200'],
             'client' => ['nullable', 'string', 'max:160'],
             'kicker' => ['nullable', 'string', 'max:200'],
             'year' => ['nullable', 'string', 'max:4'],

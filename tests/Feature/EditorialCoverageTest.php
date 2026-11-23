@@ -81,4 +81,28 @@ class EditorialCoverageTest extends TestCase
         }
     }
 
+    public function test_projects_and_platforms_listing_and_detailed_case_study_controls_render(): void
+    {
+        $owner = User::first(); $owner->assignRole(Permissions::OWNER_ROLE);
+        $project = \App\Models\Project::where('slug', 'nilepay')->firstOrFail();
+        $this->actingAs($owner)->put('/admin/pages/work', ['sections' => ['hero_title' => 'Updated Projects and Platforms introduction']])->assertRedirect();
+        $this->actingAs($owner)->put('/admin/projects/'.$project->id, [
+            'title' => 'Edited Platform Case Study', 'slug' => $project->slug,
+            'client' => 'Platform Client', 'location' => 'Cairo Platform Studio', 'year' => '2026',
+            'kicker' => 'Platform Delivery', 'excerpt' => 'Platform card introduction',
+            'facts' => 'Scope | Platform scope verified',
+            'stats' => '42 | 0 | % | Platform outcome verified',
+            'sections' => 'Delivery || Platform narrative heading || Platform narrative paragraph',
+            'quote' => 'Platform client quotation', 'quote_cite' => 'Platform client leader',
+            'body' => '<p>Platform detailed body</p>',
+            'video_src' => 'https://example.com/platform.mp4', 'video_poster' => 'assets/img/work/nilepay-detail.jpg',
+            'tags' => 'Platform, Engineering', 'is_active' => true, 'is_featured' => true,
+        ])->assertRedirect();
+        $this->get('/work')->assertOk()->assertSee('Updated Projects and Platforms introduction')->assertSee('Edited Platform Case Study')->assertSee('Platform Delivery');
+        $this->get('/work/'.$project->slug)->assertOk()->assertSee('Edited Platform Case Study')->assertSee('Cairo Platform Studio')
+            ->assertSee('Platform scope verified')->assertSee('Platform outcome verified')->assertSee('Platform narrative heading')
+            ->assertSee('Platform narrative paragraph')->assertSee('Platform client quotation')->assertSee('Platform client leader')
+            ->assertSee('Platform detailed body')->assertSee('https://example.com/platform.mp4', false);
+    }
+
 }

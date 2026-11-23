@@ -114,10 +114,10 @@
         <div class="container">
           <div class="video" data-video-player="{{ $project->slug }}-reel">
             @if($project->video_poster)
-              <img class="video__poster" src="{{ asset($project->video_poster) }}" alt="{{ $project->title }} video poster" width="1280" height="720"/>
+              <img class="video__poster" src="{{ content_asset($project->video_poster) }}" alt="{{ $project->title }} video poster" width="1280" height="720"/>
             @endif
-            <video class="video__el" preload="metadata" @if($project->video_poster) poster="{{ asset($project->video_poster) }}" @endif>
-              <source src="{{ asset($project->video_src) }}" type="video/mp4"/>
+            <video class="video__el" preload="metadata" @if($project->video_poster) poster="{{ content_asset($project->video_poster) }}" @endif>
+              <source src="{{ content_asset($project->video_src) }}" type="video/mp4"/>
             </video>
             <button type="button" class="video__btn" data-video-play aria-label="Play {{ $project->title }} case study video">
               <span class="video__btn-inner">
