@@ -1012,6 +1012,11 @@ table.table { width: 100%; border-collapse: collapse; }
     0 4px 12px rgba(0, 0, 0, 0.42);
 }
 .stat-card__icon svg { width: 25px; height: 25px; filter: drop-shadow(0 1.5px 1px rgba(140, 30, 0, 0.28)); }
+/* Real 3D asset in the chip: the PNG carries its own shading, so the chip
+   stays a plain soft tint and the art fills it edge to edge. */
+.stat-card__icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.stat-card__icon:has(img) { background: #FFF1E8; box-shadow: none; }
+.stat-card--dark .stat-card__icon:has(img) { background: rgba(255, 90, 44, 0.14); box-shadow: none; }
 .stat-card__meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .stat-card__head .stat-card__label { text-transform: none; letter-spacing: 0; font-size: 15.5px; font-weight: 700; color: var(--text); }
 .stat-card--dark .stat-card__head .stat-card__label { color: #F5F1EC; }
@@ -1070,6 +1075,9 @@ table.table { width: 100%; border-collapse: collapse; }
   min-height: 190px;
 }
 .brand-panel__art { position: absolute; top: 14px; right: 16px; width: 132px; height: auto; }
+.brand-panel__chart { width: 96px; height: 96px; object-fit: contain; }
+.brand-panel__plane { position: absolute; top: -12px; right: -6px; width: 54px; height: 54px; object-fit: contain; }
+.empty__art { width: 150px; height: 150px; object-fit: contain; margin: 0 auto 10px; display: block; }
 .brand-panel__mark { font-family: var(--font-display); font-size: 60px; line-height: 0.6; color: var(--accent); margin-bottom: 14px; position: relative; }
 .brand-panel__quote { font-family: var(--font-display); font-weight: 800; font-size: 21px; margin: 0 0 4px; position: relative; }
 .brand-panel__by { color: var(--text-muted); font-size: 13px; position: relative; }
