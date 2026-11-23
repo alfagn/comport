@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+/**
+ * Career openings. Named job_posts to avoid clashing with Laravel's
+ * queue `jobs` table. responsibilities/requirements are JSON arrays of
+ * bullet strings rendered on the job detail page.
+ */
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('job_posts', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->string('department')->nullable();
+            $table->string('location')->nullable();
+            $table->string('type')->nullable();            // Full-time / Contract ...
+            $table->text('summary')->nullable();
+            $table->text('intro')->nullable();             // detail page intro paragraph
+            $table->json('pills')->nullable();             // small meta chips on the listing card
+            $table->json('responsibilities')->nullable();
+            $table->json('requirements')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('job_posts');
+    }
+};

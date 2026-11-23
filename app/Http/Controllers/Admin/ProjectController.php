@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\DTOs\ProjectData;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ProjectRequest;
+use App\Services\ProjectService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
+
+/**
+ * Dashboard CRUD for Project.
+ *
+ * Thin controller: the FormRequest validates, the service does the work,
+ * the controller only moves data between them and picks the next screen.
+ */
+class ProjectController extends Controller
+{
+    public function __construct(private ProjectService $service) {}
+
+    /** List records. */
+    public function index(): View
+    {
+        return view('admin.projects.index', ['items' => $this->service->paginateForAdmin()]);
+    }
+
+    /** Show the create form. */
+    public function create(): View
+    {
+        return view('admin.projects.form', ['item' => null]);
+    }
+
+    /** Store a new record. */
+    public function store(ProjectRequest $request): RedirectResponse
+    {
+        $this->service->create(ProjectData::fromArray($request->validated()), $request->file('image'));
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project created.');
+    }
+
+    /** Show the edit form. */
+    public function edit(int $id): View
+    {
+        return view('admin.projects.form', ['item' => $this->service->findForEdit($id)]);
+    }
+
+    /** Update a record. */
+    public function update(ProjectRequest $request, int $id): RedirectResponse
+    {
+        $this->service->update($id, ProjectData::fromArray($request->validated()), $request->file('image'));
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project updated.');
+    }
+
+    /** Delete a record. */
+    public function destroy(int $id): RedirectResponse
+    {
+        $this->service->delete($id);
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project deleted.');
+    }
+}
