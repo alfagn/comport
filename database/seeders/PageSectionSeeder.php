@@ -68,6 +68,10 @@ class PageSectionSeeder extends Seeder
             ['process_heading', "Hiring process heading", 'text'],
             ['other_jobs_heading', '"Other positions" heading (job page)', 'text'],
         ],
+        'founder' => [
+            ['work_heading', '"Selected work" heading (founder profile)', 'text'],
+            ['other_founders_heading', '"Other founders" heading (founder profile)', 'text'],
+        ],
         'mega' => [
             ['capabilities_title', 'Mega menu: Capabilities intro title', 'text'],
             ['capabilities_desc', 'Mega menu: Capabilities intro paragraph', 'textarea'],

@@ -80,7 +80,7 @@
     <!-- Selected Work -->
     <section class="founder-band founder-band--surface" aria-labelledby="work-heading">
       <div class="founder-container">
-        <h2 id="work-heading" class="founder-heading">Selected work</h2>
+        <h2 id="work-heading" class="founder-heading">{{ sec('founder', 'work_heading', 'Selected work') }}</h2>
         <ul class="founder-projects">
               @foreach($projects as $project)
                 <li>
@@ -102,7 +102,7 @@
     <section class="founder-band founder-band--white" aria-labelledby="other-founders-heading">
       <div class="founder-container">
         <header class="founder-others__header">
-          <h2 id="other-founders-heading" class="founder-heading">Other founders</h2>
+          <h2 id="other-founders-heading" class="founder-heading">{{ sec('founder', 'other_founders_heading', 'Other founders') }}</h2>
           <a href="{{ url('/team') }}" class="founder-text-link">Meet the full team</a>
         </header>
 

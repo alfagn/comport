@@ -209,3 +209,22 @@
 .form__status:empty {
   display: none;
 }
+
+/* Server round-trip flash/validation blocks (job application, contact). */
+.form__status--success {
+  background: rgba(26, 127, 75, 0.10);
+  border: 1px solid rgba(26, 127, 75, 0.35);
+  color: #1a7f4b;
+  font-weight: 600;
+}
+
+.form__status--error {
+  background: rgba(217, 44, 44, 0.08);
+  border: 1px solid rgba(217, 44, 44, 0.35);
+  color: #b02424;
+}
+
+.form__status--error ul {
+  margin: 8px 0 0;
+  padding-inline-start: 20px;
+}

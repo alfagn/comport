@@ -633,7 +633,8 @@ table.table { width: 100%; border-collapse: collapse; }
 }
 
 .message-body {
-  background: var(--ink-900);
+  background: var(--surface-2);
+  color: var(--text-body);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 22px;
@@ -761,7 +762,7 @@ table.table { width: 100%; border-collapse: collapse; }
 .sidebar .btn--ghost:hover { background: rgba(255, 255, 255, 0.08); }
 
 /* ---------- Topbar ---------- */
-.topbar { background: transparent; border-bottom: none; padding-top: 26px; }
+.topbar { background: transparent; border-bottom: none; padding-top: 14px; }
 .topbar__titles h1 { color: var(--text); }
 
 /* Search pill opening the quick-nav overlay. */
@@ -851,7 +852,7 @@ table.table { width: 100%; border-collapse: collapse; }
 }
 .page-title {
   font-family: var(--font-display); font-weight: 800;
-  font-size: 40px; letter-spacing: -0.02em;
+  font-size: 36px; letter-spacing: -0.02em;
   margin: 0 0 6px; color: var(--text);
 }
 .page-sub { color: var(--text-muted); margin: 0 0 22px; font-size: 14.5px; }
@@ -956,8 +957,8 @@ table.table { width: 100%; border-collapse: collapse; }
 .pill-link:hover { border-color: var(--accent); color: var(--accent-deep); }
 
 /* Illustrated empty state. */
-.empty--illustrated { padding: 22px 20px 22px; }
-.empty--illustrated svg { width: 230px; height: auto; display: block; margin: 0 auto 12px; }
+.empty--illustrated { padding: 16px 20px 18px; }
+.empty--illustrated svg { width: 170px; height: auto; display: block; margin: 0 auto 10px; }
 .empty--illustrated .empty__title { font-weight: 800; font-family: var(--font-display); font-size: 19px; color: var(--text); margin: 0 0 4px; }
 .empty--illustrated .empty__sub { color: var(--text-muted); font-size: 14px; margin: 0; }
 .empty--illustrated .btn { margin-top: 14px; }
@@ -971,7 +972,7 @@ table.table { width: 100%; border-collapse: collapse; }
   border: 1px solid var(--line);
   color: var(--text); position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: flex-end;
-  min-height: 240px;
+  min-height: 190px;
 }
 .brand-panel__art { position: absolute; top: 14px; right: 16px; width: 132px; height: auto; }
 .brand-panel__mark { font-family: var(--font-display); font-size: 60px; line-height: 0.6; color: var(--accent); margin-bottom: 14px; position: relative; }
