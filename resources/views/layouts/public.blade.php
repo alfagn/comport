@@ -386,9 +386,9 @@
     <!-- 1. Top Framed Executive CTA Banner -->
     <div class="foot-banner">
       <div>
-        <h2 class="foot-banner__title">Tell us about the product you want to build.</h2>
+        <h2 class="foot-banner__title">{{ sec('footer', 'banner_title', 'Tell us about the product you want to build.') }}</h2>
         <p class="foot-banner__sub">
-          Speak directly with our co-founders and engineering leads. We respond to all project briefs within 24 business hours.
+          {{ sec('footer', 'banner_sub', 'Speak directly with our co-founders and engineering leads. We respond to all project briefs within 24 business hours.') }}
         </p>
       </div>
       <div class="foot-banner__actions">
@@ -419,7 +419,7 @@
         </a>
 
         <p class="foot-grid__summary">
-          Empetix Solutions is a software engineering and performance marketing partner. We build enterprise web &amp; mobile platforms and scale the brands behind them.
+          {{ sec('footer', 'brand_summary', 'Empetix Solutions is a software engineering and performance marketing partner. We build enterprise web & mobile platforms and scale the brands behind them.') }}
         </p>
 
         <div class="foot-hq">
@@ -428,20 +428,20 @@
               <path d="M8 1.5C5.2 1.5 3 3.7 3 6.5C3 10.2 8 14.5 8 14.5C8 14.5 13 10.2 13 6.5C13 3.7 10.8 1.5 8 1.5Z" stroke="currentColor" stroke-width="1.4"/>
               <circle cx="8" cy="6.5" r="1.8" fill="currentColor"/>
             </svg>
-            <span>Building 14, District 5 Campus, New Cairo, Cairo, Egypt</span>
+            <span>{{ setting('address', 'Building 14, District 5 Campus, New Cairo, Cairo, Egypt') }}</span>
           </div>
           <div class="foot-hq__item">
             <svg class="foot-hq__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M2.5 4H13.5V12H2.5V4Z" stroke="currentColor" stroke-width="1.4"/>
               <path d="M2.5 4.5L8 8.5L13.5 4.5" stroke="currentColor" stroke-width="1.4"/>
             </svg>
-            <a href="mailto:hello&#64;empetix.com">hello&#64;empetix.com</a>
+            <a href="mailto:{{ setting('email', 'hello@empetix.com') }}">{{ setting('email', 'hello@empetix.com') }}</a>
           </div>
           <div class="foot-hq__item">
             <svg class="foot-hq__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3.5 2.5H6.5L8 6L6 7.5C6.8 9.2 8.3 10.7 10 11.5L11.5 9.5L15 11V14C15 14.5 14.5 15 13.8 15C7.2 14.6 2.9 10.3 2.5 3.7C2.5 3 3 2.5 3.5 2.5Z" stroke="currentColor" stroke-width="1.4"/>
             </svg>
-            <a href="tel:+20227928400">+20 2 2792 8400</a>
+            <a href="tel:{{ setting('phone', '+20227928400') }}">{{ setting('phone', '+20 2 2792 8400') }}</a>
           </div>
         </div>
       </div>
@@ -505,16 +505,16 @@
           </form>
 
         <div class="foot-socials" aria-label="Social media channels">
-          <a href="https://www.linkedin.com" class="foot-social-btn" rel="noopener noreferrer" aria-label="LinkedIn">
+          <a href="{{ setting('linkedin', 'https://www.linkedin.com') }}" class="foot-social-btn" rel="noopener noreferrer" aria-label="LinkedIn">
             <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.5 2A1.5 1.5 0 1 0 3.5 5 1.5 1.5 0 0 0 3.5 2ZM2.2 6.2H4.8V14H2.2V6.2ZM6.4 6.2H8.9V7.3H9C9.4 6.6 10.3 6 11.6 6 14.2 6 14.7 7.7 14.7 10V14H12.1V10.4C12.1 9.5 12.1 8.4 10.8 8.4 9.5 8.4 9.3 9.4 9.3 10.4V14H6.4V6.2Z"/></svg>
           </a>
           <a href="https://www.github.com" class="foot-social-btn" rel="noopener noreferrer" aria-label="GitHub">
             <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.3A6.7 6.7 0 0 0 5.9 14.4C6.2 14.5 6.3 14.3 6.3 14.1V12.9C4.4 13.3 4 12.1 4 12.1 3.7 11.3 3.2 11.1 3.2 11.1 2.6 10.7 3.3 10.7 3.3 10.7 4 10.8 4.3 11.4 4.3 11.4 4.9 12.4 5.9 12.1 6.3 11.9 6.4 11.5 6.6 11.2 6.8 11 5.3 10.8 3.7 10.3 3.7 7.7 3.7 7 4 6.4 4.4 5.9 4.3 5.7 4.1 5 4.5 4.1 4.5 4.1 5 3.9 6.3 4.8A6.5 6.5 0 0 1 9.7 4.8C11 3.9 11.5 4.1 11.5 4.1 11.9 5 11.7 5.7 11.6 5.9 12 6.4 12.3 7 12.3 7.7 12.3 10.3 10.7 10.8 9.2 11 9.5 11.2 9.7 11.7 9.7 12.4V14.1C9.7 14.3 9.8 14.5 10.1 14.4A6.7 6.7 0 0 0 8 1.3Z"/></svg>
           </a>
-          <a href="https://www.youtube.com" class="foot-social-btn" rel="noopener noreferrer" aria-label="YouTube">
+          <a href="{{ setting('youtube', 'https://www.youtube.com') }}" class="foot-social-btn" rel="noopener noreferrer" aria-label="YouTube">
             <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M14.7 4.8A1.8 1.8 0 0 0 13.4 3.5C12.3 3.2 8 3.2 8 3.2S3.7 3.2 2.6 3.5A1.8 1.8 0 0 0 1.3 4.8C1 5.9 1 8 1 8S1 10.1 1.3 11.2A1.8 1.8 0 0 0 2.6 12.5C3.7 12.8 8 12.8 8 12.8S12.3 12.8 13.4 12.5A1.8 1.8 0 0 0 14.7 11.2C15 10.1 15 8 15 8S15 5.9 14.7 4.8ZM6.6 10.1V5.9L10.3 8L6.6 10.1Z"/></svg>
           </a>
-          <a href="https://www.instagram.com" class="foot-social-btn" rel="noopener noreferrer" aria-label="Instagram">
+          <a href="{{ setting('instagram', 'https://www.instagram.com') }}" class="foot-social-btn" rel="noopener noreferrer" aria-label="Instagram">
             <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 3.4C9.5 3.4 9.7 3.4 10.3 3.4 11.8 3.5 12.5 4.2 12.6 5.7 12.6 6.3 12.6 6.5 12.6 8 12.6 9.5 12.6 9.7 12.6 10.3 12.5 11.8 11.8 12.5 10.3 12.6 9.7 12.6 9.5 12.6 8 12.6 6.5 12.6 6.3 12.6 5.7 12.6 4.2 12.5 3.5 11.8 3.4 10.3 3.4 9.7 3.4 9.5 3.4 8 3.4 6.5 3.4 6.3 3.4 5.7 3.5 4.2 4.2 3.5 5.7 3.4 6.3 3.4 6.5 3.4 8 3.4ZM8 2C6.4 2 6.2 2 5.6 2 3.5 2.1 2.1 3.5 2 5.6 2 6.2 2 6.4 2 8 2 9.6 2 9.8 2 10.4 2.1 12.5 3.5 13.9 5.6 14 6.2 14 6.4 14 8 14 9.6 14 9.8 14 10.4 14 12.5 13.9 13.9 12.5 14 10.4 14 9.8 14 9.6 14 8 14 6.4 14 6.2 14 5.6 13.9 3.5 12.5 2.1 10.4 2 9.8 2 9.6 2 8 2ZM8 4.9A3.1 3.1 0 1 0 8 11.1 3.1 3.1 0 0 0 8 4.9ZM8 10A2 2 0 1 1 8 6 2 2 0 0 1 8 10ZM11.2 4.1A0.7 0.7 0 1 0 11.2 5.5 0.7 0.7 0 0 0 11.2 4.1Z"/></svg>
           </a>
         </div>

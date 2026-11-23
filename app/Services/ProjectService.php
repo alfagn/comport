@@ -35,6 +35,42 @@ class ProjectService extends BaseService
     }
 
     /** Create a project and sync its tags. */
+    /**
+     * Dashboard textareas carry the structured case-study blocks as
+     * delimited lines; convert them to arrays before JSON storage.
+     */
+    private function normalizeCaseStudy(array $attributes): array
+    {
+        if (isset($attributes['facts']) && is_array($attributes['facts'])) {
+            $attributes['facts'] = array_values(array_map(function (string $line) {
+                $p = array_map('trim', explode('|', $line, 2));
+
+                return ['label' => $p[0], 'value' => $p[1] ?? ''];
+            }, $attributes['facts']));
+        }
+        if (isset($attributes['stats']) && is_array($attributes['stats'])) {
+            $attributes['stats'] = array_values(array_map(function (string $line) {
+                $p = array_map('trim', explode('|', $line, 4));
+
+                return [
+                    'target' => $p[0] ?? '0',
+                    'decimals' => (int) ($p[1] ?? 0),
+                    'suffix' => $p[2] ?? '',
+                    'label' => $p[3] ?? '',
+                ];
+            }, $attributes['stats']));
+        }
+        if (isset($attributes['sections']) && is_array($attributes['sections'])) {
+            $attributes['sections'] = array_values(array_map(function (string $line) {
+                $p = array_map('trim', explode('||', $line));
+
+                return ['eyebrow' => $p[0] ?? '', 'heading' => $p[1] ?? '', 'items' => array_values(array_filter(array_slice($p, 2)))];
+            }, $attributes['sections']));
+        }
+
+        return $attributes;
+    }
+
     public function create(ProjectData $data, ?UploadedFile $imageFile = null): Project
     {
         $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
@@ -90,5 +126,11 @@ class ProjectService extends BaseService
         );
 
         $project->tags()->sync($ids);
+    }
+
+    /** @inheritDoc */
+    protected function attributeDefaults(): array
+    {
+        return ['is_active' => true, 'is_featured' => false, 'sort_order' => 0];
     }
 }

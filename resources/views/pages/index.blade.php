@@ -112,7 +112,7 @@
     <section id="who-we-are" class="overview-film" aria-labelledby="who-we-are-heading">
       <div class="container">
         <header class="overview-film__header">
-          <h2 id="who-we-are-heading" class="overview-film__title">Who we are</h2>
+          <h2 id="who-we-are-heading" class="overview-film__title">{{ sec('home', 'who_we_are', 'Who we are') }}</h2>
           <p class="overview-film__lead">
             Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses.
           </p>
@@ -164,7 +164,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="solutions-heading" class="t-h2">End-to-end engineering and growth capabilities.</h2>
+            <h2 id="solutions-heading" class="t-h2">{{ sec('home', 'solutions_heading', 'End-to-end engineering and growth capabilities.') }}</h2>
             <p class="t-lead">
               Select a practice pillar below to inspect our architecture, deliverables, and verified client outcomes.
             </p>
@@ -255,7 +255,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="work-heading" class="t-h2">Platforms built to perform. Campaigns built to convert.</h2>
+            <h2 id="work-heading" class="t-h2">{{ sec('home', 'work_heading', 'Platforms built to perform. Campaigns built to convert.') }}</h2>
           </div>
           <div class="section-head__action">
             <a href="{{ url('/work') }}" class="arrow-link">
@@ -301,7 +301,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="impact-heading" class="t-h2">Measurable engineering velocity and commercial return.</h2>
+            <h2 id="impact-heading" class="t-h2">{{ sec('home', 'impact_heading', 'Measurable engineering velocity and commercial return.') }}</h2>
           </div>
         </div>
 
@@ -362,7 +362,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="partners-home-heading" class="t-h2">Trusted by category leaders and global technology alliances.</h2>
+            <h2 id="partners-home-heading" class="t-h2">{{ sec('home', 'partners_heading', 'Trusted by category leaders and global technology alliances.') }}</h2>
           </div>
           <div class="section-head__action">
             <a href="{{ url('/partners') }}" class="arrow-link">
@@ -395,7 +395,7 @@
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="blog-home-heading" class="t-h2">Engineering essays, video episodes &amp; behind-the-scenes photo dispatches.</h2>
+            <h2 id="blog-home-heading" class="t-h2">{{ sec('home', 'journal_heading', 'Engineering essays, video episodes & behind-the-scenes photo dispatches.') }}</h2>
           </div>
           <div class="section-head__action">
             <a href="{{ url('/blog') }}" class="arrow-link">
@@ -441,7 +441,7 @@
       <div class="container cta-band__inner reveal">
         <div class="cta-band__main">
           <span class="eyebrow eyebrow--inverse">07 / Careers Portal &middot; jobs.empetix.com</span>
-          <h2 id="careers-band-title" class="cta-band__title">Do the sharpest work of your career without the agency theatre.</h2>
+          <h2 id="careers-band-title" class="cta-band__title">{{ sec('home', 'careers_band_title', 'Do the sharpest work of your career without the agency theatre.') }}</h2>
         </div>
         <div class="cta-band__side">
           <p>

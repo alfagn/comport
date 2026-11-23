@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Admin is the only authenticated area: guests land on its login screen.
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {

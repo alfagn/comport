@@ -79,4 +79,10 @@ class MemberService extends BaseService
     {
         return $this->repository->delete($id);
     }
+
+    /** @inheritDoc */
+    protected function attributeDefaults(): array
+    {
+        return ['is_active' => true, 'sort_order' => 0];
+    }
 }

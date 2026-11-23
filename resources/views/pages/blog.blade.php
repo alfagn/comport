@@ -33,7 +33,7 @@
           <li><a href="{{ url('/') }}">Home</a></li>
           <li aria-current="page">Blog &amp; Media</li>
         </ol>
-        <h1 class="page-hero__title">The Empetix Journal: Engineering, Growth, Video &amp; Photo Essays.</h1>
+        <h1 class="page-hero__title">{{ sec('blog', 'hero_title', 'The Empetix Journal: Engineering, Growth, Video & Photo Essays.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
             <span class="eyebrow">Studio Publications</span>

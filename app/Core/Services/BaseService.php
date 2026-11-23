@@ -33,7 +33,24 @@ abstract class BaseService
             }
         }
 
+        // Unchecked toggle inputs submit nothing, and empty number inputs
+        // arrive as null; NOT NULL columns need their form-level defaults.
+        foreach ($this->attributeDefaults() as $key => $value) {
+            if (($attributes[$key] ?? null) === null) {
+                $attributes[$key] = $value;
+            }
+        }
+
         return $attributes;
+    }
+
+    /**
+     * Attribute defaults applied when the dashboard form left a field
+     * empty: unchecked toggles mean "off", an empty sort order means 0.
+     */
+    protected function attributeDefaults(): array
+    {
+        return [];
     }
 
     /**

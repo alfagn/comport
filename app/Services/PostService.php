@@ -62,4 +62,10 @@ class PostService extends BaseService
     {
         return $this->repository->delete($id);
     }
+
+    /** @inheritDoc */
+    protected function attributeDefaults(): array
+    {
+        return ['is_published' => false];
+    }
 }

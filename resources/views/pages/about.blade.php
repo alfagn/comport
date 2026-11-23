@@ -33,7 +33,7 @@
           <li><a href="{{ url('/') }}">Home</a></li>
           <li aria-current="page">About &amp; Founders</li>
         </ol>
-        <h1 class="page-hero__title">Built by engineers and storytellers who got tired of the hand-off gap.</h1>
+        <h1 class="page-hero__title">{{ sec('about', 'hero_title', 'Built by engineers and storytellers who got tired of the hand-off gap.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
             <span class="eyebrow">Established 2018 &middot; Cairo</span>

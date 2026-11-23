@@ -33,7 +33,7 @@
           <li><a href="{{ url('/') }}">Home</a></li>
           <li aria-current="page">Projects</li>
         </ol>
-        <h1 class="page-hero__title">Selected software &amp; growth case studies.</h1>
+        <h1 class="page-hero__title">{{ sec('work', 'hero_title', 'Selected software & growth case studies.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
             <span class="eyebrow">Portfolio 2023&ndash;2026</span>

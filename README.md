@@ -1,58 +1,60 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Empetix Solution — Laravel 13 + CMS Dashboard (`laravel-13-dashboard` branch)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The Empetix company website rebuilt as a Laravel 13 application: every public
+page is a Blade template rendered from the database, and a dedicated admin
+dashboard controls the site's content.
 
-## About Laravel
+> The `main` branch still holds the original static site and is untouched.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Laravel 13** (PHP 8.2+), Blade templates, SQLite by default (any Laravel-supported DB works)
+- Architecture: Controllers → FormRequests → DTOs → Services → Repository contracts + Eloquent implementations → Models. Comments explain every layer.
+- Frontend assets are the original site's static files under `public/assets` (no build step required); the dashboard has its own design system at `public/assets/admin/admin.css`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## What the dashboard controls
 
-## Learning Laravel
+- Hero slides (incl. slider tabs), Services, Industries, Projects (full case-study builder: facts, outcome stats, narrative sections, quote, video), Team & founders (incl. bio and expertise), Job posts (numbered spec sections, tech tags), Journal posts (article body, author card, table of contents), Partners
+- **Pages & Content**: editable headings/paragraphs/buttons per page plus the footer banner and brand summary (`sec()` blocks)
+- **Settings**: emails, phone, address, social links, site name/tagline
+- **Inbox**: contact form messages and newsletter subscribers
+- Entity ordering (`sort_order`), publish/active toggles everywhere, image uploads
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Setup
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env          # then set APP_KEY via `php artisan key:generate`
+touch database/database.sqlite
+php artisan migrate --seed    # seeds the real site content + an admin login
+php artisan serve             # public site: http://127.0.0.1:8000  |  dashboard: /admin
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+The seeder prints the generated admin password once (or set your own first):
 
-## Contributing
+```env
+ADMIN_EMAIL=admin@empetix.com
+ADMIN_INITIAL_PASSWORD=choose-a-strong-password
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+For uploaded images to be served: `php artisan storage:link`.
 
-## Code of Conduct
+## Tests
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan test
+```
 
-## Security Vulnerabilities
+Feature tests cover the public routes (listings, detail pages, 404s, contact +
+newsletter persistence, settings/section rendering) and the dashboard (guest
+redirects, login, every index screen, project CRUD cycle, service update,
+settings and page-section saves).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Repo layout worth knowing
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `app/Core` — base repository/service/DTO abstractions
+- `app/Repositories/{Contracts,Eloquent}` — persistence contracts + implementations
+- `app/Services` — business logic (uploads, JSON line normalization, tag sync, cache busting)
+- `app/DTOs`, `app/Http/Requests` — typed input carriers + validation
+- `database/seeders/data/content.json` — the seeded site content (reviewable without reading PHP)
+- `app/Support/helpers.php` — `sec()` (editable page block) and `setting()` helpers

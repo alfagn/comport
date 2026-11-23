@@ -33,7 +33,7 @@
           <li><a href="{{ url('/') }}">Home</a></li>
           <li aria-current="page">Corporate Partners</li>
         </ol>
-        <h1 class="page-hero__title">Corporate partners &amp; technology alliances.</h1>
+        <h1 class="page-hero__title">{{ sec('partners', 'hero_title', 'Corporate partners & technology alliances.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
             <span class="eyebrow">Ecosystem &amp; Alliances</span>

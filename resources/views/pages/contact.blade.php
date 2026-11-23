@@ -33,7 +33,7 @@
           <li><a href="{{ url('/') }}">Home</a></li>
           <li aria-current="page">Contact Us</li>
         </ol>
-        <h1 class="page-hero__title">Start a project, request a technical audit, or partner with our studios.</h1>
+        <h1 class="page-hero__title">{{ sec('contact', 'hero_title', 'Start a project, request a technical audit, or partner with our studios.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
             <span class="eyebrow eyebrow--inverse">Direct Executive Access</span>
@@ -72,8 +72,8 @@
               </p>
             </div>
             <div class="channel-card__foot">
-              <a href="mailto:hello&#64;empetix.com" class="channel-card__email">hello&#64;empetix.com</a>
-              <button type="button" class="channel-card__copy" data-copy-email="hello&#64;empetix.com">Copy</button>
+              <a href="mailto:{{ setting('email', 'hello@empetix.com') }}" class="channel-card__email">{{ setting('email', 'hello@empetix.com') }}</a>
+              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('email', 'hello@empetix.com') }}">Copy</button>
             </div>
           </article>
           <!-- END LOOP: channel-card -->
@@ -91,8 +91,8 @@
               </p>
             </div>
             <div class="channel-card__foot">
-              <a href="mailto:partners&#64;empetix.com" class="channel-card__email">partners&#64;empetix.com</a>
-              <button type="button" class="channel-card__copy" data-copy-email="partners&#64;empetix.com">Copy</button>
+              <a href="mailto:{{ setting('partners_email', 'partners@empetix.com') }}" class="channel-card__email">{{ setting('partners_email', 'partners@empetix.com') }}</a>
+              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('partners_email', 'partners@empetix.com') }}">Copy</button>
             </div>
           </article>
           <!-- END LOOP: channel-card -->
@@ -110,8 +110,8 @@
               </p>
             </div>
             <div class="channel-card__foot">
-              <a href="mailto:talent&#64;empetix.com" class="channel-card__email">talent&#64;empetix.com</a>
-              <button type="button" class="channel-card__copy" data-copy-email="talent&#64;empetix.com">Copy</button>
+              <a href="mailto:{{ setting('talent_email', 'talent@empetix.com') }}" class="channel-card__email">{{ setting('talent_email', 'talent@empetix.com') }}</a>
+              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('talent_email', 'talent@empetix.com') }}">Copy</button>
             </div>
           </article>
           <!-- END LOOP: channel-card -->
@@ -129,8 +129,8 @@
               </p>
             </div>
             <div class="channel-card__foot">
-              <a href="mailto:press&#64;empetix.com" class="channel-card__email">press&#64;empetix.com</a>
-              <button type="button" class="channel-card__copy" data-copy-email="press&#64;empetix.com">Copy</button>
+              <a href="mailto:{{ setting('press_email', 'press@empetix.com') }}" class="channel-card__email">{{ setting('press_email', 'press@empetix.com') }}</a>
+              <button type="button" class="channel-card__copy" data-copy-email="{{ setting('press_email', 'press@empetix.com') }}">Copy</button>
             </div>
           </article>
           <!-- END LOOP: channel-card -->
@@ -252,7 +252,7 @@
 
             <div class="contact-block">
               <span class="contact-block__title">Immediate Executive Hotline</span>
-              <a href="tel:+20227928400" class="contact-block__big">+20 2 2792 8400</a>
+              <a href="tel:{{ setting('phone', '+20227928400') }}" class="contact-block__big">{{ setting('phone', '+20 2 2792 8400') }}</a>
               <p class="t-small">Sunday &ndash; Thursday, 09:00 &ndash; 18:00 Cairo / Riyadh Time.</p>
             </div>
           </aside>
@@ -289,7 +289,7 @@
             <div class="hq-showcase__list">
               <div class="hq-showcase__row">
                 <span>Address</span>
-                <span>Building 14, District 5 Campus, New Cairo</span>
+                <span>{{ setting('address', 'Building 14, District 5 Campus, New Cairo, Cairo, Egypt') }}</span>
               </div>
               <div class="hq-showcase__row">
                 <span>Working Hours</span>

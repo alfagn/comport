@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Setting;
 use App\Services\SectionService;
 
 if (! function_exists('sec')) {
@@ -12,5 +13,16 @@ if (! function_exists('sec')) {
     function sec(string $page, string $key, ?string $default = null): ?string
     {
         return app(SectionService::class)->get($page, $key, $default);
+    }
+}
+
+if (! function_exists('setting')) {
+    /**
+     * Read a site setting with a template default, for editable global
+     * values such as the public email, phone, address and social links.
+     */
+    function setting(string $key, ?string $default = null): ?string
+    {
+        return Setting::getValue($key, $default);
     }
 }

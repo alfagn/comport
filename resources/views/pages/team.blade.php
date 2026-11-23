@@ -35,7 +35,7 @@
         </nav>
 
         <div class="team-hero">
-          <h1 id="team-hero-heading" class="team-hero__title">The people behind Empetix</h1>
+          <h1 id="team-hero-heading" class="team-hero__title">{{ sec('team', 'hero_title', 'The people behind Empetix') }}</h1>
           <p class="team-hero__lead">
             Engineers, product designers, and performance marketers working as one multidisciplinary team from New Cairo—without agency layers or external hand-offs.
           </p>
