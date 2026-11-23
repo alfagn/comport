@@ -19,13 +19,13 @@ Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digita
 - **Performance & Growth Engineering:** Server-side Conversions API (CAPI) integrations, sub-second latency optimization, full-funnel activation engines.
 
 ## 4. Notable SaaS Projects & Software Case Studies
-### [Alfagn: High-concurrency interactive learning & secure video streaming for 45,000+ students.](https://cms.test/work/alfagn)
+### [Alfagn: High-concurrency interactive learning and secure video streaming for 45,000+ students.](https://cms.test/work/alfagn)
 - **Client/Brand:** AlphaGen Educational Technologies (منصة ألفا جن)
 - **Region:** CAIRO & RIYADH
 - **Summary:** How Empetix engineered Alfagn’s high-throughput learning ecosystem—from dynamic forensic DRM video watermarking and asynchronous exam engines to native mobile apps—handling 12,000+ concurrent submissions with sub-180ms latency.
 - **Highlights:** Client: AlphaGen Educational Technologies (منصة وأكاديمية ألفا جن) | Scope: Cloud LMS Core, Forensic DRM Video Protection, Asynchronous Quiz Engine & Flutter Apps | Timeline: 14 Weeks to MVP + Scaled Infrastructure Retainer
 
-### [Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms & verified credentials.](https://cms.test/work/western-elearning-academy)
+### [Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms and verified credentials.](https://cms.test/work/western-elearning-academy)
 - **Client/Brand:** Western International Academy for Distance Learning (أكاديمية ويسترن)
 - **Region:** CAIRO, DUBAI & LONDON
 - **Summary:** How Empetix architected Western eLearning Academy’s multi-tenant LMS—delivering WebRTC virtual lecture halls, AI-proctored certification exams, and automated cryptographic QR credential issuance across Egypt, the GCC, and the UK.
@@ -40,7 +40,7 @@ Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digita
 
 # Detailed Project Case Studies & Technical Breakdown
 
-## Case Study: Alfagn: High-concurrency interactive learning & secure video streaming for 45,000+ students.
+## Case Study: Alfagn: High-concurrency interactive learning and secure video streaming for 45,000+ students.
 **URL:** https://cms.test/work/alfagn
 **Year:** 2025 | **Client:** AlphaGen Educational Technologies (منصة ألفا جن) | **Location:** CAIRO & RIYADH
 
@@ -73,7 +73,7 @@ Following the deployment, course completion rates grew by 68%, student ratings r
 
 ---
 
-## Case Study: Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms & verified credentials.
+## Case Study: Western eLearning Academy: Architecting an enterprise LMS with WebRTC classrooms and verified credentials.
 **URL:** https://cms.test/work/western-elearning-academy
 **Year:** 2026 | **Client:** Western International Academy for Distance Learning (أكاديمية ويسترن) | **Location:** CAIRO, DUBAI & LONDON
 

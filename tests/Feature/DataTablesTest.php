@@ -45,7 +45,7 @@ class DataTablesTest extends TestCase
 
         $payload = $response->json();
         $this->assertSame(Project::count(), $payload['recordsTotal']);
-        $this->assertStringContainsString($project->title, json_encode($payload['data']));
+        $this->assertStringContainsString(e($project->title), json_encode($payload['data']));
     }
 
     public function test_global_search_filters_in_sql(): void
