@@ -1,0 +1,110 @@
+{
+  "about": [
+    {
+      "key": "breadcrumb",
+      "label": "Breadcrumb label",
+      "type": "text",
+      "value": "About & Founders"
+    },
+    {
+      "key": "established",
+      "label": "Establishment and location badge",
+      "type": "text",
+      "value": "Established 2018 · Cairo"
+    },
+    {
+      "key": "hero_lead",
+      "label": "Introductory paragraph",
+      "type": "textarea",
+      "value": "Empetix Solution was founded in New Cairo by three co-founders uniting executive strategy, operational excellence, and software engineering under one roof—helping ambitious businesses build technology, scale growth, and grow sustainably."
+    },
+    {
+      "key": "hero_meta",
+      "label": "Specialist and studio badge",
+      "type": "text",
+      "value": "48 SPECIALISTS · 3 STUDIOS"
+    },
+    {
+      "key": "overview_lead",
+      "label": "Who we are paragraph",
+      "type": "textarea",
+      "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses."
+    },
+    {
+      "key": "overview_poster",
+      "label": "Overview video poster",
+      "type": "image",
+      "value": "assets/img/home/overview-poster.jpg"
+    },
+    {
+      "key": "overview_video",
+      "label": "Overview video URL or local public path",
+      "type": "text",
+      "value": "assets/video/empetix-overview.mp4"
+    },
+    {
+      "key": "video_fallback",
+      "label": "Video fallback message",
+      "type": "text",
+      "value": "Your browser does not support embedded video playback."
+    }
+  ],
+  "founders": [
+    {
+      "key": "heading",
+      "label": "Founders heading",
+      "type": "text",
+      "value": "The founders"
+    },
+    {
+      "key": "lead",
+      "label": "Founders introduction",
+      "type": "textarea",
+      "value": "Every engagement at Empetix Solution is led directly by our three co-founders across executive strategy, operations, and software engineering."
+    },
+    {
+      "key": "team_link",
+      "label": "Full team link label",
+      "type": "text",
+      "value": "Meet the full team"
+    }
+  ],
+  "directory": [
+    {
+      "title": "Youssef Nabil",
+      "body": "Principal Laravel Architect"
+    },
+    {
+      "title": "Nourhan Shawky",
+      "body": "Head of Product Design Systems"
+    },
+    {
+      "title": "Hassan El-Kholy",
+      "body": "Staff Mobile Engineer (Flutter)"
+    },
+    {
+      "title": "Mariam Farouk",
+      "body": "Director of Paid Acquisition"
+    },
+    {
+      "title": "Ziad Mansour",
+      "body": "Director of Photography & Film"
+    },
+    {
+      "title": "DinaAbdelrahman",
+      "body": "Head of CRO & Analytics"
+    },
+    {
+      "title": "Mostafa Salem",
+      "body": "Lead DevOps & Cloud Security"
+    },
+    {
+      "title": "Salma Hegazy",
+      "body": "Bilingual Brand & Copy Director"
+    },
+    {
+      "title": "Tامر Al-Qahtani",
+      "body": "Managing Director, Riyadh Studio"
+    }
+  ]
+}

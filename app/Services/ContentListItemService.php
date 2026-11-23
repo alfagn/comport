@@ -25,10 +25,14 @@ class ContentListItemService extends BaseService
     public const GROUPS = [
         'about.pillars' => 'About — Core pillars',
         'about.principles' => 'About — Principles',
+        'about.directory' => 'About — Leadership directory',
         'about.timeline' => 'About — Studio timeline',
         'team.culture' => 'Team — Culture cards',
         'careers.tracks' => 'Careers — Practice area tracks',
         'careers.benefits' => 'Careers — Benefits',
+        'contact.channels' => 'Contact — Practice channels',
+        'contact.promise' => 'Contact — Process promise',
+        'contact.faq' => 'Contact — FAQ',
         'careers.process' => 'Careers — Hiring steps',
     ];
 
@@ -66,7 +70,7 @@ class ContentListItemService extends BaseService
     /** Create a card from validated input and refresh the cached lists. */
     public function create(ContentListItemData $data): Model
     {
-        $item = $this->repository->create($data->toArray());
+        $item = $this->repository->create(array_replace($data->toArray(), ['sort_order' => $data->sort_order ?? 0, 'is_active' => $data->is_active ?? true]));
         $this->flushListCache();
 
         return $item;
@@ -75,7 +79,7 @@ class ContentListItemService extends BaseService
     /** Update a card from validated input and refresh the cached lists. */
     public function update(int $id, ContentListItemData $data): Model
     {
-        $item = $this->repository->update($id, $data->toArray());
+        $item = $this->repository->update($id, array_replace($data->toArray(), ['sort_order' => $data->sort_order ?? 0, 'is_active' => $data->is_active ?? true]));
         $this->flushListCache();
 
         return $item;

@@ -66,6 +66,16 @@
             document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
           } catch (e) {}
           if (window.empetixSyncThemeButtons) window.empetixSyncThemeButtons();
+          // Keep the selected destination visible in the independently scrolling rail.
+          document.querySelectorAll('.sidebar__nav a.nav-item').forEach(function (link) {
+            var active = link.classList.contains('is-active');
+            if (active) {
+              link.setAttribute('aria-current', 'page');
+              link.scrollIntoView({ block: 'nearest' });
+            } else {
+              link.removeAttribute('aria-current');
+            }
+          });
           // Tables use their page-scoped Livewire lifecycle initializer.
         });
       }

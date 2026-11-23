@@ -6,12 +6,12 @@
 <section id="founders" class="founders" aria-labelledby="founders-heading">
   <div class="founders__inner">
     <header class="founders__header">
-      <h2 id="founders-heading" class="founders__title">The founders</h2>
+      <h2 id="founders-heading" class="founders__title">{{ sec('founders', 'heading', 'The founders') }}</h2>
       <div class="founders__intro">
         <p class="founders__lead">
-          Every engagement at Empetix Solution is led directly by our three co-founders across executive strategy, operations, and software engineering.
+          {{ sec('founders', 'lead', 'Every engagement at Empetix Solution is led directly by our three co-founders across executive strategy, operations, and software engineering.') }}
         </p>
-        <a href="{{ url('/team') }}" class="founders__story-link">Meet the full team</a>
+        <a href="{{ url('/team') }}" class="founders__story-link">{{ sec('founders', 'team_link', 'Meet the full team') }}</a>
       </div>
     </header>
 

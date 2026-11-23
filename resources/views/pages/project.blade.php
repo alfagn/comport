@@ -9,7 +9,7 @@
   <meta property="og:title" content="{{ $project->title }} — Empetix Solution Case Study"/>
   <meta property="og:description" content="{{ $project->excerpt }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/work/{{ $project->slug }}"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -19,8 +19,8 @@
     <section class="article-head">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">Home</a></li>
-          <li><a href="{{ url('/work') }}">Projects</a></li>
+          <li><a href="{{ url('/') }}">{{ sec('project', 'copy_66b93f927675') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('project', 'copy_5629b6adbbae') }}</a></li>
           <li aria-current="page">{{ $project->client ?? $project->title }}</li>
         </ol>
 
@@ -51,8 +51,8 @@
           <img src="{{ str_starts_with((string) $project->image, 'uploads/') ? asset('storage/'.$project->image) : asset($project->image) }}" alt="{{ $project->title }}" width="1600" height="900"/>
         </div>
         <div class="bleed__caption">
-          <span>{{ strtoupper($project->client ?? 'EMPETIX') }} &mdash; CASE STUDY</span>
-          <span>BY EMPETIX SOLUTION</span>
+          <span>{{ strtoupper($project->client ?? 'EMPETIX') }} &mdash; {{ sec('project', 'case_study_suffix') }}</span>
+          <span>{{ sec('project', 'copy_b3d3c7a19f0e') }}</span>
         </div>
       </div>
     </section>
@@ -102,7 +102,7 @@
       <section class="section">
         <div class="container case-cols">
           <div class="case-cols__label">
-            <span class="eyebrow">DETAILS</span>
+            <span class="eyebrow">{{ sec('project', 'copy_7b4dd66edc0b') }}</span>
           </div>
           <div class="case-cols__body prose">{!! $project->body !!}</div>
         </div>
@@ -124,12 +124,12 @@
                 <span class="video__btn-icon">
                   <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="4,2 14,8 4,14"/></svg>
                 </span>
-                <span>Play Case Study Film</span>
+                <span>{{ sec('project', 'copy_d5ebf21c3df6') }}</span>
               </span>
             </button>
           </div>
           <div class="video__meta">
-            <span>DIRECTED &amp; ENGINEERED BY EMPETIX STUDIO</span>
+            <span>{{ sec('project', 'copy_201a8b9bca1e') }}</span>
           </div>
         </div>
       </section>
@@ -139,7 +139,7 @@
     <div class="container">
       @if($nextProject)
       <a href="{{ route('work.show', $nextProject->slug) }}" class="pager">
-        <span class="pager__label">Next Case Study</span>
+        <span class="pager__label">{{ sec('project', 'copy_2d7f7e941759') }}</span>
         <span class="pager__title">
           <span>{{ $nextProject->title }}</span>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2"/></svg>

@@ -9,7 +9,7 @@
   <meta property="og:title" content="{{ $post->title }} — Empetix Journal"/>
   <meta property="og:description" content="{{ $post->excerpt }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/blog/{{ $post->slug }}"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -23,8 +23,8 @@
     <header class="article-head">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">Home</a></li>
-          <li><a href="{{ url('/blog') }}">Blog &amp; Media</a></li>
+          <li><a href="{{ url('/') }}">{{ sec('post', 'copy_66b93f927675') }}</a></li>
+          <li><a href="{{ url('/blog') }}">{{ sec('post', 'copy_16c89765a20a') }}</a></li>
           <li aria-current="page">{{ $post->category ?? $post->title }}</li>
         </ol>
 
@@ -46,7 +46,7 @@
       </div>
       <div class="bleed__caption">
         <span>{{ strtoupper($post->category ?? 'EMPETIX JOURNAL') }}</span>
-        <span>EMPETIX SOLUTION</span>
+        <span>{{ sec('post', 'copy_69b4ecc9b2a5') }}</span>
       </div>
     </div>
 
@@ -57,16 +57,16 @@
         <aside class="article-layout__aside" aria-label="Article metadata and table of contents">
           <div class="byline">
             <div class="byline__avatar">
-              <img src="{{ asset('assets/img/team/bishoy-magdy.jpg') }}" alt="Bishoy Magdy" width="96" height="96"/>
+              <img src="{{ content_asset(sec('post', 'copy_5dcf7c639ff8')) }}" alt="{{ sec('post', 'copy_4e90d4a2ec8c') }}" width="96" height="96"/>
             </div>
             <div>
-              <p class="byline__name">Bishoy Magdy</p>
-              <p class="byline__role">Co-Founder &amp; Chief Operating Officer</p>
+              <p class="byline__name">{{ sec('post', 'copy_4e90d4a2ec8c') }}</p>
+              <p class="byline__role">{{ sec('post', 'copy_b9eaf34ef53f') }}</p>
             </div>
           </div>
 
           <div class="aside-block">
-            <p class="aside-block__title">In This Post</p>
+            <p class="aside-block__title">{{ sec('post', 'copy_6dbd1a8fad7a') }}</p>
             <ol class="toc">
               @foreach((array) ($post->meta['toc'] ?? []) as $toc)
                 <li><a href="#{{ $toc['id'] ?? '' }}">{{ $toc['label'] ?? '' }}</a></li>
@@ -75,10 +75,10 @@
           </div>
 
           <div class="aside-block">
-            <p class="aside-block__title">Share Article</p>
+            <p class="aside-block__title">{{ sec('post', 'copy_85de894d98ec') }}</p>
             <div class="share">
-              <button type="button" data-copy-url>Copy Link</button>
-              <a href="https://www.linkedin.com" rel="noopener noreferrer">LinkedIn</a>
+              <button type="button" data-copy-url>{{ sec('post', 'copy_5221aec4c5b2') }}</button>
+              <a href="https://www.linkedin.com" rel="noopener noreferrer">{{ sec('post', 'copy_b024176fdfeb') }}</a>
             </div>
           </div>
         </aside>
@@ -93,12 +93,12 @@
                 <img src="{{ asset($post->meta['author_avatar'] ?? 'assets/img/og-empetix.jpg') }}" alt="{{ $post->meta['author_name'] }}" width="160" height="160"/>
               </div>
               <div>
-                <p class="t-meta">WRITTEN BY</p>
+                <p class="t-meta">{{ sec('post', 'copy_b63dfd031b1e') }}</p>
                 <h3 class="author-card__name">{{ $post->meta['author_name'] }}@if($post->meta['author_role'] ?? null) &mdash; {{ $post->meta['author_role'] }}@endif</h3>
                 @if($post->meta['author_bio'] ?? null)
                   <p class="author-card__bio">
                     {{ $post->meta['author_bio'] }}
-                    @if($post->meta['author_profile'] ?? null) <a href="{{ url($post->meta['author_profile']) }}">View profile</a>.@endif
+                    @if($post->meta['author_profile'] ?? null) <a href="{{ url($post->meta['author_profile']) }}">{{ sec('post', 'copy_ad7c3155f702') }}</a>.@endif
                   </p>
                 @endif
               </div>
@@ -113,10 +113,10 @@
       <div class="container">
         <div class="section-head">
           <div class="section-head__label">
-            <span class="eyebrow">Continue Reading</span>
+            <span class="eyebrow">{{ sec('post', 'copy_eb3ae40bfaaf') }}</span>
           </div>
           <div class="section-head__title">
-            <h2 id="related-heading" class="t-h3">More from the Empetix Journal</h2>
+            <h2 id="related-heading" class="t-h3">{{ sec('post', 'copy_d12803309421') }}</h2>
           </div>
         </div>
 
@@ -145,7 +145,7 @@
     <dialog id="photo-lightbox" class="lightbox" aria-label="Full-screen photo viewer">
       <div class="lightbox__bar">
         <span class="lightbox__counter" data-lightbox-counter>01 / 04</span>
-        <button type="button" class="lightbox__btn" data-lightbox-close>Close (Esc)</button>
+        <button type="button" class="lightbox__btn" data-lightbox-close>{{ sec('post', 'copy_7bff368c4b49') }}</button>
       </div>
       <div class="lightbox__stage">
         <img class="lightbox__img" data-lightbox-img src="" alt=""/>
@@ -153,8 +153,8 @@
       <div class="lightbox__foot">
         <p class="lightbox__caption" data-lightbox-caption></p>
         <div class="lightbox__nav">
-          <button type="button" class="lightbox__btn" data-lightbox-prev aria-label="Previous photo">&larr; Prev</button>
-          <button type="button" class="lightbox__btn" data-lightbox-next aria-label="Next photo">Next &rarr;</button>
+          <button type="button" class="lightbox__btn" data-lightbox-prev aria-label="Previous photo">{{ sec('post', 'copy_6d25cf1e2efc') }}</button>
+          <button type="button" class="lightbox__btn" data-lightbox-next aria-label="Next photo">{{ sec('post', 'copy_7624375b8717') }}</button>
         </div>
       </div>
     </dialog>

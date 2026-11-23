@@ -11,13 +11,13 @@
   <form method="post" enctype="multipart/form-data" action="{{ route('admin.pages.update', $page) }}">
     @csrf @method('PUT')
 
-    @foreach($sections as $section)
+    @foreach($sections->where('type', '!=', 'internal') as $section)
       @if($section->type === 'textarea')
         <x-admin.textarea :name="'sections['.$section->key.']'" :label="$section->label" :value="$section->value" rows="3"/>
       @elseif($section->type === 'image')
         <x-admin.image :name="'images['.$section->key.']'" :label="$section->label" :current="$section->value"/>
       @elseif($section->type === 'number')
-        <x-admin.input :name="'sections['.$section->key.']'" :label="$section->label" type="number" :value="$section->value"/>
+        <x-admin.input :name="'sections['.$section->key.']'" :label="$section->label" type="number" step="any" :value="$section->value"/>
       @else
         <x-admin.input :name="'sections['.$section->key.']'" :label="$section->label" :value="$section->value"/>
       @endif

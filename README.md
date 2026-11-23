@@ -108,3 +108,24 @@ Blade — that is presentation structure, not content. Every piece of copy,
 link, card, image path and ordering listed above is editable from the
 dashboard.
 
+
+
+### Editorial control coverage
+
+Pages & Content now includes the remaining marketing copy, labels, media paths,
+static featured cards and homepage impact values across all public page templates.
+The About editor includes the company introduction, establishment and studio badges,
+overview paragraph, video URL and uploaded poster. Content Lists includes About's
+leadership directory, pillars, principles and timeline. The shared founder-strip
+copy is under Pages & Content > Founders; individual founder records remain under
+Team & Founders. Existing entity editors continue to own their record content.
+
+`PageSectionSeeder` runs the new About and editorial registrations additively.
+It preserves edited values and does not restore deleted directory people on reruns.
+Existing template fallback values are shown in the editor, so saving a page does not
+require guessing its current defaults. Video fields accept HTTPS URLs or local
+public paths; image fields support uploads. Layout geometry, CSS, animation logic,
+filter mechanics and protocol metadata remain developer-owned, not a drag-and-drop
+page builder. Some dynamic interface sentences (for example job-count phrases)
+remain fixed around live record values. Public marketing numbers are editable
+site content, not verified business analytics.

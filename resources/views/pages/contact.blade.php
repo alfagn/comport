@@ -1,26 +1,26 @@
 @extends('layouts.public', ['activePage' => 'contact'])
 
 @section('meta')
-  <meta name="description" content="Contact Empetix's co-founders and practice leads in New Cairo for software engineering, growth marketing, or corporate partnerships."/>
-  <title>Contact Us & Start a Project — Empetix Studio (Cairo, Riyadh, London)</title>
+  <meta name="description" content="{{ sec('contact', 'copy_d6d0b4b6f76b') }}"/>
+  <title>{{ sec('contact', 'copy_b33a9603fc54') }}</title>
   <!-- Open Graph / WhatsApp Preview -->
   <meta name="theme-color" content="#0A111C"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Empetix Solution"/>
-  <meta property="og:title" content="Contact Us & Start a Project — Empetix Studio (Cairo, Riyadh, London)"/>
-  <meta property="og:description" content="Contact Empetix's co-founders and practice leads in New Cairo for software engineering, growth marketing, or corporate partnerships."/>
+  <meta property="og:title" content="{{ sec('contact', 'copy_b33a9603fc54') }}"/>
+  <meta property="og:description" content="{{ sec('contact', 'copy_d6d0b4b6f76b') }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/contact.html"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:secure_url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="Empetix Solution Logo"/>
+  <meta property="og:image:alt" content="{{ sec('contact', 'copy_46054f40eb9f') }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Contact Us & Start a Project — Empetix Studio (Cairo, Riyadh, London)"/>
-  <meta name="twitter:description" content="Contact Empetix's co-founders and practice leads in New Cairo for software engineering, growth marketing, or corporate partnerships."/>
-  <meta name="twitter:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta name="twitter:title" content="{{ sec('contact', 'copy_b33a9603fc54') }}"/>
+  <meta name="twitter:description" content="{{ sec('contact', 'copy_d6d0b4b6f76b') }}"/>
+  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -30,19 +30,19 @@
     <section class="page-hero page-hero--dark">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">Home</a></li>
-          <li aria-current="page">Contact Us</li>
+          <li><a href="{{ url('/') }}">{{ sec('contact', 'copy_66b93f927675') }}</a></li>
+          <li aria-current="page">{{ sec('contact', 'copy_f4b9a5c91fb5') }}</li>
         </ol>
         <h1 class="page-hero__title">{{ sec('contact', 'hero_title', 'Start a project, request a technical audit, or partner with our studios.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
-            <span class="eyebrow eyebrow--inverse">Direct Executive Access</span>
+            <span class="eyebrow eyebrow--inverse">{{ sec('contact', 'copy_591febde720a') }}</span>
           </div>
           <p class="page-hero__lead">
-            At Empetix, you never speak with junior sales reps. Every inquiry goes directly to our four co-founders and practice heads in New Cairo.
+            {{ sec('contact', 'copy_7dd28e9d5493') }}
           </p>
           <div class="page-hero__aside">
-            <span class="hero__badge">AVG RESPONSE: &lt; 6 BUSINESS HOURS</span>
+            <span class="hero__badge">{{ sec('contact', 'copy_deda8e22bf26') }}</span>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@
               </div>
               <div class="channel-card__foot">
                 <a href="mailto:{{ $channelEmail }}" class="channel-card__email">{{ $channelEmail }}</a>
-                <button type="button" class="channel-card__copy" data-copy-email="{{ $channelEmail }}">Copy</button>
+                <button type="button" class="channel-card__copy" data-copy-email="{{ $channelEmail }}">{{ sec('contact', 'copy_80c93ba48149') }}</button>
               </div>
             </article>
           @endforeach
@@ -84,10 +84,10 @@
             <div class="form-card">
               <div class="form-card__head">
                 <div>
-                  <span class="eyebrow">02 / Interactive Project Brief</span>
+                  <span class="eyebrow">{{ sec('contact', 'copy_c334f3d0be11') }}</span>
                   <h2 class="t-h3">{{ sec('contact', 'form_heading', 'Configure your project or partnership brief.') }}</h2>
                 </div>
-                <span class="t-meta">PROTECTED BY MUTUAL NDA</span>
+                <span class="t-meta">{{ sec('contact', 'copy_0d1cc21eaa9c') }}</span>
               </div>
 
               <form class="form" action="{{ route('contact.store') }}" method="post">
@@ -182,14 +182,14 @@
           <!-- Executive Promise Sidebar -->
           <aside class="contact__aside reveal">
             <div class="contact-promise">
-              <span class="eyebrow eyebrow--inverse">What Happens Next</span>
+              <span class="eyebrow eyebrow--inverse">{{ sec('contact', 'copy_287b3a77ee46') }}</span>
               <h3 class="contact-promise__title">{{ sec('contact', 'promise_title', 'Direct founder review within 24 hours.') }}</h3>
               <ul class="contact-promise__list">
                 @foreach(content_list('contact.promise') as $promise)
                   <li><strong>{{ $promise->title }}</strong> {{ $promise->body }}</li>
                 @endforeach
               </ul>
-              <p class="t-small"><a href="{{ url('/team') }}" class="text-link">Meet the full Empetix team &rarr;</a></p>
+              <p class="t-small"><a href="{{ url('/team') }}" class="text-link">{{ sec('contact', 'copy_c7c47204b1e1') }}</a></p>
             </div>
 
             <div class="contact-block">
@@ -214,13 +214,13 @@
 
         <article class="hq-showcase reveal">
           <div class="hq-showcase__media">
-            <img src="{{ asset('assets/img/home/hero.jpg') }}" alt="Empetix Solutions Headquarters in New Cairo" width="1200" height="675"/>
+            <img src="{{ content_asset(sec('contact', 'copy_fcccaf2eb501')) }}" alt="{{ sec('contact', 'copy_9c8db7be5f24') }}" width="1200" height="675"/>
           </div>
           <div class="hq-showcase__body">
             <div>
               <div class="office__top">
-                <span class="office__role">EMPETIX SOLUTIONS HEADQUARTERS</span>
-                <span class="office__clock"><span data-tz-clock="Africa/Cairo">12:00</span> CAIRO</span>
+                <span class="office__role">{{ sec('contact', 'copy_1fc320ce6a0a') }}</span>
+                <span class="office__clock"><span data-tz-clock="Africa/Cairo">12:00</span> {{ sec('contact', 'copy_d2cbb97a2788') }}</span>
               </div>
               <h3 class="t-h2">{{ sec('contact', 'hq_city', 'Cairo, Egypt') }}</h3>
               <p class="t-small">{{ sec('contact', 'hq_desc', 'All software engineering, product design, commercial production, and performance marketing squads operate together under one roof at our New Cairo campus.') }}</p>
@@ -228,19 +228,19 @@
 
             <div class="hq-showcase__list">
               <div class="hq-showcase__row">
-                <span>Address</span>
+                <span>{{ sec('contact', 'copy_054abeb99433') }}</span>
                 <span>{{ setting('address', 'Building 14, District 5 Campus, New Cairo, Cairo, Egypt') }}</span>
               </div>
               <div class="hq-showcase__row">
-                <span>Working Hours</span>
+                <span>{{ sec('contact', 'copy_d8edc49daba3') }}</span>
                 <span>{{ sec('contact', 'hq_hours', 'Sunday – Thursday · 09:00 – 18:00') }}</span>
               </div>
               <div class="hq-showcase__row">
-                <span>Direct Telephone</span>
+                <span>{{ sec('contact', 'copy_30c1075531c4') }}</span>
                 <span><a href="tel:{{ setting('phone', '+20227928400') }}" class="text-link">{{ setting('phone', '+20 2 2792 8400') }}</a></span>
               </div>
               <div class="hq-showcase__row">
-                <span>New Business Desk</span>
+                <span>{{ sec('contact', 'copy_8022729296a5') }}</span>
                 <span><a href="mailto:{{ setting('email', 'hello@empetix.com') }}" class="text-link">{{ setting('email', 'hello@empetix.com') }}</a></span>
               </div>
             </div>

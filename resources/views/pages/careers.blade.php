@@ -1,26 +1,26 @@
 @extends('layouts.public', ['activePage' => 'careers'])
 
 @section('meta')
-  <meta name="description" content="Explore open software engineering, product design, and growth marketing jobs at jobs.empetix.com across Cairo, Riyadh, London, and remote EMEA."/>
-  <title>jobs.empetix.com — Official Careers & Talent Portal | Empetix Studio</title>
+  <meta name="description" content="{{ sec('careers', 'copy_71c7ef938d08') }}"/>
+  <title>{{ sec('careers', 'copy_c8f958fda5c5') }}</title>
   <!-- Open Graph / WhatsApp Preview -->
   <meta name="theme-color" content="#0A111C"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Empetix Solution"/>
-  <meta property="og:title" content="jobs.empetix.com — Official Careers & Talent Portal | Empetix Studio"/>
-  <meta property="og:description" content="Explore open software engineering, product design, and growth marketing jobs at jobs.empetix.com across Cairo, Riyadh, London, and remote EMEA."/>
+  <meta property="og:title" content="{{ sec('careers', 'copy_c8f958fda5c5') }}"/>
+  <meta property="og:description" content="{{ sec('careers', 'copy_71c7ef938d08') }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/careers.html"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:secure_url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="Empetix Solution Logo"/>
+  <meta property="og:image:alt" content="{{ sec('careers', 'copy_46054f40eb9f') }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="jobs.empetix.com — Official Careers & Talent Portal | Empetix Studio"/>
-  <meta name="twitter:description" content="Explore open software engineering, product design, and growth marketing jobs at jobs.empetix.com across Cairo, Riyadh, London, and remote EMEA."/>
-  <meta name="twitter:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta name="twitter:title" content="{{ sec('careers', 'copy_c8f958fda5c5') }}"/>
+  <meta name="twitter:description" content="{{ sec('careers', 'copy_71c7ef938d08') }}"/>
+  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -32,27 +32,27 @@
       <div class="container">
         <div class="jobs-hero__grid">
           <div class="jobs-hero__main">
-            <span class="eyebrow eyebrow--inverse">Empetix Talent Portal &middot; jobs.empetix.com</span>
+            <span class="eyebrow eyebrow--inverse">{{ sec('careers', 'copy_21b4847b84f7') }}</span>
             <h1 id="jobs-hero-title" class="jobs-hero__title">
-              Build software that endures and campaigns that move numbers.
+              {{ sec('careers', 'copy_017ca46e789e') }}
             </h1>
             <p class="jobs-hero__lead">
-              Welcome to our dedicated careers portal. Explore open engineering, product design, and performance marketing roles across our New Cairo studios—or apply remotely across EMEA.
+              {{ sec('careers', 'copy_7f822db55925') }}
             </p>
           </div>
 
           <div class="jobs-hero__stats">
             <div class="jobs-hero__stat">
-              <span class="jobs-hero__stat-num">6</span>
-              <span class="jobs-hero__stat-label">Open Positions</span>
+              <span class="jobs-hero__stat-num">{{ sec('careers', 'metric_1') }}</span>
+              <span class="jobs-hero__stat-label">{{ sec('careers', 'copy_aae7c571ba3b') }}</span>
             </div>
             <div class="jobs-hero__stat">
-              <span class="jobs-hero__stat-num">48<span>h</span></span>
-              <span class="jobs-hero__stat-label">Offer Turnaround</span>
+              <span class="jobs-hero__stat-num">{{ sec('careers', 'metric_2') }}<span>{{ sec('careers', 'copy_ec369163dd99') }}</span></span>
+              <span class="jobs-hero__stat-label">{{ sec('careers', 'copy_a05c8e7260e3') }}</span>
             </div>
             <div class="jobs-hero__stat">
-              <span class="jobs-hero__stat-num">28<span>d</span></span>
-              <span class="jobs-hero__stat-label">Paid Annual Leave</span>
+              <span class="jobs-hero__stat-num">{{ sec('careers', 'metric_3') }}<span>{{ sec('careers', 'copy_23c33f363943') }}</span></span>
+              <span class="jobs-hero__stat-label">{{ sec('careers', 'copy_3cf747b69596') }}</span>
             </div>
           </div>
         </div>
@@ -61,41 +61,41 @@
         <div class="jobs-console" role="search" aria-label="Filter open jobs on jobs.empetix.com">
           <div class="jobs-console__grid">
             <div class="jobs-console__field">
-              <label for="jobs-search-input" class="jobs-console__label">01 / Search Keyword or Skill</label>
-              <input id="jobs-search-input" type="search" class="jobs-console__input" placeholder="e.g. Laravel, Flutter, Next.js, Media Buyer, Designer..."/>
+              <label for="jobs-search-input" class="jobs-console__label">{{ sec('careers', 'copy_e344c8a8924e') }}</label>
+              <input id="jobs-search-input" type="search" class="jobs-console__input" placeholder="{{ sec('careers', 'search_placeholder') }}"/>
             </div>
 
             <div class="jobs-console__field">
-              <label for="jobs-dept-select" class="jobs-console__label">02 / Department</label>
+              <label for="jobs-dept-select" class="jobs-console__label">{{ sec('careers', 'copy_2e6bccd8b351') }}</label>
               <select id="jobs-dept-select" class="jobs-console__select">
-                <option value="all">All Departments (6)</option>
-                <option value="engineering">Software Engineering (3)</option>
-                <option value="marketing">Growth &amp; Marketing (2)</option>
-                <option value="design">Product Design (1)</option>
+                <option value="all">{{ sec('careers', 'copy_6f97cfde6f1e') }}</option>
+                <option value="engineering">{{ sec('careers', 'copy_297c1c46e1e6') }}</option>
+                <option value="marketing">{{ sec('careers', 'copy_3f610d88b025') }}</option>
+                <option value="design">{{ sec('careers', 'copy_eb7736ae753c') }}</option>
               </select>
             </div>
 
             <div class="jobs-console__field">
-              <label for="jobs-loc-select" class="jobs-console__label">03 / Studio Location</label>
+              <label for="jobs-loc-select" class="jobs-console__label">{{ sec('careers', 'copy_7c370205063d') }}</label>
               <select id="jobs-loc-select" class="jobs-console__select">
-                <option value="all">All Locations</option>
-                <option value="cairo">Cairo, Egypt</option>
-                <option value="riyadh">Riyadh, KSA</option>
-                <option value="remote">Remote (EMEA)</option>
+                <option value="all">{{ sec('careers', 'copy_3113dd8b6cd1') }}</option>
+                <option value="cairo">{{ sec('careers', 'copy_ad4a3e32c2fa') }}</option>
+                <option value="riyadh">{{ sec('careers', 'copy_e3633e1efbe7') }}</option>
+                <option value="remote">{{ sec('careers', 'copy_d36fc93c808d') }}</option>
               </select>
             </div>
 
             <div class="jobs-console__field">
-              <label for="jobs-mode-select" class="jobs-console__label">04 / Work Model</label>
+              <label for="jobs-mode-select" class="jobs-console__label">{{ sec('careers', 'copy_df1859440bf5') }}</label>
               <select id="jobs-mode-select" class="jobs-console__select">
-                <option value="all">All Models</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="remote">Remote-Friendly</option>
-                <option value="onsite">On-Site Studio</option>
+                <option value="all">{{ sec('careers', 'copy_092c8f13af8c') }}</option>
+                <option value="hybrid">{{ sec('careers', 'copy_4cc7b52166b5') }}</option>
+                <option value="remote">{{ sec('careers', 'copy_c43752b33085') }}</option>
+                <option value="onsite">{{ sec('careers', 'copy_90eeb7bbaf38') }}</option>
               </select>
             </div>
 
-            <button type="button" id="jobs-reset-btn" class="btn btn--ghost btn--sm">Reset</button>
+            <button type="button" id="jobs-reset-btn" class="btn btn--ghost btn--sm">{{ sec('careers', 'copy_ba15f01f177e') }}</button>
           </div>
         </div>
       </div>
@@ -108,7 +108,7 @@
           <div class="section-head__label"></div>
           <div class="section-head__title">
             <h2 id="tracks-heading" class="t-h2">{{ sec('careers', 'tracks_heading', 'Choose your practice area.') }}</h2>
-            <p class="t-lead">Click any department track below to filter open positions immediately.</p>
+            <p class="t-lead">{{ sec('careers', 'copy_5477c5140849') }}</p>
           </div>
         </div>
 
@@ -135,11 +135,11 @@
       <div class="container">
         <div class="jobs-toolbar">
           <div>
-            <span class="eyebrow">02 / Open Requisitions</span>
+            <span class="eyebrow">{{ sec('careers', 'copy_53391263da4e') }}</span>
             <h2 id="roles-heading" class="t-h3">{{ sec('careers', 'roles_heading', 'Select a role to view full qualifications, requirements & apply') }}</h2>
           </div>
           <p id="jobs-results-count" class="jobs-toolbar__count" aria-live="polite">
-            Showing 6 of 6 open positions on jobs.empetix.com
+            {{ sec('careers', 'copy_c584a43addb9') }}
           </p>
         </div>
 
@@ -171,7 +171,7 @@
 
             <div class="job-card__actions">
               <a href="{{ route('jobs.show', $job->slug) }}" class="btn btn--primary">
-                <span>View Job &amp; Apply</span>
+                <span>{{ sec('careers', 'copy_1a79fca0aeea') }}</span>
                 <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
@@ -182,8 +182,8 @@
         </div>
 
         <div id="jobs-empty-state" class="empty-state" hidden>
-          <p class="t-h4">No positions match your current filter criteria.</p>
-          <p class="t-small">Try clearing your search keyword or switching the location/department filter to &ldquo;All&rdquo;.</p>
+          <p class="t-h4">{{ sec('careers', 'copy_c93b63381e0c') }}</p>
+          <p class="t-small">{{ sec('careers', 'copy_e0c019ea05b9') }}</p>
         </div>
       </div>
     </section>
@@ -192,11 +192,11 @@
     <section class="bleed">
       <div class="container">
         <div class="frame bleed__frame bleed__frame--culture">
-          <img src="{{ asset('assets/img/careers/culture.jpg') }}" alt="Empetix engineers and designers collaborating during a design sprint workshop" width="1600" height="900"/>
+          <img src="{{ content_asset(sec('careers', 'copy_b221f03ea2bf')) }}" alt="{{ sec('careers', 'copy_fb6b450b1b17') }}" width="1600" height="900"/>
         </div>
         <div class="bleed__caption">
-          <span>FRIDAY ARCHITECTURE &amp; GROWTH CRITIQUE &middot; EMPETIX CAIRO</span>
-          <span>PROTECTED DEEP-WORK BLOCKS &middot; NO MEETINGS BEFORE 1:00 PM</span>
+          <span>{{ sec('careers', 'copy_b896d4468f68') }}</span>
+          <span>{{ sec('careers', 'copy_015dac6443b3') }}</span>
         </div>
       </div>
     </section>

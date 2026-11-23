@@ -88,3 +88,18 @@ if (! function_exists('brand_logo')) {
         return $path ? asset('storage/'.$path) : asset($default);
     }
 }
+
+if (! function_exists('content_asset')) {
+    /** Resolve a CMS media path, supporting uploads and HTTPS-hosted media only. */
+    function content_asset(?string $path): string
+    {
+        $path = trim($path ?? '');
+        if (str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        if (str_contains($path, ':') || str_starts_with($path, '//')) {
+            return '';
+        }
+        return asset(str_starts_with($path, 'uploads/') ? 'storage/'.$path : $path);
+    }
+}

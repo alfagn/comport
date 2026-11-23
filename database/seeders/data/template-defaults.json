@@ -1,0 +1,637 @@
+[
+  {
+    "page": "founder",
+    "key": "work_heading",
+    "value": "Selected work"
+  },
+  {
+    "page": "founder",
+    "key": "other_founders_heading",
+    "value": "Other founders"
+  },
+  {
+    "page": "contact",
+    "key": "hero_title",
+    "value": "Start a project, request a technical audit, or partner with our studios."
+  },
+  {
+    "page": "contact",
+    "key": "channels_heading",
+    "value": "Reach the right practice desk immediately."
+  },
+  {
+    "page": "contact",
+    "key": "form_heading",
+    "value": "Configure your project or partnership brief."
+  },
+  {
+    "page": "contact",
+    "key": "form_legend_a",
+    "value": "A. Which capabilities do you need? (Select one or more)"
+  },
+  {
+    "page": "contact",
+    "key": "form_legend_b",
+    "value": "B. Estimated Investment Range"
+  },
+  {
+    "page": "contact",
+    "key": "form_budget_1",
+    "value": "USD 15k – 35k (5-Day Sprint / Audit)"
+  },
+  {
+    "page": "contact",
+    "key": "form_budget_2",
+    "value": "USD 35k – 80k (Full Product / Campaign)"
+  },
+  {
+    "page": "contact",
+    "key": "form_budget_3",
+    "value": "USD 80k – 150k (Platform + Growth Engine)"
+  },
+  {
+    "page": "contact",
+    "key": "form_budget_4",
+    "value": "USD 150k+ (Enterprise Multi-Quarter)"
+  },
+  {
+    "page": "contact",
+    "key": "form_label_name",
+    "value": "Full Name"
+  },
+  {
+    "page": "contact",
+    "key": "form_ph_name",
+    "value": "e.g. Tariq Al-Faisal"
+  },
+  {
+    "page": "contact",
+    "key": "form_label_email",
+    "value": "Work Email"
+  },
+  {
+    "page": "contact",
+    "key": "form_ph_email",
+    "value": "name@company.com"
+  },
+  {
+    "page": "contact",
+    "key": "form_label_company",
+    "value": "Company & Website"
+  },
+  {
+    "page": "contact",
+    "key": "form_ph_company",
+    "value": "e.g. Acme FinTech (acme.com)"
+  },
+  {
+    "page": "contact",
+    "key": "form_label_timeline",
+    "value": "Target Kickoff Window"
+  },
+  {
+    "page": "contact",
+    "key": "form_timeline_1",
+    "value": "Immediate (Within 2 Weeks)"
+  },
+  {
+    "page": "contact",
+    "key": "form_timeline_2",
+    "value": "Within 30 Days"
+  },
+  {
+    "page": "contact",
+    "key": "form_timeline_3",
+    "value": "Next Quarter Planning"
+  },
+  {
+    "page": "contact",
+    "key": "form_timeline_4",
+    "value": "Exploratory / RFP Stage"
+  },
+  {
+    "page": "contact",
+    "key": "form_label_brief",
+    "value": "Project Context, Technical Stack & Commercial Goals"
+  },
+  {
+    "page": "contact",
+    "key": "form_ph_brief",
+    "value": "Tell us what you are building or scaling, what bottleneck you want to solve, and any key launch dates..."
+  },
+  {
+    "page": "contact",
+    "key": "form_consent",
+    "value": "We sign mutual NDAs prior to reviewing private repositories or ad accounts. Zero spam, ever."
+  },
+  {
+    "page": "contact",
+    "key": "form_button",
+    "value": "Submit Project Brief"
+  },
+  {
+    "page": "contact",
+    "key": "promise_title",
+    "value": "Direct founder review within 24 hours."
+  },
+  {
+    "page": "contact",
+    "key": "hotline_title",
+    "value": "Immediate Executive Hotline"
+  },
+  {
+    "page": "contact",
+    "key": "hotline_hours",
+    "value": "Sunday – Thursday, 09:00 – 18:00 Cairo / Riyadh Time."
+  },
+  {
+    "page": "contact",
+    "key": "studios_heading",
+    "value": "Visit our headquarters in New Cairo."
+  },
+  {
+    "page": "contact",
+    "key": "hq_city",
+    "value": "Cairo, Egypt"
+  },
+  {
+    "page": "contact",
+    "key": "hq_desc",
+    "value": "All software engineering, product design, commercial production, and performance marketing squads operate together under one roof at our New Cairo campus."
+  },
+  {
+    "page": "contact",
+    "key": "hq_hours",
+    "value": "Sunday – Thursday · 09:00 – 18:00"
+  },
+  {
+    "page": "contact",
+    "key": "visit_cta",
+    "value": "Schedule an In-Person Studio Visit"
+  },
+  {
+    "page": "contact",
+    "key": "faq_heading",
+    "value": "Common questions before we kick off."
+  },
+  {
+    "page": "careers",
+    "key": "apply_button_open",
+    "value": "Apply for this Job"
+  },
+  {
+    "page": "careers",
+    "key": "apply_button_open",
+    "value": "Apply for this Job"
+  },
+  {
+    "page": "careers",
+    "key": "apply_eyebrow",
+    "value": "Official Application · jobs.empetix.com"
+  },
+  {
+    "page": "careers",
+    "key": "apply_badge",
+    "value": "STEP 1 OF 1 · ~3 MINS"
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_name",
+    "value": "Full Legal Name"
+  },
+  {
+    "page": "careers",
+    "key": "apply_ph_name",
+    "value": "e.g. Mostafa El-Sayed"
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_email",
+    "value": "Email Address"
+  },
+  {
+    "page": "careers",
+    "key": "apply_ph_email",
+    "value": "you@domain.com"
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_phone",
+    "value": "Phone / WhatsApp Number"
+  },
+  {
+    "page": "careers",
+    "key": "apply_ph_phone",
+    "value": "+20 10 ... or +966 5 ..."
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_city",
+    "value": "Current City & Country"
+  },
+  {
+    "page": "careers",
+    "key": "apply_ph_city",
+    "value": "e.g. Cairo, Egypt"
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_linkedin",
+    "value": "LinkedIn Profile URL"
+  },
+  {
+    "page": "careers",
+    "key": "apply_ph_linkedin",
+    "value": "https://linkedin.com/in/..."
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_portfolio",
+    "value": "GitHub / Portfolio / Behance / Case Studies URL"
+  },
+  {
+    "page": "careers",
+    "key": "apply_ph_portfolio",
+    "value": "https://github.com/..."
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_cv",
+    "value": "Upload CV / Resume (PDF or DOCX)"
+  },
+  {
+    "page": "careers",
+    "key": "apply_cv_title",
+    "value": "Click or drag your CV / Resume here (PDF, DOCX — Max 10MB)"
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_exp",
+    "value": "Years of Relevant Experience"
+  },
+  {
+    "page": "careers",
+    "key": "apply_exp_1",
+    "value": "3 – 5 Years"
+  },
+  {
+    "page": "careers",
+    "key": "apply_exp_2",
+    "value": "5 – 8 Years"
+  },
+  {
+    "page": "careers",
+    "key": "apply_exp_3",
+    "value": "8+ Years (Staff / Principal)"
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_notice",
+    "value": "Notice Period / Availability"
+  },
+  {
+    "page": "careers",
+    "key": "apply_notice_1",
+    "value": "Available Immediately"
+  },
+  {
+    "page": "careers",
+    "key": "apply_notice_2",
+    "value": "2 Weeks Notice"
+  },
+  {
+    "page": "careers",
+    "key": "apply_notice_3",
+    "value": "30 Days Notice"
+  },
+  {
+    "page": "careers",
+    "key": "apply_notice_4",
+    "value": "60 Days Notice"
+  },
+  {
+    "page": "careers",
+    "key": "apply_label_achievement",
+    "value": "Tell us about the most complex system, product, or campaign you have shipped"
+  },
+  {
+    "page": "careers",
+    "key": "apply_ph_achievement",
+    "value": "Share the technical or commercial challenge, your exact contribution, and the measurable result..."
+  },
+  {
+    "page": "careers",
+    "key": "apply_consent",
+    "value": "By submitting, you consent to Empetix storing your application for recruitment evaluation. We reply to 100% of applicants within 3 business days."
+  },
+  {
+    "page": "careers",
+    "key": "apply_button",
+    "value": "Submit Application"
+  },
+  {
+    "page": "careers",
+    "key": "other_jobs_heading",
+    "value": "Other open positions on jobs.empetix.com"
+  },
+  {
+    "page": "careers",
+    "key": "tracks_heading",
+    "value": "Choose your practice area."
+  },
+  {
+    "page": "careers",
+    "key": "roles_heading",
+    "value": "Select a role to view full qualifications, requirements & apply"
+  },
+  {
+    "page": "careers",
+    "key": "benefits_heading",
+    "value": "Built for people who take their craft seriously."
+  },
+  {
+    "page": "careers",
+    "key": "process_heading",
+    "value": "Four transparent steps from application to written offer."
+  },
+  {
+    "page": "blog",
+    "key": "hero_title",
+    "value": "The Empetix Journal: Engineering, Growth, Video & Photo Essays."
+  },
+  {
+    "page": "blog",
+    "key": "hero_eyebrow",
+    "value": "Studio Publications"
+  },
+  {
+    "page": "blog",
+    "key": "hero_lead",
+    "value": "Long-form technical articles, full video episodes with chapter transcripts, and behind-the-scenes photography galleries from our software and marketing teams. Click any entry to open the full post."
+  },
+  {
+    "page": "blog",
+    "key": "hero_meta",
+    "value": "VIDEOS · PHOTOS · ESSAYS"
+  },
+  {
+    "page": "blog",
+    "key": "featured_url",
+    "value": "/blog/video"
+  },
+  {
+    "page": "home",
+    "key": "hero_kicker",
+    "value": "NEW CAIRO, EGYPT"
+  },
+  {
+    "page": "home",
+    "key": "hero_secondary_cta",
+    "value": "Watch Company Overview"
+  },
+  {
+    "page": "home",
+    "key": "who_we_are",
+    "value": "Who we are"
+  },
+  {
+    "page": "home",
+    "key": "solutions_heading",
+    "value": "End-to-end engineering and growth capabilities."
+  },
+  {
+    "page": "home",
+    "key": "work_heading",
+    "value": "Platforms built to perform. Campaigns built to convert."
+  },
+  {
+    "page": "home",
+    "key": "impact_heading",
+    "value": "Measurable engineering velocity and commercial return."
+  },
+  {
+    "page": "home",
+    "key": "partners_heading",
+    "value": "Trusted by category leaders and global technology alliances."
+  },
+  {
+    "page": "home",
+    "key": "journal_heading",
+    "value": "Engineering essays, video episodes & behind-the-scenes photo dispatches."
+  },
+  {
+    "page": "home",
+    "key": "careers_band_title",
+    "value": "Do the sharpest work of your career without the agency theatre."
+  },
+  {
+    "page": "about",
+    "key": "breadcrumb",
+    "value": "About &amp; Founders"
+  },
+  {
+    "page": "about",
+    "key": "hero_title",
+    "value": "Built by engineers and storytellers who got tired of the hand-off gap."
+  },
+  {
+    "page": "about",
+    "key": "established",
+    "value": "Established 2018 &middot; Cairo"
+  },
+  {
+    "page": "about",
+    "key": "hero_lead",
+    "value": "Empetix Solution was founded in New Cairo by three co-founders uniting executive strategy, operational excellence, and software engineering under one roof—helping ambitious businesses build technology, scale growth, and grow sustainably."
+  },
+  {
+    "page": "about",
+    "key": "hero_meta",
+    "value": "48 SPECIALISTS &middot; 3 STUDIOS"
+  },
+  {
+    "page": "about",
+    "key": "who_we_are_heading",
+    "value": "Who we are"
+  },
+  {
+    "page": "about",
+    "key": "overview_lead",
+    "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses."
+  },
+  {
+    "page": "about",
+    "key": "overview_poster",
+    "value": "assets/img/home/overview-poster.jpg"
+  },
+  {
+    "page": "about",
+    "key": "overview_video",
+    "value": "assets/video/empetix-overview.mp4"
+  },
+  {
+    "page": "about",
+    "key": "video_fallback",
+    "value": "Your browser does not support embedded video playback."
+  },
+  {
+    "page": "about",
+    "key": "principles_heading",
+    "value": "How we work when the stakes are high."
+  },
+  {
+    "page": "about",
+    "key": "timeline_heading",
+    "value": "Eight years of compounding craft."
+  },
+  {
+    "page": "about",
+    "key": "directory_heading",
+    "value": "Senior Principals & Discipline Heads"
+  },
+  {
+    "page": "team",
+    "key": "hero_title",
+    "value": "The people behind Empetix"
+  },
+  {
+    "page": "team",
+    "key": "practices_heading",
+    "value": "Practice teams"
+  },
+  {
+    "page": "team",
+    "key": "culture_heading",
+    "value": "How we work together"
+  },
+  {
+    "page": "team",
+    "key": "join_heading",
+    "value": "Join Empetix Solution"
+  },
+  {
+    "page": "partners",
+    "key": "hero_title",
+    "value": "Corporate partners & technology alliances."
+  },
+  {
+    "page": "partners",
+    "key": "hero_eyebrow",
+    "value": "Ecosystem & Alliances"
+  },
+  {
+    "page": "partners",
+    "key": "hero_lead",
+    "value": "We partner with ambitious enterprises, venture-backed category leaders, and global cloud and marketing platforms to deliver end-to-end digital transformation and commercial growth."
+  },
+  {
+    "page": "partners",
+    "key": "cta_button",
+    "value": "Become a Partner"
+  },
+  {
+    "page": "work",
+    "key": "hero_title",
+    "value": "Selected software & growth case studies."
+  },
+  {
+    "page": "work",
+    "key": "hero_eyebrow",
+    "value": "Portfolio 2023–2026"
+  },
+  {
+    "page": "work",
+    "key": "hero_lead",
+    "value": "Every project below pairs production software engineering with measurable commercial growth. Click any project to inspect the full architecture, creative assets, and business outcomes."
+  },
+  {
+    "page": "work",
+    "key": "hero_meta",
+    "value": "6 FEATURED DOSSIERS"
+  },
+  {
+    "page": "work",
+    "key": "filter_label",
+    "value": "Filter by discipline:"
+  },
+  {
+    "page": "founders",
+    "key": "heading",
+    "value": "The founders"
+  },
+  {
+    "page": "founders",
+    "key": "lead",
+    "value": "Every engagement at Empetix Solution is led directly by our three co-founders across executive strategy, operations, and software engineering."
+  },
+  {
+    "page": "founders",
+    "key": "team_link",
+    "value": "Meet the full team"
+  },
+  {
+    "page": "footer",
+    "key": "search_placeholder",
+    "value": "Search solutions, case studies, engineering essays, video episodes..."
+  },
+  {
+    "page": "footer",
+    "key": "search_quickjump",
+    "value": "Quick jump:"
+  },
+  {
+    "page": "mega",
+    "key": "capabilities_title",
+    "value": "One studio. Code and growth under one roof."
+  },
+  {
+    "page": "mega",
+    "key": "capabilities_desc",
+    "value": "We pair senior software engineers with performance marketers and commercial directors so products ship fast and scale profitably."
+  },
+  {
+    "page": "mega",
+    "key": "journal_title",
+    "value": "Articles, video episodes & photo essays."
+  },
+  {
+    "page": "mega",
+    "key": "journal_desc",
+    "value": "Field notes from our engineers, product designers, and performance marketers."
+  },
+  {
+    "page": "footer",
+    "key": "banner_title",
+    "value": "Tell us about the product you want to build."
+  },
+  {
+    "page": "footer",
+    "key": "banner_sub",
+    "value": "Speak directly with our co-founders and engineering leads. We respond to all project briefs within 24 business hours."
+  },
+  {
+    "page": "footer",
+    "key": "brand_summary",
+    "value": "Empetix Solutions is a software engineering and performance marketing partner. We build enterprise web & mobile platforms and scale the brands behind them."
+  },
+  {
+    "page": "footer",
+    "key": "newsletter_title",
+    "value": "Insights Dispatch"
+  },
+  {
+    "page": "footer",
+    "key": "newsletter_summary",
+    "value": "Monthly engineering monographs, video episodes, and growth playbooks."
+  },
+  {
+    "page": "footer",
+    "key": "newsletter_placeholder",
+    "value": "Enter your work email..."
+  },
+  {
+    "page": "footer",
+    "key": "newsletter_button",
+    "value": "Subscribe →"
+  }
+]

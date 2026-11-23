@@ -1,26 +1,26 @@
 @extends('layouts.public', ['activePage' => 'home'])
 
 @section('meta')
-  <meta name="description" content="Empetix is a multinational software engineering and performance marketing studio building web/mobile platforms and high-ROAS growth engines."/>
-  <title>Empetix — Software Engineering & Growth Marketing Studio</title>
+  <meta name="description" content="{{ sec('home', 'copy_24622118df1b') }}"/>
+  <title>{{ sec('home', 'copy_3e8e84b38e6d') }}</title>
   <!-- Open Graph / WhatsApp Preview -->
   <meta name="theme-color" content="#0A111C"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Empetix Solution"/>
-  <meta property="og:title" content="Empetix — Software Engineering & Growth Marketing Studio"/>
-  <meta property="og:description" content="Empetix is a multinational software engineering and performance marketing studio building web/mobile platforms and high-ROAS growth engines."/>
+  <meta property="og:title" content="{{ sec('home', 'copy_3e8e84b38e6d') }}"/>
+  <meta property="og:description" content="{{ sec('home', 'copy_24622118df1b') }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:secure_url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="Empetix Solution Logo"/>
+  <meta property="og:image:alt" content="{{ sec('home', 'copy_46054f40eb9f') }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Empetix — Software Engineering & Growth Marketing Studio"/>
-  <meta name="twitter:description" content="Empetix is a multinational software engineering and performance marketing studio building web/mobile platforms and high-ROAS growth engines."/>
-  <meta name="twitter:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta name="twitter:title" content="{{ sec('home', 'copy_3e8e84b38e6d') }}"/>
+  <meta name="twitter:description" content="{{ sec('home', 'copy_24622118df1b') }}"/>
+  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -89,20 +89,20 @@
     <!-- Continuous Capabilities Ticker -->
     <div class="ticker" aria-label="Core studio capabilities">
       <div class="ticker__track">
-        <span class="ticker__item"><span class="ticker__dot"></span>LARAVEL &amp; DISTRIBUTED CLOUD APIS</span>
-        <span class="ticker__item"><span class="ticker__dot"></span>FLUTTER &amp; NATIVE MOBILE ENGINEERING</span>
-        <span class="ticker__item"><span class="ticker__dot"></span>PERFORMANCE MARKETING &amp; SERVER-SIDE CAPI</span>
-        <span class="ticker__item"><span class="ticker__dot"></span>ARABIC-FIRST (RTL/LTR) DESIGN SYSTEMS</span>
-        <span class="ticker__item"><span class="ticker__dot"></span>HEADLESS E-COMMERCE &amp; FINTECH LEDGERS</span>
-        <span class="ticker__item"><span class="ticker__dot"></span>COMMERCIAL FILM &amp; 35MM PHOTOGRAPHY</span>
-        <span class="ticker__item"><span class="ticker__dot"></span>CONVERSION RATE OPTIMIZATION (CRO)</span>
-        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>LARAVEL &amp; DISTRIBUTED CLOUD APIS</span>
-        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>FLUTTER &amp; NATIVE MOBILE ENGINEERING</span>
-        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>PERFORMANCE MARKETING &amp; SERVER-SIDE CAPI</span>
-        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>ARABIC-FIRST (RTL/LTR) DESIGN SYSTEMS</span>
-        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>HEADLESS E-COMMERCE &amp; FINTECH LEDGERS</span>
-        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>COMMERCIAL FILM &amp; 35MM PHOTOGRAPHY</span>
-        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>CONVERSION RATE OPTIMIZATION (CRO)</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>{{ sec('home', 'copy_5ba0a96f0d3c') }}</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>{{ sec('home', 'copy_39ef2eb7e25d') }}</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>{{ sec('home', 'copy_595fd58755b8') }}</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>{{ sec('home', 'copy_17b64f78c117') }}</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>{{ sec('home', 'copy_d54dd05dbce5') }}</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>{{ sec('home', 'copy_65ab6c9c5557') }}</span>
+        <span class="ticker__item"><span class="ticker__dot"></span>{{ sec('home', 'copy_83fd4c2d2618') }}</span>
+        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>{{ sec('home', 'copy_5ba0a96f0d3c') }}</span>
+        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>{{ sec('home', 'copy_39ef2eb7e25d') }}</span>
+        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>{{ sec('home', 'copy_595fd58755b8') }}</span>
+        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>{{ sec('home', 'copy_17b64f78c117') }}</span>
+        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>{{ sec('home', 'copy_d54dd05dbce5') }}</span>
+        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>{{ sec('home', 'copy_65ab6c9c5557') }}</span>
+        <span class="ticker__item" aria-hidden="true"><span class="ticker__dot"></span>{{ sec('home', 'copy_83fd4c2d2618') }}</span>
       </div>
     </div>
 
@@ -114,7 +114,7 @@
         <header class="overview-film__header">
           <h2 id="who-we-are-heading" class="overview-film__title">{{ sec('home', 'who_we_are', 'Who we are') }}</h2>
           <p class="overview-film__lead">
-            Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses.
+            {{ sec('home', 'copy_3ef452996cc0') }}
           </p>
         </header>
 
@@ -124,32 +124,32 @@
             controls
             playsinline
             preload="metadata"
-            poster="assets/img/home/overview-poster.jpg"
+            poster="{{ content_asset(sec('home', 'copy_6d2c2c58c880')) }}"
             width="1920"
             height="1080"
           >
-            <source src="{{ asset('assets/video/empetix-overview.mp4') }}" type="video/mp4"/>
-            Your browser does not support embedded video playback.
+            <source src="{{ content_asset(sec('home', 'copy_29166363eeca')) }}" type="video/mp4"/>
+            {{ sec('home', 'copy_8424b4de9ef5') }}
           </video>
         </div>
 
         <ul class="overview-film__pillars" aria-label="Empetix Solution core pillars">
           <li class="overview-film__pillar">
-            <h3 class="overview-film__pillar-title">Software engineering</h3>
+            <h3 class="overview-film__pillar-title">{{ sec('home', 'copy_865f5a4280b3') }}</h3>
             <p class="overview-film__pillar-desc">
-              Full-stack web and mobile platforms built for reliability, speed, and long-term scale.
+              {{ sec('home', 'copy_3662ee57e15d') }}
             </p>
           </li>
           <li class="overview-film__pillar">
-            <h3 class="overview-film__pillar-title">Growth marketing</h3>
+            <h3 class="overview-film__pillar-title">{{ sec('home', 'copy_fcb465e5f4ab') }}</h3>
             <p class="overview-film__pillar-desc">
-              Engineers and marketers working as one unified team to turn clean data into customer acquisition.
+              {{ sec('home', 'copy_c7fa076a2c97') }}
             </p>
           </li>
           <li class="overview-film__pillar">
-            <h3 class="overview-film__pillar-title">Strategic investment</h3>
+            <h3 class="overview-film__pillar-title">{{ sec('home', 'copy_5c3330972f1f') }}</h3>
             <p class="overview-film__pillar-desc">
-              Backing bold founders with capital, senior technical leadership, and go-to-market execution.
+              {{ sec('home', 'copy_d617fb8edf18') }}
             </p>
           </li>
         </ul>
@@ -166,12 +166,12 @@
           <div class="section-head__title">
             <h2 id="solutions-heading" class="t-h2">{{ sec('home', 'solutions_heading', 'End-to-end engineering and growth capabilities.') }}</h2>
             <p class="t-lead">
-              Select a practice pillar below to inspect our architecture, deliverables, and verified client outcomes.
+              {{ sec('home', 'copy_4b883a035467') }}
             </p>
           </div>
           <div class="section-head__action">
             <a href="{{ url('/contact') }}" class="arrow-link">
-              <span>Request Custom Scope</span>
+              <span>{{ sec('home', 'copy_30fe7b74af14') }}</span>
               <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -238,7 +238,7 @@
         <div class="sectors-grid reveal">
           @foreach($industries as $i => $industry)
           <a href="{{ url('/work') }}" class="sector-box">
-            <span class="sector-box__num">SECTOR {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+            <span class="sector-box__num">{{ sec('home', 'sector_prefix') }} {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
             <h3 class="sector-box__title">{{ $industry->title }}</h3>
             <span class="sector-box__sub">{{ $industry->subtitle }}</span>
           </a>
@@ -259,7 +259,7 @@
           </div>
           <div class="section-head__action">
             <a href="{{ url('/work') }}" class="arrow-link">
-              <span>All 6 Case Studies</span>
+              <span>{{ sec('home', 'copy_7115cff2cafe') }}</span>
               <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -309,40 +309,40 @@
           <!-- LOOP: stat-item -->
           <div class="stat">
             <div class="stat__value">
-              <span data-counter data-counter-target="64" data-counter-decimals="0">64</span>
+              <span data-counter data-counter-target="{{ sec('home', 'impact_value_1') }}" data-counter-decimals="0">{{ sec('home', 'impact_value_1') }}</span>
               <span class="stat__suffix">+</span>
             </div>
-            <p class="stat__label">Software platforms &amp; growth engines shipped since 2018</p>
+            <p class="stat__label">{{ sec('home', 'copy_bdec4c898cfc') }}</p>
           </div>
           <!-- END LOOP: stat-item -->
 
           <!-- LOOP: stat-item -->
           <div class="stat">
             <div class="stat__value">
-              <span data-counter data-counter-target="3.8" data-counter-decimals="1">3.8</span>
-              <span class="stat__suffix">x</span>
+              <span data-counter data-counter-target="{{ sec('home', 'impact_value_2') }}" data-counter-decimals="1">{{ sec('home', 'impact_value_2') }}</span>
+              <span class="stat__suffix">{{ sec('home', 'copy_ee9ff8c14dd0') }}</span>
             </div>
-            <p class="stat__label">Audited median return on ad spend across active retainers</p>
+            <p class="stat__label">{{ sec('home', 'copy_e3edd5b505ad') }}</p>
           </div>
           <!-- END LOOP: stat-item -->
 
           <!-- LOOP: stat-item -->
           <div class="stat">
             <div class="stat__value">
-              <span data-counter data-counter-target="99.96" data-counter-decimals="2">99.96</span>
+              <span data-counter data-counter-target="{{ sec('home', 'impact_value_3') }}" data-counter-decimals="2">{{ sec('home', 'impact_value_3') }}</span>
               <span class="stat__suffix">%</span>
             </div>
-            <p class="stat__label">Production uptime across client SaaS and FinTech applications</p>
+            <p class="stat__label">{{ sec('home', 'copy_97e657dc8770') }}</p>
           </div>
           <!-- END LOOP: stat-item -->
 
           <!-- LOOP: stat-item -->
           <div class="stat">
             <div class="stat__value">
-              <span data-counter data-counter-target="94" data-counter-decimals="0">94</span>
+              <span data-counter data-counter-target="{{ sec('home', 'impact_value_4') }}" data-counter-decimals="0">{{ sec('home', 'impact_value_4') }}</span>
               <span class="stat__suffix">%</span>
             </div>
-            <p class="stat__label">Client retention beyond initial 12-month engagement</p>
+            <p class="stat__label">{{ sec('home', 'copy_b479b0ae0c28') }}</p>
           </div>
           <!-- END LOOP: stat-item -->
         </div>
@@ -366,7 +366,7 @@
           </div>
           <div class="section-head__action">
             <a href="{{ url('/partners') }}" class="arrow-link">
-              <span>Partner Directory</span>
+              <span>{{ sec('home', 'copy_47a6aec3cda3') }}</span>
               <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -399,7 +399,7 @@
           </div>
           <div class="section-head__action">
             <a href="{{ url('/blog') }}" class="arrow-link">
-              <span>View All Posts</span>
+              <span>{{ sec('home', 'copy_3a178140ec02') }}</span>
               <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -436,19 +436,19 @@
          ==================================================================== -->
     <section class="cta-band" aria-labelledby="careers-band-title">
       <div class="cta-band__media">
-        <img src="{{ asset('assets/img/careers/culture.jpg') }}" alt="Empetix engineers and designers collaborating during a studio workshop" width="1600" height="900"/>
+        <img src="{{ content_asset(sec('home', 'copy_b221f03ea2bf')) }}" alt="{{ sec('home', 'copy_bb8852a3151e') }}" width="1600" height="900"/>
       </div>
       <div class="container cta-band__inner reveal">
         <div class="cta-band__main">
-          <span class="eyebrow eyebrow--inverse">07 / Careers Portal &middot; jobs.empetix.com</span>
+          <span class="eyebrow eyebrow--inverse">{{ sec('home', 'copy_ba8b1727770e') }}</span>
           <h2 id="careers-band-title" class="cta-band__title">{{ sec('home', 'careers_band_title', 'Do the sharpest work of your career without the agency theatre.') }}</h2>
         </div>
         <div class="cta-band__side">
           <p>
-            Explore open roles in Laravel, Next.js, Flutter, Product Design, and Performance Marketing on our dedicated talent portal.
+            {{ sec('home', 'copy_441bd1f69009') }}
           </p>
           <a href="{{ url('/careers') }}" class="btn btn--accent btn--lg">
-            <span>Launch jobs.empetix.com (6 Open Roles)</span>
+            <span>{{ sec('home', 'copy_bf9786d4c4eb') }}</span>
             <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
             </svg>

@@ -1,26 +1,26 @@
 @extends('layouts.public', ['activePage' => 'about'])
 
 @section('meta')
-  <meta name="description" content="Meet the four co-founders leading Empetix's software engineering, product design, and growth marketing practices."/>
-  <title>About Empetix & Meet the Founders (أصحاب المشروع) — Empetix</title>
+  <meta name="description" content="{{ sec('about', 'copy_d75b76a6e09c') }}"/>
+  <title>{{ sec('about', 'copy_a35b294e59fe') }}</title>
   <!-- Open Graph / WhatsApp Preview -->
   <meta name="theme-color" content="#0A111C"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Empetix Solution"/>
-  <meta property="og:title" content="About Empetix & Meet the Founders (أصحاب المشروع) — Empetix"/>
-  <meta property="og:description" content="Meet the four co-founders leading Empetix's software engineering, product design, and growth marketing practices."/>
+  <meta property="og:title" content="{{ sec('about', 'copy_a35b294e59fe') }}"/>
+  <meta property="og:description" content="{{ sec('about', 'copy_d75b76a6e09c') }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/about.html"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:secure_url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="Empetix Solution Logo"/>
+  <meta property="og:image:alt" content="{{ sec('about', 'copy_46054f40eb9f') }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="About Empetix & Meet the Founders (أصحاب المشروع) — Empetix"/>
-  <meta name="twitter:description" content="Meet the four co-founders leading Empetix's software engineering, product design, and growth marketing practices."/>
-  <meta name="twitter:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta name="twitter:title" content="{{ sec('about', 'copy_a35b294e59fe') }}"/>
+  <meta name="twitter:description" content="{{ sec('about', 'copy_d75b76a6e09c') }}"/>
+  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -30,19 +30,19 @@
     <section class="page-hero">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">Home</a></li>
-          <li aria-current="page">About &amp; Founders</li>
+          <li><a href="{{ url('/') }}">{{ sec('about', 'copy_66b93f927675') }}</a></li>
+          <li aria-current="page">{{ sec('about', 'breadcrumb', 'About &amp; Founders') }}</li>
         </ol>
         <h1 class="page-hero__title">{{ sec('about', 'hero_title', 'Built by engineers and storytellers who got tired of the hand-off gap.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
-            <span class="eyebrow">Established 2018 &middot; Cairo</span>
+            <span class="eyebrow">{{ sec('about', 'established', 'Established 2018 &middot; Cairo') }}</span>
           </div>
           <p class="page-hero__lead">
-            Empetix Solution was founded in New Cairo by three co-founders uniting executive strategy, operational excellence, and software engineering under one roof—helping ambitious businesses build technology, scale growth, and grow sustainably.
+            {{ sec('about', 'hero_lead', 'Empetix Solution was founded in New Cairo by three co-founders uniting executive strategy, operational excellence, and software engineering under one roof—helping ambitious businesses build technology, scale growth, and grow sustainably.') }}
           </p>
           <div class="page-hero__aside">
-            <span class="t-meta">48 SPECIALISTS &middot; 3 STUDIOS</span>
+            <span class="t-meta">{{ sec('about', 'hero_meta', '48 SPECIALISTS &middot; 3 STUDIOS') }}</span>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@
         <header class="overview-film__header">
           <h2 id="who-we-are-heading" class="overview-film__title">{{ sec('about', 'who_we_are_heading', 'Who we are') }}</h2>
           <p class="overview-film__lead">
-            Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses.
+            {{ sec('about', 'overview_lead', 'Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses.') }}
           </p>
         </header>
 
@@ -66,12 +66,12 @@
             controls
             playsinline
             preload="metadata"
-            poster="assets/img/home/overview-poster.jpg"
+            poster="{{ content_asset(sec('about', 'overview_poster', 'assets/img/home/overview-poster.jpg')) }}"
             width="1920"
             height="1080"
           >
-            <source src="{{ asset('assets/video/empetix-overview.mp4') }}" type="video/mp4"/>
-            Your browser does not support embedded video playback.
+            <source src="{{ content_asset(sec('about', 'overview_video', 'assets/video/empetix-overview.mp4')) }}" type="video/mp4"/>
+            {{ sec('about', 'video_fallback', 'Your browser does not support embedded video playback.') }}
           </video>
         </div>
 
@@ -144,15 +144,9 @@
         </div>
 
         <ul class="team-list reveal">
-          <li class="team-list__item"><span>Youssef Nabil</span><span class="team-list__role">Principal Laravel Architect</span></li>
-          <li class="team-list__item"><span>Nourhan Shawky</span><span class="team-list__role">Head of Product Design Systems</span></li>
-          <li class="team-list__item"><span>Hassan El-Kholy</span><span class="team-list__role">Staff Mobile Engineer (Flutter)</span></li>
-          <li class="team-list__item"><span>Mariam Farouk</span><span class="team-list__role">Director of Paid Acquisition</span></li>
-          <li class="team-list__item"><span>Ziad Mansour</span><span class="team-list__role">Director of Photography &amp; Film</span></li>
-          <li class="team-list__item"><span>DinaAbdelrahman</span><span class="team-list__role">Head of CRO &amp; Analytics</span></li>
-          <li class="team-list__item"><span>Mostafa Salem</span><span class="team-list__role">Lead DevOps &amp; Cloud Security</span></li>
-          <li class="team-list__item"><span>Salma Hegazy</span><span class="team-list__role">Bilingual Brand &amp; Copy Director</span></li>
-          <li class="team-list__item"><span>Tامر Al-Qahtani</span><span class="team-list__role">Managing Director, Riyadh Studio</span></li>
+          @foreach(content_list('about.directory') as $person)
+            <li class="team-list__item"><span>{{ $person->title }}</span><span class="team-list__role">{{ $person->body }}</span></li>
+          @endforeach
         </ul>
       </div>
     </section>

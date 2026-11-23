@@ -1,26 +1,26 @@
 @extends('layouts.public', ['activePage' => 'blog'])
 
 @section('meta')
-  <meta name="description" content="Read full engineering articles, watch studio video episodes, and explore behind-the-scenes photo essays from Empetix."/>
-  <title>The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays</title>
+  <meta name="description" content="{{ sec('blog', 'copy_1256e49dd66b') }}"/>
+  <title>{{ sec('blog', 'copy_fdc599e3df65') }}</title>
   <!-- Open Graph / WhatsApp Preview -->
   <meta name="theme-color" content="#0A111C"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Empetix Solution"/>
-  <meta property="og:title" content="The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays"/>
-  <meta property="og:description" content="Read full engineering articles, watch studio video episodes, and explore behind-the-scenes photo essays from Empetix."/>
+  <meta property="og:title" content="{{ sec('blog', 'copy_fdc599e3df65') }}"/>
+  <meta property="og:description" content="{{ sec('blog', 'copy_1256e49dd66b') }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/blog.html"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:secure_url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="Empetix Solution Logo"/>
+  <meta property="og:image:alt" content="{{ sec('blog', 'copy_46054f40eb9f') }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays"/>
-  <meta name="twitter:description" content="Read full engineering articles, watch studio video episodes, and explore behind-the-scenes photo essays from Empetix."/>
-  <meta name="twitter:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta name="twitter:title" content="{{ sec('blog', 'copy_fdc599e3df65') }}"/>
+  <meta name="twitter:description" content="{{ sec('blog', 'copy_1256e49dd66b') }}"/>
+  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -30,8 +30,8 @@
     <section class="page-hero">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">Home</a></li>
-          <li aria-current="page">Blog &amp; Media</li>
+          <li><a href="{{ url('/') }}">{{ sec('blog', 'copy_66b93f927675') }}</a></li>
+          <li aria-current="page">{{ sec('blog', 'copy_16c89765a20a') }}</li>
         </ol>
         <h1 class="page-hero__title">{{ sec('blog', 'hero_title', 'The Empetix Journal: Engineering, Growth, Video & Photo Essays.') }}</h1>
         <div class="page-hero__row">
@@ -52,25 +52,25 @@
     <section class="section section--flush-top">
       <div class="container">
         <article class="post-card post-card--featured reveal">
-          <a href="{{ url('/blog/video') }}" class="post-card__link">
+          <a href="{{ url(sec('blog', 'featured_url', '/blog/video')) }}" class="post-card__link">
             <div class="frame post-card__frame frame--zoom">
-              <img src="{{ asset('assets/img/blog/design-sprint.jpg') }}" alt="Empetix product and growth team placing voting dots on interface sketches during a 5-day sprint" width="1200" height="750"/>
+              <img src="{{ content_asset(sec('blog', 'copy_26f63d8f8aa0')) }}" alt="{{ sec('blog', 'copy_a1f7648a3b74') }}" width="1200" height="750"/>
               <span class="post-card__play" aria-hidden="true">
                 <svg viewBox="0 0 16 16" fill="currentColor"><polygon points="4,2 14,8 4,14"/></svg>
               </span>
-              <span class="post-card__badge">FEATURED VIDEO EPISODE &middot; 14:20</span>
+              <span class="post-card__badge">{{ sec('blog', 'copy_855145b5639a') }}</span>
             </div>
             <div class="post-card__text">
               <div class="post-card__meta">
-                <span class="post-card__cat">VIDEO DOCUMENTARY + FULL POST</span>
-                <time datetime="2026-11-05">05 NOV 2026</time>
+                <span class="post-card__cat">{{ sec('blog', 'copy_82eec5c0a198') }}</span>
+                <time datetime="2026-11-05">{{ sec('blog', 'copy_3ee3c06a73ee') }}</time>
               </div>
-              <h2 class="post-card__title">Inside an Empetix 5-Day Product &amp; Growth Sprint (Full Video + Transcript + Photos)</h2>
+              <h2 class="post-card__title">{{ sec('blog', 'copy_d70de1ef3361') }}</h2>
               <p class="post-card__excerpt">
-                Watch how our engineers, product designers, and performance marketers take a FinTech checkout product from raw problem statement to user-tested prototype and live acquisition test in five days.
+                {{ sec('blog', 'copy_be2a3ae8d09f') }}
               </p>
               <span class="arrow-link">
-                <span>Watch Video &amp; Read Full Post</span>
+                <span>{{ sec('blog', 'copy_9448bd6ae08a') }}</span>
                 <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
@@ -85,13 +85,13 @@
     <section class="section section--flush-top" aria-label="Blog posts archive">
       <div class="container">
         <div class="filter" data-filter-bar="blog-archive" role="toolbar" aria-label="Filter blog posts by format and topic">
-          <span class="filter__label">Filter posts:</span>
-          <button type="button" class="filter__btn" data-filter="all" aria-pressed="true">All Posts<sup>6</sup></button>
-          <button type="button" class="filter__btn" data-filter="video" aria-pressed="false">Video Episodes<sup>3</sup></button>
-          <button type="button" class="filter__btn" data-filter="photos" aria-pressed="false">Photo Essays<sup>3</sup></button>
-          <button type="button" class="filter__btn" data-filter="engineering" aria-pressed="false">Engineering<sup>3</sup></button>
-          <button type="button" class="filter__btn" data-filter="marketing" aria-pressed="false">Growth Marketing<sup>3</sup></button>
-          <span class="filter__count" data-filter-count>6 entries</span>
+          <span class="filter__label">{{ sec('blog', 'copy_7571d773cf73') }}</span>
+          <button type="button" class="filter__btn" data-filter="all" aria-pressed="true">{{ sec('blog', 'copy_00f415594506') }}<sup>6</sup></button>
+          <button type="button" class="filter__btn" data-filter="video" aria-pressed="false">{{ sec('blog', 'copy_a2f559e2cf39') }}<sup>3</sup></button>
+          <button type="button" class="filter__btn" data-filter="photos" aria-pressed="false">{{ sec('blog', 'copy_ea939700e2f3') }}<sup>3</sup></button>
+          <button type="button" class="filter__btn" data-filter="engineering" aria-pressed="false">{{ sec('blog', 'copy_2c9920d0787c') }}<sup>3</sup></button>
+          <button type="button" class="filter__btn" data-filter="marketing" aria-pressed="false">{{ sec('blog', 'copy_aecfa0b21ab2') }}<sup>3</sup></button>
+          <span class="filter__count" data-filter-count>{{ sec('blog', 'copy_941ff037160e') }}</span>
         </div>
 
         <div id="blog-archive" class="post-grid">

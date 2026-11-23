@@ -155,6 +155,8 @@ class PageSectionSeeder extends Seeder
 
     public function run(): void
     {
+        $this->call(AboutContentSeeder::class);
+        $this->call(EditorialContentSeeder::class);
         foreach (self::SECTIONS as $page => $sections) {
             foreach ($sections as $i => [$key, $label, $type]) {
                 PageSection::firstOrCreate(

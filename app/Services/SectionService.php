@@ -33,7 +33,14 @@ class SectionService
     /** All sections of a page for the dashboard editor. */
     public function forPage(string $page): Collection
     {
-        return $this->repository->forPage($page);
+        $defaults = collect(json_decode(file_get_contents(database_path('seeders/data/template-defaults.json')), true))
+            ->where('page', $page)->keyBy('key');
+        return $this->repository->forPage($page)->each(function (PageSection $section) use ($defaults) {
+            // Show the exact template fallback without writing over the database.
+            if ($section->value === null && isset($defaults[$section->key])) {
+                $section->value = $defaults[$section->key]['value'];
+            }
+        });
     }
 
     /** Sections grouped by page for the dashboard index. */

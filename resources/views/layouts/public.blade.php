@@ -11,7 +11,7 @@
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/public-sans-400.woff2') }}" crossorigin/>
 
   <link rel="icon" href="{{ brand_favicon() }}"/>
-  <link rel="preload" as="image" href="{{ asset('assets/img/logo/empetix-logo.png') }}" fetchpriority="high"/>
+  <link rel="preload" as="image" href="{{ content_asset(sec('global', 'copy_c47b5facbcd3')) }}" fetchpriority="high"/>
   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"/>
   <script src="{{ asset('assets/js/preloader-gate.js') }}"></script>
   <noscript>
@@ -28,7 +28,7 @@
   role="status"
   aria-label="Loading Empetix Solution"
 >
-  <span id="preloader-sr" class="preloader__sr" aria-live="polite">Loading 0%</span>
+  <span id="preloader-sr" class="preloader__sr" aria-live="polite">{{ sec('global', 'copy_9ae629abced1') }}</span>
 
   <div class="preloader__stage">
     <div class="preloader__logo-stack">
@@ -36,7 +36,7 @@
       <img
         class="preloader__logo preloader__logo--base"
         src="{{ brand_logo() }}"
-        alt="Empetix Solution"
+        alt="{{ sec('global', 'copy_4fa930d35d88') }}"
         width="881"
         height="302"
         fetchpriority="high"
@@ -75,7 +75,7 @@
 
 
 <!-- PARTIAL: header -->
-<a href="#main-content" class="skip-link">Skip to main content</a>
+<a href="#main-content" class="skip-link">{{ sec('global', 'copy_b9b90b76f6f1') }}</a>
 
 <div id="site-head" class="site-head">
   <!-- Row 1: Top Utility Bar (Links on the Left, Search Button Only on the Right) -->
@@ -101,18 +101,18 @@
   <div id="search-panel" class="search-panel" role="search" aria-label="Search Empetix Solutions">
     <div class="container">
       <form class="search-panel__form" action="{{ route('blog') }}" method="get">
-        <label for="search-input" class="sr-only">Search projects, blog posts, and roles</label>
+        <label for="search-input" class="sr-only">{{ sec('global', 'copy_4de56f097187') }}</label>
         <input id="search-input" type="search" name="q" class="search-panel__input" placeholder="{{ sec('footer', 'search_placeholder', 'Search solutions, case studies, engineering essays, video episodes...') }}" autocomplete="off"/>
-        <button type="submit" class="btn btn--accent btn--sm">Search</button>
-        <button type="button" id="search-close" class="btn btn--ghost btn--sm">Close</button>
+        <button type="submit" class="btn btn--accent btn--sm">{{ sec('global', 'copy_3e9b94d3a503') }}</button>
+        <button type="button" id="search-close" class="btn btn--ghost btn--sm">{{ sec('global', 'copy_7fde00f1ef77') }}</button>
       </form>
       <div class="search-panel__hints">
         <span>{{ sec('footer', 'search_quickjump', 'Quick jump:') }}</span>
-        <a href="{{ url('/work/nilepay') }}">NilePay Case Study</a>
-        <a href="{{ url('/blog/five-day-product-growth-sprint') }}">5-Day Sprint Video</a>
-        <a href="{{ url('/blog/behind-the-lens-qahwa-launch') }}">Qahwa Photo Essay</a>
-        <a href="{{ url('/about') }}#founders">Meet the Founders</a>
-        <a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif>Contact Us</a>
+        <a href="{{ url('/work/nilepay') }}">{{ sec('global', 'copy_99681c08acc5') }}</a>
+        <a href="{{ url('/blog/five-day-product-growth-sprint') }}">{{ sec('global', 'copy_9bd3315c2cda') }}</a>
+        <a href="{{ url('/blog/behind-the-lens-qahwa-launch') }}">{{ sec('global', 'copy_c845f21a3cfc') }}</a>
+        <a href="{{ url('/about') }}#founders">{{ sec('global', 'copy_56466eb90fcf') }}</a>
+        <a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif>{{ sec('global', 'copy_f4b9a5c91fb5') }}</a>
       </div>
     </div>
   </div>
@@ -124,7 +124,7 @@
         <img
           class="brand__logo-img"
           src="{{ brand_logo(dark: true) }}"
-          alt="Empetix Solution"
+          alt="{{ sec('global', 'copy_4fa930d35d88') }}"
           width="881"
           height="302"
         />
@@ -134,7 +134,7 @@
         <ul class="nav__list">
           <li class="nav__item">
             <a href="{{ url('/') }}#solutions-hub" class="nav__link" data-mega-trigger="capabilities" aria-expanded="false" aria-controls="mega-capabilities">
-              <span>Capabilities &amp; Solutions</span>
+              <span>{{ sec('global', 'copy_edddda7990f5') }}</span>
               <svg class="nav__chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -142,12 +142,12 @@
           </li>
           <li class="nav__item">
             <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="nav__link">
-              <span>Projects &amp; Platforms</span>
+              <span>{{ sec('global', 'copy_5faa9a4a6ae2') }}</span>
             </a>
           </li>
           <li class="nav__item">
             <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="nav__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">
-              <span>Blogs &amp; Media</span>
+              <span>{{ sec('global', 'copy_565b27a38e2b') }}</span>
               <svg class="nav__chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -155,12 +155,12 @@
           </li>
           <li class="nav__item">
             <a href="{{ url('/partners') }}"@if(($activePage ?? '') === 'partners') aria-current="page"@endif class="nav__link">
-              <span>Partners &amp; Industries</span>
+              <span>{{ sec('global', 'copy_a2aef16268ef') }}</span>
             </a>
           </li>
           <li class="nav__item">
             <a href="{{ url('/about') }}"@if(($activePage ?? '') === 'about') aria-current="page"@endif class="nav__link">
-              <span>About &amp; Founders</span>
+              <span>{{ sec('global', 'copy_321facc49ee7') }}</span>
             </a>
           </li>
         </ul>
@@ -174,7 +174,7 @@
           </svg>
         </button>
         <button type="button" id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="mobile-drawer">
-          <span>Menu</span>
+          <span>{{ sec('global', 'copy_1f09c87bba77') }}</span>
           <span class="menu-toggle__bars" aria-hidden="true">
             <span></span>
             <span></span>
@@ -191,12 +191,12 @@
     <div class="container mega__grid">
       <div class="mega__intro">
         <div>
-          <span class="eyebrow">01 / Capabilities</span>
+          <span class="eyebrow">{{ sec('global', 'copy_ba60d8ed7f8e') }}</span>
           <h2 class="mega__title">{{ sec('mega', 'capabilities_title', 'One studio. Code and growth under one roof.') }}</h2>
           <p class="mega__desc">{{ sec('mega', 'capabilities_desc', 'We pair senior software engineers with performance marketers and commercial directors so products ship fast and scale profitably.') }}</p>
         </div>
         <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="arrow-link">
-          <span>Explore All Case Studies</span>
+          <span>{{ sec('global', 'copy_3127442311db') }}</span>
           <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
           </svg>
@@ -243,12 +243,12 @@
     <div class="container mega__grid">
       <div class="mega__intro">
         <div>
-          <span class="eyebrow">02 / Empetix Journal</span>
+          <span class="eyebrow">{{ sec('global', 'copy_cfa25d342ff3') }}</span>
           <h2 class="mega__title">{{ sec('mega', 'journal_title', 'Articles, video episodes & photo essays.') }}</h2>
           <p class="mega__desc">{{ sec('mega', 'journal_desc', 'Field notes from our engineers, product designers, and performance marketers.') }}</p>
         </div>
         <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="arrow-link">
-          <span>Open Full Blog Archive</span>
+          <span>{{ sec('global', 'copy_ce0f8021330a') }}</span>
           <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
           </svg>
@@ -281,13 +281,13 @@
 <aside id="mobile-drawer" class="drawer" aria-label="Mobile navigation" aria-hidden="true">
   <div class="container drawer__head">
     <a href="{{ url('/') }}"@if(($activePage ?? '') === 'home') aria-current="page"@endif class="brand">
-      <span class="brand__word">Empetix</span>
+      <span class="brand__word">{{ sec('global', 'copy_f3cca2387d54') }}</span>
     </a>
-    <button type="button" id="drawer-close" class="drawer__close">Close</button>
+    <button type="button" id="drawer-close" class="drawer__close">{{ sec('global', 'copy_7fde00f1ef77') }}</button>
   </div>
   <div class="container drawer__body">
     <ul class="drawer__list">
-      <li><a href="{{ url('/') }}"@if(($activePage ?? '') === 'home') aria-current="page"@endif class="drawer__link">Home</a></li>
+      <li><a href="{{ url('/') }}"@if(($activePage ?? '') === 'home') aria-current="page"@endif class="drawer__link">{{ sec('global', 'copy_66b93f927675') }}</a></li>
       {{-- Dashboard-editable links (Navigation → Mobile drawer). --}}
       @foreach(nav_items('drawer') as $navItem)
         <li><a href="{{ str_starts_with($navItem->url, 'http') ? $navItem->url : url($navItem->url) }}" class="drawer__link">{{ $navItem->label }}</a></li>
@@ -295,9 +295,9 @@
     </ul>
 
     <div class="drawer__meta">
-      <p>New Business: hello&#64;empetix.com</p>
-      <p>Careers: talent&#64;empetix.com</p>
-      <p>New Cairo, Egypt</p>
+      <p>{{ sec('global', 'copy_a16ec9b1a9dc') }}</p>
+      <p>{{ sec('global', 'copy_fe641bf80e36') }}</p>
+      <p>{{ sec('global', 'copy_99171044a562') }}</p>
     </div>
   </div>
 </aside>
@@ -320,13 +320,13 @@
       </div>
       <div class="foot-banner__actions">
         <a href="{{ url('/contact') }}" class="btn btn--accent btn--lg">
-          <span>Start a Project</span>
+          <span>{{ sec('global', 'copy_0a2e9effe060') }}</span>
           <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
           </svg>
         </a>
         <a href="{{ url('/careers') }}" class="btn btn--ghost btn--lg">
-          <span>Careers Portal</span>
+          <span>{{ sec('global', 'copy_af45d288e6ae') }}</span>
         </a>
       </div>
     </div>
@@ -339,7 +339,7 @@
           <img
             class="brand__logo-img"
             src="{{ brand_logo() }}"
-            alt="Empetix Solution"
+            alt="{{ sec('global', 'copy_4fa930d35d88') }}"
             width="881"
             height="302"
           />
@@ -375,42 +375,42 @@
 
       <!-- Col 2 (2 cols): Company -->
       <div class="foot-grid__col">
-        <h3 class="foot-col__title">Company</h3>
+        <h3 class="foot-col__title">{{ sec('global', 'copy_afa2ec755fdf') }}</h3>
         <ul class="foot-col__list">
-          <li><a href="{{ url('/') }}">Home</a></li>
-          <li><a href="{{ url('/about') }}">About &amp; Founders</a></li>
-          <li><a href="{{ url('/team') }}">Our Team</a></li>
-          <li><a href="{{ url('/work') }}">Selected Projects</a></li>
-          <li><a href="{{ url('/partners') }}">Corporate Partners</a></li>
-          <li><a href="{{ url('/blog') }}">Blogs &amp; Media</a></li>
-          <li><a href="{{ url('/careers') }}">Careers (jobs.empetix)</a></li>
-          <li><a href="{{ url('/contact') }}">Contact Us</a></li>
+          <li><a href="{{ url('/') }}">{{ sec('global', 'copy_66b93f927675') }}</a></li>
+          <li><a href="{{ url('/about') }}">{{ sec('global', 'copy_321facc49ee7') }}</a></li>
+          <li><a href="{{ url('/team') }}">{{ sec('global', 'copy_ca4d3e8fdf98') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_addc49d04a88') }}</a></li>
+          <li><a href="{{ url('/partners') }}">{{ sec('global', 'copy_91619d630bd7') }}</a></li>
+          <li><a href="{{ url('/blog') }}">{{ sec('global', 'copy_565b27a38e2b') }}</a></li>
+          <li><a href="{{ url('/careers') }}">{{ sec('global', 'copy_b29ba4267f24') }}</a></li>
+          <li><a href="{{ url('/contact') }}">{{ sec('global', 'copy_f4b9a5c91fb5') }}</a></li>
         </ul>
       </div>
 
       <!-- Col 3 (2 cols): Software Solutions -->
       <div class="foot-grid__col">
-        <h3 class="foot-col__title">Software</h3>
+        <h3 class="foot-col__title">{{ sec('global', 'copy_03be197a2651') }}</h3>
         <ul class="foot-col__list">
-          <li><a href="{{ url('/work') }}">Web &amp; SaaS Platforms</a></li>
-          <li><a href="{{ url('/work') }}">Mobile Apps (Flutter)</a></li>
-          <li><a href="{{ url('/work') }}">Laravel &amp; Cloud APIs</a></li>
-          <li><a href="{{ url('/work/nilepay') }}">FinTech &amp; Payment Ledgers</a></li>
-          <li><a href="{{ url('/work') }}">Headless E-Commerce</a></li>
-          <li><a href="{{ url('/work') }}">AI &amp; Workflow Agents</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_43f2d8ef5f41') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_1ffceb06c763') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_f0c7b48874fc') }}</a></li>
+          <li><a href="{{ url('/work/nilepay') }}">{{ sec('global', 'copy_e9d3ab4269dc') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_ca3c76e3e0a6') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_bcd691d43e8f') }}</a></li>
         </ul>
       </div>
 
       <!-- Col 4 (2 cols): Growth & Marketing -->
       <div class="foot-grid__col">
-        <h3 class="foot-col__title">Marketing</h3>
+        <h3 class="foot-col__title">{{ sec('global', 'copy_5a780da735e3') }}</h3>
         <ul class="foot-col__list">
-          <li><a href="{{ url('/work') }}">Performance &amp; Paid Media</a></li>
-          <li><a href="{{ url('/blog/post') }}">Conversion Optimization</a></li>
-          <li><a href="{{ url('/work') }}">Brand Identity Systems</a></li>
-          <li><a href="{{ url('/blog/photos') }}">Commercial Video &amp; Photo</a></li>
-          <li><a href="{{ url('/work') }}">Server-Side Attribution</a></li>
-          <li><a href="{{ url('/work') }}">SEO &amp; Content Engines</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_a0cd4b53344d') }}</a></li>
+          <li><a href="{{ url('/blog/post') }}">{{ sec('global', 'copy_53a9bc564772') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_5a18d0785981') }}</a></li>
+          <li><a href="{{ url('/blog/photos') }}">{{ sec('global', 'copy_714c4a6f2a9c') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_12de7e0930d1') }}</a></li>
+          <li><a href="{{ url('/work') }}">{{ sec('global', 'copy_965533ad102a') }}</a></li>
         </ul>
       </div>
 
@@ -422,7 +422,7 @@
         </p>
         <form class="foot-sub-form" action="{{ route('subscribe') }}" method="post">
             @csrf
-          <label for="foot-email-input" class="sr-only">Work email address</label>
+          <label for="foot-email-input" class="sr-only">{{ sec('global', 'copy_a9f62d79c357') }}</label>
           <input id="foot-email-input" name="email" type="email" class="foot-sub-form__input" required placeholder="{{ sec('footer', 'newsletter_placeholder', 'Enter your work email...') }}"/>
           <button type="submit" class="btn btn--accent btn--sm">{{ sec('footer', 'newsletter_button', 'Subscribe →') }}</button>
           <div class="form__status" data-form-status role="status" aria-live="polite"></div>
@@ -450,12 +450,12 @@
 
     <!-- 3. Bottom Legal & Copyright Bar -->
     <div class="foot-bottom">
-      <p>&copy; 2026 Empetix Solutions LLC. All rights reserved.</p>
+      <p>{{ sec('global', 'copy_ce0795d9d101') }}</p>
       <ul class="foot-bottom__links" aria-label="Legal links">
-        <li><a href="{{ url('/contact') }}">Privacy Policy</a></li>
-        <li><a href="{{ url('/contact') }}">Terms of Service</a></li>
-        <li><a href="{{ url('/contact') }}">Cookie Settings</a></li>
-        <li><a href="#main-content">Back to Top &uarr;</a></li>
+        <li><a href="{{ url('/contact') }}">{{ sec('global', 'copy_505e2c9ec064') }}</a></li>
+        <li><a href="{{ url('/contact') }}">{{ sec('global', 'copy_7c38db12a0f5') }}</a></li>
+        <li><a href="{{ url('/contact') }}">{{ sec('global', 'copy_3181b3a91220') }}</a></li>
+        <li><a href="#main-content">{{ sec('global', 'copy_39885245a3fb') }}</a></li>
       </ul>
     </div>
   </div>

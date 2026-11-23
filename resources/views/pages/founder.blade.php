@@ -9,11 +9,11 @@
   <meta property="og:title" content="{{ $member->name }} — Empetix Solution"/>
   <meta property="og:description" content="{{ $member->name }}, {{ $member->role }} at Empetix Solution."/>
   <meta property="og:url" content="https://empetix.vercel.app/founders/{{ $member->slug }}"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ $member->name }} — Empetix Solution"/>
   <meta name="twitter:description" content="{{ $member->name }}, {{ $member->role }} at Empetix Solution."/>
-  <meta name="twitter:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -22,9 +22,9 @@
       <div class="founder-container">
         <nav class="founder-crumb" aria-label="Breadcrumb">
           <ol class="founder-crumb__list">
-            <li class="founder-crumb__item"><a href="{{ url('/') }}" class="founder-crumb__link">Home</a></li>
-            <li class="founder-crumb__item"><a href="{{ url('/team') }}" class="founder-crumb__link">Team</a></li>
-            <li class="founder-crumb__item" aria-current="page">Mohanad Ahmed Shehata</li>
+            <li class="founder-crumb__item"><a href="{{ url('/') }}" class="founder-crumb__link">{{ sec('founder', 'copy_66b93f927675') }}</a></li>
+            <li class="founder-crumb__item"><a href="{{ url('/team') }}" class="founder-crumb__link">{{ sec('founder', 'copy_cdbd990d3384') }}</a></li>
+            <li class="founder-crumb__item" aria-current="page">{{ sec('founder', 'copy_12659584a8fd') }}</li>
           </ol>
         </nav>
 
@@ -33,7 +33,7 @@
             <img
               class="founder-hero__photo"
               src="{{ str_starts_with((string) $member->photo, 'uploads/') ? asset('storage/'.$member->photo) : asset($member->photo) }}"
-              alt="Portrait of Mohanad Ahmed Shehata, Co-founder and chief technology officer"
+              alt="{{ sec('founder', 'copy_b135a6b41c48') }}"
               width="800"
               height="1000"
             />
@@ -52,7 +52,7 @@
     <section class="founder-band founder-band--surface" aria-labelledby="about-heading">
       <div class="founder-container">
         <div class="founder-about">
-          <h2 id="about-heading" class="founder-heading">About {{ str($member->name)->before(" ") }}</h2>
+          <h2 id="about-heading" class="founder-heading">{{ sec('founder', 'about_prefix') }} {{ str($member->name)->before(" ") }}</h2>
           <div class="founder-about__body">
               @foreach((array) $member->bio as $paragraph)
                 <p class="founder-about__copy">{{ $paragraph }}</p>
@@ -65,7 +65,7 @@
     <!-- Expertise -->
     <section class="founder-band founder-band--white" aria-labelledby="expertise-heading">
       <div class="founder-container">
-        <h2 id="expertise-heading" class="founder-heading">Where {{ str($member->name)->before(" ") }} can help</h2>
+        <h2 id="expertise-heading" class="founder-heading">{{ sec('founder', 'expertise_prefix') }} {{ str($member->name)->before(" ") }} {{ sec('founder', 'expertise_suffix') }}</h2>
         <ul class="founder-expertise">
               @foreach((array) $member->expertise as $expertise)
                 <li class="founder-expertise__item">
@@ -90,7 +90,7 @@
                     </div>
                     <h3 class="founder-project__client">{{ $project->kicker }}</h3>
                     <p class="founder-project__outcome">{{ $project->excerpt }}</p>
-                    <a href="{{ route('work.show', $project->slug) }}" class="founder-text-link">Read the case study</a>
+                    <a href="{{ route('work.show', $project->slug) }}" class="founder-text-link">{{ sec('founder', 'copy_5e7fc04f025c') }}</a>
                   </article>
                 </li>
               @endforeach
@@ -103,7 +103,7 @@
       <div class="founder-container">
         <header class="founder-others__header">
           <h2 id="other-founders-heading" class="founder-heading">{{ sec('founder', 'other_founders_heading', 'Other founders') }}</h2>
-          <a href="{{ url('/team') }}" class="founder-text-link">Meet the full team</a>
+          <a href="{{ url('/team') }}" class="founder-text-link">{{ sec('founder', 'copy_14d981d94d75') }}</a>
         </header>
 
         <ul class="founder-others__list">

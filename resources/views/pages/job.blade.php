@@ -9,7 +9,7 @@
   <meta property="og:title" content="{{ $job->title }} — Careers at Empetix Solution"/>
   <meta property="og:description" content="{{ $job->summary }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/careers/{{ $job->slug }}"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -19,8 +19,8 @@
     <header class="job-header">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/careers') }}">jobs.empetix.com</a></li>
-          <li><a href="{{ url('/careers') }}#open-roles">Software Engineering</a></li>
+          <li><a href="{{ url('/careers') }}">{{ sec('job', 'copy_c0d554c08817') }}</a></li>
+          <li><a href="{{ url('/careers') }}#open-roles">{{ sec('job', 'copy_f665170f831d') }}</a></li>
           <li aria-current="page">{{ $job->ref_code ?? $job->title }}</li>
         </ol>
 
@@ -29,7 +29,7 @@
             <div class="job-header__badges">
               @if($job->ref_code)<span class="hero__badge">{{ $job->ref_code }}</span>@endif
               @if($job->department)<span class="hero__badge">{{ strtoupper($job->department) }}</span>@endif
-              <span class="hero__badge">POSTED {{ strtoupper($job->created_at->diffForHumans()) }}</span>
+              <span class="hero__badge">{{ sec('job', 'posted_prefix') }} {{ strtoupper($job->created_at->diffForHumans()) }}</span>
             </div>
             <h1 class="job-header__title">{{ $job->title }}</h1>
           </div>
@@ -79,7 +79,7 @@
               <div class="job-section">
                 <h2 class="job-section__title">
                   <span class="job-section__num">{{ str_pad((string) (count((array) $job->sections) + 1), 2, '0', STR_PAD_LEFT) }}</span>
-                  <span>Tools, Stack &amp; Environment</span>
+                  <span>{{ sec('job', 'copy_c12c0b3fcd51') }}</span>
                 </h2>
                 <ul class="tag-list">
                   @foreach((array) $job->tags as $tag)
@@ -88,10 +88,10 @@
                 </ul>
               </div>
             @endif
-<h3 class="t-h4">Click &ldquo;Apply Now&rdquo; to open the application form below.</h3>
+<h3 class="t-h4">{{ sec('job', 'copy_d99229d3eb2a') }}</h3>
               </div>
               <button type="button" class="btn btn--accent btn--lg" data-trigger-apply>
-                <span>Apply Now{{ $job->ref_code ? ' for '.$job->ref_code : '' }}</span>
+                <span>{{ sec('job', 'apply_now') }}{{ $job->ref_code ? ' for '.$job->ref_code : '' }}</span>
                 <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
@@ -102,14 +102,14 @@
           <!-- Right 4-Column Sticky Job Summary Card -->
           <aside class="job-layout__aside" aria-label="Job summary and quick apply">
             <div class="job-summary-card">
-              <span class="eyebrow">Requisition Summary</span>
+              <span class="eyebrow">{{ sec('job', 'copy_3e44bd2a5936') }}</span>
 
               <div class="job-summary-card__list">
                 @if($job->ref_code)
-                  <div class="job-summary-card__row"><span>Requisition ID</span><span>{{ $job->ref_code }}</span></div>
+                  <div class="job-summary-card__row"><span>{{ sec('job', 'copy_98979abc826f') }}</span><span>{{ $job->ref_code }}</span></div>
                 @endif
                 @if($job->department)
-                  <div class="job-summary-card__row"><span>Department</span><span>{{ $job->department }}</span></div>
+                  <div class="job-summary-card__row"><span>{{ sec('job', 'copy_d6387b429263') }}</span><span>{{ $job->department }}</span></div>
                 @endif
                 @foreach((array) $job->pills as $pill)
                   @php([$rowLabel, $rowValue] = array_pad(array_map('trim', explode(':', (string) $pill, 2)), 2, ''))
@@ -119,7 +119,7 @@
 
               @if($job->hiringManager)
                 <div>
-                  <p class="t-meta">HIRING MANAGER</p>
+                  <p class="t-meta">{{ sec('job', 'copy_fd6a2174fbff') }}</p>
                   <div class="hiring-manager">
                     @if($job->hiringManager->photo)
                       <img class="hiring-manager__img" src="{{ asset('storage/'.$job->hiringManager->photo) }}" alt="{{ $job->hiringManager->name }}" width="88" height="88"/>
@@ -153,8 +153,8 @@
           <div class="form-card__head">
             <div>
               <span class="eyebrow">{{ sec('careers', 'apply_eyebrow', 'Official Application · jobs.empetix.com') }}</span>
-              <h2 id="apply-drawer-title" class="t-h2">Apply for: {{ $job->title }}</h2>
-              <p class="t-small">@if($job->ref_code)Requisition ID: <strong>{{ $job->ref_code }}</strong>@endif @if($job->hiringManager) &middot; Reviewed directly by {{ $job->hiringManager->name }} ({{ $job->hiringManager->role }})@endif</p>
+              <h2 id="apply-drawer-title" class="t-h2">{{ sec('job', 'apply_for') }} {{ $job->title }}</h2>
+              <p class="t-small">@if($job->ref_code){{ sec('job', 'requisition_prefix') }} <strong>{{ $job->ref_code }}</strong>@endif @if($job->hiringManager) &middot; Reviewed directly by {{ $job->hiringManager->name }} ({{ $job->hiringManager->role }})@endif</p>
             </div>
             <span class="hero__badge">{{ sec('careers', 'apply_badge', 'STEP 1 OF 1 · ~3 MINS') }}</span>
           </div>
@@ -164,7 +164,7 @@
           @endif
           @if($errors->any())
             <div class="form__status form__status--error" role="alert">
-              <strong>Please fix the following:</strong>
+              <strong>{{ sec('job', 'copy_53c08c8da755') }}</strong>
               <ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
             </div>
           @endif
@@ -257,7 +257,7 @@
       <div class="container">
         <div class="section-head">
           <div class="section-head__label">
-            <span class="eyebrow">Explore More Roles</span>
+            <span class="eyebrow">{{ sec('job', 'copy_25270615a39a') }}</span>
           </div>
           <div class="section-head__title">
             <h2 id="other-jobs-heading" class="t-h3">{{ sec('careers', 'other_jobs_heading', 'Other open positions on jobs.empetix.com') }}</h2>
@@ -284,7 +284,7 @@
                 </div>
               </div>
               <div class="job-card__actions">
-                <a href="{{ route('jobs.show', $other->slug) }}" class="btn btn--primary btn--sm">View Job Details &rarr;</a>
+                <a href="{{ route('jobs.show', $other->slug) }}" class="btn btn--primary btn--sm">{{ sec('job', 'copy_69ccfe9d9779') }}</a>
               </div>
             </article>
           @endforeach

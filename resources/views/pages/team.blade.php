@@ -1,26 +1,26 @@
 @extends('layouts.public', ['activePage' => 'team'])
 
 @section('meta')
-  <meta name="description" content="Meet the leadership, engineering, product design, and marketing teams at Empetix Solution in New Cairo."/>
-  <title>Team — Empetix Solution</title>
+  <meta name="description" content="{{ sec('team', 'copy_dca495ea9079') }}"/>
+  <title>{{ sec('team', 'copy_1bd5cb61a600') }}</title>
   <!-- Open Graph / WhatsApp Preview -->
   <meta name="theme-color" content="#0A111C"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Empetix Solution"/>
-  <meta property="og:title" content="Team — Empetix Solution"/>
-  <meta property="og:description" content="Meet the leadership, engineering, product design, and marketing teams at Empetix Solution in New Cairo."/>
+  <meta property="og:title" content="{{ sec('team', 'copy_1bd5cb61a600') }}"/>
+  <meta property="og:description" content="{{ sec('team', 'copy_dca495ea9079') }}"/>
   <meta property="og:url" content="https://empetix.vercel.app/team.html"/>
-  <meta property="og:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
-  <meta property="og:image:secure_url" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="Empetix Solution Logo"/>
+  <meta property="og:image:alt" content="{{ sec('team', 'copy_46054f40eb9f') }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Team — Empetix Solution"/>
-  <meta name="twitter:description" content="Meet the leadership, engineering, product design, and marketing teams at Empetix Solution in New Cairo."/>
-  <meta name="twitter:image" content="https://empetix.vercel.app/assets/img/og-empetix.jpg"/>
+  <meta name="twitter:title" content="{{ sec('team', 'copy_1bd5cb61a600') }}"/>
+  <meta name="twitter:description" content="{{ sec('team', 'copy_dca495ea9079') }}"/>
+  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
 @endsection
 
 @section('content')
@@ -29,23 +29,23 @@
       <div class="team-container">
         <nav class="team-crumb" aria-label="Breadcrumb">
           <ol class="team-crumb__list">
-            <li class="team-crumb__item"><a href="{{ url('/') }}" class="team-crumb__link">Home</a></li>
-            <li class="team-crumb__item" aria-current="page">Team</li>
+            <li class="team-crumb__item"><a href="{{ url('/') }}" class="team-crumb__link">{{ sec('team', 'copy_66b93f927675') }}</a></li>
+            <li class="team-crumb__item" aria-current="page">{{ sec('team', 'copy_cdbd990d3384') }}</li>
           </ol>
         </nav>
 
         <div class="team-hero">
           <h1 id="team-hero-heading" class="team-hero__title">{{ sec('team', 'hero_title', 'The people behind Empetix') }}</h1>
           <p class="team-hero__lead">
-            Engineers, product designers, and performance marketers working as one multidisciplinary team from New Cairo—without agency layers or external hand-offs.
+            {{ sec('team', 'copy_be3f40c5f9fe') }}
           </p>
         </div>
 
         <div class="team-hero__media">
           <img
             class="team-hero__photo"
-            src="{{ asset('assets/img/about/office.jpg') }}"
-            alt="Empetix engineers and product designers reviewing layouts together in our New Cairo studio"
+            src="{{ content_asset(sec('team', 'copy_38a9b4c47c1d')) }}"
+            alt="{{ sec('team', 'copy_548db1eb20f4') }}"
             width="1600"
             height="900"
           />
@@ -63,13 +63,13 @@
           <h2 id="directory-heading" class="team-heading">{{ sec('team', 'practices_heading', 'Practice teams') }}</h2>
           <div class="team-section-head__body">
             <p class="team-section-head__lead">
-              Senior specialists across software engineering, product design, and performance marketing working together in dedicated client squads.
+              {{ sec('team', 'copy_42a38ba194b4') }}
             </p>
             <div class="team-filters" role="group" aria-label="Filter team by department">
-              <button type="button" class="team-filter" data-team-filter="all" aria-pressed="true">All teams (12)</button>
-              <button type="button" class="team-filter" data-team-filter="engineering" aria-pressed="false">Software engineering (4)</button>
-              <button type="button" class="team-filter" data-team-filter="design" aria-pressed="false">Product design (4)</button>
-              <button type="button" class="team-filter" data-team-filter="marketing" aria-pressed="false">Marketing and production (4)</button>
+              <button type="button" class="team-filter" data-team-filter="all" aria-pressed="true">{{ sec('team', 'copy_e111c2849bae') }}</button>
+              <button type="button" class="team-filter" data-team-filter="engineering" aria-pressed="false">{{ sec('team', 'copy_bba41e68c87e') }}</button>
+              <button type="button" class="team-filter" data-team-filter="design" aria-pressed="false">{{ sec('team', 'copy_9f3ba2584498') }}</button>
+              <button type="button" class="team-filter" data-team-filter="marketing" aria-pressed="false">{{ sec('team', 'copy_81990933b449') }}</button>
             </div>
           </div>
         </div>
@@ -77,9 +77,9 @@
         <!-- Practice 1: Software Engineering -->
         <div id="practice-engineering" class="team-practice" data-team-group="engineering">
           <div class="team-practice__head">
-            <h3 class="team-practice__title">Software engineering</h3>
+            <h3 class="team-practice__title">{{ sec('team', 'copy_865f5a4280b3') }}</h3>
             <p class="team-practice__desc">
-              Backend, frontend, mobile, and infrastructure engineers responsible for scalable APIs, payment ledgers, and reliable cloud deployments.
+              {{ sec('team', 'copy_a588d0d2cd5f') }}
             </p>
           </div>
 
@@ -121,7 +121,7 @@
             <h2 id="culture-heading" class="team-heading">{{ sec('team', 'culture_heading', 'How we work together') }}</h2>
             <div class="team-section-head__body">
               <p class="team-section-head__lead">
-                Every client engagement pairs engineering, design, and growth under one shared roadmap so software quality and commercial performance move together.
+                {{ sec('team', 'copy_67418b5acff7') }}
               </p>
             </div>
           </div>
@@ -138,8 +138,8 @@
           <div class="team-culture__media">
             <img
               class="team-culture__photo"
-              src="{{ asset('assets/img/careers/culture.jpg') }}"
-              alt="Empetix team members collaborating around a studio workshop table in New Cairo"
+              src="{{ content_asset(sec('team', 'copy_b221f03ea2bf')) }}"
+              alt="{{ sec('team', 'copy_8a668411ecaf') }}"
               width="1600"
               height="900"
               loading="lazy"
@@ -156,12 +156,12 @@
           <div class="team-join__main">
             <h2 id="join-heading" class="team-heading">{{ sec('team', 'join_heading', 'Join Empetix Solution') }}</h2>
             <p class="team-join__copy">
-              We hire engineers, designers, and marketers who care deeply about craft and measurable work. Explore open positions on our careers portal or reach out to our company desk.
+              {{ sec('team', 'copy_0c8127443473') }}
             </p>
           </div>
           <div class="team-join__actions">
-            <a href="{{ url('/careers') }}" class="team-btn team-btn--primary">View open roles</a>
-            <a href="{{ url('/contact') }}" class="team-text-link">Start a project</a>
+            <a href="{{ url('/careers') }}" class="team-btn team-btn--primary">{{ sec('team', 'copy_96490c6dd6ac') }}</a>
+            <a href="{{ url('/contact') }}" class="team-text-link">{{ sec('team', 'copy_83e7789a3687') }}</a>
           </div>
         </div>
       </div>
