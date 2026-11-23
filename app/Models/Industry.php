@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Industry extends Model
 {
-    protected $fillable = ['title', 'subtitle', 'sort_order', 'is_active'];
+    protected $fillable = ['num', 'title', 'subtitle', 'sort_order', 'is_active'];
 
     protected $casts = ['is_active' => 'boolean'];
 

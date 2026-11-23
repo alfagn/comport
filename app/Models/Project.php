@@ -11,11 +11,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Project extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'client', 'kicker', 'year', 'excerpt',
-        'body', 'image', 'is_featured', 'is_active', 'sort_order',
+        'title', 'slug', 'client', 'kicker', 'location', 'year', 'excerpt',
+        'body', 'facts', 'stats', 'sections', 'quote', 'quote_cite',
+        'video_poster', 'video_src', 'image', 'is_featured', 'is_active', 'sort_order',
     ];
 
     protected $casts = [
+        'facts' => 'array',
+        'stats' => 'array',
+        'sections' => 'array',
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
     ];
@@ -23,7 +27,7 @@ class Project extends Model
     /** Tags attached through the project_tag pivot. */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class)->withTimestamps();
+        return $this->belongsToMany(Tag::class);
     }
 
     /** Scope: published projects in display order. */

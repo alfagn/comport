@@ -493,12 +493,16 @@
         <p class="foot-grid__summary">
           Monthly engineering monographs, video episodes, and growth playbooks.
         </p>
-        <form class="foot-sub-form" action="#main-content" method="post" data-interactive-form data-success-msg="Subscribed to Empetix Solutions Insights.">
+        <form class="foot-sub-form" action="{{ route('subscribe') }}" method="post" data-interactive-form data-success-msg="Subscribed to Empetix Solutions Insights.">
+            @csrf
           <label for="foot-email-input" class="sr-only">Work email address</label>
           <input id="foot-email-input" type="email" class="foot-sub-form__input" required placeholder="Enter your work email..."/>
           <button type="submit" class="btn btn--accent btn--sm">Subscribe &rarr;</button>
           <div class="form__status" data-form-status role="status" aria-live="polite"></div>
-        </form>
+        @if(session('subscribed'))
+              <p role="status" style="color:#1a7f4b;font-weight:600">{{ session('subscribed') }}</p>
+            @endif
+          </form>
 
         <div class="foot-socials" aria-label="Social media channels">
           <a href="https://www.linkedin.com" class="foot-social-btn" rel="noopener noreferrer" aria-label="LinkedIn">

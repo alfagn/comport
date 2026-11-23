@@ -11,8 +11,9 @@ use App\Core\DTOs\BaseData;
  */
 class ServiceData extends BaseData
 {
-    protected static array $fields = ['title', 'slug', 'tag', 'kicker', 'heading', 'description', 'deliverables', 'metric_num', 'metric_label', 'cta_label', 'cta_url', 'image', 'sort_order', 'is_active'];
+    protected static array $fields = ['num', 'title', 'slug', 'tag', 'kicker', 'heading', 'description', 'deliverables', 'metric_num', 'metric_label', 'cta_label', 'cta_url', 'image', 'sort_order', 'is_active'];
 
+    public mixed $num = null;
     public mixed $title = null;
     public mixed $slug = null;
     public mixed $tag = null;

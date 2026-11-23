@@ -18,7 +18,10 @@
       <x-admin.input name="cta_label" label="Button label" :value="$item?->cta_label" placeholder="Start a Project"/>
       <x-admin.input name="cta_url" label="Button link" :value="$item?->cta_url" placeholder="/contact"/>
       <div class="full"><x-admin.textarea name="meta" label="Stat chips (one per line)" :value="$item ? implode(PHP_EOL, (array) $item->meta) : ''" rows="3" hint="Small facts rendered beside the slide, e.g. 99.96% uptime."/></div>
-      <div class="full"><x-admin.image name="image" label="Background image" :current="$item?->image"/></div>
+      <div class="full"><x-admin.input name="tab_label" label="Tab label" :value="$item?->tab_label" placeholder="OVERVIEW"/>
+      <x-admin.input name="tab_title" label="Tab title" :value="$item?->tab_title" placeholder="Software & Growth Studio"/>
+      <div class="full"><x-admin.input name="tab_sub" label="Tab subtitle" :value="$item?->tab_sub"/></div>
+      <x-admin.image name="image" label="Background image" :current="$item?->image"/></div>
       <x-admin.toggle name="is_active" label="Live on the site" :checked="$item?->is_active ?? true"/>
     </div>
 

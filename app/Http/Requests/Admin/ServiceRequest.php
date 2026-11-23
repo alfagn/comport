@@ -22,6 +22,7 @@ class ServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'num' => ['nullable', 'string', 'max:10'],
             'title' => ['required', 'string', 'max:200'],
             'slug' => ['nullable', 'string', 'max:220', 'alpha_dash'],
             'tag' => ['nullable', 'string', 'max:80'],

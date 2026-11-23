@@ -53,78 +53,12 @@
       <div class="container">
         <h2 id="alliance-heading" class="sr-only">Verified Corporate and Technology Partners</h2>
         <div class="logo-wall reveal">
-          <!-- LOOP: partner-logo -->
+          @foreach($partners as $partner)
           <div class="logo-wall__item">
-            <span class="logo-wall__tier">FINTECH PARTNER</span>
-            <img src="{{ asset('assets/img/partners/nilepay.svg') }}" alt="NilePay Financial Technologies" width="220" height="56"/>
+            <span class="logo-wall__tier">{{ $partner->tier }}</span>
+            <img src="{{ str_starts_with((string) $partner->logo, 'uploads/') ? asset('storage/'.$partner->logo) : asset($partner->logo) }}" alt="{{ $partner->name }}" width="220" height="56"/>
           </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">CLOUD ALLIANCE</span>
-            <img src="{{ asset('assets/img/partners/aws-partner.svg') }}" alt="AWS Advanced Consulting Partner" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">COMMERCE ALLIANCE</span>
-            <img src="{{ asset('assets/img/partners/shopify-plus.svg') }}" alt="Shopify Plus Partner" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">MEDIA ALLIANCE</span>
-            <img src="{{ asset('assets/img/partners/meta-business.svg') }}" alt="Meta Business Partner" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">PAYMENTS ALLIANCE</span>
-            <img src="{{ asset('assets/img/partners/stripe-partner.svg') }}" alt="Stripe Verified Partner" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">AI &amp; DATA</span>
-            <img src="{{ asset('assets/img/partners/google-cloud.svg') }}" alt="Google Cloud Partner" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">CRM &amp; REVOPS</span>
-            <img src="{{ asset('assets/img/partners/hubspot-tier.svg') }}" alt="HubSpot Diamond Partner" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">HEALTHCARE CLIENT</span>
-            <img src="{{ asset('assets/img/partners/medlink.svg') }}" alt="MedLink Health" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">LOGISTICS CLIENT</span>
-            <img src="{{ asset('assets/img/partners/cargoline.svg') }}" alt="CargoLine MENA" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">REAL ESTATE CLIENT</span>
-            <img src="{{ asset('assets/img/partners/palm-residences.svg') }}" alt="Palm Developments" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">D2C EXPORT CLIENT</span>
-            <img src="{{ asset('assets/img/partners/dar-ceramics.svg') }}" alt="Dar Ceramics" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
-          <!-- LOOP: partner-logo -->
-          <div class="logo-wall__item">
-            <span class="logo-wall__tier">RETAIL CLIENT</span>
-            <img src="{{ asset('assets/img/partners/qahwa.svg') }}" alt="Qahwa Roasters" width="220" height="56"/>
-          </div>
-          <!-- END LOOP: partner-logo -->
+@endforeach
         </div>
       </div>
     </section>

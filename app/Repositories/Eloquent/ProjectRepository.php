@@ -28,6 +28,18 @@ class ProjectRepository extends EloquentRepository implements ProjectRepositoryI
     }
 
     /** An active project by slug for the public case-study page. */
+    public function nextAfter(Project $project): ?Project
+    {
+        return Project::query()
+            ->where('is_active', true)
+            ->where(fn ($q) => $q->where('sort_order', '>', $project->sort_order)
+                ->orWhere(fn ($q2) => $q2->where('sort_order', $project->sort_order)->where('id', '>', $project->id)))
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->first()
+            ?? Project::query()->where('is_active', true)->where('id', '!=', $project->id)->orderBy('sort_order')->orderBy('id')->first();
+    }
+
     public function findActiveBySlug(string $slug): Project
     {
         return $this->query()->with('tags')->active()->where('slug', $slug)->firstOrFail();

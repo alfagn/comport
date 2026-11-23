@@ -11,6 +11,7 @@
     @if($item) @method('PUT') @endif
 
     <div class="form-grid">
+      <x-admin.input name="num" label="Number" :value="$item?->num" placeholder="01"/>
       <x-admin.input name="title" label="Tab title" :value="$item?->title" :required="true"/>
       <x-admin.input name="slug" label="Slug" :value="$item?->slug" hint="Leave empty to generate from the title."/>
       <x-admin.input name="tag" label="Tag" :value="$item?->tag" placeholder="Engineering"/>

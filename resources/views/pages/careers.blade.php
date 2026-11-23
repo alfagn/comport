@@ -186,34 +186,33 @@
         </div>
 
         <div class="jobs-grid">
-          <!-- LOOP: role-item -->
-          <article class="job-card" data-job-card data-job-dept="engineering" data-job-loc="cairo remote" data-job-mode="hybrid remote">
+          @foreach($jobs as $job)
+          <article class="job-card" data-job-card data-job-dept="{{ \Illuminate\Support\Str::slug($job->department) }}" data-job-loc="{{ \Illuminate\Support\Str::slug($job->location) }}" data-job-mode="{{ \Illuminate\Support\Str::slug($job->type) }}">
             <div>
               <div class="job-card__meta-top">
-                <span class="job-card__dept">SOFTWARE ENGINEERING</span>
-                <span class="job-card__req">REQ-2026-014</span>
-                <span class="job-card__new">POSTED 2 DAYS AGO</span>
+                <span class="job-card__dept">{{ $job->department }}</span>
+                <span class="job-card__new">{{ $job->created_at->diffForHumans() }}</span>
               </div>
 
               <h3 class="job-card__title">
-                <a href="{{ url('/careers/laravel') }}">Senior Laravel & Distributed Systems Engineer</a>
+                <a href="{{ route('jobs.show', $job->slug) }}">{{ $job->title }}</a>
               </h3>
-              <p class="job-card__summary">Architect high-concurrency Laravel 11 APIs, event-sourced FinTech payment ledgers, and multi-tenant SaaS backends serving 1.4M+ active monthly users.</p>
+              <p class="job-card__summary">{{ $job->summary }}</p>
 
               <ul class="tag-list">
-                <li class="tag">Laravel 11</li><li class="tag">PHP 8.3</li><li class="tag">PostgreSQL</li><li class="tag">Redis / Horizon</li><li class="tag">AWS ECS</li><li class="tag">DDD / Event Sourcing</li>
+                @foreach((array) $job->tags as $tag)<li class="tag">{{ $tag }}</li>@endforeach
               </ul>
 
               <div class="job-card__pills">
-                <span class="job-card__pill"><strong>Location:</strong> Cairo or Remote EMEA</span>
-                <span class="job-card__pill"><strong>Work Mode:</strong> Hybrid / Remote</span>
-                <span class="job-card__pill"><strong>Level:</strong> L5 / Senior Engineer</span>
-                <span class="job-card__pill"><strong>Compensation:</strong> USD 3,500 – 5,200 / mo + Profit Share</span>
+                @foreach((array) $job->pills as $pill)
+                  @php($parts = explode(':', $pill, 2))
+                  <span class="job-card__pill">@if(count($parts) === 2)<strong>{{ $parts[0] }}:</strong>{{ $parts[1] }}@else{{ $pill }}@endif</span>
+                @endforeach
               </div>
             </div>
 
             <div class="job-card__actions">
-              <a href="{{ url('/careers/laravel') }}" class="btn btn--primary">
+              <a href="{{ route('jobs.show', $job->slug) }}" class="btn btn--primary">
                 <span>View Job &amp; Apply</span>
                 <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
@@ -221,192 +220,7 @@
               </a>
             </div>
           </article>
-          <!-- END LOOP: role-item -->
-
-          <!-- LOOP: role-item -->
-          <article class="job-card" data-job-card data-job-dept="engineering" data-job-loc="cairo" data-job-mode="hybrid">
-            <div>
-              <div class="job-card__meta-top">
-                <span class="job-card__dept">SOFTWARE ENGINEERING</span>
-                <span class="job-card__req">REQ-2026-018</span>
-                <span class="job-card__new">POSTED 3 DAYS AGO</span>
-              </div>
-
-              <h3 class="job-card__title">
-                <a href="{{ url('/careers/frontend') }}">Senior Frontend Architect (Next.js / TypeScript / Design Systems)</a>
-              </h3>
-              <p class="job-card__summary">Own the frontend architecture, bilingual RTL/LTR component libraries, and sub-second Core Web Vitals across our enterprise web and commerce platforms.</p>
-
-              <ul class="tag-list">
-                <li class="tag">Next.js 15</li><li class="tag">React 19</li><li class="tag">TypeScript</li><li class="tag">CSS Logical Grid</li><li class="tag">Accessibility (WCAG AA)</li><li class="tag">Performance</li>
-              </ul>
-
-              <div class="job-card__pills">
-                <span class="job-card__pill"><strong>Location:</strong> Cairo (New Cairo / Downtown)</span>
-                <span class="job-card__pill"><strong>Work Mode:</strong> Hybrid (2 days in studio)</span>
-                <span class="job-card__pill"><strong>Level:</strong> L5 / Senior Architect</span>
-                <span class="job-card__pill"><strong>Compensation:</strong> USD 3,200 – 4,800 / mo + Profit Share</span>
-              </div>
-            </div>
-
-            <div class="job-card__actions">
-              <a href="{{ url('/careers/frontend') }}" class="btn btn--primary">
-                <span>View Job &amp; Apply</span>
-                <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-              </a>
-            </div>
-          </article>
-          <!-- END LOOP: role-item -->
-
-          <!-- LOOP: role-item -->
-          <article class="job-card" data-job-card data-job-dept="engineering" data-job-loc="cairo riyadh" data-job-mode="hybrid remote">
-            <div>
-              <div class="job-card__meta-top">
-                <span class="job-card__dept">SOFTWARE ENGINEERING</span>
-                <span class="job-card__req">REQ-2026-021</span>
-                <span class="job-card__new">POSTED 4 DAYS AGO</span>
-              </div>
-
-              <h3 class="job-card__title">
-                <a href="{{ url('/careers/flutter') }}">Lead Flutter Mobile Engineer (FinTech & Commerce)</a>
-              </h3>
-              <p class="job-card__summary">Lead mobile engineering for 60fps iOS & Android consumer apps in FinTech, telemedicine, and field logistics—with biometric KYC and offline-first sync.</p>
-
-              <ul class="tag-list">
-                <li class="tag">Flutter 3</li><li class="tag">Dart</li><li class="tag">iOS / Android Native Channels</li><li class="tag">Biometric KYC</li><li class="tag">Offline-First SQLite</li><li class="tag">CI/CD</li>
-              </ul>
-
-              <div class="job-card__pills">
-                <span class="job-card__pill"><strong>Location:</strong> Cairo or Riyadh</span>
-                <span class="job-card__pill"><strong>Work Mode:</strong> Hybrid / Remote</span>
-                <span class="job-card__pill"><strong>Level:</strong> L6 / Lead Engineer</span>
-                <span class="job-card__pill"><strong>Compensation:</strong> USD 3,800 – 5,500 / mo + Profit Share</span>
-              </div>
-            </div>
-
-            <div class="job-card__actions">
-              <a href="{{ url('/careers/flutter') }}" class="btn btn--primary">
-                <span>View Job &amp; Apply</span>
-                <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-              </a>
-            </div>
-          </article>
-          <!-- END LOOP: role-item -->
-
-          <!-- LOOP: role-item -->
-          <article class="job-card" data-job-card data-job-dept="marketing" data-job-loc="cairo riyadh" data-job-mode="hybrid">
-            <div>
-              <div class="job-card__meta-top">
-                <span class="job-card__dept">GROWTH & MARKETING</span>
-                <span class="job-card__req">REQ-2026-025</span>
-                <span class="job-card__new">POSTED 1 DAY AGO</span>
-              </div>
-
-              <h3 class="job-card__title">
-                <a href="{{ url('/careers/marketing') }}">Performance Marketing & Paid Acquisition Lead (MENA / GCC)</a>
-              </h3>
-              <p class="job-card__summary">Direct multi-channel paid acquisition (Meta, Google, TikTok, LinkedIn), creative testing sprints, and server-side attribution for category-leading brands.</p>
-
-              <ul class="tag-list">
-                <li class="tag">Meta Ads & CAPI</li><li class="tag">Google Ads / PMax</li><li class="tag">TikTok & Snap GCC</li><li class="tag">Server-Side Attribution</li><li class="tag">CRO & Unit Economics</li>
-              </ul>
-
-              <div class="job-card__pills">
-                <span class="job-card__pill"><strong>Location:</strong> Cairo or Riyadh</span>
-                <span class="job-card__pill"><strong>Work Mode:</strong> Hybrid</span>
-                <span class="job-card__pill"><strong>Level:</strong> L5 / Practice Lead</span>
-                <span class="job-card__pill"><strong>Compensation:</strong> USD 2,800 – 4,500 / mo + ROAS Bonus</span>
-              </div>
-            </div>
-
-            <div class="job-card__actions">
-              <a href="{{ url('/careers/marketing') }}" class="btn btn--primary">
-                <span>View Job &amp; Apply</span>
-                <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-              </a>
-            </div>
-          </article>
-          <!-- END LOOP: role-item -->
-
-          <!-- LOOP: role-item -->
-          <article class="job-card" data-job-card data-job-dept="design" data-job-loc="cairo" data-job-mode="hybrid">
-            <div>
-              <div class="job-card__meta-top">
-                <span class="job-card__dept">PRODUCT DESIGN</span>
-                <span class="job-card__req">REQ-2026-029</span>
-                <span class="job-card__new">POSTED 5 DAYS AGO</span>
-              </div>
-
-              <h3 class="job-card__title">
-                <a href="{{ url('/careers/designer') }}">Senior Product Designer (Bilingual Design Systems & CRO)</a>
-              </h3>
-              <p class="job-card__summary">Craft typographically rigorous Arabic/English design systems, complex SaaS & FinTech workflows, and high-converting e-commerce experiences.</p>
-
-              <ul class="tag-list">
-                <li class="tag">Figma Variables & Tokens</li><li class="tag">Arabic/English RTL/LTR</li><li class="tag">Design Systems</li><li class="tag">UX Research & CRO</li><li class="tag">Prototyping</li>
-              </ul>
-
-              <div class="job-card__pills">
-                <span class="job-card__pill"><strong>Location:</strong> Cairo Studio</span>
-                <span class="job-card__pill"><strong>Work Mode:</strong> Hybrid (2 days in studio)</span>
-                <span class="job-card__pill"><strong>Level:</strong> L5 / Senior Designer</span>
-                <span class="job-card__pill"><strong>Compensation:</strong> USD 2,600 – 4,000 / mo + Profit Share</span>
-              </div>
-            </div>
-
-            <div class="job-card__actions">
-              <a href="{{ url('/careers/designer') }}" class="btn btn--primary">
-                <span>View Job &amp; Apply</span>
-                <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-              </a>
-            </div>
-          </article>
-          <!-- END LOOP: role-item -->
-
-          <!-- LOOP: role-item -->
-          <article class="job-card" data-job-card data-job-dept="marketing" data-job-loc="cairo" data-job-mode="onsite hybrid">
-            <div>
-              <div class="job-card__meta-top">
-                <span class="job-card__dept">GROWTH & MARKETING</span>
-                <span class="job-card__req">REQ-2026-032</span>
-                <span class="job-card__new">POSTED 6 DAYS AGO</span>
-              </div>
-
-              <h3 class="job-card__title">
-                <a href="{{ url('/careers/producer') }}">Commercial Video Producer & Editor (Brand & Paid Social)</a>
-              </h3>
-              <p class="job-card__summary">Direct, shoot, and edit documentary-style brand films, product launches, and high-converting paid social video variations in our Cairo production lab.</p>
-
-              <ul class="tag-list">
-                <li class="tag">Commercial Directing</li><li class="tag">DaVinci Resolve / Premiere</li><li class="tag">Cinema Cameras & Lighting</li><li class="tag">Paid Social Hooks</li><li class="tag">Sound & Color</li>
-              </ul>
-
-              <div class="job-card__pills">
-                <span class="job-card__pill"><strong>Location:</strong> Cairo Studio</span>
-                <span class="job-card__pill"><strong>Work Mode:</strong> On-Site / Hybrid</span>
-                <span class="job-card__pill"><strong>Level:</strong> L4 / Senior Producer</span>
-                <span class="job-card__pill"><strong>Compensation:</strong> USD 2,000 – 3,200 / mo + Production Bonus</span>
-              </div>
-            </div>
-
-            <div class="job-card__actions">
-              <a href="{{ url('/careers/producer') }}" class="btn btn--primary">
-                <span>View Job &amp; Apply</span>
-                <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-              </a>
-            </div>
-          </article>
-          <!-- END LOOP: role-item -->
+@endforeach
         </div>
 
         <div id="jobs-empty-state" class="empty-state" hidden>

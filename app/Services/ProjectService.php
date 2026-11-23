@@ -37,7 +37,7 @@ class ProjectService extends BaseService
     /** Create a project and sync its tags. */
     public function create(ProjectData $data, ?UploadedFile $imageFile = null): Project
     {
-        $attributes = $this->normalizeJsonLines($data->toArray());
+        $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['title']);
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects');
 
@@ -52,7 +52,7 @@ class ProjectService extends BaseService
     public function update(int $id, ProjectData $data, ?UploadedFile $imageFile = null): Project
     {
         $record = $this->repository->find($id);
-        $attributes = $this->normalizeJsonLines($data->toArray());
+        $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? $record->slug;
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects', $record->image);
 

@@ -22,6 +22,7 @@ class IndustryRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'num' => ['nullable', 'string', 'max:20'],
             'title' => ['required', 'string', 'max:200'],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],

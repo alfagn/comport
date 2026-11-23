@@ -148,35 +148,21 @@
                 <span class="t-meta">PROTECTED BY MUTUAL NDA</span>
               </div>
 
-              <form class="form" action="#main-content" method="post" data-interactive-form data-success-msg="Thank you. Your brief has been delivered directly to Co-Founders Ayman Ibrahim (CEO) and Bishoy Magdy (VP Growth). We will reply with a proposed architecture &amp; growth call time within 24 business hours.">
+              <form class="form" action="{{ route('contact.store') }}" method="post" data-interactive-form data-success-msg="Thank you. Your brief has been delivered directly to Co-Founders Ayman Ibrahim (CEO) and Bishoy Magdy (VP Growth). We will reply with a proposed architecture &amp; growth call time within 24 business hours.">
+                @csrf
+                @if(session('success'))
+                  <p class="form__success" role="status" style="color:#1a7f4b;font-weight:600">{{ session('success') }}</p>
+                @endif
                 <!-- Step A: Capabilities -->
                 <fieldset class="form__group">
                   <legend class="form__label">A. Which capabilities do you need? (Select one or more)</legend>
                   <div class="choices">
+                    @foreach($services as $i => $service)
                     <label class="choice">
-                      <input type="checkbox" name="service" value="web-saas" checked/>
-                      <span>Web / SaaS Software (Laravel &amp; Next.js)</span>
+                      <input type="checkbox" name="service[]" value="{{ $service->title }}" {{ $i === 0 ? 'checked' : '' }}/>
+                      <span>{{ $service->title }}</span>
                     </label>
-                    <label class="choice">
-                      <input type="checkbox" name="service" value="mobile-app"/>
-                      <span>Mobile App (Flutter / iOS / Android)</span>
-                    </label>
-                    <label class="choice">
-                      <input type="checkbox" name="service" value="fintech-commerce"/>
-                      <span>E-Commerce / FinTech Platform</span>
-                    </label>
-                    <label class="choice">
-                      <input type="checkbox" name="service" value="paid-acquisition"/>
-                      <span>Performance Marketing &amp; Paid Media</span>
-                    </label>
-                    <label class="choice">
-                      <input type="checkbox" name="service" value="brand-production"/>
-                      <span>Brand Identity, Film &amp; Photo Shoot</span>
-                    </label>
-                    <label class="choice">
-                      <input type="checkbox" name="service" value="dedicated-squad"/>
-                      <span>Dedicated Embedded Squad</span>
-                    </label>
+@endforeach
                   </div>
                 </fieldset>
 

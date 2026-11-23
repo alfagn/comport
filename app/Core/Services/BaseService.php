@@ -24,7 +24,7 @@ abstract class BaseService
      */
     protected function normalizeJsonLines(array $attributes): array
     {
-        $listFields = ['deliverables', 'meta', 'pills', 'responsibilities', 'requirements', 'bio', 'services'];
+        $listFields = ['deliverables', 'meta', 'pills', 'responsibilities', 'requirements', 'bio', 'services', 'tags'];
 
         foreach ($listFields as $field) {
             if (isset($attributes[$field]) && is_string($attributes[$field])) {

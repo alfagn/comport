@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'tag', 'kicker', 'heading', 'description',
+        'num', 'title', 'slug', 'tag', 'kicker', 'heading', 'description',
         'deliverables', 'metric_num', 'metric_label',
         'cta_label', 'cta_url', 'image', 'sort_order', 'is_active',
     ];

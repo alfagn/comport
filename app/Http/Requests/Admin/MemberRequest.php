@@ -27,6 +27,8 @@ class MemberRequest extends FormRequest
             'role' => ['nullable', 'string', 'max:160'],
             'kind' => ['required', 'in:founder,member'],
             'focus' => ['nullable', 'string', 'max:255'],
+            'lead' => ['nullable', 'string', 'max:500'],
+            'expertise' => ['nullable', 'string'],
             'bio' => ['nullable', 'string'],
             'photo' => ['nullable', 'image', 'max:4096'],
             'email' => ['nullable', 'email', 'max:160'],

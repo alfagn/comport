@@ -95,131 +95,23 @@
         </div>
 
         <div id="blog-archive" class="post-grid">
-          <!-- LOOP: news-item -->
-          <article class="post-card" data-category="engineering marketing photos video">
-            <a href="{{ url('/blog/post') }}" class="post-card__link">
+          @foreach($posts as $post)
+          <article class="post-card" data-category="{{ $post->type }} {{ \Illuminate\Support\Str::slug($post->category) }}">
+            <a href="{{ route('blog.show', $post->slug) }}" class="post-card__link">
               <div class="frame post-card__frame frame--zoom">
-                <img src="{{ asset('assets/img/blog/arabic-first.jpg') }}" alt="Designer sketching Arabic right-to-left interface wireframes on paper" width="800" height="533"/>
-                <span class="post-card__badge">ARTICLE + VIDEO + 4 PHOTOS</span>
+                <img src="{{ str_starts_with((string) $post->cover_image, 'uploads/') ? asset('storage/'.$post->cover_image) : asset($post->cover_image ?: 'assets/img/blog/placeholder.jpg') }}" alt="{{ $post->title }}" width="800" height="533"/>
+                <span class="post-card__badge">{{ $post->type === 'video' ? 'VIDEO EPISODE' : ($post->type === 'photos' ? 'PHOTO ESSAY' : 'ARTICLE') }}</span>
               </div>
               <div class="post-card__meta">
-                <span class="post-card__cat">DESIGN SYSTEMS &amp; CRO</span>
-                <time datetime="2026-11-14">14 NOV 2026</time>
-                <span>8 MIN READ</span>
+                <span class="post-card__cat">{{ $post->category }}</span>
+                <time datetime="{{ $post->published_at?->format('Y-m-d') }}">{{ $post->published_at?->format('d M Y') }}</time>
+                @if($post->meta['card_label'] ?? null)<span>{{ $post->meta['card_label'] }}</span>@endif
               </div>
-              <h2 class="post-card__title">Engineering Arabic-First Design Systems &amp; High-Conversion Funnels</h2>
-              <p class="post-card__excerpt">
-                A complete engineering and conversion guide to CSS logical properties, Arabic typographic rhythm, and bilingual checkout funnels—with video walkthrough and photo gallery.
-              </p>
+              <h2 class="post-card__title">{{ $post->title }}</h2>
+              <p class="post-card__excerpt">{{ $post->excerpt }}</p>
             </a>
           </article>
-          <!-- END LOOP: news-item -->
-
-          <!-- LOOP: news-item -->
-          <article class="post-card" data-category="video engineering marketing">
-            <a href="{{ url('/blog/video') }}" class="post-card__link">
-              <div class="frame post-card__frame frame--zoom">
-                <img src="{{ asset('assets/img/blog/design-sprint.jpg') }}" alt="Team voting with dot stickers on product wireframes pinned to a wall" width="800" height="533"/>
-                <span class="post-card__play" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="currentColor"><polygon points="4,2 14,8 4,14"/></svg>
-                </span>
-                <span class="post-card__badge">VIDEO EPISODE &middot; 14:20</span>
-              </div>
-              <div class="post-card__meta">
-                <span class="post-card__cat">VIDEO DOCUMENTARY</span>
-                <time datetime="2026-11-05">05 NOV 2026</time>
-                <span>VIDEO + TRANSCRIPT</span>
-              </div>
-              <h2 class="post-card__title">Inside an Empetix 5-Day Product &amp; Growth Sprint (Full Episode)</h2>
-              <p class="post-card__excerpt">
-                Full 14-minute studio documentary with interactive chapter timestamps, day-by-day deliverables breakdown, and workshop photography.
-              </p>
-            </a>
-          </article>
-          <!-- END LOOP: news-item -->
-
-          <!-- LOOP: news-item -->
-          <article class="post-card" data-category="photos marketing video">
-            <a href="{{ url('/blog/photos') }}" class="post-card__link">
-              <div class="frame post-card__frame frame--zoom">
-                <img src="{{ asset('assets/img/blog/behind-the-lens.jpg') }}" alt="Barista pouring latte art on set during commercial film shoot" width="800" height="533"/>
-                <span class="post-card__badge">PHOTO ESSAY &middot; 8 PHOTOS + REEL</span>
-              </div>
-              <div class="post-card__meta">
-                <span class="post-card__cat">COMMERCIAL PRODUCTION</span>
-                <time datetime="2026-10-22">22 OCT 2026</time>
-                <span>LIGHTBOX GALLERY</span>
-              </div>
-              <h2 class="post-card__title">Behind the Lens: Directing the Qahwa Roasters Omnichannel Launch Shoot</h2>
-              <p class="post-card__excerpt">
-                Explore 8 high-resolution behind-the-scenes photographs, lighting diagrams, director notes, and the final commercial reel that drove +190% subscriptions.
-              </p>
-            </a>
-          </article>
-          <!-- END LOOP: news-item -->
-
-          <!-- LOOP: news-item -->
-          <article class="post-card" data-category="marketing">
-            <a href="{{ url('/blog/post') }}" class="post-card__link">
-              <div class="frame post-card__frame frame--zoom">
-                <img src="{{ asset('assets/img/blog/performance-playbook.jpg') }}" alt="Marketing analysts reviewing attribution telemetry on dual monitors" width="800" height="533"/>
-                <span class="post-card__badge">GROWTH PLAYBOOK</span>
-              </div>
-              <div class="post-card__meta">
-                <span class="post-card__cat">PAID ACQUISITION</span>
-                <time datetime="2026-10-09">09 OCT 2026</time>
-                <span>11 MIN READ</span>
-              </div>
-              <h2 class="post-card__title">Server-Side Attribution in 2026: Wiring Laravel Events Directly to Meta CAPI &amp; Google Ads</h2>
-              <p class="post-card__excerpt">
-                How we replaced fragile browser pixels with deterministic backend webhooks to recover 34% of lost conversion signals and lower blended CAC.
-              </p>
-            </a>
-          </article>
-          <!-- END LOOP: news-item -->
-
-          <!-- LOOP: news-item -->
-          <article class="post-card" data-category="video engineering">
-            <a href="{{ url('/blog/video') }}" class="post-card__link">
-              <div class="frame post-card__frame frame--zoom">
-                <img src="{{ asset('assets/img/blog/talks-engineering.jpg') }}" alt="Engineers gathered around a table during a technical architecture talk" width="800" height="533"/>
-                <span class="post-card__play" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="currentColor"><polygon points="4,2 14,8 4,14"/></svg>
-                </span>
-                <span class="post-card__badge">TECH TALK VIDEO &middot; 22:10</span>
-              </div>
-              <div class="post-card__meta">
-                <span class="post-card__cat">BACKEND ENGINEERING</span>
-                <time datetime="2026-09-24">24 SEP 2026</time>
-                <span>VIDEO + CODE NOTES</span>
-              </div>
-              <h2 class="post-card__title">Zero-Downtime Ledger Migrations in Laravel: Lessons from 1.4 Million Active Wallets</h2>
-              <p class="post-card__excerpt">
-                CTO Mohanad Ahmed Shehata walks through our dual-write migration pattern, idempotency keys, and automated reconciliation tests.
-              </p>
-            </a>
-          </article>
-          <!-- END LOOP: news-item -->
-
-          <!-- LOOP: news-item -->
-          <article class="post-card" data-category="photos">
-            <a href="{{ url('/blog/photos') }}" class="post-card__link">
-              <div class="frame post-card__frame frame--zoom">
-                <img src="{{ asset('assets/img/blog/studio-week.jpg') }}" alt="Two developers pair-programming at a wooden desk in soft daylight" width="800" height="533"/>
-                <span class="post-card__badge">PHOTO DISPATCH &middot; 8 FRAMES</span>
-              </div>
-              <div class="post-card__meta">
-                <span class="post-card__cat">STUDIO CULTURE</span>
-                <time datetime="2026-09-10">10 SEP 2026</time>
-                <span>PHOTO ESSAY</span>
-              </div>
-              <h2 class="post-card__title">A Week Inside Empetix Cairo: Code Reviews, Critique Walls &amp; Rooftop Suppers</h2>
-              <p class="post-card__excerpt">
-                An unfiltered 35mm photo journal documenting five days with our software, design, and film teams in Cairo.
-              </p>
-            </a>
-          </article>
-          <!-- END LOOP: news-item -->
+@endforeach
         </div>
       </div>
     </section>

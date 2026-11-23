@@ -22,6 +22,7 @@ class JobPostRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'ref_code' => ['nullable', 'string', 'max:30'],
             'title' => ['required', 'string', 'max:200'],
             'slug' => ['nullable', 'string', 'max:220', 'alpha_dash'],
             'department' => ['nullable', 'string', 'max:120'],
@@ -30,8 +31,10 @@ class JobPostRequest extends FormRequest
             'summary' => ['nullable', 'string'],
             'intro' => ['nullable', 'string'],
             'pills' => ['nullable', 'string'],
+            'tags' => ['nullable', 'string'],
             'responsibilities' => ['nullable', 'string'],
             'requirements' => ['nullable', 'string'],
+            'sections' => ['nullable', 'string'],
             'is_active' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ];

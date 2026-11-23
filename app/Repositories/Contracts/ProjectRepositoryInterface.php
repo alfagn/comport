@@ -18,4 +18,7 @@ interface ProjectRepositoryInterface extends RepositoryInterface
 
     /** An active project by slug for the public case-study page. */
     public function findActiveBySlug(string $slug): \App\Models\Project;
+
+    /** The next live project after the given one (sort order, wrapping to the first). */
+    public function nextAfter(\App\Models\Project $project): ?\App\Models\Project;
 }

@@ -11,7 +11,7 @@ class HeroSlide extends Model
 {
     protected $fillable = [
         'tag', 'title', 'description', 'cta_label', 'cta_url',
-        'image', 'meta', 'sort_order', 'is_active',
+        'image', 'meta', 'tab_label', 'tab_title', 'tab_sub', 'sort_order', 'is_active',
     ];
 
     protected $casts = [

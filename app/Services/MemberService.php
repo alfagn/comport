@@ -36,10 +36,27 @@ class MemberService extends BaseService
         return $this->repository->find($id);
     }
 
+    /**
+     * Expertise lines arrive as "Title | description" text; convert to
+     * structured pairs before JSON storage.
+     */
+    private function normalizeExpertise(array $attributes): array
+    {
+        if (isset($attributes['expertise']) && is_array($attributes['expertise'])) {
+            $attributes['expertise'] = array_values(array_map(function (string $line) {
+                $parts = array_map('trim', explode('|', $line, 2));
+
+                return ['title' => $parts[0], 'desc' => $parts[1] ?? ''];
+            }, $attributes['expertise']));
+        }
+
+        return $attributes;
+    }
+
     /** Create a record from validated input. */
     public function create(MemberData $data, ?UploadedFile $photoFile = null): Model
     {
-        $attributes = $this->normalizeJsonLines($data->toArray());
+        $attributes = $this->normalizeExpertise($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['title'] ?? $attributes['name'] ?? '');
         $attributes['photo'] = $this->storeUpload($photoFile, 'uploads/members');
 
@@ -50,7 +67,7 @@ class MemberService extends BaseService
     public function update(int $id, MemberData $data, ?UploadedFile $photoFile = null): Model
     {
         $record = $this->repository->find($id);
-        $attributes = $this->normalizeJsonLines($data->toArray());
+        $attributes = $this->normalizeExpertise($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? $record->slug ?? null;
         $attributes['photo'] = $this->storeUpload($photoFile, 'uploads/members', $record->photo);
 

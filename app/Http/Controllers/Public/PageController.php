@@ -62,7 +62,11 @@ class PageController extends Controller
     /** Case-study detail page. */
     public function project(string $slug): View
     {
-        return view('pages.project', ['project' => $this->projects->findActiveBySlug($slug)]);
+        $project = $this->projects->findActiveBySlug($slug);
+        // The pager links to the next live project in sort order, wrapping around.
+        $next = $this->projects->nextAfter($project);
+
+        return view('pages.project', ['project' => $project, 'nextProject' => $next]);
     }
 
     /** Team page: founders plus the wider team grid. */
@@ -77,7 +81,15 @@ class PageController extends Controller
     /** Founder profile page. */
     public function founder(string $slug): View
     {
-        return view('pages.founder', ['member' => $this->members->findFounderBySlug($slug)]);
+        $member = $this->members->findFounderBySlug($slug);
+
+        return view('pages.founder', [
+            'member' => $member,
+            // The remaining founders, for the "other founders" strip.
+            'otherFounders' => $this->members->founders()->where('id', '!=', $member->id),
+            // Featured projects shared across founder profiles.
+            'projects' => $this->projects->featured()->take(2),
+        ]);
     }
 
     /** Careers index: all open positions. */
@@ -92,7 +104,11 @@ class PageController extends Controller
         $job = $this->jobs->all()->where('is_active', true)->where('slug', $slug)->first();
         abort_unless($job, 404);
 
-        return view('pages.job', ['job' => $job]);
+        return view('pages.job', [
+            'job' => $job,
+            // Remaining openings, for the "other positions" grid.
+            'otherJobs' => $this->jobs->all()->where('is_active', true)->where('id', '!=', $job->id)->take(3),
+        ]);
     }
 
     /** Partners page. */
@@ -110,7 +126,13 @@ class PageController extends Controller
     /** Blog article page (article, video episode or photo essay). */
     public function post(string $slug): View
     {
-        return view('pages.post', ['post' => $this->posts->findPublishedBySlug($slug)]);
+        $post = $this->posts->findPublishedBySlug($slug);
+
+        return view('pages.post', [
+            'post' => $post,
+            // Two latest other published posts for "Continue reading".
+            'relatedPosts' => $this->posts->latestPublished()->where('id', '!=', $post->id)->take(2),
+        ]);
     }
 
     /** Contact page with the services list for the brief form. */

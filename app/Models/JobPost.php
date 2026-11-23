@@ -11,15 +11,17 @@ use Illuminate\Database\Eloquent\Model;
 class JobPost extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'department', 'location', 'type', 'summary',
-        'intro', 'pills', 'responsibilities', 'requirements',
+        'title', 'slug', 'ref_code', 'department', 'location', 'type', 'summary',
+        'intro', 'pills', 'tags', 'responsibilities', 'requirements', 'sections',
         'is_active', 'sort_order',
     ];
 
     protected $casts = [
         'pills' => 'array',
+        'tags' => 'array',
         'responsibilities' => 'array',
         'requirements' => 'array',
+        'sections' => 'array',
         'is_active' => 'boolean',
     ];
 
