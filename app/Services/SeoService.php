@@ -194,6 +194,7 @@ class SeoService
             $urls = $this->getSitemapUrls();
 
             $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+            $xml .= '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>' . PHP_EOL;
             $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"' . PHP_EOL;
             $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml"' . PHP_EOL;
             $xml .= '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . PHP_EOL;
