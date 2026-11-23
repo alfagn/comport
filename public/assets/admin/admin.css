@@ -103,15 +103,20 @@ body.admin::before {
   flex-shrink: 0;
   background: linear-gradient(180deg, var(--ink-900), var(--ink-950));
   border-right: 1px solid var(--line);
-  padding: 22px 14px 18px;
+  padding: 22px 0 18px;
   display: flex;
   flex-direction: column;
   gap: 4px;
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow-y: auto;
+  overflow: hidden;
 }
+
+/* Nav scrolls independently; brand (top) and profile footer (bottom) stay pinned. */
+.sidebar__brand { margin: 0 14px; flex-shrink: 0; }
+.sidebar__nav { flex: 1; min-height: 0; overflow-y: auto; padding: 0 14px; }
+.sidebar__foot { flex-shrink: 0; margin: 0 14px; }
 
 .sidebar__brand {
   display: flex;
@@ -708,10 +713,10 @@ table.table { width: 100%; border-collapse: collapse; }
 
 /* Sidebar: keep the rail tidy on short viewports — thin dark scrollbar,
    and the user chip (with logout) stays pinned and reachable at the bottom. */
-.sidebar { scrollbar-width: thin; scrollbar-color: var(--ink-700) transparent; }
-.sidebar::-webkit-scrollbar { width: 6px; }
-.sidebar::-webkit-scrollbar-thumb { background: var(--ink-700); border-radius: 6px; }
-.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar__nav { scrollbar-width: thin; scrollbar-color: var(--ink-700) transparent; }
+.sidebar__nav::-webkit-scrollbar { width: 6px; }
+.sidebar__nav::-webkit-scrollbar-thumb { background: var(--ink-700); border-radius: 6px; }
+.sidebar__nav::-webkit-scrollbar-track { background: transparent; }
 
 /* ============================================================
    Light redesign (user reference, 2026-11-23): black sidebar,
@@ -726,11 +731,8 @@ table.table { width: 100%; border-collapse: collapse; }
   border-right: none;
   color: #F5F1EC;
 }
-/* The corner glow needs clipping; clip only on desktop so the mobile
-   off-canvas rail keeps its fixed positioning and scroll. */
-@media (min-width: 981px) {
-  .sidebar { overflow: hidden; }
-}
+/* The corner glow is clipped by the rail itself (overflow: hidden above);
+   the inner .sidebar__nav carries the scrolling on every viewport. */
 @media (max-width: 980px) {
   .sidebar::after { display: none; }
 }

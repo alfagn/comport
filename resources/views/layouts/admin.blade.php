@@ -77,6 +77,8 @@
       $adminUser = auth()->user();
     @endphp
 
+    {{-- Scrollable nav region: the brand and the profile footer stay pinned. --}}
+    <nav class="sidebar__nav" aria-label="Dashboard sections">
     <div class="sidebar__label">Overview</div>
     <a class="nav-item {{ $r === 'admin.dashboard' ? 'is-active' : '' }}" href="{{ route('admin.dashboard') }}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="8" height="10" rx="1.5"/><rect x="13" y="3" width="8" height="6" rx="1.5"/><rect x="13" y="11" width="8" height="10" rx="1.5"/><rect x="3" y="15" width="8" height="6" rx="1.5"/></svg>
@@ -148,6 +150,8 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 4h6v6M20 4L10 14M9 5H5a1 1 0 00-1 1v13a1 1 0 001 1h13a1 1 0 001-1v-4"/></svg>
       View Website
     </a>
+
+    </nav>
 
     <div class="sidebar__foot">
       <div class="user-chip">
