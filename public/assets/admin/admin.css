@@ -1171,7 +1171,18 @@ table.dt-table td.dataTables_empty { text-align: center; color: var(--text-muted
   body.sidebar-collapsed .sidebar__signout { padding-left: 6px; padding-right: 6px; }
 }
 
-/* Collapsed sidebar: keep the brand mark inside the narrow rail. */
+/* Collapsed rail: swap the wide wordmark for a square E monogram chip,
+   matching the avatar/topbar treatment (same Empetix identity). */
+.sidebar__brand-mark { display: none; }
 @media (min-width: 981px) {
-  body.sidebar-collapsed .sidebar__brand img { max-width: 44px; object-fit: contain; }
+  body.sidebar-collapsed .sidebar__brand img { display: none; }
+  body.sidebar-collapsed .sidebar__brand-mark {
+    display: flex;
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    color: #fff; font-weight: 800; font-size: 17px;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(255, 77, 28, 0.35);
+  }
 }

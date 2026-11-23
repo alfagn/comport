@@ -102,6 +102,7 @@
     <div class="sidebar__brand">
       <a href="{{ route('admin.dashboard') }}" wire:navigate>
         <img src="{{ brand_logo() }}" alt="Empetix"/>
+        <span class="sidebar__brand-mark" aria-hidden="true">E</span>
       </a>
       <div>
         <small>Solutions</small>
