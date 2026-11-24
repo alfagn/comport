@@ -31,15 +31,16 @@ class SeoDiscoveryTest extends TestCase
 
         $response->assertOk();
         $response->assertHeader('Content-Type', 'application/xml; charset=UTF-8');
+        $response->assertSee('href="/sitemap.xsl"', false);
         $content = $response->getContent();
 
         $this->assertStringContainsString('<?xml version="1.0" encoding="UTF-8"?>', $content);
         $this->assertStringContainsString('<urlset', $content);
-        $this->assertStringContainsString(url('/'), $content);
-        $this->assertStringContainsString(url('/work/alfagn'), $content);
-        $this->assertStringContainsString(url('/blog/arabic-first-design-systems'), $content);
-        $this->assertStringContainsString('hreflang="ar"', $content);
-        $this->assertStringContainsString('hreflang="en"', $content);
+        $this->assertStringContainsString(seo_url('/'), $content);
+        $this->assertStringContainsString(seo_url('/work/alfagn'), $content);
+        $this->assertStringContainsString(seo_url('/blog/arabic-first-design-systems'), $content);
+        $this->assertStringNotContainsString('hreflang=', $content);
+        $this->assertStringContainsString('/founders/mohanad', $content);
     }
 
     /** Public /robots.txt allows search crawlers and explicitly welcomes AI model bots. */
@@ -52,15 +53,15 @@ class SeoDiscoveryTest extends TestCase
         $content = $response->getContent();
 
         $this->assertStringContainsString('User-agent: *', $content);
-        $this->assertStringContainsString('Disallow: /admin/', $content);
+        $this->assertStringContainsString('Disallow: /admin', $content);
         $this->assertStringContainsString('User-agent: GPTBot', $content);
         $this->assertStringContainsString('User-agent: ClaudeBot', $content);
         $this->assertStringContainsString('User-agent: PerplexityBot', $content);
-        $this->assertStringContainsString('Sitemap: ' . url('/sitemap.xml'), $content);
+        $this->assertStringContainsString('Sitemap: '.seo_url('/sitemap.xml'), $content);
     }
 
-    /** Public /llms.txt provides standard Markdown context for AI models with Arabic & English identity. */
-    public function test_public_llms_txt_renders_bilingual_studio_context(): void
+    /** Public /llms.txt provides standard Markdown context for AI models with English identity. */
+    public function test_public_llms_txt_renders_english_studio_context(): void
     {
         $response = $this->get('/llms.txt');
 
@@ -68,11 +69,11 @@ class SeoDiscoveryTest extends TestCase
         $response->assertHeader('Content-Type', 'text/markdown; charset=UTF-8');
         $content = $response->getContent();
 
-        $this->assertStringContainsString('Empetix Solutions', $content);
-        $this->assertStringContainsString('إمبيتكس', $content);
-        $this->assertStringContainsString('حلول إمبيتكس', $content);
+        $this->assertStringContainsString('Empetix Solution', $content);
+        $this->assertStringNotContainsString('Headquarters & Reach', $content);
+        $this->assertStringContainsString('## Public pages', $content);
         $this->assertStringContainsString('Alfagn', $content);
-        $this->assertStringContainsString(url('/work/alfagn'), $content);
+        $this->assertStringContainsString(seo_url('/work/alfagn'), $content);
     }
 
     /** Public /llms-full.txt supplies detailed case studies and technical breakdowns. */
@@ -84,24 +85,24 @@ class SeoDiscoveryTest extends TestCase
         $response->assertHeader('Content-Type', 'text/markdown; charset=UTF-8');
         $content = $response->getContent();
 
-        $this->assertStringContainsString('Case Study:', $content);
+        $this->assertStringContainsString('Published project summaries', $content);
         $this->assertStringContainsString('Technical Essays & Editorial Insights', $content);
     }
 
-    /** Public layout injects JSON-LD Organization schema with Arabic/English aliases. */
+    /** Public layout injects JSON-LD Organization schema with English identity. */
     public function test_public_pages_embed_schema_org_json_ld(): void
     {
         $homeResponse = $this->get('/');
         $homeResponse->assertOk();
         $homeResponse->assertSee('application/ld+json', false);
         $homeResponse->assertSee('Empetix Solutions', false);
-        $homeResponse->assertSee('إمبيتكس', false);
-        $homeResponse->assertSee('حلول إمبيتكس', false);
+        $homeResponse->assertDontSee('إمبيتكس', false);
+        $homeResponse->assertSee('lang="en" dir="ltr"', false);
 
         // Project detail embeds SoftwareApplication schema
         $projectResponse = $this->get('/work/alfagn');
         $projectResponse->assertOk();
-        $projectResponse->assertSee('SoftwareApplication', false);
+        $projectResponse->assertSee('CreativeWork', false);
         $projectResponse->assertSee('Alfagn', false);
     }
 
@@ -151,7 +152,7 @@ class SeoDiscoveryTest extends TestCase
         $indexResponse = $this->get('/admin/sitemap');
         $indexResponse->assertOk();
         $indexResponse->assertSee('XML Sitemap &amp; URL Inventory', false);
-        $indexResponse->assertSee('Total URLs Indexed', false);
+        $indexResponse->assertSee('Public URLs Listed', false);
         $indexResponse->assertSee('/work/alfagn', false);
 
         // Regenerate action

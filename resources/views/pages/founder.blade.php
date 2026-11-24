@@ -1,4 +1,4 @@
-@extends('layouts.public', ['activePage' => 'team'])
+@extends('layouts.public', ['activePage' => 'team', 'pageClass' => 'founder-page'])
 
 @section('meta')
   <meta name="description" content="{{ $member->name }}, {{ $member->role }} at Empetix Solution."/>
@@ -8,12 +8,12 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ $member->name }} — Empetix Solution"/>
   <meta property="og:description" content="{{ $member->name }}, {{ $member->role }} at Empetix Solution."/>
-  <meta property="og:url" content="{{ url()->current() }}"/>
-  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:url" content="{{ seo_current_url() }}"/>
+  <meta property="og:image" content="{{ seo_og_image() }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ $member->name }} — Empetix Solution"/>
   <meta name="twitter:description" content="{{ $member->name }}, {{ $member->role }} at Empetix Solution."/>
-  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta name="twitter:image" content="{{ seo_og_image() }}"/>
 @endsection
 
 @section('content')
@@ -24,7 +24,7 @@
           <ol class="founder-crumb__list">
             <li class="founder-crumb__item"><a href="{{ url('/') }}" class="founder-crumb__link">{{ sec('founder', 'copy_66b93f927675') }}</a></li>
             <li class="founder-crumb__item"><a href="{{ url('/team') }}" class="founder-crumb__link">{{ sec('founder', 'copy_cdbd990d3384') }}</a></li>
-            <li class="founder-crumb__item" aria-current="page">{{ sec('founder', 'copy_12659584a8fd') }}</li>
+            <li class="founder-crumb__item" aria-current="page">{{ $member->name }}</li>
           </ol>
         </nav>
 
@@ -33,7 +33,7 @@
             <img
               class="founder-hero__photo"
               src="{{ str_starts_with((string) $member->photo, 'uploads/') ? asset('storage/'.$member->photo) : asset($member->photo) }}"
-              alt="{{ sec('founder', 'copy_b135a6b41c48') }}"
+              alt="Portrait of {{ $member->name }}, {{ $member->role }}"
               width="800"
               height="1000"
             />

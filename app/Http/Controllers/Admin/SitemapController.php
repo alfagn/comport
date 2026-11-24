@@ -58,6 +58,6 @@ class SitemapController extends Controller
     {
         $this->seo->flushCaches();
 
-        return back()->with('success', 'Sitemap successfully pinged. Major search engines have been notified of your URL updates.');
+        return back()->with('success', 'Discovery documents refreshed locally. No search engine was notified. Submit the production sitemap through a verified webmaster account.');
     }
 }

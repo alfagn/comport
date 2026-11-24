@@ -47,19 +47,20 @@
   align-items: stretch;
   justify-content: space-between;
   block-size: 100%;
-  max-inline-size: var(--container-max);
+  inline-size: 100%;
+  max-inline-size: 100%;
   margin-inline: auto;
-  padding-inline-start: var(--container-pad);
+  padding-inline-start: clamp(1.25rem, 3vw, 3.5rem);
 }
 
 .utility__links {
   display: none;
   align-items: center;
-  gap: clamp(1.25rem, 2.2vw, 2.25rem);
+  gap: clamp(1.5rem, 2.4vw, 2.5rem);
   padding-inline-end: var(--space-6);
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 68rem) {
   .utility__links {
     display: flex;
   }
@@ -121,7 +122,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: clamp(4.5rem, 11vw, 10.5rem);
+  inline-size: clamp(4.75rem, 12vw, 13.75rem);
   block-size: 100%;
   background-color: #FF5B1F;
   color: #FFFFFF;
@@ -144,7 +145,7 @@
    ROW 2: Main Gridded Navbar with 1px Vertical Cell Dividers
    -------------------------------------------------------------------------- */
 .nav-bar {
-  block-size: 5.125rem;
+  block-size: 5.25rem;
   background-color: #FFFFFF;
   border-block-end: var(--border) solid #E6EBF2;
 }
@@ -154,16 +155,17 @@
   align-items: stretch;
   justify-content: space-between;
   block-size: 100%;
-  max-inline-size: var(--container-max);
+  inline-size: 100%;
+  max-inline-size: 100%;
   margin-inline: auto;
   padding-inline: var(--container-pad);
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 68rem) {
   .nav-bar__inner {
     padding-inline: 0;
     border-inline-start: 0;
-    border-inline-end: var(--border) solid #E6EBF2;
+    border-inline-end: 0;
   }
 }
 
@@ -179,7 +181,7 @@
 .brand__logo-img {
   display: block;
   inline-size: auto;
-  block-size: 2.85rem;
+  block-size: clamp(2.45rem, 2.5vw, 2.85rem);
   aspect-ratio: 881 / 302;
   object-fit: contain;
   transition: transform var(--dur-base) var(--ease-spring);
@@ -189,11 +191,10 @@
   transform: scale(1.04);
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 68rem) {
   .brand {
-    padding-inline: clamp(1.5rem, 2.5vw, 2.5rem);
+    padding-inline: clamp(1.5rem, 2.8vw, 3.25rem);
     border-inline-end: var(--border) solid #E6EBF2;
-    min-inline-size: 14.5rem;
   }
 }
 
@@ -242,14 +243,15 @@
   background-color: var(--color-accent-500);
 }
 
-/* Desktop Gridded Nav Cells */
+/* Desktop Gridded Nav Cells — Intrinsic Spacious Flex Distribution */
 .nav {
   display: none;
   block-size: 100%;
-  flex: 1;
+  flex: 1 1 auto;
+  min-inline-size: 0;
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 68rem) {
   .nav {
     display: flex;
     align-items: stretch;
@@ -257,20 +259,17 @@
 }
 
 .nav__list {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
+  align-items: stretch;
   inline-size: 100%;
   block-size: 100%;
 }
 
 .nav__item {
   display: flex;
+  flex: 1 1 auto;
   block-size: 100%;
   border-inline-end: var(--border) solid #E6EBF2;
-}
-
-.nav__item:last-child {
-  border-inline-end: 0;
 }
 
 .nav__link {
@@ -278,14 +277,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  gap: 0.45rem;
   inline-size: 100%;
   block-size: 100%;
-  padding-inline: var(--space-4);
-  font-size: 0.95rem;
+  padding-inline: clamp(0.9rem, 1.75vw, 2.35rem);
+  font-size: clamp(0.86rem, 0.94vw, 0.96rem);
   font-weight: var(--weight-medium);
   color: var(--color-ink-900);
   text-align: center;
+  white-space: nowrap;
   transition:
     background-color var(--dur-fast) var(--ease-out),
     color var(--dur-fast) var(--ease-out);
@@ -333,11 +333,12 @@
 .nav-bar__actions {
   display: none;
   align-items: center;
-  padding-inline-start: var(--space-5);
+  justify-content: center;
+  padding-inline: clamp(1.15rem, 2vw, 2.5rem);
   flex-shrink: 0;
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 68rem) {
   .nav-bar__actions {
     display: flex;
   }
@@ -346,23 +347,27 @@
 .nav-bar__cta {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  min-block-size: 2.5rem;
-  padding-inline: 1.25rem;
-  font-size: 0.85rem;
-  font-weight: var(--weight-medium);
-  letter-spacing: 0.02em;
+  justify-content: center;
+  gap: 0.55rem;
+  min-block-size: 2.7rem;
+  padding-inline: clamp(1.2rem, 1.5vw, 1.65rem);
+  font-size: 0.9rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
   background-color: #FF5B1F;
   color: #FFFFFF;
   border-radius: var(--radius-1);
-  box-shadow: 0 4px 14px rgba(255, 91, 31, 0.28);
+  box-shadow: 0 4px 14px rgba(255, 91, 31, 0.26);
   transition:
     background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
     transform var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-fast) var(--ease-out);
 }
 
-.nav-bar__cta:hover {
+.nav-bar__cta:hover,
+.nav-bar__cta[aria-current="page"] {
   background-color: var(--color-ink-900);
   color: #FFFFFF;
   transform: translateY(-1px);
@@ -371,6 +376,14 @@
 
 .nav-bar__cta:active {
   transform: scale(0.98);
+}
+
+.nav-bar__cta:hover .btn__icon {
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .nav-bar__cta:hover .btn__icon {
+  transform: scaleX(-1) translateX(3px);
 }
 
 /* --------------------------------------------------------------------------
@@ -474,7 +487,7 @@
   background-color: currentColor;
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 68rem) {
   .nav-bar__mobile-actions,
   .menu-toggle {
     display: none;

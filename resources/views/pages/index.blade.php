@@ -1,26 +1,26 @@
 @extends('layouts.public', ['activePage' => 'home'])
 
 @section('meta')
-  <meta name="description" content="{{ sec('home', 'copy_24622118df1b') }}"/>
-  <title>{{ sec('home', 'copy_3e8e84b38e6d') }}</title>
+  <meta name="description" content="{{ setting('seo_meta_description_en', sec('home', 'copy_24622118df1b')) }}"/>
+  <title>{{ setting('seo_meta_title_en', sec('home', 'copy_3e8e84b38e6d')) }}</title>
   <!-- Open Graph / WhatsApp Preview -->
   <meta name="theme-color" content="#0A111C"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Empetix Solution"/>
-  <meta property="og:title" content="{{ sec('home', 'copy_3e8e84b38e6d') }}"/>
-  <meta property="og:description" content="{{ sec('home', 'copy_24622118df1b') }}"/>
-  <meta property="og:url" content="{{ url()->current() }}"/>
-  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
-  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
-  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:title" content="{{ setting('seo_meta_title_en', sec('home', 'copy_3e8e84b38e6d')) }}"/>
+  <meta property="og:description" content="{{ setting('seo_meta_description_en', sec('home', 'copy_24622118df1b')) }}"/>
+  <meta property="og:url" content="{{ seo_current_url() }}"/>
+  <meta property="og:image" content="{{ seo_og_image() }}"/>
+  <meta property="og:image:url" content="{{ seo_og_image() }}"/>
+  <meta property="og:image:secure_url" content="{{ seo_og_image() }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
   <meta property="og:image:alt" content="{{ sec('home', 'copy_46054f40eb9f') }}"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="{{ sec('home', 'copy_3e8e84b38e6d') }}"/>
-  <meta name="twitter:description" content="{{ sec('home', 'copy_24622118df1b') }}"/>
-  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta name="twitter:title" content="{{ setting('seo_meta_title_en', sec('home', 'copy_3e8e84b38e6d')) }}"/>
+  <meta name="twitter:description" content="{{ setting('seo_meta_description_en', sec('home', 'copy_24622118df1b')) }}"/>
+  <meta name="twitter:image" content="{{ seo_og_image() }}"/>
 @endsection
 
 @section('content')

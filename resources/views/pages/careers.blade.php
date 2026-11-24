@@ -9,10 +9,10 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ sec('careers', 'copy_c8f958fda5c5') }}"/>
   <meta property="og:description" content="{{ sec('careers', 'copy_71c7ef938d08') }}"/>
-  <meta property="og:url" content="{{ url()->current() }}"/>
-  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
-  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
-  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:url" content="{{ seo_current_url() }}"/>
+  <meta property="og:image" content="{{ seo_og_image() }}"/>
+  <meta property="og:image:url" content="{{ seo_og_image() }}"/>
+  <meta property="og:image:secure_url" content="{{ seo_og_image() }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ sec('careers', 'copy_c8f958fda5c5') }}"/>
   <meta name="twitter:description" content="{{ sec('careers', 'copy_71c7ef938d08') }}"/>
-  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta name="twitter:image" content="{{ seo_og_image() }}"/>
 @endsection
 
 @section('content')

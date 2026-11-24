@@ -8,8 +8,8 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ $job->title }} — Careers at Empetix Solution"/>
   <meta property="og:description" content="{{ $job->summary }}"/>
-  <meta property="og:url" content="{{ url()->current() }}"/>
-  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:url" content="{{ seo_current_url() }}"/>
+  <meta property="og:image" content="{{ seo_og_image() }}"/>
 @endsection
 
 @section('content')
