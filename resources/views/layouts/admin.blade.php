@@ -629,8 +629,10 @@
         .finally(function() {
           toggleBtn.classList.remove('is-busy');
         });
+    });
+
     // 5. Universal DataTable Bulk Selection & Floating Bulk Bar
-    function initDataTableBulkSelection() {
+    function ensureBulkBar() {
       var bar = document.getElementById('empetix-bulk-bar');
       if (!bar) {
         bar = document.createElement('div');
@@ -650,11 +652,163 @@
           </div>
         `;
         document.body.appendChild(bar);
+      }
+      return bar;
+    }
 
-        // Clear selection button
-        bar.querySelector('.dt-bulk-clear-btn').addEventListener('click', function() {
-          if (!bar.__activeTable) return;
-          var table = bar.__activeTable;
+    function updateBulkBarForTable(table) {
+      if (!table) return;
+      var bar = ensureBulkBar();
+      var checked = table.querySelectorAll('tbody .dt-row-select:checked');
+      var count = checked.length;
+      var allRows = table.querySelectorAll('tbody .dt-row-select');
+      var master = table.querySelector('thead .dt-select-all');
+
+      if (master) {
+        if (count === 0) {
+          master.checked = false;
+          master.indeterminate = false;
+        } else if (count === allRows.length && allRows.length > 0) {
+          master.checked = true;
+          master.indeterminate = false;
+        } else {
+          master.checked = false;
+          master.indeterminate = true;
+        }
+      }
+
+      var countEls = document.querySelectorAll('.dt-bulk-count, .dt-bulk-count-btn');
+      countEls.forEach(function(el) { el.textContent = count; });
+
+      // Also inject and update top toolbar bulk button in the card
+      var wrap = table.closest('.table-wrap--dt') || table.closest('.card');
+      if (wrap) {
+        var topBtn = wrap.querySelector('.dt-card-bulk-delete');
+        if (!topBtn) {
+          var lengthBox = wrap.querySelector('.dataTables_length');
+          if (lengthBox) {
+            topBtn = document.createElement('button');
+            topBtn.type = 'button';
+            topBtn.className = 'btn btn--danger btn--sm dt-bulk-delete-btn dt-card-bulk-delete';
+            topBtn.style.cssText = 'display:none; margin-left:14px; vertical-align:middle;';
+            topBtn.innerHTML = `
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Delete Selected (<span class="dt-bulk-count-btn">0</span>)</span>
+            `;
+            lengthBox.appendChild(topBtn);
+          }
+        }
+        if (topBtn) {
+          topBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+          var topNum = topBtn.querySelector('.dt-bulk-count-btn');
+          if (topNum) topNum.textContent = count;
+        }
+      }
+
+      if (count > 0) {
+        bar.classList.add('is-active');
+        bar.__activeTable = table;
+      } else {
+        bar.classList.remove('is-active');
+        bar.__activeTable = null;
+      }
+    }
+
+    function executeBulkDelete(table) {
+      if (!table) return;
+      var checkedBoxes = table.querySelectorAll('tbody .dt-row-select:checked');
+      var ids = Array.from(checkedBoxes).map(function(cb) { return cb.value; });
+      if (!ids.length) return;
+
+      var bulkUrl = table.getAttribute('data-bulk-url');
+      if (!bulkUrl) {
+        var entity = table.getAttribute('data-entity');
+        if (!entity) {
+          var pathParts = window.location.pathname.split('/').filter(Boolean);
+          entity = pathParts[pathParts.length - 1];
+        }
+        bulkUrl = '/admin/bulk-delete/' + entity;
+      }
+
+      var count = ids.length;
+      var label = count === 1 ? 'record' : 'records';
+
+      window.empetixConfirm({
+        title: 'Delete ' + count + ' ' + label + '?',
+        text: 'Are you sure you want to permanently delete these ' + count + ' selected ' + label + '? This action cannot be undone.',
+        confirmText: 'Yes, Delete ' + count + ' ' + label,
+        cancelText: 'Cancel'
+      }).then(function(result) {
+        if (!result.isConfirmed) return;
+
+        var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        var token = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
+        fetch(bulkUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': token,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ ids: ids })
+        })
+        .then(function(res) {
+          if (!res.ok) throw new Error('Deletion failed');
+          return res.json();
+        })
+        .then(function(data) {
+          if (window.empetixToast) {
+            window.empetixToast(data.message || (count + ' ' + label + ' deleted successfully.'), 'success');
+          }
+          if (window.jQuery) {
+            var dt = window.jQuery(table).DataTable();
+            if (dt) dt.ajax.reload(null, false);
+          }
+          var bar = ensureBulkBar();
+          bar.classList.remove('is-active');
+          bar.__activeTable = null;
+          updateBulkBarForTable(table);
+        })
+        .catch(function() {
+          if (window.empetixToast) {
+            window.empetixToast('Could not delete selected records. Please try again.', 'error');
+          }
+        });
+      });
+    }
+
+    // Global event listeners for Checkboxes & Bulk Bar
+    document.addEventListener('change', function(e) {
+      var target = e.target;
+      if (target.matches('.dt-select-all')) {
+        var table = target.closest('table');
+        if (!table) return;
+        var isChecked = target.checked;
+        var rowChecks = table.querySelectorAll('tbody .dt-row-select');
+        rowChecks.forEach(function(cb) {
+          cb.checked = isChecked;
+          var tr = cb.closest('tr');
+          if (tr) tr.classList.toggle('is-selected', isChecked);
+        });
+        updateBulkBarForTable(table);
+      } else if (target.matches('.dt-row-select')) {
+        var table = target.closest('table');
+        if (!table) return;
+        var tr = target.closest('tr');
+        if (tr) tr.classList.toggle('is-selected', target.checked);
+        updateBulkBarForTable(table);
+      }
+    });
+
+    // Bulk bar buttons delegation
+    document.addEventListener('click', function(e) {
+      var clearBtn = e.target.closest('.dt-bulk-clear-btn');
+      if (clearBtn) {
+        var bar = ensureBulkBar();
+        var table = bar.__activeTable || document.querySelector('table.dt-table');
+        if (table) {
           var master = table.querySelector('thead .dt-select-all');
           if (master) { master.checked = false; master.indeterminate = false; }
           table.querySelectorAll('tbody .dt-row-select').forEach(function(cb) {
@@ -662,137 +816,33 @@
             var tr = cb.closest('tr');
             if (tr) tr.classList.remove('is-selected');
           });
-          updateBarForTable(table);
-        });
-
-        // Delete button click
-        bar.querySelector('.dt-bulk-delete-btn').addEventListener('click', function() {
-          if (!bar.__activeTable) return;
-          var table = bar.__activeTable;
-          var checkedBoxes = table.querySelectorAll('tbody .dt-row-select:checked');
-          var ids = Array.from(checkedBoxes).map(function(cb) { return cb.value; });
-          if (!ids.length) return;
-
-          var bulkUrl = table.getAttribute('data-bulk-url');
-          if (!bulkUrl) return;
-
-          var count = ids.length;
-          var label = count === 1 ? 'record' : 'records';
-
-          window.empetixConfirm({
-            title: 'Delete ' + count + ' ' + label + '?',
-            text: 'Are you sure you want to permanently delete these ' + count + ' selected ' + label + '? This action cannot be undone.',
-            confirmText: 'Yes, Delete ' + count + ' ' + label,
-            cancelText: 'Cancel'
-          }).then(function(result) {
-            if (!result.isConfirmed) return;
-
-            var csrfMeta = document.querySelector('meta[name="csrf-token"]');
-            var token = csrfMeta ? csrfMeta.getAttribute('content') : '';
-
-            fetch(bulkUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': token,
-                'X-Requested-With': 'XMLHttpRequest'
-              },
-              body: JSON.stringify({ ids: ids })
-            })
-            .then(function(res) {
-              if (!res.ok) throw new Error('Deletion failed');
-              return res.json();
-            })
-            .then(function(data) {
-              if (window.empetixToast) {
-                window.empetixToast(data.message || (count + ' ' + label + ' deleted successfully.'), 'success');
-              }
-              if (window.jQuery) {
-                var dt = window.jQuery(table).DataTable();
-                if (dt) dt.ajax.reload(null, false);
-              }
-              bar.classList.remove('is-active');
-              bar.__activeTable = null;
-            })
-            .catch(function() {
-              if (window.empetixToast) {
-                window.empetixToast('Could not delete selected records. Please try again.', 'error');
-              }
-            });
-          });
-        });
+          updateBulkBarForTable(table);
+        }
+        return;
       }
 
-      function updateBarForTable(table) {
-        if (!table) return;
-        var checked = table.querySelectorAll('tbody .dt-row-select:checked');
-        var count = checked.length;
-        var allRows = table.querySelectorAll('tbody .dt-row-select');
-        var master = table.querySelector('thead .dt-select-all');
-
-        if (master) {
-          if (count === 0) {
-            master.checked = false;
-            master.indeterminate = false;
-          } else if (count === allRows.length) {
-            master.checked = true;
-            master.indeterminate = false;
-          } else {
-            master.checked = false;
-            master.indeterminate = true;
-          }
-        }
-
-        var countEls = bar.querySelectorAll('.dt-bulk-count, .dt-bulk-count-btn');
-        countEls.forEach(function(el) { el.textContent = count; });
-
-        if (count > 0) {
-          bar.classList.add('is-active');
-          bar.__activeTable = table;
-        } else {
-          bar.classList.remove('is-active');
-          bar.__activeTable = null;
-        }
+      var delBtn = e.target.closest('.dt-bulk-delete-btn');
+      if (delBtn) {
+        var bar = ensureBulkBar();
+        var table = bar.__activeTable || delBtn.closest('.card')?.querySelector('table.dt-table') || document.querySelector('table.dt-table');
+        if (table) executeBulkDelete(table);
       }
+    });
 
-      // Checkbox click delegation
-      document.addEventListener('change', function(e) {
-        var target = e.target;
-        if (target.matches('.dt-select-all')) {
-          var table = target.closest('table[data-bulk-url]');
-          if (!table) return;
-          var isChecked = target.checked;
-          var rowChecks = table.querySelectorAll('tbody .dt-row-select');
-          rowChecks.forEach(function(cb) {
-            cb.checked = isChecked;
-            var tr = cb.closest('tr');
-            if (tr) tr.classList.toggle('is-selected', isChecked);
-          });
-          updateBarForTable(table);
-        } else if (target.matches('.dt-row-select')) {
-          var table = target.closest('table[data-bulk-url]');
-          if (!table) return;
-          var tr = target.closest('tr');
-          if (tr) tr.classList.toggle('is-selected', target.checked);
-          updateBarForTable(table);
-        }
+    // Hook onto DataTables draw events
+    if (window.jQuery) {
+      window.jQuery(document).off('draw.dt.bulk').on('draw.dt.bulk', 'table', function() {
+        updateBulkBarForTable(this);
       });
-
-      // On DataTable draw event, sync checkboxes state
-      if (window.jQuery) {
-        window.jQuery(document).off('draw.dt.bulk').on('draw.dt.bulk', 'table[data-bulk-url]', function() {
-          updateBarForTable(this);
-        });
-      }
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initDataTableBulkSelection);
-    } else {
-      initDataTableBulkSelection();
-    }
-    document.addEventListener('livewire:navigated', initDataTableBulkSelection);
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      ensureBulkBar();
+    });
+    document.addEventListener('livewire:navigated', function() {
+      ensureBulkBar();
+    });
   })();
 </script>
 @stack('datatables')

@@ -2941,13 +2941,13 @@ tr.is-selected {
   transform: translate(-50%, 40px) scale(0.92);
   opacity: 0;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999 !important;
   display: flex;
   align-items: center;
   gap: 16px;
   background: #0F172A;
   color: #F8FAFC;
-  padding: 8px 10px 8px 18px;
+  padding: 8px 12px 8px 18px;
   border-radius: 9999px;
   box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.12);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
@@ -2959,9 +2959,9 @@ tr.is-selected {
 }
 
 .dt-bulk-bar.is-active {
-  transform: translate(-50%, 0) scale(1);
-  opacity: 1;
-  pointer-events: auto;
+  transform: translate(-50%, 0) scale(1) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .dt-bulk-bar__badge {
