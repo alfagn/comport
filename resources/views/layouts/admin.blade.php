@@ -165,9 +165,13 @@
     </a>
     @endcan
     @can('manage services')
-    <a class="nav-item {{ (str_starts_with($r, 'admin.services') || str_starts_with($r, 'admin.service-pages')) ? 'is-active' : '' }}" href="{{ route('admin.services.index') }}" wire:navigate>
+    <a class="nav-item {{ str_starts_with($r, 'admin.services') ? 'is-active' : '' }}" href="{{ route('admin.services.index') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-headphones.png') }}" alt="" width="22" height="22"/>
       <span class="nav-item__text">Services</span>
+    </a>
+    <a class="nav-item {{ str_starts_with($r, 'admin.service-pages') ? 'is-active' : '' }}" href="{{ route('admin.service-pages.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-document.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">Service Pages</span>
     </a>
     @endcan
     @can('manage industries')
@@ -335,6 +339,7 @@
           <li data-name="pages content sections"><a href="{{ route('admin.pages.index') }}" wire:navigate>Pages &amp; Content</a></li>
           <li data-name="hero slides homepage"><a href="{{ route('admin.hero-slides.index') }}" wire:navigate>Hero Slides</a></li>
           <li data-name="services"><a href="{{ route('admin.services.index') }}" wire:navigate>Services</a></li>
+          <li data-name="service pages editions landing"><a href="{{ route('admin.service-pages.index') }}" wire:navigate>Service Pages</a></li>
           <li data-name="industries"><a href="{{ route('admin.industries.index') }}" wire:navigate>Industries</a></li>
           <li data-name="projects work portfolio"><a href="{{ route('admin.projects.index') }}" wire:navigate>Projects</a></li>
           <li data-name="team founders members"><a href="{{ route('admin.members.index') }}" wire:navigate>Team &amp; Founders</a></li>

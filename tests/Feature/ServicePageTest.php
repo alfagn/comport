@@ -63,8 +63,49 @@ class ServicePageTest extends TestCase
             $this->get('/admin/service-pages/'.$page->id.'/'.$action)->assertNotFound();
         }
         $this->put('/admin/service-pages/'.$page->id, ['title' => 'Must not save', 'summary' => 'Must not save', 'body' => 'Must not save', 'is_published' => '1'])->assertNotFound();
+        $this->delete('/admin/service-pages/'.$page->id)->assertNotFound();
         $this->assertSame($original, $page->fresh()->toArray());
         $this->assertSame(3, ServicePage::where('locale', 'ar')->count());
+    }
+
+    public function test_owner_can_create_and_delete_custom_service_pages_with_section_cards(): void
+    {
+        $owner = $this->owner();
+
+        $this->actingAs($owner)->get('/admin/service-pages/create')
+            ->assertOk()
+            ->assertSee('New Service Landing Page')
+            ->assertSee('+ Add Section Card');
+
+        $this->actingAs($owner)->post('/admin/service-pages', [
+            'title' => 'Custom Mobile App Engineering',
+            'slug' => '',
+            'summary' => 'Native-grade Flutter and iOS/Android platforms engineered in Cairo.',
+            'sections' => [
+                ['heading' => 'Architecture & State', 'content' => 'Modular offline-first mobile architecture.'],
+                ['heading' => 'CI/CD & Store Delivery', 'content' => 'Automated App Store and Google Play pipelines.'],
+            ],
+            'meta_title' => 'Mobile App Engineering | Empetix',
+            'meta_description' => 'Flutter & native mobile app engineering.',
+            'is_published' => '1',
+        ])->assertSessionHasNoErrors()->assertRedirect('/admin/service-pages');
+
+        $created = ServicePage::where('locale', 'en')->where('slug', 'custom-mobile-app-engineering')->firstOrFail();
+        $this->assertTrue($created->is_published);
+
+        $this->get('/services/custom-mobile-app-engineering')
+            ->assertOk()
+            ->assertSee('Custom Mobile App Engineering')
+            ->assertSee('Architecture &amp; State', false)
+            ->assertSee('Automated App Store and Google Play pipelines.');
+
+        $this->get('/sitemap.xml')->assertSee('/services/custom-mobile-app-engineering');
+
+        $this->actingAs($owner)->delete('/admin/service-pages/'.$created->id)
+            ->assertRedirect('/admin/service-pages');
+
+        $this->assertDatabaseMissing('service_pages', ['id' => $created->id]);
+        $this->get('/services/custom-mobile-app-engineering')->assertNotFound();
     }
 
     public function test_english_seo_form_keeps_archived_metadata_on_save(): void

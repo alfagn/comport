@@ -7,7 +7,9 @@ use App\Core\DTOs\BaseData;
 /** Only editorial fields pass from validated input to persistence. */
 class ServicePageData extends BaseData
 {
-    protected static array $fields = ['title', 'summary', 'body', 'meta_title', 'meta_description', 'is_published'];
+    protected static array $fields = ['slug', 'title', 'summary', 'body', 'meta_title', 'meta_description', 'is_published'];
+
+    public mixed $slug = null;
 
     public mixed $title = null;
 

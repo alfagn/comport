@@ -87,8 +87,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('services', Admin\ServiceController::class)->except('show')->middleware('permission:manage services');
         Route::middleware('permission:manage services')->prefix('service-pages')->name('service-pages.')->group(function () {
             Route::get('/', [Admin\ServicePageController::class, 'index'])->name('index');
+            Route::get('/create', [Admin\ServicePageController::class, 'create'])->name('create');
+            Route::post('/', [Admin\ServicePageController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [Admin\ServicePageController::class, 'edit'])->name('edit');
             Route::put('/{id}', [Admin\ServicePageController::class, 'update'])->name('update');
+            Route::delete('/{id}', [Admin\ServicePageController::class, 'destroy'])->name('destroy');
             Route::get('/{id}/preview', [Admin\ServicePageController::class, 'preview'])->name('preview');
         });
 
