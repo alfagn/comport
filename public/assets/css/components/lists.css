@@ -628,8 +628,14 @@
 
 .cta-band__inner {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-7) var(--gutter);
   padding-block: clamp(5rem, 4rem + 6vw, 9rem);
+}
+
+.cta-band__main,
+.cta-band__side {
+  min-inline-size: 0;
 }
 
 @media (min-width: 64rem) {
@@ -658,6 +664,7 @@
 
 .cta-band__side {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
   justify-items: start;
   color: var(--color-text-inverse-body);
