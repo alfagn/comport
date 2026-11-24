@@ -34,6 +34,12 @@
 
 </head>
 <body>
+@if(\App\Models\ServicePage::where('is_published', true)->exists())
+<nav class="published-service-links" aria-label="Service pages" style="background:#0a1426;color:white;padding:10px 24px;text-align:center;font-size:14px">
+  @if(\App\Models\ServicePage::where('locale', 'en')->where('is_published', true)->exists())<a href="{{ url('/services') }}">Services</a>@endif
+  @if(\App\Models\ServicePage::where('locale', 'ar')->where('is_published', true)->exists())<a href="{{ url('/ar/services') }}" lang="ar" style="margin-inline-start:20px">الخدمات بالعربية</a>@endif
+</nav>
+@endif
 
 <!-- PARTIAL: preloader -->
 <div

@@ -82,7 +82,7 @@
     })();
   </script>
 </head>
-<body class="admin {{ request()->routeIs('admin.seo.*', 'admin.sitemap.*') ? 'discovery-admin' : '' }}">
+<body class="admin {{ request()->routeIs('admin.seo.*', 'admin.sitemap.*', 'admin.service-pages.*') ? 'discovery-admin' : '' }}">
   <script>
     // Sidebar: persisted desktop collapsed state, applied before first paint.
     (function () {
@@ -165,7 +165,7 @@
     </a>
     @endcan
     @can('manage services')
-    <a class="nav-item {{ str_starts_with($r, 'admin.services') ? 'is-active' : '' }}" href="{{ route('admin.services.index') }}" wire:navigate>
+    <a class="nav-item {{ (str_starts_with($r, 'admin.services') || str_starts_with($r, 'admin.service-pages')) ? 'is-active' : '' }}" href="{{ route('admin.services.index') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-headphones.png') }}" alt="" width="22" height="22"/>
       <span class="nav-item__text">Services</span>
     </a>

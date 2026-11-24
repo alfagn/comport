@@ -73,7 +73,7 @@ if (! function_exists('brand_favicon')) {
     {
         $path = setting('brand_favicon');
 
-        return $path ? asset('storage/'.$path) : asset('assets/img/favicon.svg');
+        return $path ? asset('storage/'.$path) : asset('assets/img/favicon.png');
     }
 }
 

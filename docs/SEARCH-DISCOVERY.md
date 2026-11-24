@@ -46,3 +46,15 @@ For service-search growth, confirm the real markets, customer languages, SaaS/ER
 - https://developers.google.com/search/docs/specialty/international/localized-versions
 - https://developers.google.com/search/docs/appearance/structured-data/sd-policies
 - https://developers.google.com/search/docs/crawling-indexing/special-tags
+
+## Bilingual service-page drafts
+
+The next additive migration creates a separate `service_pages` table with six **unpublished** editions: SaaS development, ERP systems, and performance marketing, each in English and Arabic. It does not overwrite existing homepage Services or republish anything. The draft copy contains scoping questions, not proof of delivered capability. Review it against the actual offer before publishing.
+
+Open **Services > Bilingual service pages and drafts**. Each edition has an editor and an authenticated **Private preview**. Previews send `noindex` and private/no-store headers; anonymous or unauthorized users cannot access them. An unpublished edition returns 404 on its future public URL and is absent from public links, sitemap and optional summaries.
+
+The explicit publish switch affects only that installation. It is not a deployment. Public URLs are `/services/{slug}` for English and `/ar/services/{slug}` for Arabic. The actual page language and direction are set server-side. Reciprocal `hreflang` and the language switch appear only for editions that are both published. Hiding a translation removes that language alternative immediately. Published service indexes link to the editions; the main public layout only exposes service navigation when at least one edition is published. No location/keyword doorway pages or automatic language redirects are added.
+
+The original logo mark now has a stable square 192px PNG fallback and an ICO. Existing custom favicon settings are preserved. Google's latest documented guidance recommends a square raster icon larger than 48px, a stable URL, and crawl access to the homepage and icon. Correct markup makes an icon eligible, not guaranteed: https://developers.google.com/search/docs/appearance/favicon-in-search
+
+Before launch, validate the copy, edition publication state, actual canonical production URLs, language pairing, contact routes, and mobile layout. Google/Bing webmaster ownership, Search Console generative-AI inclusion and any URL submission remain separate authorized work. Bing's current guidance also emphasizes clear internal links and accurate content for search/grounding eligibility: https://www2.bing.com/webmasters/help/Webmaster-Guidelines-30fba23a

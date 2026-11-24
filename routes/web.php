@@ -6,6 +6,7 @@ use App\Http\Controllers\Public\JobApplicationController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\SeoDiscoveryController;
+use App\Http\Controllers\Public\ServicePageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,12 @@ Route::get('/partners', [PageController::class, 'partners'])->name('partners');
 Route::get('/blog', [PageController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [PageController::class, 'post'])->name('blog.show');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+// Real language URLs, never automatic language/geo redirects.
+Route::get('/services', [ServicePageController::class, 'index'])->name('services.index');
+Route::get('/services/{slug}', [ServicePageController::class, 'show'])->name('services.show');
+Route::get('/ar/services', [ServicePageController::class, 'index'])->defaults('locale', 'ar')->name('services.ar.index');
+Route::get('/ar/services/{slug}', [ServicePageController::class, 'show'])->defaults('locale', 'ar')->name('services.ar.show');
+
 Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
 Route::post('/subscribe', [NewsletterController::class, 'store'])->name('subscribe');
 
@@ -76,6 +83,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // permission; the sidebar only hides what the server already blocks.
         Route::resource('hero-slides', Admin\HeroSlideController::class)->except('show')->middleware('permission:manage hero slides');
         Route::resource('services', Admin\ServiceController::class)->except('show')->middleware('permission:manage services');
+        Route::middleware('permission:manage services')->prefix('service-pages')->name('service-pages.')->group(function () {
+            Route::get('/', [Admin\ServicePageController::class, 'index'])->name('index');
+            Route::get('/{id}/edit', [Admin\ServicePageController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [Admin\ServicePageController::class, 'update'])->name('update');
+            Route::get('/{id}/preview', [Admin\ServicePageController::class, 'preview'])->name('preview');
+        });
+
         Route::resource('industries', Admin\IndustryController::class)->except('show')->middleware('permission:manage industries');
         Route::resource('projects', Admin\ProjectController::class)->except('show')->middleware('permission:manage projects');
         Route::resource('members', Admin\MemberController::class)->except('show')->middleware('permission:manage members');
