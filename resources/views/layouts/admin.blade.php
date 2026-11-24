@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="csrf-token" content="{{ csrf_token() }}"/>
   <meta name="robots" content="noindex, nofollow"/>
   <title>@yield('title', 'Dashboard') — Empetix Command</title>
   <link rel="icon" href="{{ brand_favicon() }}"/>
@@ -398,15 +399,27 @@
 
     <div class="content">
       @if(session('success'))
-        <div class="flash">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
-          {{ session('success') }}
-        </div>
         <script>
           (function() {
             var fireToast = function() {
               if (window.empetixToast) {
                 window.empetixToast(@json(session('success')), 'success');
+              }
+            };
+            if (document.readyState === 'loading') {
+              window.addEventListener('DOMContentLoaded', fireToast);
+            } else {
+              fireToast();
+            }
+          })();
+        </script>
+      @endif
+      @if(session('error'))
+        <script>
+          (function() {
+            var fireToast = function() {
+              if (window.empetixToast) {
+                window.empetixToast(@json(session('error')), 'error');
               }
             };
             if (document.readyState === 'loading') {
@@ -555,6 +568,231 @@
         }
       });
     }, true); // Capture phase is essential!
+
+    // 4. Universal One-Click Status Toggle Handler (Tables & Cards)
+    document.addEventListener('click', function(e) {
+      var toggleBtn = e.target.closest('[data-status-toggle]');
+      if (!toggleBtn || toggleBtn.classList.contains('is-busy')) return;
+
+      e.preventDefault();
+      var url = toggleBtn.getAttribute('data-toggle-url');
+      if (!url) return;
+
+      var wasOn = toggleBtn.classList.contains('is-on');
+      var nextOn = !wasOn;
+      var labelOn = toggleBtn.getAttribute('data-label-on') || 'Live';
+      var labelOff = toggleBtn.getAttribute('data-label-off') || 'Hidden';
+      var labelEl = toggleBtn.querySelector('.dt-status-toggle__label');
+
+      function applyState(on, customLabel) {
+        toggleBtn.classList.toggle('is-on', on);
+        toggleBtn.classList.toggle('is-off', !on);
+        toggleBtn.setAttribute('aria-checked', on ? 'true' : 'false');
+        if (labelEl) {
+          labelEl.textContent = customLabel || (on ? labelOn : labelOff);
+        }
+      }
+
+      // Optimistic instant flip
+      toggleBtn.classList.add('is-busy');
+      applyState(nextOn);
+
+      var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+      var token = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
+      fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': token
+        },
+        credentials: 'same-origin'
+      })
+        .then(function(res) {
+          if (!res.ok) throw new Error('Status update failed');
+          return res.json();
+        })
+        .then(function(data) {
+          applyState(Boolean(data.active), data.label);
+          if (window.empetixToast && data.message) {
+            window.empetixToast(data.message, 'success');
+          }
+        })
+        .catch(function() {
+          applyState(wasOn);
+          if (window.empetixToast) {
+            window.empetixToast('Could not update status. Please try again.', 'error');
+          }
+        })
+        .finally(function() {
+          toggleBtn.classList.remove('is-busy');
+        });
+    // 5. Universal DataTable Bulk Selection & Floating Bulk Bar
+    function initDataTableBulkSelection() {
+      var bar = document.getElementById('empetix-bulk-bar');
+      if (!bar) {
+        bar = document.createElement('div');
+        bar.id = 'empetix-bulk-bar';
+        bar.className = 'dt-bulk-bar';
+        bar.innerHTML = `
+          <div class="dt-bulk-bar__badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong class="dt-bulk-count">0</strong> selected</span>
+          </div>
+          <div class="dt-bulk-bar__actions">
+            <button type="button" class="dt-bulk-clear-btn">Deselect</button>
+            <button type="button" class="btn btn--danger btn--sm dt-bulk-delete-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Delete Selected (<span class="dt-bulk-count-btn">0</span>)</span>
+            </button>
+          </div>
+        `;
+        document.body.appendChild(bar);
+
+        // Clear selection button
+        bar.querySelector('.dt-bulk-clear-btn').addEventListener('click', function() {
+          if (!bar.__activeTable) return;
+          var table = bar.__activeTable;
+          var master = table.querySelector('thead .dt-select-all');
+          if (master) { master.checked = false; master.indeterminate = false; }
+          table.querySelectorAll('tbody .dt-row-select').forEach(function(cb) {
+            cb.checked = false;
+            var tr = cb.closest('tr');
+            if (tr) tr.classList.remove('is-selected');
+          });
+          updateBarForTable(table);
+        });
+
+        // Delete button click
+        bar.querySelector('.dt-bulk-delete-btn').addEventListener('click', function() {
+          if (!bar.__activeTable) return;
+          var table = bar.__activeTable;
+          var checkedBoxes = table.querySelectorAll('tbody .dt-row-select:checked');
+          var ids = Array.from(checkedBoxes).map(function(cb) { return cb.value; });
+          if (!ids.length) return;
+
+          var bulkUrl = table.getAttribute('data-bulk-url');
+          if (!bulkUrl) return;
+
+          var count = ids.length;
+          var label = count === 1 ? 'record' : 'records';
+
+          window.empetixConfirm({
+            title: 'Delete ' + count + ' ' + label + '?',
+            text: 'Are you sure you want to permanently delete these ' + count + ' selected ' + label + '? This action cannot be undone.',
+            confirmText: 'Yes, Delete ' + count + ' ' + label,
+            cancelText: 'Cancel'
+          }).then(function(result) {
+            if (!result.isConfirmed) return;
+
+            var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            var token = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
+            fetch(bulkUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': token,
+                'X-Requested-With': 'XMLHttpRequest'
+              },
+              body: JSON.stringify({ ids: ids })
+            })
+            .then(function(res) {
+              if (!res.ok) throw new Error('Deletion failed');
+              return res.json();
+            })
+            .then(function(data) {
+              if (window.empetixToast) {
+                window.empetixToast(data.message || (count + ' ' + label + ' deleted successfully.'), 'success');
+              }
+              if (window.jQuery) {
+                var dt = window.jQuery(table).DataTable();
+                if (dt) dt.ajax.reload(null, false);
+              }
+              bar.classList.remove('is-active');
+              bar.__activeTable = null;
+            })
+            .catch(function() {
+              if (window.empetixToast) {
+                window.empetixToast('Could not delete selected records. Please try again.', 'error');
+              }
+            });
+          });
+        });
+      }
+
+      function updateBarForTable(table) {
+        if (!table) return;
+        var checked = table.querySelectorAll('tbody .dt-row-select:checked');
+        var count = checked.length;
+        var allRows = table.querySelectorAll('tbody .dt-row-select');
+        var master = table.querySelector('thead .dt-select-all');
+
+        if (master) {
+          if (count === 0) {
+            master.checked = false;
+            master.indeterminate = false;
+          } else if (count === allRows.length) {
+            master.checked = true;
+            master.indeterminate = false;
+          } else {
+            master.checked = false;
+            master.indeterminate = true;
+          }
+        }
+
+        var countEls = bar.querySelectorAll('.dt-bulk-count, .dt-bulk-count-btn');
+        countEls.forEach(function(el) { el.textContent = count; });
+
+        if (count > 0) {
+          bar.classList.add('is-active');
+          bar.__activeTable = table;
+        } else {
+          bar.classList.remove('is-active');
+          bar.__activeTable = null;
+        }
+      }
+
+      // Checkbox click delegation
+      document.addEventListener('change', function(e) {
+        var target = e.target;
+        if (target.matches('.dt-select-all')) {
+          var table = target.closest('table[data-bulk-url]');
+          if (!table) return;
+          var isChecked = target.checked;
+          var rowChecks = table.querySelectorAll('tbody .dt-row-select');
+          rowChecks.forEach(function(cb) {
+            cb.checked = isChecked;
+            var tr = cb.closest('tr');
+            if (tr) tr.classList.toggle('is-selected', isChecked);
+          });
+          updateBarForTable(table);
+        } else if (target.matches('.dt-row-select')) {
+          var table = target.closest('table[data-bulk-url]');
+          if (!table) return;
+          var tr = target.closest('tr');
+          if (tr) tr.classList.toggle('is-selected', target.checked);
+          updateBarForTable(table);
+        }
+      });
+
+      // On DataTable draw event, sync checkboxes state
+      if (window.jQuery) {
+        window.jQuery(document).off('draw.dt.bulk').on('draw.dt.bulk', 'table[data-bulk-url]', function() {
+          updateBarForTable(this);
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDataTableBulkSelection);
+    } else {
+      initDataTableBulkSelection();
+    }
+    document.addEventListener('livewire:navigated', initDataTableBulkSelection);
   })();
 </script>
 @stack('datatables')

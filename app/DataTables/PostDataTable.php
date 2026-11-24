@@ -5,15 +5,11 @@ namespace App\DataTables;
 use App\Core\DataTables\AdminDataTable;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
-use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\DataTables;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 
-/**
- * Server-side Yajra table for the Blog & Media listing. Dynamic values are escaped
- * with e(); only static pill/cell markup is rendered raw.
- */
 class PostDataTable extends AdminDataTable
 {
     public function __construct(DataTables $datatables, HtmlBuilder $html, private PostRepositoryInterface $repository)
@@ -33,21 +29,32 @@ class PostDataTable extends AdminDataTable
 
     protected function decorate(EloquentDataTable $table): void
     {
-        $table->editColumn('title', fn ($row) => '<div class="cell-title">'.e($row->title).'</div><div class="cell-sub">'.e($row->category ?? '').'</div>')
+        $table
+            ->editColumn('title', function ($row) {
+                $img = '';
+                if ($row->cover_image) {
+                    $src = str_starts_with((string) $row->cover_image, 'uploads/') ? asset('storage/'.$row->cover_image) : asset($row->cover_image);
+                    $img = '<img class="thumb" src="'.e($src).'" alt=""/>';
+                }
+
+                return '<div class="dt-media-cell">'.$img.'<div>'
+                    .'<div class="cell-title">'.e($row->title).'</div>'
+                    .'<div class="cell-sub">'.e($row->category ?? '').'</div></div></div>';
+            })
+            ->editColumn('type', fn ($row) => '<span class="pill">'.e(ucfirst((string) $row->type)).'</span>')
             ->editColumn('published_at', fn ($row) => $row->published_at?->format('M j, Y') ?? '—')
-            ->editColumn('is_published', fn ($row) => $row->is_published
-                ? '<span class="pill pill--on">Live</span>' : '<span class="pill pill--off">Draft</span>')
+            ->editColumn('is_published', fn ($row) => $this->statusToggle('posts', $row->id, (bool) $row->is_published, 'Published', 'Draft'))
             ->addColumn('actions', fn ($row) => $this->rowActions($row->id, 'post'))
-            ->rawColumns(['title', 'is_published', 'actions']);
+            ->rawColumns(['title', 'type', 'is_published', 'actions']);
     }
 
     protected function columns(): array
     {
         return [
             Column::make('title')->title('Post'),
-            Column::make('type')->title('Type'),
-            Column::make('published_at')->title('Published')->searchable(false),
-            Column::make('is_published')->title('Status')->searchable(false),
+            Column::make('type')->title('Format')->width(115),
+            Column::make('published_at')->title('Published')->searchable(false)->width(125),
+            Column::make('is_published')->title('Status')->searchable(false)->width(140),
             $this->actionsColumn(),
         ];
     }
@@ -56,5 +63,4 @@ class PostDataTable extends AdminDataTable
     {
         return [2, 'desc'];
     }
-
 }

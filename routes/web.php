@@ -73,6 +73,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [Admin\AuthController::class, 'destroy'])->name('logout');
 
         Route::get('/', Admin\DashboardController::class)->name('dashboard');
+        Route::patch('/status-toggle/{entity}/{id}', Admin\StatusToggleController::class)->name('status.toggle');
+        Route::post('/bulk-delete/{entity}', Admin\BulkDeleteController::class)->name('bulk.delete');
 
         // Page content: every editable text/image block of the site.
         Route::middleware('permission:manage pages')->group(function () {

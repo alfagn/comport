@@ -5,15 +5,11 @@ namespace App\DataTables;
 use App\Core\DataTables\AdminDataTable;
 use App\Repositories\Contracts\JobPostRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
-use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\DataTables;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 
-/**
- * Server-side Yajra table for the Careers listing. Dynamic values are escaped
- * with e(); only static pill/cell markup is rendered raw.
- */
 class JobPostDataTable extends AdminDataTable
 {
     public function __construct(DataTables $datatables, HtmlBuilder $html, private JobPostRepositoryInterface $repository)
@@ -33,11 +29,12 @@ class JobPostDataTable extends AdminDataTable
 
     protected function decorate(EloquentDataTable $table): void
     {
-        $table->editColumn('title', fn ($row) => '<div class="cell-title">'.e($row->title).'</div><div class="cell-sub">'.e($row->ref_code ?? '').'</div>')
-            ->editColumn('is_active', fn ($row) => $row->is_active
-            ? '<span class="pill pill--on">Live</span>' : '<span class="pill pill--off">Hidden</span>')
-            ->addColumn('actions', fn ($row) => $this->rowActions($row->id, 'record'))
-            ->rawColumns(['title', 'is_active', 'actions']);
+        $table
+            ->editColumn('title', fn ($row) => '<div class="cell-title">'.e($row->title).'</div><div class="cell-sub">'.e($row->ref_code ?? '').'</div>')
+            ->editColumn('department', fn ($row) => $row->department ? '<span class="pill">'.e($row->department).'</span>' : '<span class="cell-sub">—</span>')
+            ->editColumn('is_active', fn ($row) => $this->statusToggle('jobs', $row->id, (bool) $row->is_active, 'Live', 'Hidden'))
+            ->addColumn('actions', fn ($row) => $this->rowActions($row->id, 'job opening'))
+            ->rawColumns(['title', 'department', 'is_active', 'actions']);
     }
 
     protected function columns(): array
@@ -46,9 +43,8 @@ class JobPostDataTable extends AdminDataTable
             Column::make('title')->title('Role'),
             Column::make('department')->title('Department'),
             Column::make('location')->title('Location'),
-            Column::make('is_active')->title('Status')->searchable(false),
+            Column::make('is_active')->title('Status')->searchable(false)->width(130),
             $this->actionsColumn(),
         ];
     }
-
 }

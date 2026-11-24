@@ -213,7 +213,7 @@
       @else
         <div class="table-wrap">
           <table class="table">
-            <thead><tr><th>From</th><th>Company</th><th>Budget</th><th>Received</th><th></th></tr></thead>
+            <thead><tr><th>From</th><th>Company</th><th>Budget</th><th>Received</th><th class="row-actions">Actions</th></tr></thead>
             <tbody>
               @foreach($latestMessages as $m)
                 <tr class="message-row {{ $m->read_at ? '' : 'unread' }}">
@@ -224,7 +224,11 @@
                   <td>{{ $m->company ?? '—' }}</td>
                   <td>{{ $m->budget_tier ?? '—' }}</td>
                   <td>{{ $m->created_at->diffForHumans() }}</td>
-                  <td class="row-actions"><a class="btn btn--ghost btn--sm" href="{{ route('admin.inbox.show', $m->id) }}">Open</a></td>
+                  <td class="row-actions">
+                    <div class="dt-actions">
+                      <a class="btn btn--ghost btn--sm dt-btn" href="{{ route('admin.inbox.show', $m->id) }}">Open</a>
+                    </div>
+                  </td>
                 </tr>
               @endforeach
             </tbody>

@@ -10,12 +10,6 @@ use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 
-/**
- * Server-side Yajra table for job applications: newest first, with a
- * "New" pill on unreviewed rows. Actions are Open (review view), CV
- * (authenticated private download) and Delete. Dynamic values are
- * escaped with e(); plain columns rely on Yajra's default escaping.
- */
 class JobApplicationDataTable extends AdminDataTable
 {
     public function __construct(DataTables $datatables, HtmlBuilder $html, private JobApplicationRepositoryInterface $repository)
@@ -43,16 +37,18 @@ class JobApplicationDataTable extends AdminDataTable
                     .'<div class="cell-sub">'.e($row->email).'</div>';
             })
             ->addColumn('job', fn ($row) => $row->jobPost?->title ?? '—')
+            ->editColumn('status', fn ($row) => $this->statusToggle('applications', $row->id, $row->status !== 'new', 'Reviewed', 'New'))
             ->editColumn('created_at', fn ($row) => $row->created_at->diffForHumans())
             ->addColumn('actions', function ($row) {
-                $open = '<a class="btn btn--ghost btn--sm" href="'.e(route('admin.applications.show', $row->id)).'">Open</a>';
-                $cv = '<a class="btn btn--ghost btn--sm" href="'.e(route('admin.applications.cv', $row->id)).'">CV</a>';
+                $open = '<a class="btn btn--ghost btn--sm dt-btn" href="'.e(route('admin.applications.show', $row->id)).'">Open</a>';
+                $cv = '<a class="btn btn--ghost btn--sm dt-btn" href="'.e(route('admin.applications.cv', $row->id)).'">CV</a>';
 
-                return $open.$cv.'<form method="post" action="'.e(route('admin.applications.destroy', $row->id)).'" data-confirm="Delete this application and its CV?" data-confirm-title="Delete Application" style="display:inline">'
+                return '<div class="dt-actions">'.$open.$cv
+                    .'<form method="post" action="'.e(route('admin.applications.destroy', $row->id)).'" data-confirm="Delete this application and its CV?" data-confirm-title="Delete Application" class="dt-inline-form">'
                     .csrf_field().method_field('DELETE')
-                    .'<button class="btn btn--danger btn--sm" type="submit">Delete</button></form>';
+                    .'<button class="btn btn--danger btn--sm dt-btn" type="submit">Delete</button></form></div>';
             })
-            ->rawColumns(['full_name', 'actions']);
+            ->rawColumns(['full_name', 'status', 'actions']);
     }
 
     protected function columns(): array
@@ -63,11 +59,11 @@ class JobApplicationDataTable extends AdminDataTable
             Column::make('phone')->title('Phone'),
             Column::make('experience_years')->title('Experience'),
             Column::make('created_at')->title('Received')->searchable(false),
-            Column::computed('actions')->title('')->orderable(false)->searchable(false)->width(230)->addClass('row-actions'),
+            Column::make('status')->title('Status')->searchable(false)->width(140),
+            $this->actionsColumn(225),
         ];
     }
 
-    /** Newest applications first. */
     protected function defaultOrder(): array
     {
         return [4, 'desc'];

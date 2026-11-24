@@ -38,10 +38,13 @@
       <article class="card sp-card">
         <div>
           <div class="sp-card__meta">
-            <span class="sp-status {{ $edition->is_published ? 'sp-status--live' : 'sp-status--draft' }}">
-              <span class="sp-status__dot" aria-hidden="true"></span>
-              {{ $edition->is_published ? 'Published' : 'Draft (Private)' }}
-            </span>
+            @include('admin._partials.status-toggle', [
+              'entity' => 'service-pages',
+              'id' => $edition->id,
+              'active' => (bool) $edition->is_published,
+              'labelOn' => 'Published',
+              'labelOff' => 'Draft',
+            ])
             <code class="sp-card__slug">/services/{{ $edition->slug }}</code>
           </div>
 

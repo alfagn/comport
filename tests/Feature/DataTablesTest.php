@@ -205,4 +205,55 @@ class DataTablesTest extends TestCase
         $this->assertStringContainsString('dt-table', $html);
         $this->assertStringContainsString('jquery.dataTables.min.js', $html);
     }
+
+    public function test_inline_status_toggle_switches_records_and_enforces_permissions(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        $admin = $this->admin();
+
+        // 1. DataTable AJAX payload renders interactive data-status-toggle button
+        $industry = \App\Models\Industry::firstOrFail();
+        $dtPayload = $this->actingAs($admin)
+            ->get(route('admin.industries.index', ['draw' => 1, 'start' => 0, 'length' => 15]), $this->ajaxHeaders())
+            ->assertOk()
+            ->json();
+
+        $firstRow = collect($dtPayload['data'])->firstWhere('id', $industry->id);
+        $this->assertStringContainsString('data-status-toggle', $firstRow['is_active']);
+
+        // 2. One-click PATCH flips Industry status Live -> Hidden -> Live
+        $initial = (bool) $industry->is_active;
+        $this->actingAs($admin)
+            ->patchJson(route('admin.status.toggle', ['entity' => 'industries', 'id' => $industry->id]))
+            ->assertOk()
+            ->assertJson(['ok' => true, 'active' => ! $initial, 'label' => ! $initial ? 'Live' : 'Hidden']);
+        $this->assertSame(! $initial, (bool) $industry->fresh()->is_active);
+
+        // 3. Post toggle sets published_at when publishing a draft
+        $post = \App\Models\Post::firstOrFail();
+        $post->update(['is_published' => false, 'published_at' => null]);
+        $this->actingAs($admin)
+            ->patchJson(route('admin.status.toggle', ['entity' => 'posts', 'id' => $post->id]))
+            ->assertOk()
+            ->assertJson(['ok' => true, 'active' => true, 'label' => 'Published']);
+        $this->assertTrue((bool) $post->fresh()->is_published);
+        $this->assertNotNull($post->fresh()->published_at);
+
+        // 4. Service Page toggle updates publication & blocks archived Arabic rows
+        $enServicePage = \App\Models\ServicePage::where('locale', 'en')->firstOrFail();
+        $this->actingAs($admin)
+            ->patchJson(route('admin.status.toggle', ['entity' => 'service-pages', 'id' => $enServicePage->id]))
+            ->assertOk()
+            ->assertJson(['ok' => true, 'active' => true, 'label' => 'Published']);
+        $arServicePage = \App\Models\ServicePage::where('locale', 'ar')->firstOrFail();
+        $this->actingAs($admin)
+            ->patchJson(route('admin.status.toggle', ['entity' => 'service-pages', 'id' => $arServicePage->id]))
+            ->assertNotFound();
+
+        // 5. Unprivileged user cannot toggle status
+        $unprivileged = User::factory()->create();
+        $this->actingAs($unprivileged)
+            ->patchJson(route('admin.status.toggle', ['entity' => 'industries', 'id' => $industry->id]))
+            ->assertForbidden();
+    }
 }

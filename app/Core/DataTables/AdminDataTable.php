@@ -5,55 +5,64 @@ namespace App\Core\DataTables;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
-use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\DataTables;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 
 /**
  * Shared spine for every dashboard listing table.
- *
- * Concrete DataTables declare three things — the Eloquent query (through the
- * entity's repository), the column definitions, and the entity's route
- * prefix — and inherit the whole server-side flow:
- *
- *   browser GET          -> handle() renders the view with an HTML builder
- *   DataTables XHR (GET) -> handle() answers with Yajra's JSON payload
- *
- * Search, sort and pagination all run in SQL through Yajra's
- * EloquentDataTable, so large listings stay fast and the browser only ever
- * receives one page of rows.
  */
 abstract class AdminDataTable
 {
+    /** Whether bulk selection checkboxes and bulk actions are enabled for this table. */
+    protected bool $enableBulkSelect = true;
+
     public function __construct(
         protected DataTables $datatables,
         protected HtmlBuilder $html,
     ) {}
 
-    /**
-     * The listing query, sourced from the entity's repository so the
-     * persistence layer stays behind its contract.
-     */
     abstract protected function query(): Builder;
 
-    /**
-     * DataTables.net column definitions (Yajra Html\Column objects).
-     *
-     * @return array<int, Column>
-     */
+    /** @return array<int, Column> */
     abstract protected function columns(): array;
 
-    /**
-     * The entity's admin route prefix, e.g. "admin.projects". Used to build
-     * the ajax URL and the per-row edit/delete links.
-     */
     abstract protected function routePrefix(): string;
 
-    /**
-     * Entry point used by controllers: JSON for the DataTables XHR, the
-     * Blade view otherwise.
-     */
+    public function entityKey(): string
+    {
+        $prefix = str_replace('admin.', '', $this->routePrefix());
+        if ($prefix === 'inbox.subscribers') {
+            return 'subscribers';
+        }
+
+        return $prefix;
+    }
+
+    protected function selectColumn(): Column
+    {
+        return Column::computed('select_row')
+            ->title('<div class="dt-checkbox-cell"><input type="checkbox" class="dt-select-all" aria-label="Select all rows" /></div>')
+            ->titleAttr('Select all rows')
+            ->orderable(false)
+            ->searchable(false)
+            ->exportable(false)
+            ->printable(false)
+            ->width(42)
+            ->addClass('dt-col-select text-center');
+    }
+
+    public function getColumns(): array
+    {
+        $cols = $this->columns();
+        if ($this->enableBulkSelect) {
+            array_unshift($cols, $this->selectColumn());
+        }
+
+        return $cols;
+    }
+
     public function handle(string $view, array $data = []): View|JsonResponse
     {
         if (request()->ajax()) {
@@ -63,92 +72,110 @@ abstract class AdminDataTable
         return view($view, $data + ['datatable' => $this->tableBuilder()]);
     }
 
-    /**
-     * Yajra's server-side JSON answer: paging, global search and column
-     * sorting are handled by EloquentDataTable; decorate() adds the
-     * entity-specific computed columns (thumbnails, pills, actions).
-     */
     public function ajax(): JsonResponse
     {
         $table = $this->datatables->eloquent($this->query());
 
         $this->decorate($table);
 
+        if ($this->enableBulkSelect) {
+            $table->addColumn('select_row', function ($row) {
+                return '<div class="dt-checkbox-cell"><input type="checkbox" class="dt-row-select" value="'.$row->id.'" data-id="'.$row->id.'" aria-label="Select row '.$row->id.'" /></div>';
+            });
+
+            (function () {
+                $raw = $this->columnDef['raw'] ?? [];
+                if (! in_array('select_row', $raw, true)) {
+                    $raw[] = 'select_row';
+                }
+                $this->columnDef['raw'] = $raw;
+            })->call($table);
+        }
+
         return $table->toJson();
     }
 
-    /**
-     * Entity hook for addColumn/editColumn/rawColumns calls.
-     */
     protected function decorate(EloquentDataTable $table): void
     {
         //
     }
 
-    /**
-     * The HTML builder: emits the <table> markup and the initialisation
-     * script. Ajax points back at the same index route.
-     */
     protected function tableBuilder(): HtmlBuilder
     {
-        return $this->html
-            ->columns($this->columns())
+        $order = $this->defaultOrder();
+        if ($this->enableBulkSelect && isset($order[0]) && is_int($order[0])) {
+            $order[0] = $order[0] + 1;
+        }
+
+        $builder = $this->html
+            ->columns($this->getColumns())
             ->ajax(route($this->ajaxRoute()))
-            ->orderBy(...$this->defaultOrder())
+            ->orderBy(...$order)
             ->parameters([
                 'pageLength' => 15,
                 'lengthMenu' => [15, 30, 50],
                 'autoWidth' => false,
                 'language' => [
                     'search' => '',
-                    'searchPlaceholder' => 'Filter…',
+                    'searchPlaceholder' => 'Search records…',
+                    'lengthMenu' => 'Show _MENU_ rows',
                     'emptyTable' => 'Nothing here yet.',
-                    'zeroRecords' => 'No rows match that filter.',
+                    'zeroRecords' => 'No matching records found.',
                 ],
             ]);
+
+        if ($this->enableBulkSelect) {
+            $builder->setTableAttribute('data-entity', $this->entityKey());
+            $builder->setTableAttribute('data-bulk-url', route('admin.bulk.delete', $this->entityKey()));
+        }
+
+        return $builder;
     }
 
-    /**
-     * Route name the DataTables XHR hits. Usually the resource index;
-     * listings living on a custom route (e.g. subscribers) override it.
-     */
     protected function ajaxRoute(): string
     {
-        return $this->routePrefix() . '.index';
+        return $this->routePrefix().'.index';
     }
 
-    /**
-     * Default sort applied when the visitor hasn't clicked a header:
-     * [column index, direction]. Content tables override this to their
-     * natural display order.
-     */
     protected function defaultOrder(): array
     {
         return [0, 'asc'];
     }
 
-    /**
-     * The standard trailing actions column: Edit + Delete per row.
-     */
-    protected function actionsColumn(): Column
+    protected function actionsColumn(int $width = 176): Column
     {
         return Column::computed('actions')
-            ->title('')
+            ->title('Actions')
             ->orderable(false)
             ->searchable(false)
-            ->width(150)
+            ->width($width)
             ->addClass('row-actions');
     }
 
-    /**
-     * Render the Edit/Delete controls for one row through the shared partial.
-     */
     protected function rowActions(int $id, string $label = 'record'): string
     {
         return view('admin._partials.row-actions', [
-            'edit' => route($this->routePrefix() . '.edit', $id),
-            'delete' => route($this->routePrefix() . '.destroy', $id),
+            'edit' => route($this->routePrefix().'.edit', $id),
+            'delete' => route($this->routePrefix().'.destroy', $id),
             'label' => $label,
         ])->render();
+    }
+
+    /** Render an interactive one-click status switch directly inside a table cell. */
+    protected function statusToggle(string $entity, int $id, bool $active, string $labelOn = 'Live', string $labelOff = 'Hidden'): string
+    {
+        return view('admin._partials.status-toggle', [
+            'entity' => $entity,
+            'id' => $id,
+            'active' => $active,
+            'labelOn' => $labelOn,
+            'labelOff' => $labelOff,
+        ])->render();
+    }
+
+    /** Render a clean monospace order chip (#01, #02...). */
+    protected function orderBadge(mixed $order): string
+    {
+        return '<span class="dt-order-badge">#'.str_pad((string) ((int) $order), 2, '0', STR_PAD_LEFT).'</span>';
     }
 }
