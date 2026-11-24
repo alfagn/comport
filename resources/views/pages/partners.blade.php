@@ -9,10 +9,10 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ sec('partners', 'copy_2f39acc5afa8') }}"/>
   <meta property="og:description" content="{{ sec('partners', 'copy_8f08704df899') }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/partners.html"/>
-  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
-  <meta property="og:image:url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
-  <meta property="og:image:secure_url" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:url" content="{{ seo_current_url() }}"/>
+  <meta property="og:image" content="{{ seo_og_image() }}"/>
+  <meta property="og:image:url" content="{{ seo_og_image() }}"/>
+  <meta property="og:image:secure_url" content="{{ seo_og_image() }}"/>
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ sec('partners', 'copy_2f39acc5afa8') }}"/>
   <meta name="twitter:description" content="{{ sec('partners', 'copy_8f08704df899') }}"/>
-  <meta name="twitter:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta name="twitter:image" content="{{ seo_og_image() }}"/>
 @endsection
 
 @section('content')

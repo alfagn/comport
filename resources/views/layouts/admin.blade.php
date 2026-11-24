@@ -82,7 +82,7 @@
     })();
   </script>
 </head>
-<body class="admin">
+<body class="admin {{ request()->routeIs('admin.seo.*', 'admin.sitemap.*') ? 'discovery-admin' : '' }}">
   <script>
     // Sidebar: persisted desktop collapsed state, applied before first paint.
     (function () {

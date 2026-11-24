@@ -11,11 +11,8 @@
   <meta name="author" content="Empetix Solutions | حلول إمبيتكس"/>
   <meta name="publisher" content="Empetix Solutions"/>
   <meta name="keywords" content="{{ seo_keywords() }}"/>
-  <link rel="canonical" href="{{ url()->current() }}"/>
-  <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}"/>
-  <link rel="alternate" hreflang="en" href="{{ url()->current() }}"/>
-  <link rel="alternate" hreflang="ar" href="{{ url()->current() }}"/>
-  <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}"/>
+  <link rel="canonical" href="{{ seo_current_url() }}"/>
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ seo_url('/sitemap.xml') }}"/>
 
   @yield('meta')
   @yield('head_extra')

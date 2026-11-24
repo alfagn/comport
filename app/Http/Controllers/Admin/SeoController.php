@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Services\SeoService;
+use App\Support\SeoUrl;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,7 +44,11 @@ class SeoController extends Controller
             'seo_meta_description_ar' => ['nullable', 'string', 'max:1000'],
             'seo_keywords_en' => ['nullable', 'string', 'max:1000'],
             'seo_keywords_ar' => ['nullable', 'string', 'max:1000'],
-            'seo_canonical_base' => ['nullable', 'string', 'max:255'],
+            'seo_canonical_base' => ['nullable', 'string', 'max:255', function ($attribute, $value, $fail) {
+                if (! SeoUrl::validOrigin($value)) {
+                    $fail('Use an absolute http(s) origin without a path, credentials, query, or fragment.');
+                }
+            }],
             'seo_ai_company_bio' => ['nullable', 'string'],
             'seo_allow_indexing' => ['nullable', 'in:0,1'],
             'seo_welcome_ai_bots' => ['nullable', 'in:0,1'],

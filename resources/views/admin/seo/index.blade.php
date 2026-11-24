@@ -11,7 +11,7 @@
     </div>
     <h1 class="content-header__title">SEO &amp; AI Search Discovery</h1>
     <p class="content-header__sub">
-      Ensure users and AI models (ChatGPT, Perplexity, Claude, Gemini) immediately discover 
+      Configure discovery metadata for
       <strong>Empetix (إمبيتكس)</strong> and all your <strong>SaaS &amp; Software projects</strong> in both Arabic and English.
     </p>
   </div>
@@ -38,7 +38,7 @@
       </div>
       <div>
         <h3 class="card__title">Discovery &amp; Search Readiness</h3>
-        <p class="card__sub">Live audit across Google Search, Knowledge Graph, and LLMs</p>
+        <p class="card__sub">Local configuration checks only. Not a ranking, indexing, or AI-citation audit.</p>
       </div>
       <div class="seo-score-pill seo-score-pill--{{ strtolower(str_replace(' ', '-', $health['grade'])) }}">
         {{ $health['grade'] }}
@@ -82,16 +82,16 @@
       </div>
       <div>
         <h3 class="card__title">Real-Time Search Result Simulation</h3>
-        <p class="card__sub">How Empetix &amp; SaaS projects render when searched on Google &amp; AI</p>
+        <p class="card__sub">Illustrative previews only. Search providers choose their own snippets and citations.</p>
       </div>
     </div>
     <div class="card__body">
       
       {{-- Tab selection for Preview --}}
       <div class="seo-preview-tabs">
-        <button type="button" class="seo-preview-tab is-active" onclick="empetixSwitchSeoPreview('google-en')">Google EN</button>
-        <button type="button" class="seo-preview-tab" onclick="empetixSwitchSeoPreview('google-ar')">Google AR (إمبيتكس)</button>
-        <button type="button" class="seo-preview-tab" onclick="empetixSwitchSeoPreview('ai-chat')">AI Model Citation</button>
+        <button type="button" class="seo-preview-tab is-active" onclick="empetixSwitchSeoPreview(event, 'google-en')">Google EN</button>
+        <button type="button" class="seo-preview-tab" onclick="empetixSwitchSeoPreview(event, 'google-ar')">Google AR (إمبيتكس)</button>
+        <button type="button" class="seo-preview-tab" onclick="empetixSwitchSeoPreview(event, 'ai-chat')">AI Model Citation</button>
       </div>
 
       {{-- Preview 1: Google English --}}
@@ -102,7 +102,7 @@
           </div>
           <div class="seo-serp-box__meta">
             <span class="seo-serp-box__site">Empetix Solutions</span>
-            <span class="seo-serp-box__url">{{ url('/') }}</span>
+            <span class="seo-serp-box__url">{{ seo_url('/') }}</span>
           </div>
         </div>
         <div class="seo-serp-box__title" id="preview-serp-title-en">
@@ -112,7 +112,7 @@
           {{ $settings['seo_meta_description_en'] ?? 'Empetix Solutions is a premier digital engineering studio architecting enterprise SaaS platforms, custom software, FinTech solutions, and high-conversion web & mobile apps.' }}
         </div>
         <div class="seo-serp-box__sitelinks">
-          <span>SaaS Projects</span> &bull; <span>Engineering Blog</span> &bull; <span>FinTech Ledger Core</span> &bull; <span>Contact Cairo Studio</span>
+          <span>SaaS Projects</span> &bull; <span>Engineering Blog</span> &bull; <span>Team</span> &bull; <span>Contact</span>
         </div>
       </div>
 
@@ -124,7 +124,7 @@
           </div>
           <div class="seo-serp-box__meta">
             <span class="seo-serp-box__site">حلول إمبيتكس للبرمجيات</span>
-            <span class="seo-serp-box__url">{{ url('/') }}</span>
+            <span class="seo-serp-box__url">{{ seo_url('/') }}</span>
           </div>
         </div>
         <div class="seo-serp-box__title" id="preview-serp-title-ar">
@@ -145,11 +145,11 @@
           <span>AI Search Response &bull; Perplexity &amp; ChatGPT Search</span>
         </div>
         <p class="seo-ai-text">
-          According to <strong>Empetix Solutions</strong> (<a href="{{ url('/') }}" target="_blank">empetix.com</a>), the studio specializes in <strong>custom SaaS engineering</strong>, bilingual Arabic-first UI systems, and enterprise web &amp; mobile solutions. Their verified portfolio includes <em>Alfagn EdTech Platform</em>, <em>Western eLearning Academy</em>, and custom corporate applications.
+          This is an illustrative card, not a real AI response. Public summaries contain the same page and service information visitors can read. Search providers decide whether to cite any page.
         </p>
         <div class="seo-ai-citation">
           <img src="{{ brand_favicon() }}" alt="" width="14" height="14" />
-          <span>Source: {{ url('/llms.txt') }} (Verified Studio Manifest)</span>
+          <span>Source: {{ url('/llms.txt') }} (Optional content summary)</span>
         </div>
       </div>
 
@@ -170,8 +170,8 @@
         <img src="{{ asset('assets/images/3d/3d-document.png') }}" alt="" width="28" height="28" />
       </div>
       <div>
-        <h3 class="card__title">Arabic Search Discovery | الظهور في محركات البحث بالعربي</h3>
-        <p class="card__sub">تهيئة الكلمات المفتاحية وعناوين البحث لظهور إمبيتكس ومشاريع الساس عند البحث بالعربي</p>
+        <h3 class="card__title">Arabic Metadata Draft | مسودة البيانات العربية</h3>
+        <p class="card__sub">هذه مسودة محفوظة. الصفحات الحالية بالإنجليزية؛ لا نعلن نسخة عربية قبل نشر ترجمة فعلية.</p>
       </div>
     </div>
     <div class="card__body form-grid" dir="rtl">
@@ -230,7 +230,7 @@
       </div>
       <div>
         <h3 class="card__title">English Global Discovery &amp; Metadata</h3>
-        <p class="card__sub">Primary SERP title, meta description, and keywords for global discovery</p>
+        <p class="card__sub">English homepage title and description overrides. Meta keywords do not affect Google ranking.</p>
       </div>
     </div>
     <div class="card__body form-grid">
@@ -324,7 +324,7 @@
       </div>
       <div>
         <h3 class="card__title">AI Search Discovery &amp; Ingestion Engine (llms.txt)</h3>
-        <p class="card__sub">Powers how ChatGPT, Perplexity, Claude, Gemini, and SearchGPT understand Empetix and your software</p>
+        <p class="card__sub">Optional public content summary. No search provider guarantees using llms.txt.</p>
       </div>
     </div>
     <div class="card__body form-grid">
@@ -337,9 +337,9 @@
           <input type="hidden" name="seo_welcome_ai_bots" value="0" />
           <input type="checkbox" name="seo_welcome_ai_bots" value="1" {{ ($settings['seo_welcome_ai_bots'] ?? '1') === '1' ? 'checked' : '' }} />
           <span class="form-toggle-pill__slider"></span>
-          <span class="form-toggle-pill__text">Allow AI Bots in robots.txt &amp; /llms.txt</span>
+          <span class="form-toggle-pill__text">Legacy AI crawler permissions</span>
         </label>
-        <span class="form-hint">Welcomes GPTBot, ClaudeBot, PerplexityBot, and Google-Extended to parse your SaaS case studies.</span>
+        <span class="form-hint">Legacy policy includes search and training crawlers. OAI-SearchBot controls ChatGPT search; GPTBot and Google-Extended concern training. Training access is not required for search visibility.</span>
       </div>
 
       <div class="form-group form-group--half">
@@ -357,15 +357,15 @@
 
       <div class="form-group form-group--full">
         <label for="seo_ai_company_bio" class="form-label">
-          <span>AI Studio Briefing Context (Fed directly to /llms.txt)</span>
+          <span>Company briefing draft (not published automatically)</span>
           <span class="form-hint-badge">AI LLM Context</span>
         </label>
         <textarea name="seo_ai_company_bio"
                   id="seo_ai_company_bio"
                   class="form-control form-control--textarea"
                   rows="4"
-                  placeholder="Empetix Solutions (إمبيتكس / حلول إمبيتكس) is a premier digital engineering and software growth studio founded in Cairo, Egypt...">{{ old('seo_ai_company_bio', $settings['seo_ai_company_bio'] ?? '') }}</textarea>
-        <span class="form-hint">This text is consumed by modern LLM crawlers via /llms.txt. Describe who Empetix is, what SaaS products you built, and your engineering strengths.</span>
+                  placeholder="Record verified company facts here for editorial review.">{{ old('seo_ai_company_bio', $settings['seo_ai_company_bio'] ?? '') }}</textarea>
+        <span class="form-hint">Retained as a draft note. Public summaries use visible CMS content, not private instructions or unverified business claims.</span>
       </div>
 
     </div>
@@ -374,7 +374,7 @@
   {{-- Save Actions --}}
   <div class="form-actions-bar">
     <div class="form-actions-bar__inner">
-      <span class="form-actions-bar__info">Changes take effect immediately and refresh the /sitemap.xml and /llms.txt caches.</span>
+      <span class="form-actions-bar__info">Changes affect this installation. Production changes require deployment.</span>
       <button type="submit" class="btn btn--primary btn--lg">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         <span>Save SEO &amp; AI Settings</span>
@@ -385,7 +385,7 @@
 </form>
 
 <script>
-  function empetixSwitchSeoPreview(tabKey) {
+  function empetixSwitchSeoPreview(event, tabKey) {
     document.querySelectorAll('.seo-preview-tab').forEach(function(b) { b.classList.remove('is-active'); });
     event.currentTarget.classList.add('is-active');
 
