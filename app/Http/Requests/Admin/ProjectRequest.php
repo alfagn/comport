@@ -31,14 +31,11 @@ class ProjectRequest extends FormRequest
             }
         }
 
-        if ($this->hasFile('image') && ! $this->file('image')?->isValid()) {
-            $this->request->remove('image');
-            $this->files->remove('image');
-        }
-
-        if ($this->hasFile('logo') && ! $this->file('logo')?->isValid()) {
-            $this->request->remove('logo');
-            $this->files->remove('logo');
+        foreach (['image', 'logo', 'video_poster_file', 'video_src_file'] as $fileField) {
+            if ($this->hasFile($fileField) && ! $this->file($fileField)?->isValid()) {
+                $this->request->remove($fileField);
+                $this->files->remove($fileField);
+            }
         }
     }
 
@@ -62,7 +59,9 @@ class ProjectRequest extends FormRequest
             'quote' => ['nullable', 'string'],
             'quote_cite' => ['nullable', 'string', 'max:255'],
             'video_poster' => ['nullable', 'string', 'max:255'],
+            'video_poster_file' => ['nullable', 'image', 'max:4096'],
             'video_src' => ['nullable', 'string', 'max:255'],
+            'video_src_file' => ['nullable', 'file', 'mimes:mp4,webm,mov,qt', 'max:102400'],
             'video_url' => ['nullable', 'url', 'max:500'],
             'image' => ['nullable', 'image', 'max:4096'],
             'gallery_files.*' => ['nullable', 'image', 'max:4096'],

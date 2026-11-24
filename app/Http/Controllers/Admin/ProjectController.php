@@ -45,7 +45,9 @@ class ProjectController extends Controller
             ProjectData::fromArray($request->validated()),
             $request->file('image'),
             $galleryFiles,
-            $request->file('logo')
+            $request->file('logo'),
+            $request->file('video_poster_file'),
+            $request->file('video_src_file'),
         );
 
         return redirect()->route('admin.projects.index')->with('success', 'Project created.');
@@ -70,7 +72,9 @@ class ProjectController extends Controller
             ProjectData::fromArray($request->validated()),
             $request->file('image'),
             $galleryFiles,
-            $request->file('logo')
+            $request->file('logo'),
+            $request->file('video_poster_file'),
+            $request->file('video_src_file'),
         );
 
         return redirect()->route('admin.projects.index')->with('success', 'Project updated.');

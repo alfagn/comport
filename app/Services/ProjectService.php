@@ -75,12 +75,21 @@ class ProjectService extends BaseService
         return $attributes;
     }
 
-    public function create(ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = [], ?UploadedFile $logoFile = null): Project
+    public function create(ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = [], ?UploadedFile $logoFile = null, ?UploadedFile $videoPosterFile = null, ?UploadedFile $videoSrcFile = null): Project
     {
         $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['title']);
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects');
         $attributes['logo'] = $this->storeUpload($logoFile, 'uploads/projects/logos', is_string($attributes['logo'] ?? null) ? $attributes['logo'] : null);
+
+        // Video poster: uploaded file takes priority over text path
+        if ($videoPosterFile) {
+            $attributes['video_poster'] = $this->storeUpload($videoPosterFile, 'uploads/projects/posters');
+        }
+        // Video source: uploaded file takes priority over text path
+        if ($videoSrcFile) {
+            $attributes['video_src'] = $this->storeUpload($videoSrcFile, 'uploads/projects/videos');
+        }
 
         $gallery = [];
         if (isset($attributes['gallery'])) {
@@ -108,13 +117,29 @@ class ProjectService extends BaseService
     }
 
     /** Update a project and re-sync its tags. */
-    public function update(int $id, ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = [], ?UploadedFile $logoFile = null): Project
+    public function update(int $id, ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = [], ?UploadedFile $logoFile = null, ?UploadedFile $videoPosterFile = null, ?UploadedFile $videoSrcFile = null): Project
     {
         $record = $this->repository->find($id);
         $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? $record->slug;
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects', $record->image);
         $attributes['logo'] = $this->storeUpload($logoFile, 'uploads/projects/logos', $record->logo);
+
+        // Video poster: uploaded file takes priority over text path
+        if ($videoPosterFile) {
+            $old = str_starts_with((string) $record->video_poster, 'uploads/') ? $record->video_poster : null;
+            $attributes['video_poster'] = $this->storeUpload($videoPosterFile, 'uploads/projects/posters', $old);
+        } elseif (!isset($attributes['video_poster']) || $attributes['video_poster'] === null || $attributes['video_poster'] === '') {
+            $attributes['video_poster'] = $record->video_poster;
+        }
+
+        // Video source: uploaded file takes priority over text path
+        if ($videoSrcFile) {
+            $old = str_starts_with((string) $record->video_src, 'uploads/') ? $record->video_src : null;
+            $attributes['video_src'] = $this->storeUpload($videoSrcFile, 'uploads/projects/videos', $old);
+        } elseif (!isset($attributes['video_src']) || $attributes['video_src'] === null || $attributes['video_src'] === '') {
+            $attributes['video_src'] = $record->video_src;
+        }
 
         $gallery = [];
         if (isset($attributes['gallery'])) {
