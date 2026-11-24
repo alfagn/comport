@@ -16,7 +16,7 @@
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="{{ sec('team', 'copy_46054f40eb9f') }}"/>
+  <meta property="og:image:alt" content="Empetix Solution"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ sec('team', 'copy_1bd5cb61a600') }}"/>
   <meta name="twitter:description" content="{{ sec('team', 'copy_dca495ea9079') }}"/>
@@ -25,12 +25,11 @@
 
 @section('content')
 @php
-  // Do not infer a person's department from a role or their position in a seed.
   $departments = [
-    'general' => sec('team', 'general_team', 'Team'),
-    'engineering' => sec('team', 'copy_865f5a4280b3'),
-    'design' => preg_replace('/\s*\(\d+\)\s*$/', '', sec('team', 'copy_9f3ba2584498') ?? ''),
-    'marketing' => preg_replace('/\s*\(\d+\)\s*$/', '', sec('team', 'copy_81990933b449') ?? ''),
+    'general' => 'Team',
+    'engineering' => 'Software engineering',
+    'design' => 'Product design',
+    'marketing' => 'Marketing and production',
   ];
   $memberGroups = $members->groupBy(fn ($member) => $member->department ?: 'general');
 @endphp
@@ -39,8 +38,8 @@
       <div class="team-container">
         <nav class="team-crumb" aria-label="Breadcrumb">
           <ol class="team-crumb__list">
-            <li class="team-crumb__item"><a href="{{ url('/') }}" class="team-crumb__link">{{ sec('team', 'copy_66b93f927675') }}</a></li>
-            <li class="team-crumb__item" aria-current="page">{{ sec('team', 'copy_cdbd990d3384') }}</li>
+            <li class="team-crumb__item"><a href="{{ url('/') }}" class="team-crumb__link">Home</a></li>
+            <li class="team-crumb__item" aria-current="page">Team</li>
           </ol>
         </nav>
 
@@ -55,7 +54,7 @@
           <img
             class="team-hero__photo"
             src="{{ content_asset(sec('team', 'copy_38a9b4c47c1d')) }}"
-            alt="{{ sec('team', 'copy_548db1eb20f4') }}"
+            alt="Empetix engineers and product designers reviewing layouts together in our New Cairo studio"
             width="1600"
             height="900"
           />
@@ -76,7 +75,7 @@
               {{ sec('team', 'copy_42a38ba194b4') }}
             </p>
             <div class="team-filters" role="group" aria-label="Filter team by department">
-              <button type="button" class="team-filter" data-team-filter="all" aria-pressed="true">{{ preg_replace('/\s*\(\d+\)\s*$/', '', sec('team', 'copy_e111c2849bae') ?? '') }} ({{ $members->count() }})</button>
+              <button type="button" class="team-filter" data-team-filter="all" aria-pressed="true">All teams ({{ $members->count() }})</button>
               @foreach($memberGroups as $department => $people)
                 <button type="button" class="team-filter" data-team-filter="{{ $department }}" aria-pressed="false">{{ $departments[$department] ?? $departments['general'] }} ({{ $people->count() }})</button>
               @endforeach
@@ -121,7 +120,7 @@
           </ul>
         </div>
         @empty
-          <p class="team-section-head__lead">{{ sec('team', 'directory_empty', 'Our team directory will be updated soon.') }}</p>
+          <p class="team-section-head__lead">Our team directory will be updated soon.</p>
         @endforelse
       </div>
     </section>
@@ -152,7 +151,7 @@
             <img
               class="team-culture__photo"
               src="{{ content_asset(sec('team', 'copy_b221f03ea2bf')) }}"
-              alt="{{ sec('team', 'copy_8a668411ecaf') }}"
+              alt="Empetix team members collaborating around a studio workshop table in New Cairo"
               width="1600"
               height="900"
               loading="lazy"

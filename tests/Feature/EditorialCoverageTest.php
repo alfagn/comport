@@ -13,6 +13,7 @@ use Tests\TestCase;
 class EditorialCoverageTest extends TestCase
 {
     use RefreshDatabase;
+
     protected $seed = true;
 
     public function test_editorial_catalog_is_registered_and_upgrade_preserves_edits_and_deletions(): void
@@ -28,12 +29,54 @@ class EditorialCoverageTest extends TestCase
         $this->assertDatabaseMissing('content_list_items', ['group' => 'about.directory']);
     }
 
+    public function test_noisy_ui_chrome_groups_and_selector_prefixes_are_absent_from_cms_and_database(): void
+    {
+        foreach (['global', 'mega', 'founder', 'project', 'job', 'post', 'error'] as $prunedGroup) {
+            $this->assertSame(0, PageSection::where('page', $prunedGroup)->count(), "Noisy group {$prunedGroup} should not exist in page_sections");
+        }
+
+        foreach (PageSection::where('type', '!=', 'internal')->pluck('label') as $label) {
+            $this->assertDoesNotMatchRegularExpression('/^(span|p|a|li|option|t-h\d|sr-only|og:image:alt|eyebrow):/i', $label);
+        }
+
+        $owner = User::first();
+        $owner->assignRole(Permissions::OWNER_ROLE);
+        $this->actingAs($owner)->get('/admin/pages')
+            ->assertOk()
+            ->assertSee('Home page')
+            ->assertSee('Header &amp; Mega-Menu', false)
+            ->assertSee('Footer (all pages)')
+            ->assertDontSee('/admin/pages/global', false)
+            ->assertDontSee('/admin/pages/error', false)
+            ->assertDontSee('/admin/pages/job', false)
+            ->assertDontSee('/admin/pages/post', false);
+    }
+
     public function test_each_public_page_renders_an_actual_dashboard_editorial_edit(): void
     {
         $owner = User::first();
         $owner->assignRole(Permissions::OWNER_ROLE);
-        foreach (['home' => '/', 'about' => '/about', 'work' => '/work', 'team' => '/team', 'careers' => '/careers', 'partners' => '/partners', 'blog' => '/blog', 'contact' => '/contact', 'founder' => '/founders/mohanad', 'project' => '/work/alfagn', 'job' => '/careers/laravel', 'post' => '/blog/arabic-first-design-systems', 'global' => '/'] as $page => $url) {
-            $section = PageSection::where('page', $page)->where('key', 'like', 'copy_%')->where('type', 'text')->firstOrFail();
+
+        $routes = [
+            'home' => '/',
+            'header' => '/',
+            'footer' => '/',
+            'about' => '/about',
+            'founders' => '/about',
+            'work' => '/work',
+            'team' => '/team',
+            'careers' => '/careers',
+            'partners' => '/partners',
+            'blog' => '/blog',
+            'contact' => '/contact',
+        ];
+
+        foreach ($routes as $page => $url) {
+            $section = PageSection::where('page', $page)
+                ->where('type', 'text')
+                ->where('key', '!=', 'featured_url')
+                ->firstOrFail();
+
             $marker = 'EDIT-'.strtoupper($page).'-VERIFIED';
             $this->actingAs($owner)->put('/admin/pages/'.$page, ['sections' => [$section->key => $marker]])->assertRedirect();
             $this->get($url)->assertOk()->assertSee($marker);
@@ -92,9 +135,11 @@ class EditorialCoverageTest extends TestCase
         $this->get('/about')->assertOk()->assertSee('/media/video/'.$diskPath, false);
         $this->get('/media/video/'.$diskPath)->assertOk();
     }
+
     public function test_about_poster_upload_and_existing_values_are_visible_in_editor(): void
     {
-        $owner = User::first(); $owner->assignRole(Permissions::OWNER_ROLE);
+        $owner = User::first();
+        $owner->assignRole(Permissions::OWNER_ROLE);
         \Illuminate\Support\Facades\Storage::fake('public');
         $this->actingAs($owner)->get('/admin/pages/about')->assertOk()->assertSee('Built by engineers');
         $this->actingAs($owner)->put('/admin/pages/about', [
@@ -108,7 +153,11 @@ class EditorialCoverageTest extends TestCase
 
     public function test_every_literal_template_section_has_a_registered_editor_control(): void
     {
-        $paths = array_merge(glob(resource_path('views/pages/*.blade.php')), glob(resource_path('views/partials/*.blade.php')), [resource_path('views/layouts/public.blade.php')]);
+        $paths = array_merge(
+            glob(resource_path('views/pages/*.blade.php')),
+            glob(resource_path('views/partials/*.blade.php')),
+            [resource_path('views/layouts/public.blade.php')]
+        );
         foreach ($paths as $path) {
             preg_match_all("/sec\\('([^']+)', '([^']+)'/", file_get_contents($path), $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
@@ -119,7 +168,8 @@ class EditorialCoverageTest extends TestCase
 
     public function test_projects_and_platforms_listing_and_detailed_case_study_controls_render(): void
     {
-        $owner = User::first(); $owner->assignRole(Permissions::OWNER_ROLE);
+        $owner = User::first();
+        $owner->assignRole(Permissions::OWNER_ROLE);
         $project = \App\Models\Project::where('slug', 'alfagn')->firstOrFail();
         $this->actingAs($owner)->put('/admin/pages/work', ['sections' => ['hero_title' => 'Updated Projects and Platforms introduction']])->assertRedirect();
         $this->actingAs($owner)->put('/admin/projects/'.$project->id, [
@@ -140,5 +190,4 @@ class EditorialCoverageTest extends TestCase
             ->assertSee('Platform narrative paragraph')->assertSee('Platform client quotation')->assertSee('Platform client leader')
             ->assertSee('Platform detailed body')->assertSee('https://example.com/platform.mp4', false);
     }
-
 }

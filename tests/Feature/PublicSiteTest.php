@@ -97,13 +97,35 @@ class PublicSiteTest extends TestCase
     }
 
     /** The public layout must ship the interaction modules (mega menu, reveal,
-        counters, careers) — the page is inert without them. */
+        counters, careers, cookies) — the page is inert without them. */
     public function test_layout_includes_interaction_scripts(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
 
-        foreach (['nav.js', 'reveal.js', 'counter.js', 'media.js', 'careers.js', 'main.js'] as $script) {
+        foreach (['nav.js', 'reveal.js', 'counter.js', 'media.js', 'careers.js', 'cookies.js', 'main.js'] as $script) {
             $this->assertStringContainsString($script, $html, "layout is missing {$script}");
         }
+    }
+
+    /** Public pages ship the cookie consent banner, preference modal, and footer Cookie Settings button. */
+    public function test_cookie_consent_banner_and_footer_settings_render_and_respect_settings(): void
+    {
+        $this->get('/')->assertOk()
+            ->assertSee('id="cookie-consent-banner"', false)
+            ->assertSee('data-cookie-auto-prompt="1"', false)
+            ->assertSee('id="cookie-settings-modal"', false)
+            ->assertSee('data-cookie-settings', false)
+            ->assertSee('Cookie &amp; Privacy Preferences', false)
+            ->assertSee('Accept All Cookies')
+            ->assertSee('Essential Only')
+            ->assertSee('Cookie Settings');
+
+        \App\Models\Setting::setValue('cookie_consent_enabled', '0');
+        \App\Models\Setting::setValue('cookie_banner_title', 'Custom Cookie Prompt');
+
+        $this->get('/about')->assertOk()
+            ->assertSee('data-cookie-auto-prompt="0"', false)
+            ->assertSee('Custom Cookie Prompt')
+            ->assertSee('data-cookie-settings', false);
     }
 }

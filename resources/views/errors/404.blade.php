@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="robots" content="noindex, follow"/>
-  <title>{{ sec('error', 'meta_title') }}</title>
+  <title>Page not found | Empetix Solution</title>
   <link rel="icon" href="{{ brand_favicon() }}"/>
   <link rel="stylesheet" href="{{ versioned_asset('assets/css/main.css') }}"/>
   <link rel="stylesheet" href="{{ versioned_asset('assets/css/pages/error.css') }}"/>
@@ -12,16 +12,16 @@
 <body class="error-page">
   <header class="error-header">
     <a href="{{ route('home') }}" aria-label="Empetix Solution home"><img src="{{ brand_logo(dark: true) }}" alt="Empetix Solution" width="176" height="60"/></a>
-    <span class="error-status"><span aria-hidden="true"></span>404 / {{ sec('error', 'status_label') }}</span>
+    <span class="error-status"><span aria-hidden="true"></span>404 / Page not found</span>
   </header>
   <main class="error-main" id="main-content">
     <div class="error-copy">
-      <p class="error-eyebrow">{{ sec('error', 'eyebrow') }}</p>
-      <h1>{{ sec('error', 'title') }}</h1>
-      <p class="error-description">{{ sec('error', 'description') }}</p>
+      <p class="error-eyebrow">A small detour</p>
+      <h1>This page is off the map.</h1>
+      <p class="error-description">The page may have moved, or the link may be out of date. Let's get you back to what matters.</p>
       <div class="error-actions">
-        <a class="error-primary" href="{{ route('home') }}">{{ sec('error', 'home_label') }} <span aria-hidden="true">↗</span></a>
-        <a class="error-secondary" href="{{ route('work') }}">{{ sec('error', 'work_label') }} <span aria-hidden="true">→</span></a>
+        <a class="error-primary" href="{{ route('home') }}">Back to home <span aria-hidden="true">↗</span></a>
+        <a class="error-secondary" href="{{ route('work') }}">Explore our work <span aria-hidden="true">→</span></a>
       </div>
     </div>
     <div class="error-art" aria-hidden="true">
@@ -32,6 +32,6 @@
       <span class="error-art-caption">404 &nbsp; / &nbsp; OFF THE GRID</span>
     </div>
   </main>
-  <footer class="error-footer"><span>Empetix Solution</span><a href="{{ route('contact') }}">{{ sec('error', 'contact_label') }} <span aria-hidden="true">↗</span></a></footer>
+  <footer class="error-footer"><span>Empetix Solution</span><a href="{{ route('contact') }}">Need a hand? Contact us <span aria-hidden="true">↗</span></a></footer>
 </body>
 </html>

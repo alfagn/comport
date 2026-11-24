@@ -20,6 +20,9 @@ const boot = () => {
   if (typeof app.initCareers === "function") {
     app.initCareers();
   }
+  if (typeof app.initCookies === "function") {
+    app.initCookies();
+  }
 
   initPreloader(() => {
     if (typeof app.initReveal === "function") {

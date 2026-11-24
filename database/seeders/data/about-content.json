@@ -1,70 +1,58 @@
 {
   "about": [
     {
-      "key": "breadcrumb",
-      "label": "Breadcrumb label",
-      "type": "text",
-      "value": "About & Founders"
-    },
-    {
       "key": "established",
-      "label": "Establishment and location badge",
+      "label": "Establishment & Location Badge",
       "type": "text",
       "value": "Established 2025 · Cairo"
     },
     {
       "key": "hero_lead",
-      "label": "Introductory paragraph",
+      "label": "Hero Introductory Paragraph",
       "type": "textarea",
       "value": "Empetix Solution was founded in New Cairo by three co-founders uniting executive strategy, operational excellence, and software engineering under one roof—helping ambitious businesses build technology, scale growth, and grow sustainably."
     },
     {
       "key": "hero_meta",
-      "label": "Specialist and studio badge",
+      "label": "Practice Focus Badge",
       "type": "text",
       "value": "SOFTWARE ENGINEERING · GROWTH MARKETING"
     },
     {
       "key": "overview_lead",
-      "label": "Who we are paragraph",
+      "label": "Who We Are Lead Paragraph",
       "type": "textarea",
       "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our overview to see how we build and scale digital businesses."
     },
     {
       "key": "overview_poster",
-      "label": "Overview video poster",
+      "label": "Overview Video Poster",
       "type": "image",
       "value": "assets/img/home/overview-poster.jpg"
     },
     {
       "key": "overview_video",
-      "label": "Overview video (Upload to Private Storage or Link)",
+      "label": "Overview Video (Upload to Private Storage or Link)",
       "type": "video",
       "value": "assets/video/empetix-overview.mp4"
-    },
-    {
-      "key": "video_fallback",
-      "label": "Video fallback message",
-      "type": "text",
-      "value": "Your browser does not support embedded video playback."
     }
   ],
   "founders": [
     {
       "key": "heading",
-      "label": "Founders heading",
+      "label": "Founders Section Heading",
       "type": "text",
       "value": "The founders"
     },
     {
       "key": "lead",
-      "label": "Founders introduction",
+      "label": "Founders Introduction",
       "type": "textarea",
       "value": "Every engagement at Empetix Solution is led directly by our three co-founders across executive strategy, operations, and software engineering."
     },
     {
       "key": "team_link",
-      "label": "Full team link label",
+      "label": "Full Team Link Label",
       "type": "text",
       "value": "Meet the full team"
     }

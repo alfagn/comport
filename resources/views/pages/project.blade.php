@@ -15,12 +15,11 @@
 @section('content')
 <main id="main-content">
 
-
     <section class="article-head">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">{{ sec('project', 'copy_66b93f927675') }}</a></li>
-          <li><a href="{{ url('/work') }}">{{ sec('project', 'copy_5629b6adbbae') }}</a></li>
+          <li><a href="{{ url('/') }}">Home</a></li>
+          <li><a href="{{ url('/work') }}">Projects</a></li>
           <li aria-current="page">{{ $project->client ?? $project->title }}</li>
         </ol>
 
@@ -98,7 +97,7 @@
       <section class="section">
         <div class="container case-cols">
           <div class="case-cols__label">
-            <span class="eyebrow">{{ sec('project', 'copy_7b4dd66edc0b') }}</span>
+            <span class="eyebrow">DETAILS</span>
           </div>
           <div class="case-cols__body prose">{!! $project->body !!}</div>
         </div>
@@ -113,19 +112,19 @@
               <img class="video__poster" src="{{ content_asset($project->video_poster) }}" alt="{{ $project->title }} video poster" width="1280" height="720"/>
             @endif
             <video class="video__el" preload="metadata" @if($project->video_poster) poster="{{ content_asset($project->video_poster) }}" @endif>
-              <source src="{{ content_asset($project->video_src) }}" type="video/mp4"/>
+              <source src="{{ content_asset($project->video_src) }}" type="{{ video_mime($project->video_src) }}"/>
             </video>
             <button type="button" class="video__btn" data-video-play aria-label="Play {{ $project->title }} case study video">
               <span class="video__btn-inner">
                 <span class="video__btn-icon">
                   <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="4,2 14,8 4,14"/></svg>
                 </span>
-                <span>{{ sec('project', 'copy_d5ebf21c3df6') }}</span>
+                <span>Play Case Study Film</span>
               </span>
             </button>
           </div>
           <div class="video__meta">
-            <span>{{ sec('project', 'copy_201a8b9bca1e') }}</span>
+            <span>DIRECTED &amp; ENGINEERED BY EMPETIX STUDIO</span>
           </div>
         </div>
       </section>
@@ -135,7 +134,7 @@
     <div class="container">
       @if($nextProject)
       <a href="{{ route('work.show', $nextProject->slug) }}" class="pager">
-        <span class="pager__label">{{ sec('project', 'copy_2d7f7e941759') }}</span>
+        <span class="pager__label">Next Case Study</span>
         <span class="pager__title">
           <span>{{ $nextProject->title }}</span>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2"/></svg>
@@ -143,4 +142,5 @@
       </a>
     @endif
     </div>
+</main>
 @endsection

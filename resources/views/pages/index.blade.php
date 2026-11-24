@@ -16,7 +16,7 @@
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="{{ sec('home', 'copy_46054f40eb9f') }}"/>
+  <meta property="og:image:alt" content="Empetix Solution"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ setting('seo_meta_title_en', sec('home', 'copy_3e8e84b38e6d')) }}"/>
   <meta name="twitter:description" content="{{ setting('seo_meta_description_en', sec('home', 'copy_24622118df1b')) }}"/>
@@ -39,9 +39,11 @@
           </div>
           <div class="container">
             <div class="hero-slide__content">
-              @if($slide->tag)
+              @php($heroKicker = sec('home', 'hero_kicker', 'NEW CAIRO, EGYPT'))
+              @if($slide->tag || $heroKicker)
                 <div class="hero-slide__meta">
-                  <span class="hero-slide__tag">{{ $slide->tag }}</span>
+                  @if($slide->tag)<span class="hero-slide__tag">{{ $slide->tag }}</span>@endif
+                  @if($heroKicker)<span class="hero-slide__kicker">{{ $heroKicker }}</span>@endif
                 </div>
               @endif
               <h1 class="hero-slide__title">
@@ -131,7 +133,7 @@
             height="1080"
           >
             <source src="{{ content_asset($homeVideoRef) }}" type="{{ video_mime($homeVideoRef) }}"/>
-            {{ sec('home', 'copy_8424b4de9ef5') }}
+            Your browser does not support embedded video playback.
           </video>
         </div>
 
@@ -240,7 +242,7 @@
         <div class="sectors-grid reveal">
           @foreach($industries as $i => $industry)
           <a href="{{ url('/work') }}" class="sector-box">
-            <span class="sector-box__num">{{ sec('home', 'sector_prefix') }} {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+            <span class="sector-box__num">SECTOR {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
             <h3 class="sector-box__title">{{ $industry->title }}</h3>
             <span class="sector-box__sub">{{ $industry->subtitle }}</span>
           </a>
@@ -322,7 +324,7 @@
           <div class="stat">
             <div class="stat__value">
               <span data-counter data-counter-target="{{ sec('home', 'impact_value_2') }}" data-counter-decimals="1">{{ sec('home', 'impact_value_2') }}</span>
-              <span class="stat__suffix">{{ sec('home', 'copy_ee9ff8c14dd0') }}</span>
+              <span class="stat__suffix">x</span>
             </div>
             <p class="stat__label">{{ sec('home', 'copy_e3edd5b505ad') }}</p>
           </div>
@@ -438,7 +440,7 @@
          ==================================================================== -->
     <section class="cta-band" aria-labelledby="careers-band-title">
       <div class="cta-band__media">
-        <img src="{{ content_asset(sec('home', 'copy_b221f03ea2bf')) }}" alt="{{ sec('home', 'copy_bb8852a3151e') }}" width="1600" height="900"/>
+        <img src="{{ content_asset(sec('home', 'copy_b221f03ea2bf')) }}" alt="Empetix engineers and designers collaborating during a studio workshop" width="1600" height="900"/>
       </div>
       <div class="container cta-band__inner reveal">
         <div class="cta-band__main">

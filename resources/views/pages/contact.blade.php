@@ -16,7 +16,7 @@
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="{{ sec('contact', 'copy_46054f40eb9f') }}"/>
+  <meta property="og:image:alt" content="Empetix Solution"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ sec('contact', 'copy_b33a9603fc54') }}"/>
   <meta name="twitter:description" content="{{ sec('contact', 'copy_d6d0b4b6f76b') }}"/>
@@ -30,8 +30,8 @@
     <section class="page-hero page-hero--dark">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">{{ sec('contact', 'copy_66b93f927675') }}</a></li>
-          <li aria-current="page">{{ sec('contact', 'copy_f4b9a5c91fb5') }}</li>
+          <li><a href="{{ url('/') }}">Home</a></li>
+          <li aria-current="page">Contact Us</li>
         </ol>
         <h1 class="page-hero__title">{{ sec('contact', 'hero_title', 'Start a project, request a technical audit, or partner with our studios.') }}</h1>
         <div class="page-hero__row">
@@ -72,7 +72,7 @@
               </div>
               <div class="channel-card__foot">
                 <a href="mailto:{{ $channelEmail }}" class="channel-card__email">{{ $channelEmail }}</a>
-                <button type="button" class="channel-card__copy" data-copy-email="{{ $channelEmail }}">{{ sec('contact', 'copy_80c93ba48149') }}</button>
+                <button type="button" class="channel-card__copy" data-copy-email="{{ $channelEmail }}">Copy</button>
               </div>
             </article>
           @endforeach
@@ -84,10 +84,10 @@
             <div class="form-card">
               <div class="form-card__head">
                 <div>
-                  <span class="eyebrow">{{ sec('contact', 'copy_c334f3d0be11') }}</span>
+                  <span class="eyebrow">02 / Interactive Project Brief</span>
                   <h2 class="t-h3">{{ sec('contact', 'form_heading', 'Configure your project or partnership brief.') }}</h2>
                 </div>
-                <span class="t-meta">{{ sec('contact', 'copy_0d1cc21eaa9c') }}</span>
+                <span class="t-meta">PROTECTED BY MUTUAL NDA</span>
               </div>
 
               <form class="form" action="{{ route('contact.store') }}" method="post">
@@ -97,7 +97,7 @@
                 @endif
                 <!-- Step A: Capabilities -->
                 <fieldset class="form__group">
-                  <legend class="form__label">{{ sec('contact', 'form_legend_a', 'A. Which capabilities do you need? (Select one or more)') }}</legend>
+                  <legend class="form__label">A. Which capabilities do you need? (Select one or more)</legend>
                   <div class="choices">
                     @foreach($services as $i => $service)
                     <label class="choice">
@@ -110,7 +110,7 @@
 
                 <!-- Step B: Budget Tier -->
                 <fieldset class="form__group">
-                  <legend class="form__label">{{ sec('contact', 'form_legend_b', 'B. Estimated Investment Range') }}</legend>
+                  <legend class="form__label">B. Estimated Investment Range</legend>
                   <div class="choices">
                     <label class="choice">
                       <input type="radio" name="budget_tier" value="15-35k"/>
@@ -133,33 +133,33 @@
 
                 <!-- Step C: Contact Details -->
                 <div class="form__field">
-                  <label for="c-name" class="form__label">{{ sec('contact', 'form_label_name', 'Full Name') }} <abbr title="Required">*</abbr></label>
-                  <input id="c-name" name="name" type="text" class="form__input" required placeholder="{{ sec('contact', 'form_ph_name', 'e.g. Tariq Al-Faisal') }}"/>
+                  <label for="c-name" class="form__label">Full Name <abbr title="Required">*</abbr></label>
+                  <input id="c-name" name="name" type="text" class="form__input" required placeholder="e.g. Tariq Al-Faisal"/>
                 </div>
 
                 <div class="form__field">
-                  <label for="c-email" class="form__label">{{ sec('contact', 'form_label_email', 'Work Email') }} <abbr title="Required">*</abbr></label>
-                  <input id="c-email" name="email" type="email" class="form__input" required placeholder="{{ sec('contact', 'form_ph_email', 'name@company.com') }}"/>
+                  <label for="c-email" class="form__label">Work Email <abbr title="Required">*</abbr></label>
+                  <input id="c-email" name="email" type="email" class="form__input" required placeholder="name@company.com"/>
                 </div>
 
                 <div class="form__field">
-                  <label for="c-company" class="form__label">{{ sec('contact', 'form_label_company', 'Company & Website') }} <abbr title="Required">*</abbr></label>
-                  <input id="c-company" name="company" type="text" class="form__input" required placeholder="{{ sec('contact', 'form_ph_company', 'e.g. Acme FinTech (acme.com)') }}"/>
+                  <label for="c-company" class="form__label">Company &amp; Website <abbr title="Required">*</abbr></label>
+                  <input id="c-company" name="company" type="text" class="form__input" required placeholder="e.g. Acme FinTech (acme.com)"/>
                 </div>
 
                 <div class="form__field">
-                  <label for="c-timeline" class="form__label">{{ sec('contact', 'form_label_timeline', 'Target Kickoff Window') }}</label>
+                  <label for="c-timeline" class="form__label">Target Kickoff Window</label>
                   <select id="c-timeline" name="timeline" class="form__select">
-                    <option value="immediate">{{ sec('contact', 'form_timeline_1', 'Immediate (Within 2 Weeks)') }}</option>
-                    <option value="month">{{ sec('contact', 'form_timeline_2', 'Within 30 Days') }}</option>
-                    <option value="quarter">{{ sec('contact', 'form_timeline_3', 'Next Quarter Planning') }}</option>
-                    <option value="exploring">{{ sec('contact', 'form_timeline_4', 'Exploratory / RFP Stage') }}</option>
+                    <option value="immediate">Immediate (Within 2 Weeks)</option>
+                    <option value="month">Within 30 Days</option>
+                    <option value="quarter">Next Quarter Planning</option>
+                    <option value="exploring">Exploratory / RFP Stage</option>
                   </select>
                 </div>
 
                 <div class="form__field form__field--full">
-                  <label for="c-brief" class="form__label">{{ sec('contact', 'form_label_brief', 'Project Context, Technical Stack & Commercial Goals') }} <abbr title="Required">*</abbr></label>
-                  <textarea id="c-brief" name="description" class="form__textarea" required placeholder="{{ sec('contact', 'form_ph_brief', 'Tell us what you are building or scaling, what bottleneck you want to solve, and any key launch dates...') }}"></textarea>
+                  <label for="c-brief" class="form__label">Project Context, Technical Stack &amp; Commercial Goals <abbr title="Required">*</abbr></label>
+                  <textarea id="c-brief" name="description" class="form__textarea" required placeholder="Tell us what you are building or scaling, what bottleneck you want to solve, and any key launch dates..."></textarea>
                 </div>
 
                 <div class="form__actions">
@@ -182,14 +182,14 @@
           <!-- Executive Promise Sidebar -->
           <aside class="contact__aside reveal">
             <div class="contact-promise">
-              <span class="eyebrow eyebrow--inverse">{{ sec('contact', 'copy_287b3a77ee46') }}</span>
+              <span class="eyebrow eyebrow--inverse">What Happens Next</span>
               <h3 class="contact-promise__title">{{ sec('contact', 'promise_title', 'Direct founder review within 24 hours.') }}</h3>
               <ul class="contact-promise__list">
                 @foreach(content_list('contact.promise') as $promise)
                   <li><strong>{{ $promise->title }}</strong> {{ $promise->body }}</li>
                 @endforeach
               </ul>
-              <p class="t-small"><a href="{{ url('/team') }}" class="text-link">{{ sec('contact', 'copy_c7c47204b1e1') }}</a></p>
+              <p class="t-small"><a href="{{ url('/team') }}" class="text-link">Meet the full Empetix team &rarr;</a></p>
             </div>
 
             <div class="contact-block">
@@ -202,7 +202,7 @@
       </div>
     </section>
 
-        <!-- 4. Single Headquarters Showcase -->
+    <!-- 4. Single Headquarters Showcase -->
     <section class="section section--alt section--ruled" aria-labelledby="studios-heading">
       <div class="container">
         <div class="section-head reveal">
@@ -214,13 +214,13 @@
 
         <article class="hq-showcase reveal">
           <div class="hq-showcase__media">
-            <img src="{{ content_asset(sec('contact', 'copy_fcccaf2eb501')) }}" alt="{{ sec('contact', 'copy_9c8db7be5f24') }}" width="1200" height="675"/>
+            <img src="{{ content_asset(sec('contact', 'copy_fcccaf2eb501')) }}" alt="Empetix Solutions Headquarters in New Cairo" width="1200" height="675"/>
           </div>
           <div class="hq-showcase__body">
             <div>
               <div class="office__top">
-                <span class="office__role">{{ sec('contact', 'copy_1fc320ce6a0a') }}</span>
-                <span class="office__clock"><span data-tz-clock="Africa/Cairo">12:00</span> {{ sec('contact', 'copy_d2cbb97a2788') }}</span>
+                <span class="office__role">EMPETIX SOLUTIONS HEADQUARTERS</span>
+                <span class="office__clock"><span data-tz-clock="Africa/Cairo">12:00</span> CAIRO</span>
               </div>
               <h3 class="t-h2">{{ sec('contact', 'hq_city', 'Cairo, Egypt') }}</h3>
               <p class="t-small">{{ sec('contact', 'hq_desc', 'All software engineering, product design, commercial production, and performance marketing squads operate together under one roof at our New Cairo campus.') }}</p>
@@ -228,19 +228,19 @@
 
             <div class="hq-showcase__list">
               <div class="hq-showcase__row">
-                <span>{{ sec('contact', 'copy_054abeb99433') }}</span>
+                <span>Address</span>
                 <span>{{ setting('address', 'Building 14, District 5 Campus, New Cairo, Cairo, Egypt') }}</span>
               </div>
               <div class="hq-showcase__row">
-                <span>{{ sec('contact', 'copy_d8edc49daba3') }}</span>
+                <span>Working Hours</span>
                 <span>{{ sec('contact', 'hq_hours', 'Sunday – Thursday · 09:00 – 18:00') }}</span>
               </div>
               <div class="hq-showcase__row">
-                <span>{{ sec('contact', 'copy_30c1075531c4') }}</span>
+                <span>Direct Telephone</span>
                 <span><a href="tel:{{ setting('phone', '+20227928400') }}" class="text-link">{{ setting('phone', '+20 2 2792 8400') }}</a></span>
               </div>
               <div class="hq-showcase__row">
-                <span>{{ sec('contact', 'copy_8022729296a5') }}</span>
+                <span>New Business Desk</span>
                 <span><a href="mailto:{{ setting('email', 'hello@empetix.com') }}" class="text-link">{{ setting('email', 'hello@empetix.com') }}</a></span>
               </div>
             </div>
@@ -281,4 +281,5 @@
         </div>
       </div>
     </section>
+</main>
 @endsection

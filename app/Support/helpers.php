@@ -179,7 +179,7 @@ if (! function_exists('seo_og_image')) {
             return asset('storage/'.$path);
         }
 
-        return content_asset(sec('global', 'social_preview', 'assets/img/og/empetix-share.jpg'));
+        return asset('assets/img/og-empetix.jpg');
     }
 }
 

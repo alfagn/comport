@@ -145,16 +145,32 @@ class AdminPanelTest extends TestCase
         $this->assertEquals('5 MIN READ', $fresh->meta['read_time'] ?? null);
     }
 
-    /** Settings save from the settings screen. */
+    /** Settings save from the settings screen, including Cookie Consent controls without leaking SEO keys. */
     public function test_settings_save(): void
     {
         $admin = User::first();
+        \App\Models\Setting::setValue('seo_meta_title_en', 'SEO Title Should Not Leak');
+        \App\Models\Setting::setValue('brand_logo', 'uploads/brand/logo.png', 'brand');
+
+        $this->actingAs($admin)->get('/admin/settings')
+            ->assertOk()
+            ->assertSee('Cookie Consent &amp; Privacy', false)
+            ->assertSee('name="settings[cookie_consent_enabled]"', false)
+            ->assertDontSee('name="settings[seo_meta_title_en]"', false)
+            ->assertDontSee('name="settings[brand_logo]"', false);
 
         $this->actingAs($admin)->put('/admin/settings', [
-            'settings' => ['email' => 'new@empetix.com'],
+            'settings' => [
+                'email' => 'new@empetix.com',
+                'cookie_consent_enabled' => '1',
+                'cookie_banner_title' => 'Updated Cookie Heading',
+                'cookie_accept_label' => 'Allow Cookies',
+                'cookie_reject_label' => 'Decline Optional',
+            ],
         ])->assertRedirect();
 
-        $this->assertDatabaseHas('settings', ['key' => 'email', 'value' => 'new@empetix.com']);
+        $this->assertDatabaseHas('settings', ['key' => 'email', 'value' => 'new@empetix.com', 'group' => 'contact']);
+        $this->assertDatabaseHas('settings', ['key' => 'cookie_banner_title', 'value' => 'Updated Cookie Heading', 'group' => 'cookies']);
     }
 
     /** Page sections save from the pages editor. */

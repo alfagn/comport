@@ -60,11 +60,10 @@ class TeamAndErrorPageTest extends TestCase
         $this->get('/api/missing')->assertNotFound()->assertHeader('Content-Type', 'application/json');
     }
 
-    public function test_error_copy_is_stored_and_editable_without_affecting_json(): void
+    public function test_error_page_is_static_and_absent_from_cms_database(): void
     {
-        $this->assertDatabaseHas('page_sections', ['page' => 'error', 'key' => 'title', 'value' => 'This page is off the map.']);
-        app(SectionService::class)->savePage('error', ['title' => 'Edited recovery heading']);
-        $this->get('/missing')->assertNotFound()->assertSee('Edited recovery heading');
-        $this->getJson('/missing')->assertNotFound()->assertDontSee('Edited recovery heading');
+        $this->assertSame(0, \App\Models\PageSection::where('page', 'error')->count());
+        $this->get('/missing')->assertNotFound()->assertSee('This page is off the map.');
+        $this->getJson('/missing')->assertNotFound()->assertDontSee('This page is off the map.');
     }
 }

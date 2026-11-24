@@ -20,7 +20,7 @@
   <link rel="icon" href="{{ brand_favicon() }}"/>
   <link rel="stylesheet" href="{{ versioned_asset('assets/css/pages/service-pages.css') }}"/>
   @if(isset($page) && !($preview ?? false))
-    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'WebPage', 'name' => $page->title, 'description' => $page->summary, 'inLanguage' => $locale, 'url' => seo_url($page->publicPath())], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+    <script type="application/ld+json">{!! json_encode(['@@context' => 'https://schema.org', '@type' => 'WebPage', 'name' => $page->title, 'description' => $page->summary, 'inLanguage' => $locale, 'url' => seo_url($page->publicPath())], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
   @endif
 </head>
 <body>

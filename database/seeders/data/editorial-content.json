@@ -1,2095 +1,709 @@
 [
   {
-    "page": "founder",
-    "key": "copy_66b93f927675",
-    "label": "founder-crumb__link: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "founder",
-    "key": "copy_cdbd990d3384",
-    "label": "founder-crumb__link: Team",
-    "type": "text",
-    "value": "Team"
-  },
-  {
-    "page": "founder",
-    "key": "copy_12659584a8fd",
-    "label": "founder-crumb__item: Mohanad Ahmed Shehata",
-    "type": "text",
-    "value": "Mohanad Ahmed Shehata"
-  },
-  {
-    "page": "founder",
-    "key": "copy_5e7fc04f025c",
-    "label": "founder-text-link: Read the case study",
-    "type": "text",
-    "value": "Read the case study"
-  },
-  {
-    "page": "founder",
-    "key": "copy_14d981d94d75",
-    "label": "founder-text-link: Meet the full team",
-    "type": "text",
-    "value": "Meet the full team"
-  },
-  {
-    "page": "founder",
-    "key": "copy_b135a6b41c48",
-    "label": "alt: Portrait of Mohanad Ahmed Shehata, Co-founder and chief technology offic",
-    "type": "text",
-    "value": "Portrait of Mohanad Ahmed Shehata, Co-founder and chief technology officer"
-  },
-  {
-    "page": "contact",
-    "key": "copy_b33a9603fc54",
-    "label": "title: Contact Us & Start a Project — Empetix Studio (Cairo, Riyadh, London)",
-    "type": "text",
-    "value": "Contact Us & Start a Project — Empetix Studio (Cairo, Riyadh, London)"
-  },
-  {
-    "page": "contact",
-    "key": "copy_66b93f927675",
-    "label": "a: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "contact",
-    "key": "copy_f4b9a5c91fb5",
-    "label": "li: Contact Us",
-    "type": "text",
-    "value": "Contact Us"
-  },
-  {
-    "page": "contact",
-    "key": "copy_591febde720a",
-    "label": "eyebrow eyebrow--inverse: Direct Executive Access",
-    "type": "text",
-    "value": "Direct Executive Access"
-  },
-  {
-    "page": "contact",
-    "key": "copy_7dd28e9d5493",
-    "label": "page-hero__lead: At Empetix, you never speak with junior sales reps. Every inquiry goes d",
-    "type": "textarea",
-    "value": "At Empetix, you never speak with junior sales reps. Every inquiry goes directly to our four co-founders and practice heads in New Cairo."
-  },
-  {
-    "page": "contact",
-    "key": "copy_deda8e22bf26",
-    "label": "hero__badge: AVG RESPONSE: < 6 BUSINESS HOURS",
-    "type": "text",
-    "value": "AVG RESPONSE: < 6 BUSINESS HOURS"
-  },
-  {
-    "page": "contact",
-    "key": "copy_80c93ba48149",
-    "label": "channel-card__copy: Copy",
-    "type": "text",
-    "value": "Copy"
-  },
-  {
-    "page": "contact",
-    "key": "copy_c334f3d0be11",
-    "label": "eyebrow: 02 / Interactive Project Brief",
-    "type": "text",
-    "value": "02 / Interactive Project Brief"
-  },
-  {
-    "page": "contact",
-    "key": "copy_0d1cc21eaa9c",
-    "label": "t-meta: PROTECTED BY MUTUAL NDA",
-    "type": "text",
-    "value": "PROTECTED BY MUTUAL NDA"
-  },
-  {
-    "page": "contact",
-    "key": "copy_287b3a77ee46",
-    "label": "eyebrow eyebrow--inverse: What Happens Next",
-    "type": "text",
-    "value": "What Happens Next"
-  },
-  {
-    "page": "contact",
-    "key": "copy_c7c47204b1e1",
-    "label": "text-link: Meet the full Empetix team →",
-    "type": "text",
-    "value": "Meet the full Empetix team →"
-  },
-  {
-    "page": "contact",
-    "key": "copy_1fc320ce6a0a",
-    "label": "office__role: EMPETIX SOLUTIONS HEADQUARTERS",
-    "type": "text",
-    "value": "EMPETIX SOLUTIONS HEADQUARTERS"
-  },
-  {
-    "page": "contact",
-    "key": "copy_d2cbb97a2788",
-    "label": "span: CAIRO",
-    "type": "text",
-    "value": "CAIRO"
-  },
-  {
-    "page": "contact",
-    "key": "copy_054abeb99433",
-    "label": "span: Address",
-    "type": "text",
-    "value": "Address"
-  },
-  {
-    "page": "contact",
-    "key": "copy_d8edc49daba3",
-    "label": "span: Working Hours",
-    "type": "text",
-    "value": "Working Hours"
-  },
-  {
-    "page": "contact",
-    "key": "copy_30c1075531c4",
-    "label": "span: Direct Telephone",
-    "type": "text",
-    "value": "Direct Telephone"
-  },
-  {
-    "page": "contact",
-    "key": "copy_8022729296a5",
-    "label": "span: New Business Desk",
-    "type": "text",
-    "value": "New Business Desk"
-  },
-  {
-    "page": "contact",
-    "key": "copy_9c8db7be5f24",
-    "label": "alt: Empetix Solutions Headquarters in New Cairo",
-    "type": "text",
-    "value": "Empetix Solutions Headquarters in New Cairo"
-  },
-  {
-    "page": "contact",
-    "key": "copy_fcccaf2eb501",
-    "label": "Media path: assets/img/home/hero.jpg",
-    "type": "image",
-    "value": "assets/img/home/hero.jpg"
-  },
-  {
-    "page": "contact",
-    "key": "copy_d6d0b4b6f76b",
-    "label": "description: Contact Empetix's co-founders and practice leads in New Cairo for softwa",
-    "type": "textarea",
-    "value": "Contact Empetix's co-founders and practice leads in New Cairo for software engineering, growth marketing, or corporate partnerships."
-  },
-  {
-    "page": "contact",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
-    "type": "text",
-    "value": "Empetix Solution Logo"
-  },
-  {
-    "page": "job",
-    "key": "copy_c0d554c08817",
-    "label": "a: jobs.empetix.com",
-    "type": "text",
-    "value": "jobs.empetix.com"
-  },
-  {
-    "page": "job",
-    "key": "copy_f665170f831d",
-    "label": "a: Software Engineering",
-    "type": "text",
-    "value": "Software Engineering"
-  },
-  {
-    "page": "job",
-    "key": "copy_c12c0b3fcd51",
-    "label": "span: Tools, Stack & Environment",
-    "type": "text",
-    "value": "Tools, Stack & Environment"
-  },
-  {
-    "page": "job",
-    "key": "copy_d99229d3eb2a",
-    "label": "t-h4: Click “Apply Now” to open the application form below.",
-    "type": "text",
-    "value": "Click “Apply Now” to open the application form below."
-  },
-  {
-    "page": "job",
-    "key": "copy_3e44bd2a5936",
-    "label": "eyebrow: Requisition Summary",
-    "type": "text",
-    "value": "Requisition Summary"
-  },
-  {
-    "page": "job",
-    "key": "copy_98979abc826f",
-    "label": "span: Requisition ID",
-    "type": "text",
-    "value": "Requisition ID"
-  },
-  {
-    "page": "job",
-    "key": "copy_d6387b429263",
-    "label": "span: Department",
-    "type": "text",
-    "value": "Department"
-  },
-  {
-    "page": "job",
-    "key": "copy_fd6a2174fbff",
-    "label": "t-meta: HIRING MANAGER",
-    "type": "text",
-    "value": "HIRING MANAGER"
-  },
-  {
-    "page": "job",
-    "key": "copy_53c08c8da755",
-    "label": "strong: Please fix the following:",
-    "type": "text",
-    "value": "Please fix the following:"
-  },
-  {
-    "page": "job",
-    "key": "copy_25270615a39a",
-    "label": "eyebrow: Explore More Roles",
-    "type": "text",
-    "value": "Explore More Roles"
-  },
-  {
-    "page": "job",
-    "key": "copy_69ccfe9d9779",
-    "label": "btn btn--primary btn--sm: View Job Details →",
-    "type": "text",
-    "value": "View Job Details →"
-  },
-  {
-    "page": "careers",
-    "key": "copy_c8f958fda5c5",
-    "label": "title: jobs.empetix.com — Official Careers & Talent Portal | Empetix Studio",
-    "type": "text",
-    "value": "jobs.empetix.com — Official Careers & Talent Portal | Empetix Studio"
-  },
-  {
-    "page": "careers",
-    "key": "copy_21b4847b84f7",
-    "label": "eyebrow eyebrow--inverse: Empetix Talent Portal · jobs.empetix.com",
-    "type": "text",
-    "value": "Empetix Talent Portal · jobs.empetix.com"
-  },
-  {
-    "page": "careers",
-    "key": "copy_017ca46e789e",
-    "label": "jobs-hero__title: Build software that endures and campaigns that move numbers.",
-    "type": "text",
-    "value": "Build software that endures and campaigns that move numbers."
-  },
-  {
-    "page": "careers",
-    "key": "copy_7f822db55925",
-    "label": "jobs-hero__lead: Welcome to our dedicated careers portal. Explore open engineering, produ",
-    "type": "textarea",
-    "value": "Welcome to our dedicated careers portal. Explore open engineering, product design, and performance marketing roles across our New Cairo studios—or apply remotely across EMEA."
-  },
-  {
-    "page": "careers",
-    "key": "copy_aae7c571ba3b",
-    "label": "jobs-hero__stat-label: Open Positions",
-    "type": "text",
-    "value": "Open Positions"
-  },
-  {
-    "page": "careers",
-    "key": "copy_ec369163dd99",
-    "label": "span: h",
-    "type": "text",
-    "value": "h"
-  },
-  {
-    "page": "careers",
-    "key": "copy_a05c8e7260e3",
-    "label": "jobs-hero__stat-label: Offer Turnaround",
-    "type": "text",
-    "value": "Offer Turnaround"
-  },
-  {
-    "page": "careers",
-    "key": "copy_23c33f363943",
-    "label": "span: d",
-    "type": "text",
-    "value": "d"
-  },
-  {
-    "page": "careers",
-    "key": "copy_3cf747b69596",
-    "label": "jobs-hero__stat-label: Paid Annual Leave",
-    "type": "text",
-    "value": "Paid Annual Leave"
-  },
-  {
-    "page": "careers",
-    "key": "copy_e344c8a8924e",
-    "label": "jobs-console__label: 01 / Search Keyword or Skill",
-    "type": "text",
-    "value": "01 / Search Keyword or Skill"
-  },
-  {
-    "page": "careers",
-    "key": "copy_2e6bccd8b351",
-    "label": "jobs-console__label: 02 / Department",
-    "type": "text",
-    "value": "02 / Department"
-  },
-  {
-    "page": "careers",
-    "key": "copy_6f97cfde6f1e",
-    "label": "option: All Departments (6)",
-    "type": "text",
-    "value": "All Departments (6)"
-  },
-  {
-    "page": "careers",
-    "key": "copy_297c1c46e1e6",
-    "label": "option: Software Engineering (3)",
-    "type": "text",
-    "value": "Software Engineering (3)"
-  },
-  {
-    "page": "careers",
-    "key": "copy_3f610d88b025",
-    "label": "option: Growth & Marketing (2)",
-    "type": "text",
-    "value": "Growth & Marketing (2)"
-  },
-  {
-    "page": "careers",
-    "key": "copy_eb7736ae753c",
-    "label": "option: Product Design (1)",
-    "type": "text",
-    "value": "Product Design (1)"
-  },
-  {
-    "page": "careers",
-    "key": "copy_7c370205063d",
-    "label": "jobs-console__label: 03 / Studio Location",
-    "type": "text",
-    "value": "03 / Studio Location"
-  },
-  {
-    "page": "careers",
-    "key": "copy_3113dd8b6cd1",
-    "label": "option: All Locations",
-    "type": "text",
-    "value": "All Locations"
-  },
-  {
-    "page": "careers",
-    "key": "copy_ad4a3e32c2fa",
-    "label": "option: Cairo, Egypt",
-    "type": "text",
-    "value": "Cairo, Egypt"
-  },
-  {
-    "page": "careers",
-    "key": "copy_e3633e1efbe7",
-    "label": "option: Riyadh, KSA",
-    "type": "text",
-    "value": "Riyadh, KSA"
-  },
-  {
-    "page": "careers",
-    "key": "copy_d36fc93c808d",
-    "label": "option: Remote (EMEA)",
-    "type": "text",
-    "value": "Remote (EMEA)"
-  },
-  {
-    "page": "careers",
-    "key": "copy_df1859440bf5",
-    "label": "jobs-console__label: 04 / Work Model",
-    "type": "text",
-    "value": "04 / Work Model"
-  },
-  {
-    "page": "careers",
-    "key": "copy_092c8f13af8c",
-    "label": "option: All Models",
-    "type": "text",
-    "value": "All Models"
-  },
-  {
-    "page": "careers",
-    "key": "copy_4cc7b52166b5",
-    "label": "option: Hybrid",
-    "type": "text",
-    "value": "Hybrid"
-  },
-  {
-    "page": "careers",
-    "key": "copy_c43752b33085",
-    "label": "option: Remote-Friendly",
-    "type": "text",
-    "value": "Remote-Friendly"
-  },
-  {
-    "page": "careers",
-    "key": "copy_90eeb7bbaf38",
-    "label": "option: On-Site Studio",
-    "type": "text",
-    "value": "On-Site Studio"
-  },
-  {
-    "page": "careers",
-    "key": "copy_ba15f01f177e",
-    "label": "btn btn--ghost btn--sm: Reset",
-    "type": "text",
-    "value": "Reset"
-  },
-  {
-    "page": "careers",
-    "key": "copy_5477c5140849",
-    "label": "t-lead: Click any department track below to filter open positions immediately.",
-    "type": "text",
-    "value": "Click any department track below to filter open positions immediately."
-  },
-  {
-    "page": "careers",
-    "key": "copy_53391263da4e",
-    "label": "eyebrow: 02 / Open Requisitions",
-    "type": "text",
-    "value": "02 / Open Requisitions"
-  },
-  {
-    "page": "careers",
-    "key": "copy_c584a43addb9",
-    "label": "jobs-toolbar__count: Showing 6 of 6 open positions on jobs.empetix.com",
-    "type": "text",
-    "value": "Showing 6 of 6 open positions on jobs.empetix.com"
-  },
-  {
-    "page": "careers",
-    "key": "copy_1a79fca0aeea",
-    "label": "span: View Job & Apply",
-    "type": "text",
-    "value": "View Job & Apply"
-  },
-  {
-    "page": "careers",
-    "key": "copy_c93b63381e0c",
-    "label": "t-h4: No positions match your current filter criteria.",
-    "type": "text",
-    "value": "No positions match your current filter criteria."
-  },
-  {
-    "page": "careers",
-    "key": "copy_e0c019ea05b9",
-    "label": "t-small: Try clearing your search keyword or switching the location/department fi",
-    "type": "text",
-    "value": "Try clearing your search keyword or switching the location/department filter to “All”."
-  },
-  {
-    "page": "careers",
-    "key": "copy_b896d4468f68",
-    "label": "span: FRIDAY ARCHITECTURE & GROWTH CRITIQUE · EMPETIX CAIRO",
-    "type": "text",
-    "value": "FRIDAY ARCHITECTURE & GROWTH CRITIQUE · EMPETIX CAIRO"
-  },
-  {
-    "page": "careers",
-    "key": "copy_015dac6443b3",
-    "label": "span: PROTECTED DEEP-WORK BLOCKS · NO MEETINGS BEFORE 1:00 PM",
-    "type": "text",
-    "value": "PROTECTED DEEP-WORK BLOCKS · NO MEETINGS BEFORE 1:00 PM"
-  },
-  {
-    "page": "careers",
-    "key": "copy_fb6b450b1b17",
-    "label": "alt: Empetix engineers and designers collaborating during a design sprint wor",
-    "type": "text",
-    "value": "Empetix engineers and designers collaborating during a design sprint workshop"
-  },
-  {
-    "page": "careers",
-    "key": "copy_b221f03ea2bf",
-    "label": "Media path: assets/img/careers/culture.jpg",
-    "type": "image",
-    "value": "assets/img/careers/culture.jpg"
-  },
-  {
-    "page": "careers",
-    "key": "copy_71c7ef938d08",
-    "label": "description: Explore open software engineering, product design, and growth marketing ",
-    "type": "textarea",
-    "value": "Explore open software engineering, product design, and growth marketing jobs at jobs.empetix.com across Cairo, Riyadh, London, and remote EMEA."
-  },
-  {
-    "page": "careers",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
-    "type": "text",
-    "value": "Empetix Solution Logo"
-  },
-  {
-    "page": "blog",
-    "key": "copy_fdc599e3df65",
-    "label": "title: The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays",
-    "type": "text",
-    "value": "The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays"
-  },
-  {
-    "page": "blog",
-    "key": "copy_66b93f927675",
-    "label": "a: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "blog",
-    "key": "copy_16c89765a20a",
-    "label": "li: Blog & Media",
-    "type": "text",
-    "value": "Blog & Media"
-  },
-  {
-    "page": "blog",
-    "key": "copy_855145b5639a",
-    "label": "post-card__badge: FEATURED VIDEO EPISODE · 14:20",
-    "type": "text",
-    "value": "FEATURED VIDEO EPISODE · 14:20"
-  },
-  {
-    "page": "blog",
-    "key": "copy_82eec5c0a198",
-    "label": "post-card__cat: VIDEO DOCUMENTARY + FULL POST",
-    "type": "text",
-    "value": "VIDEO DOCUMENTARY + FULL POST"
-  },
-  {
-    "page": "blog",
-    "key": "copy_3ee3c06a73ee",
-    "label": "time: 05 NOV 2026",
-    "type": "text",
-    "value": "05 NOV 2026"
-  },
-  {
-    "page": "blog",
-    "key": "copy_d70de1ef3361",
-    "label": "post-card__title: Inside an Empetix 5-Day Product & Growth Sprint (Full Video + Transcript",
-    "type": "text",
-    "value": "Inside an Empetix 5-Day Product & Growth Sprint (Full Video + Transcript + Photos)"
-  },
-  {
-    "page": "blog",
-    "key": "copy_be2a3ae8d09f",
-    "label": "post-card__excerpt: Watch how our engineers, product designers, and performance marketers ta",
-    "type": "textarea",
-    "value": "Watch how our engineers, product designers, and performance marketers take a FinTech checkout product from raw problem statement to user-tested prototype and live acquisition test in five days."
-  },
-  {
-    "page": "blog",
-    "key": "copy_9448bd6ae08a",
-    "label": "span: Watch Video & Read Full Post",
-    "type": "text",
-    "value": "Watch Video & Read Full Post"
-  },
-  {
-    "page": "blog",
-    "key": "copy_7571d773cf73",
-    "label": "filter__label: Filter posts:",
-    "type": "text",
-    "value": "Filter posts:"
-  },
-  {
-    "page": "blog",
-    "key": "copy_00f415594506",
-    "label": "filter__btn: All Posts",
-    "type": "text",
-    "value": "All Posts"
-  },
-  {
-    "page": "blog",
-    "key": "copy_a2f559e2cf39",
-    "label": "filter__btn: Video Episodes",
-    "type": "text",
-    "value": "Video Episodes"
-  },
-  {
-    "page": "blog",
-    "key": "copy_ea939700e2f3",
-    "label": "filter__btn: Photo Essays",
-    "type": "text",
-    "value": "Photo Essays"
-  },
-  {
-    "page": "blog",
-    "key": "copy_2c9920d0787c",
-    "label": "filter__btn: Engineering",
-    "type": "text",
-    "value": "Engineering"
-  },
-  {
-    "page": "blog",
-    "key": "copy_aecfa0b21ab2",
-    "label": "filter__btn: Growth Marketing",
-    "type": "text",
-    "value": "Growth Marketing"
-  },
-  {
-    "page": "blog",
-    "key": "copy_941ff037160e",
-    "label": "filter__count: 6 entries",
-    "type": "text",
-    "value": "6 entries"
-  },
-  {
-    "page": "blog",
-    "key": "copy_a1f7648a3b74",
-    "label": "alt: Empetix product and growth team placing voting dots on interface sketche",
-    "type": "text",
-    "value": "Empetix product and growth team placing voting dots on interface sketches during a 5-day sprint"
-  },
-  {
-    "page": "blog",
-    "key": "copy_26f63d8f8aa0",
-    "label": "Media path: assets/img/blog/design-sprint.jpg",
-    "type": "image",
-    "value": "assets/img/blog/design-sprint.jpg"
-  },
-  {
-    "page": "blog",
-    "key": "copy_1256e49dd66b",
-    "label": "description: Read full engineering articles, watch studio video episodes, and explore",
-    "type": "text",
-    "value": "Read full engineering articles, watch studio video episodes, and explore behind-the-scenes photo essays from Empetix."
-  },
-  {
-    "page": "blog",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
-    "type": "text",
-    "value": "Empetix Solution Logo"
-  },
-  {
     "page": "home",
     "key": "copy_3e8e84b38e6d",
-    "label": "title: Empetix — Software Engineering & Growth Marketing Studio",
+    "label": "SEO Page Title",
     "type": "text",
     "value": "Empetix — Software Engineering & Growth Marketing Studio"
   },
   {
     "page": "home",
+    "key": "copy_24622118df1b",
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Empetix is a multinational software engineering and performance marketing studio building web/mobile platforms and high-ROAS growth engines."
+  },
+  {
+    "page": "home",
     "key": "copy_5ba0a96f0d3c",
-    "label": "span: LARAVEL & DISTRIBUTED CLOUD APIS",
+    "label": "Capabilities Ticker Item 1",
     "type": "text",
     "value": "LARAVEL & DISTRIBUTED CLOUD APIS"
   },
   {
     "page": "home",
     "key": "copy_39ef2eb7e25d",
-    "label": "span: FLUTTER & NATIVE MOBILE ENGINEERING",
+    "label": "Capabilities Ticker Item 2",
     "type": "text",
     "value": "FLUTTER & NATIVE MOBILE ENGINEERING"
   },
   {
     "page": "home",
     "key": "copy_595fd58755b8",
-    "label": "span: PERFORMANCE MARKETING & SERVER-SIDE CAPI",
+    "label": "Capabilities Ticker Item 3",
     "type": "text",
     "value": "PERFORMANCE MARKETING & SERVER-SIDE CAPI"
   },
   {
     "page": "home",
     "key": "copy_17b64f78c117",
-    "label": "span: ARABIC-FIRST (RTL/LTR) DESIGN SYSTEMS",
+    "label": "Capabilities Ticker Item 4",
     "type": "text",
     "value": "ARABIC-FIRST (RTL/LTR) DESIGN SYSTEMS"
   },
   {
     "page": "home",
     "key": "copy_d54dd05dbce5",
-    "label": "span: HEADLESS E-COMMERCE & FINTECH LEDGERS",
+    "label": "Capabilities Ticker Item 5",
     "type": "text",
     "value": "HEADLESS E-COMMERCE & FINTECH LEDGERS"
   },
   {
     "page": "home",
     "key": "copy_65ab6c9c5557",
-    "label": "span: COMMERCIAL FILM & 35MM PHOTOGRAPHY",
+    "label": "Capabilities Ticker Item 6",
     "type": "text",
     "value": "COMMERCIAL FILM & 35MM PHOTOGRAPHY"
   },
   {
     "page": "home",
     "key": "copy_83fd4c2d2618",
-    "label": "span: CONVERSION RATE OPTIMIZATION (CRO)",
+    "label": "Capabilities Ticker Item 7",
     "type": "text",
     "value": "CONVERSION RATE OPTIMIZATION (CRO)"
   },
   {
     "page": "home",
     "key": "copy_3ef452996cc0",
-    "label": "overview-film__lead: Empetix Solution brings software engineering, growth marketing, and stra",
+    "label": "Who We Are Lead Paragraph",
     "type": "textarea",
-    "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses."
+    "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our overview to see how we build and scale digital businesses."
   },
   {
     "page": "home",
-    "key": "copy_8424b4de9ef5",
-    "label": "source: Your browser does not support embedded video playback.",
-    "type": "text",
-    "value": "Your browser does not support embedded video playback."
+    "key": "copy_29166363eeca",
+    "label": "Company Overview Video (Upload to Private Storage or Link)",
+    "type": "video",
+    "value": "assets/video/empetix-overview.mp4"
+  },
+  {
+    "page": "home",
+    "key": "copy_6d2c2c58c880",
+    "label": "Company Overview Video Poster",
+    "type": "image",
+    "value": "assets/img/home/overview-poster.jpg"
   },
   {
     "page": "home",
     "key": "copy_865f5a4280b3",
-    "label": "overview-film__pillar-title: Software engineering",
+    "label": "Core Pillar 1 — Title",
     "type": "text",
     "value": "Software engineering"
   },
   {
     "page": "home",
     "key": "copy_3662ee57e15d",
-    "label": "overview-film__pillar-desc: Full-stack web and mobile platforms built for reliability, speed, and lo",
+    "label": "Core Pillar 1 — Description",
     "type": "text",
     "value": "Full-stack web and mobile platforms built for reliability, speed, and long-term scale."
   },
   {
     "page": "home",
     "key": "copy_fcb465e5f4ab",
-    "label": "overview-film__pillar-title: Growth marketing",
+    "label": "Core Pillar 2 — Title",
     "type": "text",
     "value": "Growth marketing"
   },
   {
     "page": "home",
     "key": "copy_c7fa076a2c97",
-    "label": "overview-film__pillar-desc: Engineers and marketers working as one unified team to turn clean data i",
+    "label": "Core Pillar 2 — Description",
     "type": "text",
     "value": "Engineers and marketers working as one unified team to turn clean data into customer acquisition."
   },
   {
     "page": "home",
     "key": "copy_5c3330972f1f",
-    "label": "overview-film__pillar-title: Strategic investment",
+    "label": "Core Pillar 3 — Title",
     "type": "text",
     "value": "Strategic investment"
   },
   {
     "page": "home",
     "key": "copy_d617fb8edf18",
-    "label": "overview-film__pillar-desc: Backing bold founders with capital, senior technical leadership, and go-",
+    "label": "Core Pillar 3 — Description",
     "type": "text",
     "value": "Backing bold founders with capital, senior technical leadership, and go-to-market execution."
   },
   {
     "page": "home",
     "key": "copy_4b883a035467",
-    "label": "t-lead: Select a practice pillar below to inspect our architecture, deliverables",
+    "label": "Solutions Hub Lead Paragraph",
     "type": "text",
     "value": "Select a practice pillar below to inspect our architecture, deliverables, and verified client outcomes."
   },
   {
     "page": "home",
     "key": "copy_30fe7b74af14",
-    "label": "span: Request Custom Scope",
+    "label": "Solutions Hub CTA Label",
     "type": "text",
     "value": "Request Custom Scope"
   },
   {
     "page": "home",
     "key": "copy_7115cff2cafe",
-    "label": "span: All 6 Case Studies",
+    "label": "Selected Work CTA Label",
     "type": "text",
     "value": "All 6 Case Studies"
   },
   {
     "page": "home",
-    "key": "copy_bdec4c898cfc",
-    "label": "stat__label: Software platforms & growth engines shipped since 2018",
-    "type": "text",
-    "value": "Software platforms & growth engines shipped since 2018"
+    "key": "impact_value_1",
+    "label": "Impact Metric 1 — Value",
+    "type": "number",
+    "value": "64"
   },
   {
     "page": "home",
-    "key": "copy_ee9ff8c14dd0",
-    "label": "stat__suffix: x",
+    "key": "copy_bdec4c898cfc",
+    "label": "Impact Metric 1 — Label",
     "type": "text",
-    "value": "x"
+    "value": "Software platforms & growth engines shipped"
+  },
+  {
+    "page": "home",
+    "key": "impact_value_2",
+    "label": "Impact Metric 2 — Value",
+    "type": "number",
+    "value": "3.8"
   },
   {
     "page": "home",
     "key": "copy_e3edd5b505ad",
-    "label": "stat__label: Audited median return on ad spend across active retainers",
+    "label": "Impact Metric 2 — Label",
     "type": "text",
     "value": "Audited median return on ad spend across active retainers"
   },
   {
     "page": "home",
+    "key": "impact_value_3",
+    "label": "Impact Metric 3 — Value",
+    "type": "number",
+    "value": "99.96"
+  },
+  {
+    "page": "home",
     "key": "copy_97e657dc8770",
-    "label": "stat__label: Production uptime across client SaaS and FinTech applications",
+    "label": "Impact Metric 3 — Label",
     "type": "text",
     "value": "Production uptime across client SaaS and FinTech applications"
   },
   {
     "page": "home",
+    "key": "impact_value_4",
+    "label": "Impact Metric 4 — Value",
+    "type": "number",
+    "value": "94"
+  },
+  {
+    "page": "home",
     "key": "copy_b479b0ae0c28",
-    "label": "stat__label: Client retention beyond initial 12-month engagement",
+    "label": "Impact Metric 4 — Label",
     "type": "text",
     "value": "Client retention beyond initial 12-month engagement"
   },
   {
     "page": "home",
     "key": "copy_47a6aec3cda3",
-    "label": "span: Partner Directory",
+    "label": "Partners Section CTA Label",
     "type": "text",
     "value": "Partner Directory"
   },
   {
     "page": "home",
     "key": "copy_3a178140ec02",
-    "label": "span: View All Posts",
+    "label": "Journal Section CTA Label",
     "type": "text",
     "value": "View All Posts"
   },
   {
     "page": "home",
     "key": "copy_ba8b1727770e",
-    "label": "eyebrow eyebrow--inverse: 07 / Careers Portal · jobs.empetix.com",
+    "label": "Careers Banner Eyebrow",
     "type": "text",
     "value": "07 / Careers Portal · jobs.empetix.com"
   },
   {
     "page": "home",
     "key": "copy_441bd1f69009",
-    "label": "p: Explore open roles in Laravel, Next.js, Flutter, Product Design, and Per",
-    "type": "text",
+    "label": "Careers Banner Description",
+    "type": "textarea",
     "value": "Explore open roles in Laravel, Next.js, Flutter, Product Design, and Performance Marketing on our dedicated talent portal."
   },
   {
     "page": "home",
     "key": "copy_bf9786d4c4eb",
-    "label": "span: Launch jobs.empetix.com (6 Open Roles)",
+    "label": "Careers Banner Button Label",
     "type": "text",
     "value": "Launch jobs.empetix.com (6 Open Roles)"
   },
   {
     "page": "home",
-    "key": "copy_6d2c2c58c880",
-    "label": "poster: assets/img/home/overview-poster.jpg",
-    "type": "image",
-    "value": "assets/img/home/overview-poster.jpg"
-  },
-  {
-    "page": "home",
-    "key": "copy_bb8852a3151e",
-    "label": "alt: Empetix engineers and designers collaborating during a studio workshop",
-    "type": "text",
-    "value": "Empetix engineers and designers collaborating during a studio workshop"
-  },
-  {
-    "page": "home",
-    "key": "copy_29166363eeca",
-    "label": "Company overview video (Upload to Private Storage or Link)",
-    "type": "video",
-    "value": "assets/video/empetix-overview.mp4"
-  },
-  {
-    "page": "home",
     "key": "copy_b221f03ea2bf",
-    "label": "Media path: assets/img/careers/culture.jpg",
+    "label": "Careers Banner Background Image",
     "type": "image",
     "value": "assets/img/careers/culture.jpg"
   },
   {
-    "page": "home",
-    "key": "copy_24622118df1b",
-    "label": "description: Empetix is a multinational software engineering and performance marketin",
-    "type": "textarea",
-    "value": "Empetix is a multinational software engineering and performance marketing studio building web/mobile platforms and high-ROAS growth engines."
-  },
-  {
-    "page": "home",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
-    "type": "text",
-    "value": "Empetix Solution Logo"
-  },
-  {
     "page": "about",
     "key": "copy_a35b294e59fe",
-    "label": "title: About Empetix & Meet the Founders (أصحاب المشروع) — Empetix",
+    "label": "SEO Page Title",
     "type": "text",
-    "value": "About Empetix & Meet the Founders (أصحاب المشروع) — Empetix"
-  },
-  {
-    "page": "about",
-    "key": "copy_66b93f927675",
-    "label": "a: Home",
-    "type": "text",
-    "value": "Home"
+    "value": "About Empetix & Meet the Founders — Empetix Solution"
   },
   {
     "page": "about",
     "key": "copy_d75b76a6e09c",
-    "label": "description: Meet the four co-founders leading Empetix's software engineering, produc",
-    "type": "text",
-    "value": "Meet the four co-founders leading Empetix's software engineering, product design, and growth marketing practices."
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Meet the co-founders leading Empetix's software engineering and growth marketing practices in Cairo."
   },
   {
-    "page": "about",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
+    "page": "work",
+    "key": "copy_77e7fd581bd1",
+    "label": "SEO Page Title",
     "type": "text",
-    "value": "Empetix Solution Logo"
+    "value": "Selected Projects & Case Studies — Empetix"
+  },
+  {
+    "page": "work",
+    "key": "copy_83644a777d3c",
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Explore software engineering, FinTech, e-commerce, and performance marketing case studies by Empetix."
   },
   {
     "page": "team",
     "key": "copy_1bd5cb61a600",
-    "label": "title: Team — Empetix Solution",
+    "label": "SEO Page Title",
     "type": "text",
     "value": "Team — Empetix Solution"
   },
   {
     "page": "team",
-    "key": "copy_66b93f927675",
-    "label": "team-crumb__link: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "team",
-    "key": "copy_cdbd990d3384",
-    "label": "team-crumb__item: Team",
-    "type": "text",
-    "value": "Team"
+    "key": "copy_dca495ea9079",
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Meet the leadership, engineering, product design, and marketing teams at Empetix Solution in New Cairo."
   },
   {
     "page": "team",
     "key": "copy_be3f40c5f9fe",
-    "label": "team-hero__lead: Engineers, product designers, and performance marketers working as one m",
+    "label": "Hero Lead Paragraph",
     "type": "textarea",
     "value": "Engineers, product designers, and performance marketers working as one multidisciplinary team from New Cairo—without agency layers or external hand-offs."
   },
   {
     "page": "team",
+    "key": "copy_38a9b4c47c1d",
+    "label": "Hero Studio Photo",
+    "type": "image",
+    "value": "assets/img/about/office.jpg"
+  },
+  {
+    "page": "team",
     "key": "copy_42a38ba194b4",
-    "label": "team-section-head__lead: Senior specialists across software engineering, product design, and perf",
+    "label": "Practice Teams Lead Paragraph",
     "type": "textarea",
     "value": "Senior specialists across software engineering, product design, and performance marketing working together in dedicated client squads."
   },
   {
     "page": "team",
-    "key": "copy_e111c2849bae",
-    "label": "team-filter: All teams (12)",
-    "type": "text",
-    "value": "All teams (12)"
-  },
-  {
-    "page": "team",
-    "key": "copy_bba41e68c87e",
-    "label": "team-filter: Software engineering (4)",
-    "type": "text",
-    "value": "Software engineering (4)"
-  },
-  {
-    "page": "team",
-    "key": "copy_9f3ba2584498",
-    "label": "team-filter: Product design (4)",
-    "type": "text",
-    "value": "Product design (4)"
-  },
-  {
-    "page": "team",
-    "key": "copy_81990933b449",
-    "label": "team-filter: Marketing and production (4)",
-    "type": "text",
-    "value": "Marketing and production (4)"
-  },
-  {
-    "page": "team",
-    "key": "copy_865f5a4280b3",
-    "label": "team-practice__title: Software engineering",
-    "type": "text",
-    "value": "Software engineering"
-  },
-  {
-    "page": "team",
     "key": "copy_a588d0d2cd5f",
-    "label": "team-practice__desc: Backend, frontend, mobile, and infrastructure engineers responsible for ",
+    "label": "Engineering Practice Description",
     "type": "textarea",
     "value": "Backend, frontend, mobile, and infrastructure engineers responsible for scalable APIs, payment ledgers, and reliable cloud deployments."
   },
   {
     "page": "team",
     "key": "copy_67418b5acff7",
-    "label": "team-section-head__lead: Every client engagement pairs engineering, design, and growth under one ",
+    "label": "Team Culture Lead Paragraph",
     "type": "textarea",
     "value": "Every client engagement pairs engineering, design, and growth under one shared roadmap so software quality and commercial performance move together."
   },
   {
     "page": "team",
+    "key": "copy_b221f03ea2bf",
+    "label": "Team Culture Photo",
+    "type": "image",
+    "value": "assets/img/careers/culture.jpg"
+  },
+  {
+    "page": "team",
     "key": "copy_0c8127443473",
-    "label": "team-join__copy: We hire engineers, designers, and marketers who care deeply about craft ",
+    "label": "Join Section Description",
     "type": "textarea",
     "value": "We hire engineers, designers, and marketers who care deeply about craft and measurable work. Explore open positions on our careers portal or reach out to our company desk."
   },
   {
     "page": "team",
     "key": "copy_96490c6dd6ac",
-    "label": "team-btn team-btn--primary: View open roles",
+    "label": "Join Primary Button Label",
     "type": "text",
     "value": "View open roles"
   },
   {
     "page": "team",
     "key": "copy_83e7789a3687",
-    "label": "team-text-link: Start a project",
+    "label": "Join Secondary Link Label",
     "type": "text",
     "value": "Start a project"
   },
   {
-    "page": "team",
-    "key": "copy_548db1eb20f4",
-    "label": "alt: Empetix engineers and product designers reviewing layouts together in ou",
+    "page": "careers",
+    "key": "copy_c8f958fda5c5",
+    "label": "SEO Page Title",
     "type": "text",
-    "value": "Empetix engineers and product designers reviewing layouts together in our New Cairo studio"
+    "value": "Careers & Talent Portal | Empetix Solution"
   },
   {
-    "page": "team",
-    "key": "copy_8a668411ecaf",
-    "label": "alt: Empetix team members collaborating around a studio workshop table in New",
+    "page": "careers",
+    "key": "copy_71c7ef938d08",
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Explore open software engineering, product design, and growth marketing jobs at Empetix Solution."
+  },
+  {
+    "page": "careers",
+    "key": "copy_21b4847b84f7",
+    "label": "Hero Eyebrow Badge",
     "type": "text",
-    "value": "Empetix team members collaborating around a studio workshop table in New Cairo"
+    "value": "Empetix Talent Portal · jobs.empetix.com"
   },
   {
-    "page": "team",
-    "key": "copy_38a9b4c47c1d",
-    "label": "Media path: assets/img/about/office.jpg",
-    "type": "image",
-    "value": "assets/img/about/office.jpg"
+    "page": "careers",
+    "key": "copy_017ca46e789e",
+    "label": "Hero Heading",
+    "type": "text",
+    "value": "Build software that endures and campaigns that move numbers."
   },
   {
-    "page": "team",
+    "page": "careers",
+    "key": "copy_7f822db55925",
+    "label": "Hero Lead Paragraph",
+    "type": "textarea",
+    "value": "Welcome to our dedicated careers portal. Explore open engineering, product design, and performance marketing roles across our New Cairo studios—or apply remotely across EMEA."
+  },
+  {
+    "page": "careers",
+    "key": "metric_1",
+    "label": "Hero Stat 1 — Value",
+    "type": "number",
+    "value": "6"
+  },
+  {
+    "page": "careers",
+    "key": "copy_aae7c571ba3b",
+    "label": "Hero Stat 1 — Label",
+    "type": "text",
+    "value": "Open Positions"
+  },
+  {
+    "page": "careers",
+    "key": "metric_2",
+    "label": "Hero Stat 2 — Value (Hours)",
+    "type": "number",
+    "value": "48"
+  },
+  {
+    "page": "careers",
+    "key": "copy_a05c8e7260e3",
+    "label": "Hero Stat 2 — Label",
+    "type": "text",
+    "value": "Offer Turnaround"
+  },
+  {
+    "page": "careers",
+    "key": "metric_3",
+    "label": "Hero Stat 3 — Value (Days)",
+    "type": "number",
+    "value": "28"
+  },
+  {
+    "page": "careers",
+    "key": "copy_3cf747b69596",
+    "label": "Hero Stat 3 — Label",
+    "type": "text",
+    "value": "Paid Annual Leave"
+  },
+  {
+    "page": "careers",
+    "key": "copy_5477c5140849",
+    "label": "Practice Areas Subheading",
+    "type": "text",
+    "value": "Click any department track below to filter open positions immediately."
+  },
+  {
+    "page": "careers",
     "key": "copy_b221f03ea2bf",
-    "label": "Media path: assets/img/careers/culture.jpg",
+    "label": "Studio Culture Photo",
     "type": "image",
     "value": "assets/img/careers/culture.jpg"
   },
   {
-    "page": "team",
-    "key": "copy_dca495ea9079",
-    "label": "description: Meet the leadership, engineering, product design, and marketing teams at",
-    "type": "text",
-    "value": "Meet the leadership, engineering, product design, and marketing teams at Empetix Solution in New Cairo."
-  },
-  {
-    "page": "team",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
-    "type": "text",
-    "value": "Empetix Solution Logo"
-  },
-  {
-    "page": "post",
-    "key": "copy_66b93f927675",
-    "label": "a: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "post",
-    "key": "copy_16c89765a20a",
-    "label": "a: Blog & Media",
-    "type": "text",
-    "value": "Blog & Media"
-  },
-  {
-    "page": "post",
-    "key": "copy_69b4ecc9b2a5",
-    "label": "span: EMPETIX SOLUTION",
-    "type": "text",
-    "value": "EMPETIX SOLUTION"
-  },
-  {
-    "page": "post",
-    "key": "copy_4e90d4a2ec8c",
-    "label": "byline__name: Bishoy Magdy",
-    "type": "text",
-    "value": "Bishoy Magdy"
-  },
-  {
-    "page": "post",
-    "key": "copy_b9eaf34ef53f",
-    "label": "byline__role: Co-Founder & Chief Operating Officer",
-    "type": "text",
-    "value": "Co-Founder & Chief Operating Officer"
-  },
-  {
-    "page": "post",
-    "key": "copy_6dbd1a8fad7a",
-    "label": "aside-block__title: In This Post",
-    "type": "text",
-    "value": "In This Post"
-  },
-  {
-    "page": "post",
-    "key": "copy_85de894d98ec",
-    "label": "aside-block__title: Share Article",
-    "type": "text",
-    "value": "Share Article"
-  },
-  {
-    "page": "post",
-    "key": "copy_5221aec4c5b2",
-    "label": "button: Copy Link",
-    "type": "text",
-    "value": "Copy Link"
-  },
-  {
-    "page": "post",
-    "key": "copy_b024176fdfeb",
-    "label": "a: LinkedIn",
-    "type": "text",
-    "value": "LinkedIn"
-  },
-  {
-    "page": "post",
-    "key": "copy_b63dfd031b1e",
-    "label": "t-meta: WRITTEN BY",
-    "type": "text",
-    "value": "WRITTEN BY"
-  },
-  {
-    "page": "post",
-    "key": "copy_ad7c3155f702",
-    "label": "a: View profile",
-    "type": "text",
-    "value": "View profile"
-  },
-  {
-    "page": "post",
-    "key": "copy_eb3ae40bfaaf",
-    "label": "eyebrow: Continue Reading",
-    "type": "text",
-    "value": "Continue Reading"
-  },
-  {
-    "page": "post",
-    "key": "copy_d12803309421",
-    "label": "t-h3: More from the Empetix Journal",
-    "type": "text",
-    "value": "More from the Empetix Journal"
-  },
-  {
-    "page": "post",
-    "key": "copy_7bff368c4b49",
-    "label": "lightbox__btn: Close (Esc)",
-    "type": "text",
-    "value": "Close (Esc)"
-  },
-  {
-    "page": "post",
-    "key": "copy_6d25cf1e2efc",
-    "label": "lightbox__btn: ← Prev",
-    "type": "text",
-    "value": "← Prev"
-  },
-  {
-    "page": "post",
-    "key": "copy_7624375b8717",
-    "label": "lightbox__btn: Next →",
-    "type": "text",
-    "value": "Next →"
-  },
-  {
-    "page": "post",
-    "key": "copy_5dcf7c639ff8",
-    "label": "Media path: assets/img/team/bishoy-magdy.jpg",
-    "type": "image",
-    "value": "assets/img/team/bishoy-magdy.jpg"
-  },
-  {
     "page": "partners",
     "key": "copy_2f39acc5afa8",
-    "label": "title: Corporate Partners & Technology Alliances — Empetix",
+    "label": "SEO Page Title",
     "type": "text",
     "value": "Corporate Partners & Technology Alliances — Empetix"
   },
   {
     "page": "partners",
-    "key": "copy_66b93f927675",
-    "label": "a: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "partners",
-    "key": "copy_91619d630bd7",
-    "label": "li: Corporate Partners",
-    "type": "text",
-    "value": "Corporate Partners"
-  },
-  {
-    "page": "partners",
-    "key": "copy_6a83c03a373c",
-    "label": "sr-only: Verified Corporate and Technology Partners",
-    "type": "text",
-    "value": "Verified Corporate and Technology Partners"
+    "key": "copy_8f08704df899",
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Strategic corporate partners, enterprise clients, and technology alliances partnering with Empetix."
   },
   {
     "page": "partners",
     "key": "copy_a2ae320b545a",
-    "label": "t-h2: Three ways organizations partner with Empetix.",
+    "label": "Partnership Models Heading",
     "type": "text",
     "value": "Three ways organizations partner with Empetix."
   },
   {
     "page": "partners",
     "key": "copy_4cfbabb703b1",
-    "label": "programme__title: Enterprise Product & Growth Squads",
+    "label": "Model 01 — Title",
     "type": "text",
     "value": "Enterprise Product & Growth Squads"
   },
   {
     "page": "partners",
     "key": "copy_b71f8f98085f",
-    "label": "programme__text: Dedicated cross-functional squads (Laravel/Flutter engineers, product de",
+    "label": "Model 01 — Description",
     "type": "textarea",
     "value": "Dedicated cross-functional squads (Laravel/Flutter engineers, product designers, and performance marketers) embedded directly alongside your internal leadership for 6 to 24 months."
   },
   {
     "page": "partners",
     "key": "copy_8d0e286535cb",
-    "label": "li: Shared weekly revenue & velocity KPIs",
+    "label": "Model 01 — Deliverable 1",
     "type": "text",
     "value": "Shared weekly revenue & velocity KPIs"
   },
   {
     "page": "partners",
     "key": "copy_6d00c23a58e6",
-    "label": "li: Full source-code & ad-account ownership",
+    "label": "Model 01 — Deliverable 2",
     "type": "text",
     "value": "Full source-code & ad-account ownership"
   },
   {
     "page": "partners",
     "key": "copy_f8e66b52cd2e",
-    "label": "li: On-site workshops in our New Cairo studio",
+    "label": "Model 01 — Deliverable 3",
     "type": "text",
     "value": "On-site workshops in our New Cairo studio"
   },
   {
     "page": "partners",
     "key": "copy_a7c536725435",
-    "label": "programme__title: Technology & Platform Co-Delivery",
+    "label": "Model 02 — Title",
     "type": "text",
     "value": "Technology & Platform Co-Delivery"
   },
   {
     "page": "partners",
     "key": "copy_1c39b3ea75b6",
-    "label": "programme__text: We collaborate with cloud providers, payment processors, and ERP vendors",
+    "label": "Model 02 — Description",
     "type": "textarea",
     "value": "We collaborate with cloud providers, payment processors, and ERP vendors (AWS, Stripe, Shopify Plus, HubSpot) as the certified regional engineering and migration partner."
   },
   {
     "page": "partners",
     "key": "copy_5a7ccc304898",
-    "label": "li: Certified solutions architecture",
+    "label": "Model 02 — Deliverable 1",
     "type": "text",
     "value": "Certified solutions architecture"
   },
   {
     "page": "partners",
     "key": "copy_e809233c6f40",
-    "label": "li: Custom middleware & localized payment rails",
+    "label": "Model 02 — Deliverable 2",
     "type": "text",
     "value": "Custom middleware & localized payment rails"
   },
   {
     "page": "partners",
     "key": "copy_8ec34dd420cb",
-    "label": "li: Joint enterprise go-to-market campaigns",
+    "label": "Model 02 — Deliverable 3",
     "type": "text",
     "value": "Joint enterprise go-to-market campaigns"
   },
   {
     "page": "partners",
     "key": "copy_c29332f6ecd5",
-    "label": "programme__title: Venture Studio & Seed Co-Building",
+    "label": "Model 03 — Title",
     "type": "text",
     "value": "Venture Studio & Seed Co-Building"
   },
   {
     "page": "partners",
     "key": "copy_bce7d6d08d31",
-    "label": "programme__text: For funded founders and corporate spin-offs: we take new products from z",
+    "label": "Model 03 — Description",
     "type": "textarea",
     "value": "For funded founders and corporate spin-offs: we take new products from zero to v1.0 launch and initial customer acquisition in 12 weeks through structured fee-plus-milestone partnerships."
   },
   {
     "page": "partners",
     "key": "copy_b15f22e26281",
-    "label": "li: 5-Day architecture & growth sprint",
+    "label": "Model 03 — Deliverable 1",
     "type": "text",
     "value": "5-Day architecture & growth sprint"
   },
   {
     "page": "partners",
     "key": "copy_ab7ea0bca7f1",
-    "label": "li: Production MVP + brand system + launch film",
+    "label": "Model 03 — Deliverable 2",
     "type": "text",
     "value": "Production MVP + brand system + launch film"
   },
   {
     "page": "partners",
     "key": "copy_834061aa009a",
-    "label": "li: First 10,000 customers acquisition playbook",
+    "label": "Model 03 — Deliverable 3",
     "type": "text",
     "value": "First 10,000 customers acquisition playbook"
   },
   {
     "page": "partners",
     "key": "copy_ad9af5066e92",
-    "label": "eyebrow eyebrow--inverse: 02 / Partner Voice",
+    "label": "Partner Endorsement Eyebrow",
     "type": "text",
     "value": "02 / Partner Voice"
   },
   {
     "page": "partners",
     "key": "copy_d263eb31cbbf",
-    "label": "quote__text: Empetix doesn’t operate like an external vendor. Their engineers rebuilt",
+    "label": "Partner Endorsement Quote",
     "type": "textarea",
     "value": "Empetix doesn’t operate like an external vendor. Their engineers rebuilt our logistics control tower while their growth team rebuilt our B2B demand engine across the GCC."
   },
   {
     "page": "partners",
     "key": "copy_ca4c3a1a78ed",
-    "label": "strong: Khaled Al-Mansoor",
+    "label": "Partner Endorsement Author",
     "type": "text",
     "value": "Khaled Al-Mansoor"
   },
   {
     "page": "partners",
     "key": "copy_dd7e29f95bf4",
-    "label": "span: Chief Operating Officer, CargoLine MENA (Riyadh)",
+    "label": "Partner Endorsement Author Role",
     "type": "text",
     "value": "Chief Operating Officer, CargoLine MENA (Riyadh)"
   },
   {
-    "page": "partners",
-    "key": "copy_8f08704df899",
-    "label": "description: Strategic corporate partners, enterprise clients, and technology allianc",
+    "page": "blog",
+    "key": "copy_fdc599e3df65",
+    "label": "SEO Page Title",
     "type": "text",
-    "value": "Strategic corporate partners, enterprise clients, and technology alliances partnering with Empetix."
+    "value": "The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays"
   },
   {
-    "page": "partners",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
-    "type": "text",
-    "value": "Empetix Solution Logo"
-  },
-  {
-    "page": "project",
-    "key": "copy_66b93f927675",
-    "label": "a: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "project",
-    "key": "copy_5629b6adbbae",
-    "label": "a: Projects",
-    "type": "text",
-    "value": "Projects"
-  },
-  {
-    "page": "project",
-    "key": "copy_b3d3c7a19f0e",
-    "label": "span: BY EMPETIX SOLUTION",
-    "type": "text",
-    "value": "BY EMPETIX SOLUTION"
-  },
-  {
-    "page": "project",
-    "key": "copy_7b4dd66edc0b",
-    "label": "eyebrow: DETAILS",
-    "type": "text",
-    "value": "DETAILS"
-  },
-  {
-    "page": "project",
-    "key": "copy_d5ebf21c3df6",
-    "label": "span: Play Case Study Film",
-    "type": "text",
-    "value": "Play Case Study Film"
-  },
-  {
-    "page": "project",
-    "key": "copy_201a8b9bca1e",
-    "label": "span: DIRECTED & ENGINEERED BY EMPETIX STUDIO",
-    "type": "text",
-    "value": "DIRECTED & ENGINEERED BY EMPETIX STUDIO"
-  },
-  {
-    "page": "project",
-    "key": "copy_2d7f7e941759",
-    "label": "pager__label: Next Case Study",
-    "type": "text",
-    "value": "Next Case Study"
-  },
-  {
-    "page": "work",
-    "key": "copy_77e7fd581bd1",
-    "label": "title: Selected Projects & Case Studies — Empetix",
-    "type": "text",
-    "value": "Selected Projects & Case Studies — Empetix"
-  },
-  {
-    "page": "work",
-    "key": "copy_66b93f927675",
-    "label": "a: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "work",
-    "key": "copy_5629b6adbbae",
-    "label": "li: Projects",
-    "type": "text",
-    "value": "Projects"
-  },
-  {
-    "page": "work",
-    "key": "copy_fc30e80b93ff",
-    "label": "filter__btn: All Projects",
-    "type": "text",
-    "value": "All Projects"
-  },
-  {
-    "page": "work",
-    "key": "copy_f665170f831d",
-    "label": "filter__btn: Software Engineering",
-    "type": "text",
-    "value": "Software Engineering"
-  },
-  {
-    "page": "work",
-    "key": "copy_376b09f41f7c",
-    "label": "filter__btn: Growth & Marketing",
-    "type": "text",
-    "value": "Growth & Marketing"
-  },
-  {
-    "page": "work",
-    "key": "copy_a423ff6b8633",
-    "label": "filter__btn: FinTech & Commerce",
-    "type": "text",
-    "value": "FinTech & Commerce"
-  },
-  {
-    "page": "work",
-    "key": "copy_941ff037160e",
-    "label": "filter__count: 6 entries",
-    "type": "text",
-    "value": "6 entries"
-  },
-  {
-    "page": "work",
-    "key": "copy_83644a777d3c",
-    "label": "description: Explore software engineering, FinTech, e-commerce, and performance marke",
-    "type": "text",
-    "value": "Explore software engineering, FinTech, e-commerce, and performance marketing case studies by Empetix."
-  },
-  {
-    "page": "work",
-    "key": "copy_46054f40eb9f",
-    "label": "og:image:alt: Empetix Solution Logo",
-    "type": "text",
-    "value": "Empetix Solution Logo"
-  },
-  {
-    "page": "global",
-    "key": "copy_9ae629abced1",
-    "label": "preloader__sr: Loading 0%",
-    "type": "text",
-    "value": "Loading 0%"
-  },
-  {
-    "page": "global",
-    "key": "copy_b9b90b76f6f1",
-    "label": "skip-link: Skip to main content",
-    "type": "text",
-    "value": "Skip to main content"
-  },
-  {
-    "page": "global",
-    "key": "copy_4de56f097187",
-    "label": "sr-only: Search projects, blog posts, and roles",
-    "type": "text",
-    "value": "Search projects, blog posts, and roles"
-  },
-  {
-    "page": "global",
-    "key": "copy_3e9b94d3a503",
-    "label": "btn btn--accent btn--sm: Search",
-    "type": "text",
-    "value": "Search"
-  },
-  {
-    "page": "global",
-    "key": "copy_7fde00f1ef77",
-    "label": "btn btn--ghost btn--sm: Close",
-    "type": "text",
-    "value": "Close"
-  },
-  {
-    "page": "global",
-    "key": "copy_99681c08acc5",
-    "label": "a: NilePay Case Study",
-    "type": "text",
-    "value": "NilePay Case Study"
-  },
-  {
-    "page": "global",
-    "key": "copy_9bd3315c2cda",
-    "label": "a: 5-Day Sprint Video",
-    "type": "text",
-    "value": "5-Day Sprint Video"
-  },
-  {
-    "page": "global",
-    "key": "copy_c845f21a3cfc",
-    "label": "a: Qahwa Photo Essay",
-    "type": "text",
-    "value": "Qahwa Photo Essay"
-  },
-  {
-    "page": "global",
-    "key": "copy_56466eb90fcf",
-    "label": "a: Meet the Founders",
-    "type": "text",
-    "value": "Meet the Founders"
-  },
-  {
-    "page": "global",
-    "key": "copy_f4b9a5c91fb5",
-    "label": "a: Contact Us",
-    "type": "text",
-    "value": "Contact Us"
-  },
-  {
-    "page": "global",
-    "key": "copy_edddda7990f5",
-    "label": "span: Capabilities & Solutions",
-    "type": "text",
-    "value": "Capabilities & Solutions"
-  },
-  {
-    "page": "global",
-    "key": "copy_5faa9a4a6ae2",
-    "label": "span: Projects & Platforms",
-    "type": "text",
-    "value": "Projects & Platforms"
-  },
-  {
-    "page": "global",
-    "key": "copy_565b27a38e2b",
-    "label": "span: Blogs & Media",
-    "type": "text",
-    "value": "Blogs & Media"
-  },
-  {
-    "page": "global",
-    "key": "copy_a2aef16268ef",
-    "label": "span: Partners & Industries",
-    "type": "text",
-    "value": "Partners & Industries"
-  },
-  {
-    "page": "global",
-    "key": "copy_321facc49ee7",
-    "label": "span: About & Founders",
-    "type": "text",
-    "value": "About & Founders"
-  },
-  {
-    "page": "global",
-    "key": "copy_1f09c87bba77",
-    "label": "span: Menu",
-    "type": "text",
-    "value": "Menu"
-  },
-  {
-    "page": "global",
-    "key": "copy_ba60d8ed7f8e",
-    "label": "eyebrow: 01 / Capabilities",
-    "type": "text",
-    "value": "01 / Capabilities"
-  },
-  {
-    "page": "global",
-    "key": "copy_3127442311db",
-    "label": "span: Explore All Case Studies",
-    "type": "text",
-    "value": "Explore All Case Studies"
-  },
-  {
-    "page": "global",
-    "key": "copy_cfa25d342ff3",
-    "label": "eyebrow: 02 / Empetix Journal",
-    "type": "text",
-    "value": "02 / Empetix Journal"
-  },
-  {
-    "page": "global",
-    "key": "copy_ce0f8021330a",
-    "label": "span: Open Full Blog Archive",
-    "type": "text",
-    "value": "Open Full Blog Archive"
-  },
-  {
-    "page": "global",
-    "key": "copy_f3cca2387d54",
-    "label": "brand__word: Empetix",
-    "type": "text",
-    "value": "Empetix"
-  },
-  {
-    "page": "global",
-    "key": "copy_66b93f927675",
-    "label": "drawer__link: Home",
-    "type": "text",
-    "value": "Home"
-  },
-  {
-    "page": "global",
-    "key": "copy_a16ec9b1a9dc",
-    "label": "p: New Business: hello@empetix.com",
-    "type": "text",
-    "value": "New Business: hello@empetix.com"
-  },
-  {
-    "page": "global",
-    "key": "copy_fe641bf80e36",
-    "label": "p: Careers: talent@empetix.com",
-    "type": "text",
-    "value": "Careers: talent@empetix.com"
-  },
-  {
-    "page": "global",
-    "key": "copy_99171044a562",
-    "label": "p: New Cairo, Egypt",
-    "type": "text",
-    "value": "New Cairo, Egypt"
-  },
-  {
-    "page": "global",
-    "key": "copy_0a2e9effe060",
-    "label": "span: Start a Project",
-    "type": "text",
-    "value": "Start a Project"
-  },
-  {
-    "page": "global",
-    "key": "copy_af45d288e6ae",
-    "label": "span: Careers Portal",
-    "type": "text",
-    "value": "Careers Portal"
-  },
-  {
-    "page": "global",
-    "key": "copy_afa2ec755fdf",
-    "label": "foot-col__title: Company",
-    "type": "text",
-    "value": "Company"
-  },
-  {
-    "page": "global",
-    "key": "copy_ca4d3e8fdf98",
-    "label": "a: Our Team",
-    "type": "text",
-    "value": "Our Team"
-  },
-  {
-    "page": "global",
-    "key": "copy_addc49d04a88",
-    "label": "a: Selected Projects",
-    "type": "text",
-    "value": "Selected Projects"
-  },
-  {
-    "page": "global",
-    "key": "copy_91619d630bd7",
-    "label": "a: Corporate Partners",
-    "type": "text",
-    "value": "Corporate Partners"
-  },
-  {
-    "page": "global",
-    "key": "copy_b29ba4267f24",
-    "label": "a: Careers (jobs.empetix)",
-    "type": "text",
-    "value": "Careers (jobs.empetix)"
-  },
-  {
-    "page": "global",
-    "key": "copy_03be197a2651",
-    "label": "foot-col__title: Software",
-    "type": "text",
-    "value": "Software"
-  },
-  {
-    "page": "global",
-    "key": "copy_43f2d8ef5f41",
-    "label": "a: Web & SaaS Platforms",
-    "type": "text",
-    "value": "Web & SaaS Platforms"
-  },
-  {
-    "page": "global",
-    "key": "copy_1ffceb06c763",
-    "label": "a: Mobile Apps (Flutter)",
-    "type": "text",
-    "value": "Mobile Apps (Flutter)"
-  },
-  {
-    "page": "global",
-    "key": "copy_f0c7b48874fc",
-    "label": "a: Laravel & Cloud APIs",
-    "type": "text",
-    "value": "Laravel & Cloud APIs"
-  },
-  {
-    "page": "global",
-    "key": "copy_e9d3ab4269dc",
-    "label": "a: FinTech & Payment Ledgers",
-    "type": "text",
-    "value": "FinTech & Payment Ledgers"
-  },
-  {
-    "page": "global",
-    "key": "copy_ca3c76e3e0a6",
-    "label": "a: Headless E-Commerce",
-    "type": "text",
-    "value": "Headless E-Commerce"
-  },
-  {
-    "page": "global",
-    "key": "copy_bcd691d43e8f",
-    "label": "a: AI & Workflow Agents",
-    "type": "text",
-    "value": "AI & Workflow Agents"
-  },
-  {
-    "page": "global",
-    "key": "copy_5a780da735e3",
-    "label": "foot-col__title: Marketing",
-    "type": "text",
-    "value": "Marketing"
-  },
-  {
-    "page": "global",
-    "key": "copy_a0cd4b53344d",
-    "label": "a: Performance & Paid Media",
-    "type": "text",
-    "value": "Performance & Paid Media"
-  },
-  {
-    "page": "global",
-    "key": "copy_53a9bc564772",
-    "label": "a: Conversion Optimization",
-    "type": "text",
-    "value": "Conversion Optimization"
-  },
-  {
-    "page": "global",
-    "key": "copy_5a18d0785981",
-    "label": "a: Brand Identity Systems",
-    "type": "text",
-    "value": "Brand Identity Systems"
-  },
-  {
-    "page": "global",
-    "key": "copy_714c4a6f2a9c",
-    "label": "a: Commercial Video & Photo",
-    "type": "text",
-    "value": "Commercial Video & Photo"
-  },
-  {
-    "page": "global",
-    "key": "copy_12de7e0930d1",
-    "label": "a: Server-Side Attribution",
-    "type": "text",
-    "value": "Server-Side Attribution"
-  },
-  {
-    "page": "global",
-    "key": "copy_965533ad102a",
-    "label": "a: SEO & Content Engines",
-    "type": "text",
-    "value": "SEO & Content Engines"
-  },
-  {
-    "page": "global",
-    "key": "copy_a9f62d79c357",
-    "label": "sr-only: Work email address",
-    "type": "text",
-    "value": "Work email address"
-  },
-  {
-    "page": "global",
-    "key": "copy_ce0795d9d101",
-    "label": "p: © 2026 Empetix Solutions LLC. All rights reserved.",
-    "type": "text",
-    "value": "© 2026 Empetix Solutions LLC. All rights reserved."
-  },
-  {
-    "page": "global",
-    "key": "copy_505e2c9ec064",
-    "label": "a: Privacy Policy",
-    "type": "text",
-    "value": "Privacy Policy"
-  },
-  {
-    "page": "global",
-    "key": "copy_7c38db12a0f5",
-    "label": "a: Terms of Service",
-    "type": "text",
-    "value": "Terms of Service"
-  },
-  {
-    "page": "global",
-    "key": "copy_3181b3a91220",
-    "label": "a: Cookie Settings",
-    "type": "text",
-    "value": "Cookie Settings"
-  },
-  {
-    "page": "global",
-    "key": "copy_39885245a3fb",
-    "label": "a: Back to Top ↑",
-    "type": "text",
-    "value": "Back to Top ↑"
-  },
-  {
-    "page": "global",
-    "key": "copy_4fa930d35d88",
-    "label": "alt: Empetix Solution",
-    "type": "text",
-    "value": "Empetix Solution"
-  },
-  {
-    "page": "global",
-    "key": "copy_c47b5facbcd3",
-    "label": "Media path: assets/img/logo/empetix-logo.png",
-    "type": "image",
-    "value": "assets/img/logo/empetix-logo.png"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_1",
-    "label": "Impact metric 1",
-    "value": "64",
-    "type": "number"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_2",
-    "label": "Impact metric 2",
-    "value": "3.8",
-    "type": "number"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_3",
-    "label": "Impact metric 3",
-    "value": "99.96",
-    "type": "number"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_4",
-    "label": "Impact metric 4",
-    "value": "94",
-    "type": "number"
-  },
-  {
-    "page": "careers",
-    "key": "metric_1",
-    "label": "Portal metric 1",
-    "value": "6",
-    "type": "number"
-  },
-  {
-    "page": "careers",
-    "key": "metric_2",
-    "label": "Portal metric 2",
-    "value": "48",
-    "type": "number"
-  },
-  {
-    "page": "careers",
-    "key": "metric_3",
-    "label": "Portal metric 3",
-    "value": "28",
-    "type": "number"
-  },
-  {
-    "page": "careers",
-    "key": "search_placeholder",
-    "label": "Search placeholder",
-    "value": "e.g. Laravel, Flutter, Next.js, Media Buyer, Designer...",
-    "type": "text"
+    "page": "blog",
+    "key": "copy_1256e49dd66b",
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Read full engineering articles, watch studio video episodes, and explore behind-the-scenes photo essays from Empetix."
   },
   {
     "page": "blog",
     "key": "featured_url",
-    "label": "Featured post destination",
-    "value": "/blog/video",
-    "type": "text"
+    "label": "Featured Post URL",
+    "type": "text",
+    "value": "/blog/five-day-product-growth-sprint"
   },
   {
-    "page": "founder",
-    "key": "about_prefix",
-    "label": "Biography heading prefix",
-    "type": "text",
-    "value": "About"
+    "page": "blog",
+    "key": "copy_26f63d8f8aa0",
+    "label": "Featured Post Cover Image",
+    "type": "image",
+    "value": "assets/img/blog/design-sprint.jpg"
   },
   {
-    "page": "founder",
-    "key": "expertise_prefix",
-    "label": "Expertise heading prefix",
+    "page": "blog",
+    "key": "copy_855145b5639a",
+    "label": "Featured Post Badge",
     "type": "text",
-    "value": "Where"
+    "value": "FEATURED VIDEO EPISODE · 14:20"
   },
   {
-    "page": "founder",
-    "key": "expertise_suffix",
-    "label": "Expertise heading suffix",
+    "page": "blog",
+    "key": "copy_82eec5c0a198",
+    "label": "Featured Post Category",
     "type": "text",
-    "value": "can help"
+    "value": "VIDEO DOCUMENTARY + FULL POST"
   },
   {
-    "page": "job",
-    "key": "posted_prefix",
-    "label": "Posted date label",
+    "page": "blog",
+    "key": "copy_3ee3c06a73ee",
+    "label": "Featured Post Date",
     "type": "text",
-    "value": "POSTED"
+    "value": "05 NOV 2026"
   },
   {
-    "page": "job",
-    "key": "apply_now",
-    "label": "Apply CTA label",
+    "page": "blog",
+    "key": "copy_d70de1ef3361",
+    "label": "Featured Post Title",
     "type": "text",
-    "value": "Apply Now"
+    "value": "Inside an Empetix 5-Day Product & Growth Sprint (Full Video + Transcript + Photos)"
   },
   {
-    "page": "job",
-    "key": "apply_for",
-    "label": "Application title prefix",
-    "type": "text",
-    "value": "Apply for:"
+    "page": "blog",
+    "key": "copy_be2a3ae8d09f",
+    "label": "Featured Post Excerpt",
+    "type": "textarea",
+    "value": "Watch how our engineers, product designers, and performance marketers take a FinTech checkout product from raw problem statement to user-tested prototype and live acquisition test in five days."
   },
   {
-    "page": "job",
-    "key": "requisition_prefix",
-    "label": "Application requisition label",
+    "page": "blog",
+    "key": "copy_9448bd6ae08a",
+    "label": "Featured Post CTA Label",
     "type": "text",
-    "value": "Requisition ID:"
+    "value": "Watch Video & Read Full Post"
   },
   {
-    "page": "home",
-    "key": "sector_prefix",
-    "label": "Industry number label",
+    "page": "contact",
+    "key": "copy_b33a9603fc54",
+    "label": "SEO Page Title",
     "type": "text",
-    "value": "SECTOR"
+    "value": "Contact Us & Start a Project — Empetix Solution"
   },
   {
-    "page": "project",
-    "key": "case_study_suffix",
-    "label": "Case study suffix",
-    "type": "text",
-    "value": "CASE STUDY"
+    "page": "contact",
+    "key": "copy_d6d0b4b6f76b",
+    "label": "SEO Meta Description",
+    "type": "textarea",
+    "value": "Contact Empetix's co-founders and practice leads in New Cairo for software engineering, growth marketing, or corporate partnerships."
   },
   {
-    "page": "global",
-    "key": "social_preview",
-    "label": "Social sharing preview image path",
+    "page": "contact",
+    "key": "copy_591febde720a",
+    "label": "Hero Eyebrow Badge",
     "type": "text",
-    "value": "assets/img/og-empetix.jpg"
+    "value": "Direct Executive Access"
   },
   {
-    "page": "team",
-    "key": "general_team",
-    "label": "General Team",
-    "type": "text",
-    "value": "Team"
+    "page": "contact",
+    "key": "copy_7dd28e9d5493",
+    "label": "Hero Lead Paragraph",
+    "type": "textarea",
+    "value": "At Empetix, you never speak with junior sales reps. Every inquiry goes directly to our co-founders and practice heads in New Cairo."
   },
   {
-    "page": "team",
-    "key": "directory_empty",
-    "label": "Directory Empty",
+    "page": "contact",
+    "key": "copy_deda8e22bf26",
+    "label": "Hero SLA Badge",
     "type": "text",
-    "value": "Our team directory will be updated soon."
+    "value": "AVG RESPONSE: < 6 BUSINESS HOURS"
   },
   {
-    "page": "error",
-    "key": "meta_title",
-    "label": "Meta Title",
-    "type": "text",
-    "value": "Page not found | Empetix Solution"
-  },
-  {
-    "page": "error",
-    "key": "eyebrow",
-    "label": "Eyebrow",
-    "type": "text",
-    "value": "A small detour"
-  },
-  {
-    "page": "error",
-    "key": "title",
-    "label": "Title",
-    "type": "text",
-    "value": "This page is off the map."
-  },
-  {
-    "page": "error",
-    "key": "description",
-    "label": "Description",
-    "type": "text",
-    "value": "The page may have moved, or the link may be out of date. Let's get you back to what matters."
-  },
-  {
-    "page": "error",
-    "key": "home_label",
-    "label": "Home Label",
-    "type": "text",
-    "value": "Back to home"
-  },
-  {
-    "page": "error",
-    "key": "work_label",
-    "label": "Work Label",
-    "type": "text",
-    "value": "Explore our work"
-  },
-  {
-    "page": "error",
-    "key": "contact_label",
-    "label": "Contact Label",
-    "type": "text",
-    "value": "Need a hand? Contact us"
-  },
-  {
-    "page": "error",
-    "key": "status_label",
-    "label": "Status Label",
-    "type": "text",
-    "value": "Page not found"
+    "page": "contact",
+    "key": "copy_fcccaf2eb501",
+    "label": "Headquarters Photo",
+    "type": "image",
+    "value": "assets/img/home/hero.jpg"
   }
 ]

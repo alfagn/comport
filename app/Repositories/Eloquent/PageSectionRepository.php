@@ -17,12 +17,23 @@ class PageSectionRepository extends EloquentRepository implements PageSectionRep
     /** {@inheritdoc} */
     public function forPage(string $page): Collection
     {
-        return $this->query()->where('page', $page)->orderBy('sort_order')->get();
+        return $this->query()
+            ->where('page', $page)
+            ->where('type', '!=', 'internal')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
     }
 
     /** {@inheritdoc} */
     public function groupedByPage(): Collection
     {
-        return $this->query()->orderBy('page')->orderBy('sort_order')->get()->groupBy('page');
+        return $this->query()
+            ->where('type', '!=', 'internal')
+            ->orderBy('page')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->groupBy('page');
     }
 }

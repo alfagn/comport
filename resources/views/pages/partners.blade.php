@@ -16,7 +16,7 @@
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="{{ sec('partners', 'copy_46054f40eb9f') }}"/>
+  <meta property="og:image:alt" content="Empetix Solution"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ sec('partners', 'copy_2f39acc5afa8') }}"/>
   <meta name="twitter:description" content="{{ sec('partners', 'copy_8f08704df899') }}"/>
@@ -30,8 +30,8 @@
     <section class="page-hero">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">{{ sec('partners', 'copy_66b93f927675') }}</a></li>
-          <li aria-current="page">{{ sec('partners', 'copy_91619d630bd7') }}</li>
+          <li><a href="{{ url('/') }}">Home</a></li>
+          <li aria-current="page">Corporate Partners</li>
         </ol>
         <h1 class="page-hero__title">{{ sec('partners', 'hero_title', 'Corporate partners & technology alliances.') }}</h1>
         <div class="page-hero__row">
@@ -51,7 +51,7 @@
     <!-- 12-Partner Logo Grid -->
     <section class="section section--flush-top" aria-labelledby="alliance-heading">
       <div class="container">
-        <h2 id="alliance-heading" class="sr-only">{{ sec('partners', 'copy_6a83c03a373c') }}</h2>
+        <h2 id="alliance-heading" class="sr-only">Verified Corporate and Technology Partners</h2>
         <div class="logo-wall reveal">
           @foreach($partners as $partner)
           <div class="logo-wall__item">

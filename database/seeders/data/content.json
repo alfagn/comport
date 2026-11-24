@@ -1247,6 +1247,36 @@
             "group": "general",
             "key": "tagline",
             "value": "Software engineering and performance marketing, one team."
+        },
+        {
+            "group": "cookies",
+            "key": "cookie_consent_enabled",
+            "value": "1"
+        },
+        {
+            "group": "cookies",
+            "key": "cookie_banner_title",
+            "value": "Cookie & Privacy Preferences"
+        },
+        {
+            "group": "cookies",
+            "key": "cookie_banner_message",
+            "value": "We use strictly necessary cookies to keep Empetix secure and reliable, and optional analytics and marketing cookies to understand how visitors use our site. Do you allow us to store optional cookies on your device?"
+        },
+        {
+            "group": "cookies",
+            "key": "cookie_accept_label",
+            "value": "Accept All Cookies"
+        },
+        {
+            "group": "cookies",
+            "key": "cookie_reject_label",
+            "value": "Essential Only"
+        },
+        {
+            "group": "cookies",
+            "key": "cookie_settings_label",
+            "value": "Cookie Settings"
         }
     ]
 }

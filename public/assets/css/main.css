@@ -23,6 +23,7 @@
 @import url("components/lists.css");
 @import url("components/media.css");
 @import url("components/form.css");
+@import url("components/cookie-consent.css");
 
 /* 4. Pages */
 @import url("pages/home.css");

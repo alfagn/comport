@@ -16,7 +16,7 @@
   <meta property="og:image:type" content="image/jpeg"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:image:alt" content="{{ sec('about', 'copy_46054f40eb9f') }}"/>
+  <meta property="og:image:alt" content="Empetix Solution"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="{{ sec('about', 'copy_a35b294e59fe') }}"/>
   <meta name="twitter:description" content="{{ sec('about', 'copy_d75b76a6e09c') }}"/>
@@ -29,8 +29,8 @@
     <section class="page-hero">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
-          <li><a href="{{ url('/') }}">{{ sec('about', 'copy_66b93f927675') }}</a></li>
-          <li aria-current="page">{{ sec('about', 'breadcrumb', 'About & Founders') }}</li>
+          <li><a href="{{ url('/') }}">Home</a></li>
+          <li aria-current="page">About &amp; Founders</li>
         </ol>
         <h1 class="page-hero__title">{{ sec('about', 'hero_title', 'Built by engineers and storytellers who got tired of the hand-off gap.') }}</h1>
         <div class="page-hero__row">
@@ -73,7 +73,7 @@
             height="1080"
           >
             <source src="{{ content_asset($aboutVideoRef) }}" type="{{ video_mime($aboutVideoRef) }}"/>
-            {{ sec('about', 'video_fallback', 'Your browser does not support embedded video playback.') }}
+            Your browser does not support embedded video playback.
           </video>
         </div>
 
