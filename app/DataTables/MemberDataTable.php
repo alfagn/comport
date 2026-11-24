@@ -19,7 +19,20 @@ class MemberDataTable extends AdminDataTable
 
     protected function query(): Builder
     {
-        return $this->repository->listingQuery();
+        $query = $this->repository->listingQuery();
+        $user = auth()->user();
+
+        // Hide the currently authenticated user from the team table so they don't see themselves or accidentally delete themselves
+        if ($user) {
+            $query->where(function ($q) use ($user) {
+                $q->whereNull('user_id')->orWhere('user_id', '!=', $user->id);
+            });
+            if ($user->email) {
+                $query->where('email', '!=', $user->email);
+            }
+        }
+
+        return $query;
     }
 
     protected function routePrefix(): string

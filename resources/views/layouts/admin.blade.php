@@ -323,8 +323,22 @@
               <strong>{{ $adminUser->name }}</strong>
               <span>{{ $adminUser->email }}</span>
             </div>
-            <a href="{{ route('admin.profile.edit') }}" wire:navigate style="font-weight:600; color:var(--color-text-accent, #eb5e28);">My Profile &amp; Team Details</a>
-            <a href="{{ url('/') }}" target="_blank">View website</a>
+            <a href="{{ route('admin.profile.edit') }}" wire:navigate style="font-weight:600; color:var(--color-text-accent, #eb5e28); display:flex; align-items:center; gap:6px;">
+              <span>👤</span>
+              <span>View &amp; Edit Profile</span>
+            </a>
+            @if($adminUser->member?->slug && $adminUser->member?->kind === 'founder')
+              <a href="{{ route('founders.show', $adminUser->member->slug) }}" target="_blank" style="display:flex; align-items:center; gap:6px;">
+                <span>🌐</span>
+                <span>View Public Profile ↗</span>
+              </a>
+            @else
+              <a href="{{ url('/team') }}" target="_blank" style="display:flex; align-items:center; gap:6px;">
+                <span>🌐</span>
+                <span>View Public Team ↗</span>
+              </a>
+            @endif
+            <a href="{{ url('/') }}" target="_blank">View Website ↗</a>
             <form method="post" action="{{ route('admin.logout') }}">@csrf<button type="submit">Sign out</button></form>
           </div>
         </div>

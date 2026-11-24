@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             PageSectionSeeder::class,
             NavItemSeeder::class,
             ContentListSeeder::class,
+            TeamUsersSyncSeeder::class,
         ]);
     }
 }

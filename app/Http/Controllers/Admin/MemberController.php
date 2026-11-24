@@ -59,6 +59,11 @@ class MemberController extends Controller
     /** Delete a record. */
     public function destroy(int $id): RedirectResponse
     {
+        $member = \App\Models\Member::findOrFail($id);
+        if ($member->user_id === auth()->id() || $member->email === auth()->user()?->email) {
+            return redirect()->route('admin.members.index')->with('error', 'You cannot delete your own team profile. Use My Profile instead.');
+        }
+
         $this->service->delete($id);
 
         return redirect()->route('admin.members.index')->with('success', 'Member deleted.');

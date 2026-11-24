@@ -62,6 +62,11 @@ class AdminUserService
             throw ValidationException::withMessages(['admin' => 'You cannot delete your own account.']);
         }
 
+        // Guard: an owner cannot delete another owner
+        if ($user->hasRole(Permissions::OWNER_ROLE) && $actor->hasRole(Permissions::OWNER_ROLE)) {
+            throw ValidationException::withMessages(['admin' => 'You cannot delete another Owner account.']);
+        }
+
         $this->guardLastOwner($user, []);
 
         $this->repository->delete($user);

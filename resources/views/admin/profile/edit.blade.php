@@ -10,7 +10,17 @@
       <h2 style="font-size: 1.35rem; font-weight: 700; margin: 0;">Account &amp; Team Profile</h2>
       <p style="color: var(--text-muted, #777); font-size: 0.88rem; margin: 0.25rem 0 0;">Manage your login credentials and how you appear in the company team directory.</p>
     </div>
-    <div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      @if($member->slug && $member->kind === 'founder')
+        <a href="{{ route('founders.show', $member->slug) }}" target="_blank" rel="noopener noreferrer" class="btn btn--ghost btn--sm" style="display:inline-flex; align-items:center; gap:5px;">
+          <span>View Public Profile ↗</span>
+        </a>
+      @elseif($member->is_active)
+        <a href="{{ url('/team') }}" target="_blank" rel="noopener noreferrer" class="btn btn--ghost btn--sm" style="display:inline-flex; align-items:center; gap:5px;">
+          <span>View on Team Page ↗</span>
+        </a>
+      @endif
+
       @if($member->is_active)
         <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-weight: 600; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; display:inline-flex; align-items:center; gap:6px;">
           <span style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block;"></span>

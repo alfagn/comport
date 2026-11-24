@@ -68,11 +68,29 @@ class BulkDeleteController extends Controller
         $ids = array_map('intval', $validated['ids']);
 
         // Safety rules for sensitive tables:
-        if ($entity === 'admins') {
-            // Cannot delete yourself
+        if ($entity === 'members') {
             $currentUserId = (int) $request->user()->id;
-            $ids = array_values(array_filter($ids, fn ($id) => $id !== $currentUserId));
-            abort_if(empty($ids), 422, 'You cannot delete your own account.');
+            $currentUserEmail = $request->user()->email;
+            $ids = array_values(array_filter($ids, function ($id) use ($currentUserId, $currentUserEmail) {
+                $m = Member::find($id);
+                return $m && $m->user_id !== $currentUserId && $m->email !== $currentUserEmail;
+            }));
+            abort_if(empty($ids), 422, 'You cannot delete your own team profile.');
+        }
+
+        if ($entity === 'admins') {
+            // Cannot delete yourself or peer owners
+            $currentUserId = (int) $request->user()->id;
+            $isOwner = $request->user()->hasRole(\App\Support\Permissions::OWNER_ROLE);
+            $ids = array_values(array_filter($ids, function ($id) use ($currentUserId, $isOwner) {
+                if ($id === $currentUserId) return false;
+                if ($isOwner) {
+                    $target = User::find($id);
+                    if ($target && $target->hasRole(\App\Support\Permissions::OWNER_ROLE)) return false;
+                }
+                return true;
+            }));
+            abort_if(empty($ids), 422, 'You cannot delete your own account or peer Owner accounts.');
         }
 
         if ($entity === 'roles') {

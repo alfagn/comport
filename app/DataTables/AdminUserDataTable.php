@@ -19,7 +19,15 @@ class AdminUserDataTable extends AdminDataTable
 
     protected function query(): Builder
     {
-        return $this->repository->listingQuery();
+        $query = $this->repository->listingQuery()->with('roles');
+        $user = auth()->user();
+
+        // Hide the currently authenticated user from the admins table so they don't see or delete themselves
+        if ($user) {
+            $query->where('id', '!=', $user->id);
+        }
+
+        return $query;
     }
 
     protected function routePrefix(): string
@@ -29,6 +37,8 @@ class AdminUserDataTable extends AdminDataTable
 
     protected function decorate(EloquentDataTable $table): void
     {
+        $currentUser = auth()->user();
+
         $table
             ->editColumn('name', function ($row) {
                 $initial = e(mb_strtoupper(mb_substr((string) $row->name, 0, 1)));
@@ -41,7 +51,14 @@ class AdminUserDataTable extends AdminDataTable
                 ? '<span class="pill pill--off">No role</span>'
                 : '<div class="dt-pills-wrap">'.$row->roles->map(fn ($role) => '<span class="pill pill--on">'.e($role->name).'</span>')->implode('').'</div>')
             ->editColumn('created_at', fn ($row) => e($row->created_at?->format('M j, Y')))
-            ->addColumn('actions', fn ($row) => $this->rowActions($row->id, 'admin'))
+            ->addColumn('actions', function ($row) use ($currentUser) {
+                // If the target user is a peer Owner, protect them from edit/delete
+                if ($currentUser && $currentUser->hasRole('owner') && $row->hasRole('owner')) {
+                    return '<span class="pill pill--accent" style="font-size:0.75rem; padding:3px 8px;">Peer Owner</span>';
+                }
+
+                return $this->rowActions($row->id, 'admin');
+            })
             ->rawColumns(['name', 'roles', 'actions']);
     }
 

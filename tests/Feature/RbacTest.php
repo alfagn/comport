@@ -39,7 +39,7 @@ class RbacTest extends TestCase
     public function test_admin_without_permission_is_blocked_server_side(): void
     {
         $user = User::factory()->create();
-        $role = Role::create(['name' => 'editor']);
+        $role = Role::firstOrCreate(['name' => 'editor'], ['guard_name' => 'web']);
         $role->givePermissionTo('manage services');
         $user->assignRole($role);
 

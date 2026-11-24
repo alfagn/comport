@@ -18,6 +18,25 @@ class ProjectRequest extends FormRequest
         return true;
     }
 
+    /** Prepare and sanitize empty file inputs before validation. */
+    protected function prepareForValidation(): void
+    {
+        if ($this->hasFile('gallery_files')) {
+            $files = array_filter((array) $this->file('gallery_files'), fn ($f) => $f instanceof \Illuminate\Http\UploadedFile && $f->isValid());
+            if (empty($files)) {
+                $this->request->remove('gallery_files');
+                $this->files->remove('gallery_files');
+            } else {
+                $this->files->set('gallery_files', array_values($files));
+            }
+        }
+
+        if ($this->hasFile('image') && ! $this->file('image')?->isValid()) {
+            $this->request->remove('image');
+            $this->files->remove('image');
+        }
+    }
+
     /** @return array<string, array<int, string>> */
     public function rules(): array
     {

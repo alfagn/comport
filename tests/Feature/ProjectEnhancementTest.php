@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
+use Database\Seeders\TeamUsersSyncSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -17,6 +18,7 @@ class ProjectEnhancementTest extends TestCase
     {
         parent::setUp();
         Role::firstOrCreate(['name' => 'owner'], ['guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'editor'], ['guard_name' => 'web']);
     }
 
     public function test_projects_archive_page_displays_cards_and_live_url(): void
@@ -65,6 +67,34 @@ class ProjectEnhancementTest extends TestCase
         $response->assertSee('youtube-nocookie.com/embed', false);
     }
 
+    public function test_project_can_be_updated_without_fileinfo_exception(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('owner');
+
+        $project = Project::create([
+            'title' => 'Initial Title',
+            'slug' => 'initial-title',
+            'live_url' => 'https://example.com',
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($user)->put("/admin/projects/{$project->id}", [
+            'title' => 'Updated Project Title',
+            'slug' => 'updated-project-title',
+            'live_url' => 'https://alfagn.com',
+            'kicker' => 'EDTECH CORE',
+            'body' => '<p>Updated description</p>',
+        ]);
+
+        $response->assertRedirect('/admin/projects');
+        $this->assertDatabaseHas('projects', [
+            'id' => $project->id,
+            'title' => 'Updated Project Title',
+            'live_url' => 'https://alfagn.com',
+        ]);
+    }
+
     public function test_user_can_access_and_update_personal_and_team_profile(): void
     {
         $user = User::factory()->create([
@@ -99,6 +129,83 @@ class ProjectEnhancementTest extends TestCase
             'role' => 'Founder & Lead Systems Architect',
             'department' => 'Software Engineering',
         ]);
+    }
+
+    public function test_user_does_not_see_themselves_in_team_and_cannot_delete_themselves(): void
+    {
+        $user = User::factory()->create(['name' => 'Current User', 'email' => 'current@empetix.com']);
+        $user->assignRole('owner');
+
+        $myMember = Member::create([
+            'user_id' => $user->id,
+            'name' => 'Current User',
+            'slug' => 'current-user',
+            'email' => 'current@empetix.com',
+            'kind' => 'founder',
+        ]);
+
+        $otherMember = Member::create([
+            'name' => 'Other Member',
+            'slug' => 'other-member',
+            'email' => 'other@empetix.com',
+            'kind' => 'member',
+        ]);
+
+        // In DataTables JSON, current user's member is filtered out
+        $response = $this->actingAs($user)->getJson('/admin/members', ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
+        $response->assertOk();
+        $json = $response->json();
+        $dataStr = json_encode($json['data'] ?? []);
+        $this->assertStringNotContainsString('Current User', $dataStr);
+        $this->assertStringContainsString('Other Member', $dataStr);
+
+        // Attempting to delete own member record is blocked
+        $deleteResponse = $this->actingAs($user)->delete("/admin/members/{$myMember->id}");
+        $deleteResponse->assertRedirect('/admin/members');
+        $deleteResponse->assertSessionHas('error');
+        $this->assertDatabaseHas('members', ['id' => $myMember->id]);
+    }
+
+    public function test_owner_does_not_see_themselves_in_admins_table_and_peer_owner_is_protected(): void
+    {
+        $owner1 = User::factory()->create(['name' => 'Owner One', 'email' => 'owner1@empetix.com']);
+        $owner1->assignRole('owner');
+
+        $owner2 = User::factory()->create(['name' => 'Owner Two', 'email' => 'owner2@empetix.com']);
+        $owner2->assignRole('owner');
+
+        // Owner1 cannot see themselves in admins list
+        $response = $this->actingAs($owner1)->getJson('/admin/admins', ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
+        $response->assertOk();
+        $dataStr = json_encode($response->json()['data'] ?? []);
+        $this->assertStringNotContainsString('owner1@empetix.com', $dataStr);
+        $this->assertStringContainsString('owner2@empetix.com', $dataStr);
+        $this->assertStringContainsString('Peer Owner', $dataStr);
+
+        // Owner1 cannot delete Owner2
+        $deleteResponse = $this->actingAs($owner1)->delete("/admin/admins/{$owner2->id}");
+        $deleteResponse->assertSessionHasErrors();
+        $this->assertDatabaseHas('users', ['id' => $owner2->id]);
+    }
+
+    public function test_team_users_sync_seeder_assigns_owners_correctly(): void
+    {
+        $this->seed(TeamUsersSyncSeeder::class);
+
+        $mohanad = User::where('email', 'mohand@gmail.com')->first();
+        $this->assertNotNull($mohanad);
+        $this->assertTrue($mohanad->hasRole('owner'));
+        $this->assertEquals('founder', $mohanad->member?->kind);
+
+        $ayman = User::where('email', 'ayman@empetix.com')->first();
+        $this->assertNotNull($ayman);
+        $this->assertTrue($ayman->hasRole('owner'));
+        $this->assertEquals('founder', $ayman->member?->kind);
+
+        $bishoy = User::where('email', 'bishoy@empetix.com')->first();
+        $this->assertNotNull($bishoy);
+        $this->assertTrue($bishoy->hasRole('owner'));
+        $this->assertEquals('founder', $bishoy->member?->kind);
     }
 
     public function test_artisan_user_create_command(): void
