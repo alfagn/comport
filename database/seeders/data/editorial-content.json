@@ -1,709 +1,709 @@
 [
-  {
-    "page": "home",
-    "key": "copy_3e8e84b38e6d",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "Empetix — Software Engineering & Growth Marketing Studio"
-  },
-  {
-    "page": "home",
-    "key": "copy_24622118df1b",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Empetix is a multinational software engineering and performance marketing studio building web/mobile platforms and high-ROAS growth engines."
-  },
-  {
-    "page": "home",
-    "key": "copy_5ba0a96f0d3c",
-    "label": "Capabilities Ticker Item 1",
-    "type": "text",
-    "value": "LARAVEL & DISTRIBUTED CLOUD APIS"
-  },
-  {
-    "page": "home",
-    "key": "copy_39ef2eb7e25d",
-    "label": "Capabilities Ticker Item 2",
-    "type": "text",
-    "value": "FLUTTER & NATIVE MOBILE ENGINEERING"
-  },
-  {
-    "page": "home",
-    "key": "copy_595fd58755b8",
-    "label": "Capabilities Ticker Item 3",
-    "type": "text",
-    "value": "PERFORMANCE MARKETING & SERVER-SIDE CAPI"
-  },
-  {
-    "page": "home",
-    "key": "copy_17b64f78c117",
-    "label": "Capabilities Ticker Item 4",
-    "type": "text",
-    "value": "ARABIC-FIRST (RTL/LTR) DESIGN SYSTEMS"
-  },
-  {
-    "page": "home",
-    "key": "copy_d54dd05dbce5",
-    "label": "Capabilities Ticker Item 5",
-    "type": "text",
-    "value": "HEADLESS E-COMMERCE & FINTECH LEDGERS"
-  },
-  {
-    "page": "home",
-    "key": "copy_65ab6c9c5557",
-    "label": "Capabilities Ticker Item 6",
-    "type": "text",
-    "value": "COMMERCIAL FILM & 35MM PHOTOGRAPHY"
-  },
-  {
-    "page": "home",
-    "key": "copy_83fd4c2d2618",
-    "label": "Capabilities Ticker Item 7",
-    "type": "text",
-    "value": "CONVERSION RATE OPTIMIZATION (CRO)"
-  },
-  {
-    "page": "home",
-    "key": "copy_3ef452996cc0",
-    "label": "Who We Are Lead Paragraph",
-    "type": "textarea",
-    "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our overview to see how we build and scale digital businesses."
-  },
-  {
-    "page": "home",
-    "key": "copy_29166363eeca",
-    "label": "Company Overview Video (Upload to Private Storage or Link)",
-    "type": "video",
-    "value": "assets/video/empetix-overview.mp4"
-  },
-  {
-    "page": "home",
-    "key": "copy_6d2c2c58c880",
-    "label": "Company Overview Video Poster",
-    "type": "image",
-    "value": "assets/img/home/overview-poster.jpg"
-  },
-  {
-    "page": "home",
-    "key": "copy_865f5a4280b3",
-    "label": "Core Pillar 1 — Title",
-    "type": "text",
-    "value": "Software engineering"
-  },
-  {
-    "page": "home",
-    "key": "copy_3662ee57e15d",
-    "label": "Core Pillar 1 — Description",
-    "type": "text",
-    "value": "Full-stack web and mobile platforms built for reliability, speed, and long-term scale."
-  },
-  {
-    "page": "home",
-    "key": "copy_fcb465e5f4ab",
-    "label": "Core Pillar 2 — Title",
-    "type": "text",
-    "value": "Growth marketing"
-  },
-  {
-    "page": "home",
-    "key": "copy_c7fa076a2c97",
-    "label": "Core Pillar 2 — Description",
-    "type": "text",
-    "value": "Engineers and marketers working as one unified team to turn clean data into customer acquisition."
-  },
-  {
-    "page": "home",
-    "key": "copy_5c3330972f1f",
-    "label": "Core Pillar 3 — Title",
-    "type": "text",
-    "value": "Strategic investment"
-  },
-  {
-    "page": "home",
-    "key": "copy_d617fb8edf18",
-    "label": "Core Pillar 3 — Description",
-    "type": "text",
-    "value": "Backing bold founders with capital, senior technical leadership, and go-to-market execution."
-  },
-  {
-    "page": "home",
-    "key": "copy_4b883a035467",
-    "label": "Solutions Hub Lead Paragraph",
-    "type": "text",
-    "value": "Select a practice pillar below to inspect our architecture, deliverables, and verified client outcomes."
-  },
-  {
-    "page": "home",
-    "key": "copy_30fe7b74af14",
-    "label": "Solutions Hub CTA Label",
-    "type": "text",
-    "value": "Request Custom Scope"
-  },
-  {
-    "page": "home",
-    "key": "copy_7115cff2cafe",
-    "label": "Selected Work CTA Label",
-    "type": "text",
-    "value": "All 6 Case Studies"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_1",
-    "label": "Impact Metric 1 — Value",
-    "type": "number",
-    "value": "64"
-  },
-  {
-    "page": "home",
-    "key": "copy_bdec4c898cfc",
-    "label": "Impact Metric 1 — Label",
-    "type": "text",
-    "value": "Software platforms & growth engines shipped"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_2",
-    "label": "Impact Metric 2 — Value",
-    "type": "number",
-    "value": "3.8"
-  },
-  {
-    "page": "home",
-    "key": "copy_e3edd5b505ad",
-    "label": "Impact Metric 2 — Label",
-    "type": "text",
-    "value": "Audited median return on ad spend across active retainers"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_3",
-    "label": "Impact Metric 3 — Value",
-    "type": "number",
-    "value": "99.96"
-  },
-  {
-    "page": "home",
-    "key": "copy_97e657dc8770",
-    "label": "Impact Metric 3 — Label",
-    "type": "text",
-    "value": "Production uptime across client SaaS and FinTech applications"
-  },
-  {
-    "page": "home",
-    "key": "impact_value_4",
-    "label": "Impact Metric 4 — Value",
-    "type": "number",
-    "value": "94"
-  },
-  {
-    "page": "home",
-    "key": "copy_b479b0ae0c28",
-    "label": "Impact Metric 4 — Label",
-    "type": "text",
-    "value": "Client retention beyond initial 12-month engagement"
-  },
-  {
-    "page": "home",
-    "key": "copy_47a6aec3cda3",
-    "label": "Partners Section CTA Label",
-    "type": "text",
-    "value": "Partner Directory"
-  },
-  {
-    "page": "home",
-    "key": "copy_3a178140ec02",
-    "label": "Journal Section CTA Label",
-    "type": "text",
-    "value": "View All Posts"
-  },
-  {
-    "page": "home",
-    "key": "copy_ba8b1727770e",
-    "label": "Careers Banner Eyebrow",
-    "type": "text",
-    "value": "07 / Careers Portal · jobs.empetix.com"
-  },
-  {
-    "page": "home",
-    "key": "copy_441bd1f69009",
-    "label": "Careers Banner Description",
-    "type": "textarea",
-    "value": "Explore open roles in Laravel, Next.js, Flutter, Product Design, and Performance Marketing on our dedicated talent portal."
-  },
-  {
-    "page": "home",
-    "key": "copy_bf9786d4c4eb",
-    "label": "Careers Banner Button Label",
-    "type": "text",
-    "value": "Launch jobs.empetix.com (6 Open Roles)"
-  },
-  {
-    "page": "home",
-    "key": "copy_b221f03ea2bf",
-    "label": "Careers Banner Background Image",
-    "type": "image",
-    "value": "assets/img/careers/culture.jpg"
-  },
-  {
-    "page": "about",
-    "key": "copy_a35b294e59fe",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "About Empetix & Meet the Founders — Empetix Solution"
-  },
-  {
-    "page": "about",
-    "key": "copy_d75b76a6e09c",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Meet the co-founders leading Empetix's software engineering and growth marketing practices in Cairo."
-  },
-  {
-    "page": "work",
-    "key": "copy_77e7fd581bd1",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "Selected Projects & Case Studies — Empetix"
-  },
-  {
-    "page": "work",
-    "key": "copy_83644a777d3c",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Explore software engineering, FinTech, e-commerce, and performance marketing case studies by Empetix."
-  },
-  {
-    "page": "team",
-    "key": "copy_1bd5cb61a600",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "Team — Empetix Solution"
-  },
-  {
-    "page": "team",
-    "key": "copy_dca495ea9079",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Meet the leadership, engineering, product design, and marketing teams at Empetix Solution in New Cairo."
-  },
-  {
-    "page": "team",
-    "key": "copy_be3f40c5f9fe",
-    "label": "Hero Lead Paragraph",
-    "type": "textarea",
-    "value": "Engineers, product designers, and performance marketers working as one multidisciplinary team from New Cairo—without agency layers or external hand-offs."
-  },
-  {
-    "page": "team",
-    "key": "copy_38a9b4c47c1d",
-    "label": "Hero Studio Photo",
-    "type": "image",
-    "value": "assets/img/about/office.jpg"
-  },
-  {
-    "page": "team",
-    "key": "copy_42a38ba194b4",
-    "label": "Practice Teams Lead Paragraph",
-    "type": "textarea",
-    "value": "Senior specialists across software engineering, product design, and performance marketing working together in dedicated client squads."
-  },
-  {
-    "page": "team",
-    "key": "copy_a588d0d2cd5f",
-    "label": "Engineering Practice Description",
-    "type": "textarea",
-    "value": "Backend, frontend, mobile, and infrastructure engineers responsible for scalable APIs, payment ledgers, and reliable cloud deployments."
-  },
-  {
-    "page": "team",
-    "key": "copy_67418b5acff7",
-    "label": "Team Culture Lead Paragraph",
-    "type": "textarea",
-    "value": "Every client engagement pairs engineering, design, and growth under one shared roadmap so software quality and commercial performance move together."
-  },
-  {
-    "page": "team",
-    "key": "copy_b221f03ea2bf",
-    "label": "Team Culture Photo",
-    "type": "image",
-    "value": "assets/img/careers/culture.jpg"
-  },
-  {
-    "page": "team",
-    "key": "copy_0c8127443473",
-    "label": "Join Section Description",
-    "type": "textarea",
-    "value": "We hire engineers, designers, and marketers who care deeply about craft and measurable work. Explore open positions on our careers portal or reach out to our company desk."
-  },
-  {
-    "page": "team",
-    "key": "copy_96490c6dd6ac",
-    "label": "Join Primary Button Label",
-    "type": "text",
-    "value": "View open roles"
-  },
-  {
-    "page": "team",
-    "key": "copy_83e7789a3687",
-    "label": "Join Secondary Link Label",
-    "type": "text",
-    "value": "Start a project"
-  },
-  {
-    "page": "careers",
-    "key": "copy_c8f958fda5c5",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "Careers & Talent Portal | Empetix Solution"
-  },
-  {
-    "page": "careers",
-    "key": "copy_71c7ef938d08",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Explore open software engineering, product design, and growth marketing jobs at Empetix Solution."
-  },
-  {
-    "page": "careers",
-    "key": "copy_21b4847b84f7",
-    "label": "Hero Eyebrow Badge",
-    "type": "text",
-    "value": "Empetix Talent Portal · jobs.empetix.com"
-  },
-  {
-    "page": "careers",
-    "key": "copy_017ca46e789e",
-    "label": "Hero Heading",
-    "type": "text",
-    "value": "Build software that endures and campaigns that move numbers."
-  },
-  {
-    "page": "careers",
-    "key": "copy_7f822db55925",
-    "label": "Hero Lead Paragraph",
-    "type": "textarea",
-    "value": "Welcome to our dedicated careers portal. Explore open engineering, product design, and performance marketing roles across our New Cairo studios—or apply remotely across EMEA."
-  },
-  {
-    "page": "careers",
-    "key": "metric_1",
-    "label": "Hero Stat 1 — Value",
-    "type": "number",
-    "value": "6"
-  },
-  {
-    "page": "careers",
-    "key": "copy_aae7c571ba3b",
-    "label": "Hero Stat 1 — Label",
-    "type": "text",
-    "value": "Open Positions"
-  },
-  {
-    "page": "careers",
-    "key": "metric_2",
-    "label": "Hero Stat 2 — Value (Hours)",
-    "type": "number",
-    "value": "48"
-  },
-  {
-    "page": "careers",
-    "key": "copy_a05c8e7260e3",
-    "label": "Hero Stat 2 — Label",
-    "type": "text",
-    "value": "Offer Turnaround"
-  },
-  {
-    "page": "careers",
-    "key": "metric_3",
-    "label": "Hero Stat 3 — Value (Days)",
-    "type": "number",
-    "value": "28"
-  },
-  {
-    "page": "careers",
-    "key": "copy_3cf747b69596",
-    "label": "Hero Stat 3 — Label",
-    "type": "text",
-    "value": "Paid Annual Leave"
-  },
-  {
-    "page": "careers",
-    "key": "copy_5477c5140849",
-    "label": "Practice Areas Subheading",
-    "type": "text",
-    "value": "Click any department track below to filter open positions immediately."
-  },
-  {
-    "page": "careers",
-    "key": "copy_b221f03ea2bf",
-    "label": "Studio Culture Photo",
-    "type": "image",
-    "value": "assets/img/careers/culture.jpg"
-  },
-  {
-    "page": "partners",
-    "key": "copy_2f39acc5afa8",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "Corporate Partners & Technology Alliances — Empetix"
-  },
-  {
-    "page": "partners",
-    "key": "copy_8f08704df899",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Strategic corporate partners, enterprise clients, and technology alliances partnering with Empetix."
-  },
-  {
-    "page": "partners",
-    "key": "copy_a2ae320b545a",
-    "label": "Partnership Models Heading",
-    "type": "text",
-    "value": "Three ways organizations partner with Empetix."
-  },
-  {
-    "page": "partners",
-    "key": "copy_4cfbabb703b1",
-    "label": "Model 01 — Title",
-    "type": "text",
-    "value": "Enterprise Product & Growth Squads"
-  },
-  {
-    "page": "partners",
-    "key": "copy_b71f8f98085f",
-    "label": "Model 01 — Description",
-    "type": "textarea",
-    "value": "Dedicated cross-functional squads (Laravel/Flutter engineers, product designers, and performance marketers) embedded directly alongside your internal leadership for 6 to 24 months."
-  },
-  {
-    "page": "partners",
-    "key": "copy_8d0e286535cb",
-    "label": "Model 01 — Deliverable 1",
-    "type": "text",
-    "value": "Shared weekly revenue & velocity KPIs"
-  },
-  {
-    "page": "partners",
-    "key": "copy_6d00c23a58e6",
-    "label": "Model 01 — Deliverable 2",
-    "type": "text",
-    "value": "Full source-code & ad-account ownership"
-  },
-  {
-    "page": "partners",
-    "key": "copy_f8e66b52cd2e",
-    "label": "Model 01 — Deliverable 3",
-    "type": "text",
-    "value": "On-site workshops in our New Cairo studio"
-  },
-  {
-    "page": "partners",
-    "key": "copy_a7c536725435",
-    "label": "Model 02 — Title",
-    "type": "text",
-    "value": "Technology & Platform Co-Delivery"
-  },
-  {
-    "page": "partners",
-    "key": "copy_1c39b3ea75b6",
-    "label": "Model 02 — Description",
-    "type": "textarea",
-    "value": "We collaborate with cloud providers, payment processors, and ERP vendors (AWS, Stripe, Shopify Plus, HubSpot) as the certified regional engineering and migration partner."
-  },
-  {
-    "page": "partners",
-    "key": "copy_5a7ccc304898",
-    "label": "Model 02 — Deliverable 1",
-    "type": "text",
-    "value": "Certified solutions architecture"
-  },
-  {
-    "page": "partners",
-    "key": "copy_e809233c6f40",
-    "label": "Model 02 — Deliverable 2",
-    "type": "text",
-    "value": "Custom middleware & localized payment rails"
-  },
-  {
-    "page": "partners",
-    "key": "copy_8ec34dd420cb",
-    "label": "Model 02 — Deliverable 3",
-    "type": "text",
-    "value": "Joint enterprise go-to-market campaigns"
-  },
-  {
-    "page": "partners",
-    "key": "copy_c29332f6ecd5",
-    "label": "Model 03 — Title",
-    "type": "text",
-    "value": "Venture Studio & Seed Co-Building"
-  },
-  {
-    "page": "partners",
-    "key": "copy_bce7d6d08d31",
-    "label": "Model 03 — Description",
-    "type": "textarea",
-    "value": "For funded founders and corporate spin-offs: we take new products from zero to v1.0 launch and initial customer acquisition in 12 weeks through structured fee-plus-milestone partnerships."
-  },
-  {
-    "page": "partners",
-    "key": "copy_b15f22e26281",
-    "label": "Model 03 — Deliverable 1",
-    "type": "text",
-    "value": "5-Day architecture & growth sprint"
-  },
-  {
-    "page": "partners",
-    "key": "copy_ab7ea0bca7f1",
-    "label": "Model 03 — Deliverable 2",
-    "type": "text",
-    "value": "Production MVP + brand system + launch film"
-  },
-  {
-    "page": "partners",
-    "key": "copy_834061aa009a",
-    "label": "Model 03 — Deliverable 3",
-    "type": "text",
-    "value": "First 10,000 customers acquisition playbook"
-  },
-  {
-    "page": "partners",
-    "key": "copy_ad9af5066e92",
-    "label": "Partner Endorsement Eyebrow",
-    "type": "text",
-    "value": "02 / Partner Voice"
-  },
-  {
-    "page": "partners",
-    "key": "copy_d263eb31cbbf",
-    "label": "Partner Endorsement Quote",
-    "type": "textarea",
-    "value": "Empetix doesn’t operate like an external vendor. Their engineers rebuilt our logistics control tower while their growth team rebuilt our B2B demand engine across the GCC."
-  },
-  {
-    "page": "partners",
-    "key": "copy_ca4c3a1a78ed",
-    "label": "Partner Endorsement Author",
-    "type": "text",
-    "value": "Khaled Al-Mansoor"
-  },
-  {
-    "page": "partners",
-    "key": "copy_dd7e29f95bf4",
-    "label": "Partner Endorsement Author Role",
-    "type": "text",
-    "value": "Chief Operating Officer, CargoLine MENA (Riyadh)"
-  },
-  {
-    "page": "blog",
-    "key": "copy_fdc599e3df65",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays"
-  },
-  {
-    "page": "blog",
-    "key": "copy_1256e49dd66b",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Read full engineering articles, watch studio video episodes, and explore behind-the-scenes photo essays from Empetix."
-  },
-  {
-    "page": "blog",
-    "key": "featured_url",
-    "label": "Featured Post URL",
-    "type": "text",
-    "value": "/blog/five-day-product-growth-sprint"
-  },
-  {
-    "page": "blog",
-    "key": "copy_26f63d8f8aa0",
-    "label": "Featured Post Cover Image",
-    "type": "image",
-    "value": "assets/img/blog/design-sprint.jpg"
-  },
-  {
-    "page": "blog",
-    "key": "copy_855145b5639a",
-    "label": "Featured Post Badge",
-    "type": "text",
-    "value": "FEATURED VIDEO EPISODE · 14:20"
-  },
-  {
-    "page": "blog",
-    "key": "copy_82eec5c0a198",
-    "label": "Featured Post Category",
-    "type": "text",
-    "value": "VIDEO DOCUMENTARY + FULL POST"
-  },
-  {
-    "page": "blog",
-    "key": "copy_3ee3c06a73ee",
-    "label": "Featured Post Date",
-    "type": "text",
-    "value": "05 NOV 2026"
-  },
-  {
-    "page": "blog",
-    "key": "copy_d70de1ef3361",
-    "label": "Featured Post Title",
-    "type": "text",
-    "value": "Inside an Empetix 5-Day Product & Growth Sprint (Full Video + Transcript + Photos)"
-  },
-  {
-    "page": "blog",
-    "key": "copy_be2a3ae8d09f",
-    "label": "Featured Post Excerpt",
-    "type": "textarea",
-    "value": "Watch how our engineers, product designers, and performance marketers take a FinTech checkout product from raw problem statement to user-tested prototype and live acquisition test in five days."
-  },
-  {
-    "page": "blog",
-    "key": "copy_9448bd6ae08a",
-    "label": "Featured Post CTA Label",
-    "type": "text",
-    "value": "Watch Video & Read Full Post"
-  },
-  {
-    "page": "contact",
-    "key": "copy_b33a9603fc54",
-    "label": "SEO Page Title",
-    "type": "text",
-    "value": "Contact Us & Start a Project — Empetix Solution"
-  },
-  {
-    "page": "contact",
-    "key": "copy_d6d0b4b6f76b",
-    "label": "SEO Meta Description",
-    "type": "textarea",
-    "value": "Contact Empetix's co-founders and practice leads in New Cairo for software engineering, growth marketing, or corporate partnerships."
-  },
-  {
-    "page": "contact",
-    "key": "copy_591febde720a",
-    "label": "Hero Eyebrow Badge",
-    "type": "text",
-    "value": "Direct Executive Access"
-  },
-  {
-    "page": "contact",
-    "key": "copy_7dd28e9d5493",
-    "label": "Hero Lead Paragraph",
-    "type": "textarea",
-    "value": "At Empetix, you never speak with junior sales reps. Every inquiry goes directly to our co-founders and practice heads in New Cairo."
-  },
-  {
-    "page": "contact",
-    "key": "copy_deda8e22bf26",
-    "label": "Hero SLA Badge",
-    "type": "text",
-    "value": "AVG RESPONSE: < 6 BUSINESS HOURS"
-  },
-  {
-    "page": "contact",
-    "key": "copy_fcccaf2eb501",
-    "label": "Headquarters Photo",
-    "type": "image",
-    "value": "assets/img/home/hero.jpg"
-  }
+    {
+        "page": "home",
+        "key": "copy_3e8e84b38e6d",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "Empetix — Software Engineering & Cloud Architecture Studio"
+    },
+    {
+        "page": "home",
+        "key": "copy_24622118df1b",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Empetix is a multinational software engineering, SaaS, and cloud architecture studio building web/mobile platforms and high-availability cloud engines."
+    },
+    {
+        "page": "home",
+        "key": "copy_5ba0a96f0d3c",
+        "label": "Capabilities Ticker Item 1",
+        "type": "text",
+        "value": "LARAVEL & DISTRIBUTED CLOUD APIS"
+    },
+    {
+        "page": "home",
+        "key": "copy_39ef2eb7e25d",
+        "label": "Capabilities Ticker Item 2",
+        "type": "text",
+        "value": "FLUTTER & NATIVE MOBILE ENGINEERING"
+    },
+    {
+        "page": "home",
+        "key": "copy_595fd58755b8",
+        "label": "Capabilities Ticker Item 3",
+        "type": "text",
+        "value": "PERFORMANCE MARKETING & SERVER-SIDE CAPI"
+    },
+    {
+        "page": "home",
+        "key": "copy_17b64f78c117",
+        "label": "Capabilities Ticker Item 4",
+        "type": "text",
+        "value": "ARABIC-FIRST (RTL/LTR) DESIGN SYSTEMS"
+    },
+    {
+        "page": "home",
+        "key": "copy_d54dd05dbce5",
+        "label": "Capabilities Ticker Item 5",
+        "type": "text",
+        "value": "HEADLESS E-COMMERCE & FINTECH LEDGERS"
+    },
+    {
+        "page": "home",
+        "key": "copy_65ab6c9c5557",
+        "label": "Capabilities Ticker Item 6",
+        "type": "text",
+        "value": "COMMERCIAL FILM & 35MM PHOTOGRAPHY"
+    },
+    {
+        "page": "home",
+        "key": "copy_83fd4c2d2618",
+        "label": "Capabilities Ticker Item 7",
+        "type": "text",
+        "value": "CONVERSION RATE OPTIMIZATION (CRO)"
+    },
+    {
+        "page": "home",
+        "key": "copy_3ef452996cc0",
+        "label": "Who We Are Lead Paragraph",
+        "type": "textarea",
+        "value": "Empetix Solution brings software engineering, cloud architecture, and strategic investment together under one roof in New Cairo. Watch our overview to see how we build and scale digital businesses."
+    },
+    {
+        "page": "home",
+        "key": "copy_29166363eeca",
+        "label": "Company Overview Video (Upload to Private Storage or Link)",
+        "type": "video",
+        "value": "assets/video/empetix-overview.mp4"
+    },
+    {
+        "page": "home",
+        "key": "copy_6d2c2c58c880",
+        "label": "Company Overview Video Poster",
+        "type": "image",
+        "value": "assets/img/home/overview-poster.jpg"
+    },
+    {
+        "page": "home",
+        "key": "copy_865f5a4280b3",
+        "label": "Core Pillar 1 — Title",
+        "type": "text",
+        "value": "Software engineering"
+    },
+    {
+        "page": "home",
+        "key": "copy_3662ee57e15d",
+        "label": "Core Pillar 1 — Description",
+        "type": "text",
+        "value": "Full-stack web and mobile platforms built for reliability, speed, and long-term scale."
+    },
+    {
+        "page": "home",
+        "key": "copy_fcb465e5f4ab",
+        "label": "Core Pillar 2 — Title",
+        "type": "text",
+        "value": "Growth cloud engineering"
+    },
+    {
+        "page": "home",
+        "key": "copy_c7fa076a2c97",
+        "label": "Core Pillar 2 — Description",
+        "type": "text",
+        "value": "Engineers and cloud engineers working as one unified team to turn clean data into customer acquisition."
+    },
+    {
+        "page": "home",
+        "key": "copy_5c3330972f1f",
+        "label": "Core Pillar 3 — Title",
+        "type": "text",
+        "value": "Strategic investment"
+    },
+    {
+        "page": "home",
+        "key": "copy_d617fb8edf18",
+        "label": "Core Pillar 3 — Description",
+        "type": "text",
+        "value": "Backing bold founders with capital, senior technical leadership, and go-to-market execution."
+    },
+    {
+        "page": "home",
+        "key": "copy_4b883a035467",
+        "label": "Solutions Hub Lead Paragraph",
+        "type": "text",
+        "value": "Select a practice pillar below to inspect our architecture, deliverables, and verified client outcomes."
+    },
+    {
+        "page": "home",
+        "key": "copy_30fe7b74af14",
+        "label": "Solutions Hub CTA Label",
+        "type": "text",
+        "value": "Request Custom Scope"
+    },
+    {
+        "page": "home",
+        "key": "copy_7115cff2cafe",
+        "label": "Selected Work CTA Label",
+        "type": "text",
+        "value": "All 6 Case Studies"
+    },
+    {
+        "page": "home",
+        "key": "impact_value_1",
+        "label": "Impact Metric 1 — Value",
+        "type": "number",
+        "value": "64"
+    },
+    {
+        "page": "home",
+        "key": "copy_bdec4c898cfc",
+        "label": "Impact Metric 1 — Label",
+        "type": "text",
+        "value": "Software platforms & growth engines shipped"
+    },
+    {
+        "page": "home",
+        "key": "impact_value_2",
+        "label": "Impact Metric 2 — Value",
+        "type": "number",
+        "value": "3.8"
+    },
+    {
+        "page": "home",
+        "key": "copy_e3edd5b505ad",
+        "label": "Impact Metric 2 — Label",
+        "type": "text",
+        "value": "Audited median return on ad spend across active retainers"
+    },
+    {
+        "page": "home",
+        "key": "impact_value_3",
+        "label": "Impact Metric 3 — Value",
+        "type": "number",
+        "value": "99.96"
+    },
+    {
+        "page": "home",
+        "key": "copy_97e657dc8770",
+        "label": "Impact Metric 3 — Label",
+        "type": "text",
+        "value": "Production uptime across client SaaS and FinTech applications"
+    },
+    {
+        "page": "home",
+        "key": "impact_value_4",
+        "label": "Impact Metric 4 — Value",
+        "type": "number",
+        "value": "94"
+    },
+    {
+        "page": "home",
+        "key": "copy_b479b0ae0c28",
+        "label": "Impact Metric 4 — Label",
+        "type": "text",
+        "value": "Client retention beyond initial 12-month engagement"
+    },
+    {
+        "page": "home",
+        "key": "copy_47a6aec3cda3",
+        "label": "Partners Section CTA Label",
+        "type": "text",
+        "value": "Partner Directory"
+    },
+    {
+        "page": "home",
+        "key": "copy_3a178140ec02",
+        "label": "Journal Section CTA Label",
+        "type": "text",
+        "value": "View All Posts"
+    },
+    {
+        "page": "home",
+        "key": "copy_ba8b1727770e",
+        "label": "Careers Banner Eyebrow",
+        "type": "text",
+        "value": "07 / Careers Portal · jobs.empetix.com"
+    },
+    {
+        "page": "home",
+        "key": "copy_441bd1f69009",
+        "label": "Careers Banner Description",
+        "type": "textarea",
+        "value": "Explore open roles in Laravel, Next.js, Flutter, Product Design, and Cloud & AI Engineering on our dedicated talent portal."
+    },
+    {
+        "page": "home",
+        "key": "copy_bf9786d4c4eb",
+        "label": "Careers Banner Button Label",
+        "type": "text",
+        "value": "Launch jobs.empetix.com (6 Open Roles)"
+    },
+    {
+        "page": "home",
+        "key": "copy_b221f03ea2bf",
+        "label": "Careers Banner Background Image",
+        "type": "image",
+        "value": "assets/img/careers/culture.jpg"
+    },
+    {
+        "page": "about",
+        "key": "copy_a35b294e59fe",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "About Empetix & Meet the Founders — Empetix Solution"
+    },
+    {
+        "page": "about",
+        "key": "copy_d75b76a6e09c",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Meet the co-founders leading Empetix's software engineering and cloud architecture practices in Cairo."
+    },
+    {
+        "page": "work",
+        "key": "copy_77e7fd581bd1",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "Selected Projects & Case Studies — Empetix"
+    },
+    {
+        "page": "work",
+        "key": "copy_83644a777d3c",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Explore software engineering, FinTech, e-commerce, and cloud infrastructure case studies by Empetix."
+    },
+    {
+        "page": "team",
+        "key": "copy_1bd5cb61a600",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "Team — Empetix Solution"
+    },
+    {
+        "page": "team",
+        "key": "copy_dca495ea9079",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Meet the leadership, engineering, product design, and cloud engineering teams at Empetix Solution in New Cairo."
+    },
+    {
+        "page": "team",
+        "key": "copy_be3f40c5f9fe",
+        "label": "Hero Lead Paragraph",
+        "type": "textarea",
+        "value": "Engineers, product designers, and cloud infrastructure architects working as one multidisciplinary team from New Cairo—without agency layers or external hand-offs."
+    },
+    {
+        "page": "team",
+        "key": "copy_38a9b4c47c1d",
+        "label": "Hero Studio Photo",
+        "type": "image",
+        "value": "assets/img/about/office.jpg"
+    },
+    {
+        "page": "team",
+        "key": "copy_42a38ba194b4",
+        "label": "Practice Teams Lead Paragraph",
+        "type": "textarea",
+        "value": "Senior specialists across software engineering, product design, and cloud infrastructure working together in dedicated client squads."
+    },
+    {
+        "page": "team",
+        "key": "copy_a588d0d2cd5f",
+        "label": "Engineering Practice Description",
+        "type": "textarea",
+        "value": "Backend, frontend, mobile, and infrastructure engineers responsible for scalable APIs, payment ledgers, and reliable cloud deployments."
+    },
+    {
+        "page": "team",
+        "key": "copy_67418b5acff7",
+        "label": "Team Culture Lead Paragraph",
+        "type": "textarea",
+        "value": "Every client engagement pairs engineering, design, and growth under one shared roadmap so software quality and commercial performance move together."
+    },
+    {
+        "page": "team",
+        "key": "copy_b221f03ea2bf",
+        "label": "Team Culture Photo",
+        "type": "image",
+        "value": "assets/img/careers/culture.jpg"
+    },
+    {
+        "page": "team",
+        "key": "copy_0c8127443473",
+        "label": "Join Section Description",
+        "type": "textarea",
+        "value": "We hire engineers, designers, and cloud engineers who care deeply about craft and measurable work. Explore open positions on our careers portal or reach out to our company desk."
+    },
+    {
+        "page": "team",
+        "key": "copy_96490c6dd6ac",
+        "label": "Join Primary Button Label",
+        "type": "text",
+        "value": "View open roles"
+    },
+    {
+        "page": "team",
+        "key": "copy_83e7789a3687",
+        "label": "Join Secondary Link Label",
+        "type": "text",
+        "value": "Start a project"
+    },
+    {
+        "page": "careers",
+        "key": "copy_c8f958fda5c5",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "Careers & Talent Portal | Empetix Solution"
+    },
+    {
+        "page": "careers",
+        "key": "copy_71c7ef938d08",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Explore open software engineering, product design, and cloud architecture jobs at Empetix Solution."
+    },
+    {
+        "page": "careers",
+        "key": "copy_21b4847b84f7",
+        "label": "Hero Eyebrow Badge",
+        "type": "text",
+        "value": "Empetix Talent Portal · jobs.empetix.com"
+    },
+    {
+        "page": "careers",
+        "key": "copy_017ca46e789e",
+        "label": "Hero Heading",
+        "type": "text",
+        "value": "Build software that endures and campaigns that move numbers."
+    },
+    {
+        "page": "careers",
+        "key": "copy_7f822db55925",
+        "label": "Hero Lead Paragraph",
+        "type": "textarea",
+        "value": "Welcome to our dedicated careers portal. Explore open engineering, product design, and cloud infrastructure roles across our New Cairo studios—or apply remotely across EMEA."
+    },
+    {
+        "page": "careers",
+        "key": "metric_1",
+        "label": "Hero Stat 1 — Value",
+        "type": "number",
+        "value": "6"
+    },
+    {
+        "page": "careers",
+        "key": "copy_aae7c571ba3b",
+        "label": "Hero Stat 1 — Label",
+        "type": "text",
+        "value": "Open Positions"
+    },
+    {
+        "page": "careers",
+        "key": "metric_2",
+        "label": "Hero Stat 2 — Value (Hours)",
+        "type": "number",
+        "value": "48"
+    },
+    {
+        "page": "careers",
+        "key": "copy_a05c8e7260e3",
+        "label": "Hero Stat 2 — Label",
+        "type": "text",
+        "value": "Offer Turnaround"
+    },
+    {
+        "page": "careers",
+        "key": "metric_3",
+        "label": "Hero Stat 3 — Value (Days)",
+        "type": "number",
+        "value": "28"
+    },
+    {
+        "page": "careers",
+        "key": "copy_3cf747b69596",
+        "label": "Hero Stat 3 — Label",
+        "type": "text",
+        "value": "Paid Annual Leave"
+    },
+    {
+        "page": "careers",
+        "key": "copy_5477c5140849",
+        "label": "Practice Areas Subheading",
+        "type": "text",
+        "value": "Click any department track below to filter open positions immediately."
+    },
+    {
+        "page": "careers",
+        "key": "copy_b221f03ea2bf",
+        "label": "Studio Culture Photo",
+        "type": "image",
+        "value": "assets/img/careers/culture.jpg"
+    },
+    {
+        "page": "partners",
+        "key": "copy_2f39acc5afa8",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "Corporate Partners & Technology Alliances — Empetix"
+    },
+    {
+        "page": "partners",
+        "key": "copy_8f08704df899",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Strategic corporate partners, enterprise clients, and technology alliances partnering with Empetix."
+    },
+    {
+        "page": "partners",
+        "key": "copy_a2ae320b545a",
+        "label": "Partnership Models Heading",
+        "type": "text",
+        "value": "Three ways organizations partner with Empetix."
+    },
+    {
+        "page": "partners",
+        "key": "copy_4cfbabb703b1",
+        "label": "Model 01 — Title",
+        "type": "text",
+        "value": "Enterprise Product & Growth Squads"
+    },
+    {
+        "page": "partners",
+        "key": "copy_b71f8f98085f",
+        "label": "Model 01 — Description",
+        "type": "textarea",
+        "value": "Dedicated cross-functional squads (Laravel/Flutter engineers, product designers, and cloud infrastructure architects) embedded directly alongside your internal leadership for 6 to 24 months."
+    },
+    {
+        "page": "partners",
+        "key": "copy_8d0e286535cb",
+        "label": "Model 01 — Deliverable 1",
+        "type": "text",
+        "value": "Shared weekly revenue & velocity KPIs"
+    },
+    {
+        "page": "partners",
+        "key": "copy_6d00c23a58e6",
+        "label": "Model 01 — Deliverable 2",
+        "type": "text",
+        "value": "Full source-code & ad-account ownership"
+    },
+    {
+        "page": "partners",
+        "key": "copy_f8e66b52cd2e",
+        "label": "Model 01 — Deliverable 3",
+        "type": "text",
+        "value": "On-site workshops in our New Cairo studio"
+    },
+    {
+        "page": "partners",
+        "key": "copy_a7c536725435",
+        "label": "Model 02 — Title",
+        "type": "text",
+        "value": "Technology & Platform Co-Delivery"
+    },
+    {
+        "page": "partners",
+        "key": "copy_1c39b3ea75b6",
+        "label": "Model 02 — Description",
+        "type": "textarea",
+        "value": "We collaborate with cloud providers, payment processors, and ERP vendors (AWS, Stripe, Shopify Plus, HubSpot) as the certified regional engineering and migration partner."
+    },
+    {
+        "page": "partners",
+        "key": "copy_5a7ccc304898",
+        "label": "Model 02 — Deliverable 1",
+        "type": "text",
+        "value": "Certified solutions architecture"
+    },
+    {
+        "page": "partners",
+        "key": "copy_e809233c6f40",
+        "label": "Model 02 — Deliverable 2",
+        "type": "text",
+        "value": "Custom middleware & localized payment rails"
+    },
+    {
+        "page": "partners",
+        "key": "copy_8ec34dd420cb",
+        "label": "Model 02 — Deliverable 3",
+        "type": "text",
+        "value": "Joint enterprise go-to-market campaigns"
+    },
+    {
+        "page": "partners",
+        "key": "copy_c29332f6ecd5",
+        "label": "Model 03 — Title",
+        "type": "text",
+        "value": "Venture Studio & Seed Co-Building"
+    },
+    {
+        "page": "partners",
+        "key": "copy_bce7d6d08d31",
+        "label": "Model 03 — Description",
+        "type": "textarea",
+        "value": "For funded founders and corporate spin-offs: we take new products from zero to v1.0 launch and initial customer acquisition in 12 weeks through structured fee-plus-milestone partnerships."
+    },
+    {
+        "page": "partners",
+        "key": "copy_b15f22e26281",
+        "label": "Model 03 — Deliverable 1",
+        "type": "text",
+        "value": "5-Day architecture & growth sprint"
+    },
+    {
+        "page": "partners",
+        "key": "copy_ab7ea0bca7f1",
+        "label": "Model 03 — Deliverable 2",
+        "type": "text",
+        "value": "Production MVP + brand system + launch film"
+    },
+    {
+        "page": "partners",
+        "key": "copy_834061aa009a",
+        "label": "Model 03 — Deliverable 3",
+        "type": "text",
+        "value": "First 10,000 customers acquisition playbook"
+    },
+    {
+        "page": "partners",
+        "key": "copy_ad9af5066e92",
+        "label": "Partner Endorsement Eyebrow",
+        "type": "text",
+        "value": "02 / Partner Voice"
+    },
+    {
+        "page": "partners",
+        "key": "copy_d263eb31cbbf",
+        "label": "Partner Endorsement Quote",
+        "type": "textarea",
+        "value": "Empetix doesn’t operate like an external vendor. Their engineers rebuilt our logistics control tower while their growth team rebuilt our B2B demand engine across the GCC."
+    },
+    {
+        "page": "partners",
+        "key": "copy_ca4c3a1a78ed",
+        "label": "Partner Endorsement Author",
+        "type": "text",
+        "value": "Khaled Al-Mansoor"
+    },
+    {
+        "page": "partners",
+        "key": "copy_dd7e29f95bf4",
+        "label": "Partner Endorsement Author Role",
+        "type": "text",
+        "value": "Chief Operating Officer, CargoLine MENA (Riyadh)"
+    },
+    {
+        "page": "blog",
+        "key": "copy_fdc599e3df65",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "The Empetix Journal: Engineering Articles, Video Episodes & Photo Essays"
+    },
+    {
+        "page": "blog",
+        "key": "copy_1256e49dd66b",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Read full engineering articles, watch studio video episodes, and explore behind-the-scenes photo essays from Empetix."
+    },
+    {
+        "page": "blog",
+        "key": "featured_url",
+        "label": "Featured Post URL",
+        "type": "text",
+        "value": "/blog/five-day-product-growth-sprint"
+    },
+    {
+        "page": "blog",
+        "key": "copy_26f63d8f8aa0",
+        "label": "Featured Post Cover Image",
+        "type": "image",
+        "value": "assets/img/blog/design-sprint.jpg"
+    },
+    {
+        "page": "blog",
+        "key": "copy_855145b5639a",
+        "label": "Featured Post Badge",
+        "type": "text",
+        "value": "FEATURED VIDEO EPISODE · 14:20"
+    },
+    {
+        "page": "blog",
+        "key": "copy_82eec5c0a198",
+        "label": "Featured Post Category",
+        "type": "text",
+        "value": "VIDEO DOCUMENTARY + FULL POST"
+    },
+    {
+        "page": "blog",
+        "key": "copy_3ee3c06a73ee",
+        "label": "Featured Post Date",
+        "type": "text",
+        "value": "05 NOV 2026"
+    },
+    {
+        "page": "blog",
+        "key": "copy_d70de1ef3361",
+        "label": "Featured Post Title",
+        "type": "text",
+        "value": "Inside an Empetix 5-Day Product & Growth Sprint (Full Video + Transcript + Photos)"
+    },
+    {
+        "page": "blog",
+        "key": "copy_be2a3ae8d09f",
+        "label": "Featured Post Excerpt",
+        "type": "textarea",
+        "value": "Watch how our engineers, product designers, and cloud infrastructure architects take a FinTech checkout product from raw problem statement to user-tested prototype and live acquisition test in five days."
+    },
+    {
+        "page": "blog",
+        "key": "copy_9448bd6ae08a",
+        "label": "Featured Post CTA Label",
+        "type": "text",
+        "value": "Watch Video & Read Full Post"
+    },
+    {
+        "page": "contact",
+        "key": "copy_b33a9603fc54",
+        "label": "SEO Page Title",
+        "type": "text",
+        "value": "Contact Us & Start a Project — Empetix Solution"
+    },
+    {
+        "page": "contact",
+        "key": "copy_d6d0b4b6f76b",
+        "label": "SEO Meta Description",
+        "type": "textarea",
+        "value": "Contact Empetix's co-founders and practice leads in New Cairo for software engineering, cloud architecture, or corporate partnerships."
+    },
+    {
+        "page": "contact",
+        "key": "copy_591febde720a",
+        "label": "Hero Eyebrow Badge",
+        "type": "text",
+        "value": "Direct Executive Access"
+    },
+    {
+        "page": "contact",
+        "key": "copy_7dd28e9d5493",
+        "label": "Hero Lead Paragraph",
+        "type": "textarea",
+        "value": "At Empetix, you never speak with junior sales reps. Every inquiry goes directly to our co-founders and practice heads in New Cairo."
+    },
+    {
+        "page": "contact",
+        "key": "copy_deda8e22bf26",
+        "label": "Hero SLA Badge",
+        "type": "text",
+        "value": "AVG RESPONSE: < 6 BUSINESS HOURS"
+    },
+    {
+        "page": "contact",
+        "key": "copy_fcccaf2eb501",
+        "label": "Headquarters Photo",
+        "type": "image",
+        "value": "assets/img/home/hero.jpg"
+    }
 ]

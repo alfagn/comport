@@ -39,7 +39,7 @@
             <span class="eyebrow">{{ sec('partners', 'hero_eyebrow', 'Ecosystem & Alliances') }}</span>
           </div>
           <p class="page-hero__lead">
-            {{ sec('partners', 'hero_lead', 'We partner with ambitious enterprises, venture-backed category leaders, and global cloud and marketing platforms to deliver end-to-end digital transformation and commercial growth.') }}
+            {{ sec('partners', 'hero_lead', 'We partner with ambitious enterprises, venture-backed category leaders, and global cloud infrastructure providers to deliver end-to-end digital transformation and scalable platforms.') }}
           </p>
           <div class="page-hero__aside">
             <a href="{{ url('/contact') }}" class="btn btn--primary btn--sm">{{ sec('partners', 'cta_button', 'Become a Partner') }}</a>

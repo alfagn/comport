@@ -26,18 +26,21 @@ class TeamUsersSyncSeeder extends Seeder
                 'name' => 'Mohanad Ahmed Shehata',
                 'email' => 'mohand@empetix.com',
                 'role' => 'Founder & Chief Technology Officer',
+                'photo' => 'assets/img/team/mohanad-shehata.jpg',
             ],
             [
                 'slug' => 'ayman',
                 'name' => 'Ayman Ibrahim',
                 'email' => 'ayman@empetix.com',
                 'role' => 'Founder & Chief Executive Officer',
+                'photo' => 'assets/img/team/ayman-ibrahim.jpg',
             ],
             [
                 'slug' => 'bishoy',
                 'name' => 'Bishoy Magdy',
                 'email' => 'bishoy@empetix.com',
                 'role' => 'Founder & Chief Operating Officer',
+                'photo' => 'assets/img/team/bishoy-magdy.jpg',
             ],
         ];
 
@@ -62,47 +65,37 @@ class TeamUsersSyncSeeder extends Seeder
                     'email' => $user->email,
                     'kind' => 'founder',
                     'role' => $fData['role'],
+                    'photo' => $member->photo ?: $fData['photo'],
                 ]);
             } else {
-                Member::create([
+                $member = Member::create([
                     'user_id' => $user->id,
                     'name' => $fData['name'],
                     'slug' => $fData['slug'],
                     'email' => $user->email,
                     'kind' => 'founder',
                     'role' => $fData['role'],
+                    'photo' => $fData['photo'],
                     'department' => 'Executive Leadership',
                     'is_active' => true,
                     'sort_order' => 0,
                 ]);
             }
+
+            if ($user->member_id !== $member->id) {
+                $user->update(['member_id' => $member->id]);
+            }
         }
 
-        // 2. Sync all other team members into dashboard Users
+        // 2. Ensure all other Team members have clean company emails ready for selection in "New Admin"
         $members = Member::whereNotIn('slug', ['mohanad', 'ayman', 'bishoy'])->get();
         foreach ($members as $member) {
             $email = $member->email;
             if (empty($email) || str_contains($email, '&#64;') || $email === 'hello@empetix.com') {
                 $cleanSlug = Str::slug($member->name);
                 $email = "{$cleanSlug}@empetix.com";
+                $member->update(['email' => $email]);
             }
-
-            $user = User::updateOrCreate(
-                ['email' => $email],
-                [
-                    'name' => $member->name,
-                    'password' => $defaultPassword,
-                ]
-            );
-
-            if ($user->roles->isEmpty()) {
-                $user->assignRole($editorRole);
-            }
-
-            $member->update([
-                'user_id' => $user->id,
-                'email' => $email,
-            ]);
         }
     }
 }

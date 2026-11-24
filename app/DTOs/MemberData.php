@@ -11,8 +11,9 @@ use App\Core\DTOs\BaseData;
  */
 class MemberData extends BaseData
 {
-    protected static array $fields = ['name', 'slug', 'role', 'kind', 'department', 'focus', 'lead', 'bio', 'expertise', 'photo', 'email', 'linkedin', 'twitter', 'sort_order', 'is_active'];
+    protected static array $fields = ['member_code', 'name', 'slug', 'role', 'kind', 'department', 'focus', 'lead', 'bio', 'expertise', 'photo', 'email', 'linkedin', 'twitter', 'sort_order', 'is_active'];
 
+    public mixed $member_code = null;
     public mixed $name = null;
     public mixed $slug = null;
     public mixed $role = null;

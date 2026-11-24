@@ -140,9 +140,22 @@ class ContentSeeder extends Seeder
         $defaultUser = \App\Models\User::first();
 
         foreach ($this->data['members'] as $row) {
+            $email = strtolower(trim((string) ($row['email'] ?? '')));
+            if ($email === '' || str_contains($email, '&#64;') || $email === 'hello@empetix.com') {
+                $email = $row['slug'].'@empetix.com';
+            }
+            if (Member::where('email', $email)->where('slug', '!=', $row['slug'])->exists()) {
+                $email = $row['slug'].'@empetix.com';
+            }
+            $row['email'] = $email;
+
             $member = Member::updateOrCreate(['slug' => $row['slug']], $row);
             if ($row['slug'] === 'mohanad' && $defaultUser && ! $member->user_id) {
-                $member->update(['user_id' => $defaultUser->id, 'email' => $defaultUser->email]);
+                $syncData = ['user_id' => $defaultUser->id];
+                if (! Member::where('email', $defaultUser->email)->whereKeyNot($member->id)->exists()) {
+                    $syncData['email'] = $defaultUser->email;
+                }
+                $member->update($syncData);
             }
         }
     }

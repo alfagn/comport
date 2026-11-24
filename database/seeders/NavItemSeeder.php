@@ -6,8 +6,7 @@ use App\Models\NavItem;
 use Illuminate\Database\Seeder;
 
 /**
- * Seeds the navigation links that match the current public header so the
- * dashboard starts from the same menus the static site shipped with.
+ * Seeds default navigation links and pure software/cloud mega-menu fallbacks.
  */
 class NavItemSeeder extends Seeder
 {
@@ -19,24 +18,24 @@ class NavItemSeeder extends Seeder
                 ['E-Commerce & FinTech Core', '/work', 'Custom checkouts, wallets, ERP & payment gateways', null, null],
                 ['AI Automation & Data Pipelines', '/work', 'Internal copilots, CRM workflows & BI telemetry', null, null],
             ]],
-            ['Marketing & Growth', [
-                ['Performance & Paid Acquisition', '/work', 'Full-funnel ROAS across Meta, Google, TikTok & LinkedIn', null, null],
-                ['Brand Systems & Campaign Production', '/blog/photos', 'Visual identity, commercial video shoots & art direction', null, null],
-                ['CRO, SEO & Lifecycle Retention', '/blog/post', 'Arabic/English technical SEO, A/B testing & CRM flows', null, null],
+            ['Cloud & Enterprise Systems', [
+                ['Enterprise LMS & WebRTC Classrooms', '/work/western-elearning-academy', 'Live virtual lecture halls, proctoring & verified credentials', null, null],
+                ['ERP Systems & Payment Gateways', '/work', 'Multi-branch ledgers, invoicing & API integrations', null, null],
+                ['Cloud DevOps & Observability', '/work', 'AWS/Cloudflare clusters, CI/CD & sub-200ms SLA engineering', null, null],
             ]],
             ['Featured Case Study', [
                 ['High-concurrency EdTech platform serving 45,000+ active students.', '/work/alfagn', null, 'ALFAGN EDTECH · 45K+ STUDENTS', 'assets/img/work/alfagn/alfagn_seo.png'],
             ]],
         ],
         'mega-journal' => [
-            ['Full Article + Media', [
-                ['Engineering Arabic-First Design Systems & High-Conversion Funnels', '/blog/post', null, 'DESIGN & CRO · 8 MIN READ', 'assets/img/blog/arabic-first.jpg'],
+            ['System Architecture', [
+                ['Engineering Arabic-First Design Systems & Resilient SaaS Frontends', '/blog', null, 'DESIGN SYSTEMS · 8 MIN READ', 'assets/img/blog/arabic-first.jpg'],
             ]],
-            ['Video Episode', [
-                ['Inside an Empetix 5-Day Product & Growth Sprint', '/blog/video', null, 'VIDEO + TRANSCRIPT · 14:20', 'assets/img/blog/design-sprint.jpg'],
+            ['Engineering Episode', [
+                ['Inside an Empetix 5-Day Product & Architecture Sprint', '/blog', null, 'VIDEO + TRANSCRIPT · 14:20', 'assets/img/blog/design-sprint.jpg'],
             ]],
-            ['Photo Essay', [
-                ['Behind the Lens: Directing the Qahwa Roasters Launch Shoot', '/blog/photos', null, 'PHOTO GALLERY + VIDEO · CAMPAIGN', 'assets/img/blog/behind-the-lens.jpg'],
+            ['Studio Chronicle', [
+                ['Behind the Lens: Engineering Studio Operations in New Cairo', '/blog', null, 'STUDIO CHRONICLE · ARCHITECTURE', 'assets/img/blog/behind-the-lens.jpg'],
             ]],
         ],
     ];

@@ -284,5 +284,217 @@ class ProjectEnhancementTest extends TestCase
         $response->assertSee('project-emblem-stage', false);
         $response->assertSee('assets/img/work/westvale/logo.png');
         $response->assertSee('VERIFIED PRODUCTION SYSTEM');
+        $response->assertSee('westvalelearning.academy');
+        $response->assertSee('EMPETIX.COM');
+    }
+
+    public function test_bulk_delete_members_succeeds_without_cache_exception_and_renders_admin_photos(): void
+    {
+        $this->seed(TeamUsersSyncSeeder::class);
+
+        $mohanad = User::where('email', 'mohand@empetix.com')->firstOrFail();
+
+        // Topbar & Sidebar render Mohanad's real photo instead of initial letter
+        $dashResponse = $this->actingAs($mohanad)->get('/admin/profile');
+        $dashResponse->assertOk();
+        $dashResponse->assertSee('assets/img/team/mohanad-shehata.jpg');
+
+        // Admins DataTable renders Ayman & Bishoy real photos
+        $adminsJson = $this->actingAs($mohanad)->getJson('/admin/admins', ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
+        $adminsJson->assertOk();
+        $adminsPayload = json_encode($adminsJson->json()['data'] ?? []);
+        $this->assertStringContainsString('ayman-ibrahim.jpg', $adminsPayload);
+        $this->assertStringContainsString('bishoy-magdy.jpg', $adminsPayload);
+
+        // Bulk delete staff member returns 200 OK JSON (no SeoService method exception)
+        $staffMember = Member::create([
+            'name' => 'Temp Staff Engineer',
+            'slug' => 'temp-staff-engineer',
+            'email' => 'temp-staff@empetix.com',
+            'kind' => 'member',
+        ]);
+
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage members', 'guard_name' => 'web']);
+
+        $bulkRes = $this->actingAs($mohanad)->postJson('/admin/bulk-delete/members', [
+            'ids' => [$staffMember->id],
+        ]);
+
+        $bulkRes->assertOk()->assertJson(['ok' => true, 'count' => 1]);
+        $this->assertDatabaseMissing('members', ['id' => $staffMember->id]);
+    }
+
+    public function test_creating_admin_by_selecting_team_member_email_and_revoking_keeps_member(): void
+    {
+        $owner = User::factory()->create(['name' => 'Owner User', 'email' => 'owner.test@empetix.com']);
+        $owner->assignRole('owner');
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage admins', 'guard_name' => 'web']);
+
+        $teamPerson = Member::create([
+            'name' => 'Tarek El-Shenawy',
+            'slug' => 'tarek-el-shenawy-test',
+            'email' => 'tarek.test@empetix.com',
+            'role' => 'Principal Backend Engineer',
+            'photo' => 'assets/img/team/tarek-elshenawy.jpg',
+            'kind' => 'member',
+            'is_active' => true,
+        ]);
+
+        // 1. Create form displays team member's email in the dropdown
+        $createPage = $this->actingAs($owner)->get('/admin/admins/create');
+        $createPage->assertOk();
+        $createPage->assertSee('Select Team Member (Email)');
+        $createPage->assertSee('tarek.test@empetix.com');
+
+        // 2. Submitting member_id + password + roles creates Admin User linked to Member
+        $storeRes = $this->actingAs($owner)->post('/admin/admins', [
+            'member_id' => $teamPerson->id,
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'roles' => ['editor'],
+        ]);
+        $storeRes->assertRedirect('/admin/admins');
+
+        $createdAdmin = User::where('email', 'tarek.test@empetix.com')->first();
+        $this->assertNotNull($createdAdmin);
+        $this->assertEquals($teamPerson->id, $createdAdmin->member_id);
+        $this->assertEquals($createdAdmin->id, $teamPerson->fresh()->user_id);
+        $this->assertTrue($createdAdmin->hasRole('editor'));
+
+        // 3. Deleting Admin revokes login while keeping the person in Team & Founders
+        $delRes = $this->actingAs($owner)->delete("/admin/admins/{$createdAdmin->id}");
+        $delRes->assertRedirect('/admin/admins');
+
+        $this->assertDatabaseMissing('users', ['id' => $createdAdmin->id]);
+        $this->assertDatabaseHas('members', ['id' => $teamPerson->id, 'user_id' => null]);
+    }
+
+    public function test_mega_menu_and_footer_render_live_dynamic_services_projects_and_posts_without_marketing(): void
+    {
+        \App\Models\Service::create([
+            'num' => '01',
+            'title' => 'Real-Time Distributed WebRTC Engines',
+            'slug' => 'webrtc-engines',
+            'heading' => 'Sub-150ms virtual classrooms & encrypted media relays',
+            'is_active' => true,
+            'sort_order' => 1,
+        ]);
+
+        Project::updateOrCreate(
+            ['slug' => 'alfagn-live-test'],
+            [
+                'title' => 'Alfagn Live Dynamic Mega Card',
+                'client' => 'Alfagn EdTech',
+                'year' => '2026',
+                'is_featured' => true,
+                'is_active' => true,
+                'sort_order' => 1,
+            ]
+        );
+
+        \App\Models\Post::create([
+            'title' => 'Scaling PostgreSQL Under 45k Exam Submissions',
+            'slug' => 'scaling-postgresql-exams',
+            'category' => 'DATABASE ARCHITECTURE',
+            'is_published' => true,
+            'published_at' => now(),
+            'sort_order' => 1,
+        ]);
+
+        $home = $this->get('/');
+        $home->assertOk();
+        $home->assertSee('Real-Time Distributed WebRTC Engines');
+        $home->assertSee('Alfagn Live Dynamic Mega Card');
+        $home->assertSee('Scaling PostgreSQL Under 45k Exam Submissions');
+        $home->assertDontSee('MARKETING & GROWTH');
+        $home->assertDontSee('Performance & Paid Acquisition');
+    }
+
+    public function test_extensionless_temp_upload_guesses_mime_from_binary_header_without_type_error(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+
+        $owner = User::factory()->create();
+        $owner->assignRole('owner');
+
+        $project = Project::updateOrCreate(
+            ['slug' => 'mime-test-project'],
+            ['title' => 'Mime Test Project', 'is_active' => true]
+        );
+
+        // Create an extensionless temporary file (just like PHP's /tmp/phpXXXXXX on Linux) containing valid 1x1 PNG bytes
+        $tmpPath = tempnam(sys_get_temp_dir(), 'php');
+        $pngBytes = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+        file_put_contents($tmpPath, $pngBytes);
+
+        try {
+            $symfonyFile = new \Symfony\Component\HttpFoundation\File\File($tmpPath);
+            $this->assertEquals('image/png', $symfonyFile->getMimeType());
+            $this->assertEquals('png', $symfonyFile->guessExtension());
+
+            $uploadedLogo = new \Illuminate\Http\UploadedFile($tmpPath, 'logo.png', 'image/png', null, true);
+
+            $res = $this->actingAs($owner)->put("/admin/projects/{$project->id}", [
+                'title' => 'Mime Test Project Updated',
+                'slug' => 'mime-test-project',
+                'logo' => $uploadedLogo,
+            ]);
+
+            $res->assertSessionHasNoErrors()->assertRedirect('/admin/projects');
+            $this->assertNotNull($project->fresh()->logo);
+            $this->assertStringEndsWith('.png', (string) $project->fresh()->logo);
+        } finally {
+            if (is_file($tmpPath)) {
+                @unlink($tmpPath);
+            }
+        }
+    }
+
+    public function test_team_members_get_auto_unique_id_and_enforce_unique_email(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('owner');
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage members', 'guard_name' => 'web']);
+
+        // 1. Auto-generates sequential unique member_code (EMP-XXX) when omitted
+        $this->actingAs($owner)->post('/admin/members', [
+            'name' => 'Karim Adel',
+            'email' => 'karim.adel@empetix.com',
+            'kind' => 'member',
+            'department' => 'engineering',
+            'role' => 'Senior Backend Engineer',
+            'is_active' => '1',
+        ])->assertSessionHasNoErrors()->assertRedirect('/admin/members');
+
+        $karim = Member::where('email', 'karim.adel@empetix.com')->first();
+        $this->assertNotNull($karim);
+        $this->assertMatchesRegularExpression('/^EMP-\d{3,}$/', (string) $karim->member_code);
+
+        // 2. Rejects duplicate email on another team member
+        $dupEmailRes = $this->actingAs($owner)->post('/admin/members', [
+            'name' => 'Another Karim',
+            'email' => 'KARIM.ADEL@empetix.com',
+            'kind' => 'member',
+        ]);
+        $dupEmailRes->assertSessionHasErrors('email');
+
+        // 3. Rejects duplicate member_code on another team member
+        $dupCodeRes = $this->actingAs($owner)->post('/admin/members', [
+            'member_code' => $karim->member_code,
+            'name' => 'Unique Email Same Code',
+            'email' => 'unique.person@empetix.com',
+            'kind' => 'member',
+        ]);
+        $dupCodeRes->assertSessionHasErrors('member_code');
+
+        // 4. Next created member gets a distinct incremented EMP-XXX ID
+        $second = Member::create([
+            'name' => 'Salma Nabil',
+            'slug' => 'salma-nabil-unique',
+            'email' => 'salma.nabil@empetix.com',
+            'kind' => 'member',
+        ]);
+        $this->assertNotNull($second->member_code);
+        $this->assertNotEquals($karim->member_code, $second->member_code);
     }
 }

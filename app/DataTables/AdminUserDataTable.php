@@ -19,7 +19,7 @@ class AdminUserDataTable extends AdminDataTable
 
     protected function query(): Builder
     {
-        $query = $this->repository->listingQuery()->with('roles');
+        $query = $this->repository->listingQuery()->with(['roles', 'member']);
         $user = auth()->user();
 
         // Hide the currently authenticated user from the admins table so they don't see or delete themselves
@@ -41,10 +41,25 @@ class AdminUserDataTable extends AdminDataTable
 
         $table
             ->editColumn('name', function ($row) {
-                $initial = e(mb_strtoupper(mb_substr((string) $row->name, 0, 1)));
+                $photo = $row->member?->photo;
+                if (! $photo && $row->email) {
+                    $photo = \App\Models\Member::where('email', $row->email)->value('photo');
+                }
 
-                return '<div class="dt-media-cell"><span class="dt-avatar-fallback">'.$initial.'</span><div>'
-                    .'<div class="cell-title">'.e($row->name).'</div>'
+                if ($photo) {
+                    $src = str_starts_with((string) $photo, 'uploads/') ? asset('storage/'.$photo) : asset($photo);
+                    $avatar = '<img class="thumb thumb--avatar" src="'.e($src).'" alt="'.e($row->name).'"/>';
+                } else {
+                    $initial = e(mb_strtoupper(mb_substr((string) $row->name, 0, 1)));
+                    $avatar = '<span class="dt-avatar-fallback">'.$initial.'</span>';
+                }
+
+                $codeBadge = $row->member?->member_code
+                    ? ' <span style="font-family:var(--font-mono, monospace); font-size:0.72rem; padding:1px 6px; border-radius:6px; background:rgba(255,77,28,0.10); color:var(--accent, #FF4D1C); font-weight:700; margin-left:6px;">'.e($row->member->member_code).'</span>'
+                    : '';
+
+                return '<div class="dt-media-cell">'.$avatar.'<div>'
+                    .'<div class="cell-title">'.e($row->name).$codeBadge.'</div>'
                     .'<div class="cell-sub">'.e($row->email).'</div></div></div>';
             })
             ->addColumn('roles', fn ($row) => $row->roles->isEmpty()

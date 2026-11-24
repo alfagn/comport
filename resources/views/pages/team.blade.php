@@ -29,7 +29,7 @@
     'general' => 'Team',
     'engineering' => 'Software engineering',
     'design' => 'Product design',
-    'marketing' => 'Marketing and production',
+    'cloud' => 'Cloud, DevOps & AI',
   ];
   $memberGroups = $members->groupBy(fn ($member) => $member->department ?: 'general');
 @endphp

@@ -79,43 +79,127 @@
             </div>
           </div>
 
-          <!-- Right Column: Animated Project / Brand Emblem Showcase -->
+          <!-- Right Column: Executive 3D Dark-Obsidian Brand & Architecture Showcase -->
+          @php
+            $liveHost = $project->live_url ? (parse_url($project->live_url, PHP_URL_HOST) ?: 'LIVE PLATFORM') : null;
+            if ($liveHost) {
+                $liveHost = preg_replace('/^www\./i', '', $liveHost);
+            }
+            $showcaseTags = $project->tags?->pluck('name')->take(2)->implode(' · ');
+            if (empty($showcaseTags)) {
+                $showcaseTags = $project->location ?: 'Enterprise Cloud Architecture';
+            }
+          @endphp
           <div class="project-hero-split__stage">
-            <div class="project-emblem-stage">
-              <div class="project-emblem__halo" aria-hidden="true"></div>
+            <div class="project-emblem-stage" data-showcase-tilt>
+              <div class="showcase-ambient-glow" aria-hidden="true"></div>
+              <div class="showcase-backplate" aria-hidden="true"></div>
 
-              <!-- Outer Clockwise Orbital Ring -->
-              <div class="project-emblem__orbit project-emblem__orbit--outer" aria-hidden="true">
-                <span class="project-emblem__node project-emblem__node--accent"></span>
-                <span class="project-emblem__node project-emblem__node--live"></span>
-              </div>
+              <div class="showcase-card">
+                <div class="showcase-card__inner">
+                  <div class="showcase-card__grid" aria-hidden="true"></div>
+                  <div class="showcase-card__spotlight" aria-hidden="true"></div>
 
-              <!-- Inner Counter-Clockwise Orbital Ring -->
-              <div class="project-emblem__orbit project-emblem__orbit--inner" aria-hidden="true">
-                <span class="project-emblem__node project-emblem__node--navy"></span>
-              </div>
+                  <!-- Top Studio Telemetry Chrome -->
+                  <div class="showcase-topbar">
+                    <div class="showcase-topbar__left">
+                      <span class="showcase-dots" aria-hidden="true">
+                        <i></i><i></i><i></i>
+                      </span>
+                      <span class="showcase-topbar__tag">BUILD // {{ $project->year ?: 'PROD' }}</span>
+                    </div>
 
-              <!-- Levitating Glass-Porcelain Medallion -->
-              @if($project->live_url)
-                <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer" class="project-emblem__core" title="Open {{ $project->client ?? $project->title }} Live Platform">
-                  <span class="project-emblem__sheen" aria-hidden="true"></span>
-                  <img class="project-emblem__img" src="{{ $projectLogo }}" alt="{{ $project->client ?? $project->title }} Logo" width="220" height="220"/>
-                </a>
-              @else
-                <div class="project-emblem__core">
-                  <span class="project-emblem__sheen" aria-hidden="true"></span>
-                  <img class="project-emblem__img" src="{{ $projectLogo }}" alt="{{ $project->client ?? $project->title }} Logo" width="220" height="220"/>
+                    @if($liveHost)
+                      <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer" class="showcase-domain-pill" title="Visit {{ $liveHost }}">
+                        <span class="live-pulse"></span>
+                        <span>{{ $liveHost }}</span>
+                      </a>
+                    @else
+                      <span class="showcase-domain-pill">
+                        <span class="live-pulse"></span>
+                        <span>EMPETIX CORE</span>
+                      </span>
+                    @endif
+                  </div>
+
+                  <!-- Center Floating Luminous-Pearl Brand Plinth -->
+                  <div class="showcase-stage-body">
+                    <span class="showcase-orb showcase-orb--accent" aria-hidden="true"></span>
+                    <span class="showcase-orb showcase-orb--cyan" aria-hidden="true"></span>
+
+                    <!-- Architectural Corner Brackets -->
+                    <span class="showcase-corner showcase-corner--tl" aria-hidden="true"></span>
+                    <span class="showcase-corner showcase-corner--tr" aria-hidden="true"></span>
+                    <span class="showcase-corner showcase-corner--bl" aria-hidden="true"></span>
+                    <span class="showcase-corner showcase-corner--br" aria-hidden="true"></span>
+
+                    @if($project->live_url)
+                      <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer" class="showcase-plinth" title="Open {{ $project->client ?? $project->title }} Live Platform">
+                        <span class="showcase-plinth__sheen" aria-hidden="true"></span>
+                        <img class="showcase-plinth__logo" src="{{ $projectLogo }}" alt="{{ $project->client ?? $project->title }} Logo" width="280" height="140"/>
+                      </a>
+                    @else
+                      <div class="showcase-plinth">
+                        <span class="showcase-plinth__sheen" aria-hidden="true"></span>
+                        <img class="showcase-plinth__logo" src="{{ $projectLogo }}" alt="{{ $project->client ?? $project->title }} Logo" width="280" height="140"/>
+                      </div>
+                    @endif
+                  </div>
+
+                  <!-- Bottom Telemetry & Action Dock -->
+                  <div class="showcase-dock">
+                    <div class="showcase-dock__meta">
+                      <span class="showcase-dock__eyebrow">{{ $project->live_url ? 'VERIFIED PRODUCTION SYSTEM' : 'ARCHITECTED BY EMPETIX' }} &bull; {{ strtoupper(site_domain(true)) }}</span>
+                      <span class="showcase-dock__sub">{{ $showcaseTags }}</span>
+                    </div>
+
+                    @if($project->live_url)
+                      <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer" class="showcase-dock__cta">
+                        <span>Live</span>
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 1.5H14.5V11.5H13V4.06L2.53 14.53L1.47 13.47L11.94 3H4.5V1.5Z"/></svg>
+                      </a>
+                    @else
+                      <a href="#architecture" class="showcase-dock__cta">
+                        <span>Specs</span>
+                        <span aria-hidden="true">&darr;</span>
+                      </a>
+                    @endif
+                  </div>
                 </div>
-              @endif
-
-              <!-- Architectural Status Badge -->
-              <div class="project-emblem__pill">
-                <span class="live-pulse"></span>
-                <span>{{ $project->live_url ? 'VERIFIED PRODUCTION SYSTEM' : 'ARCHITECTED BY EMPETIX' }}</span>
               </div>
             </div>
           </div>
         </div>
+
+        <script>
+          (function () {
+            var stage = document.querySelector('[data-showcase-tilt]');
+            if (!stage || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var card = stage.querySelector('.showcase-card');
+            if (!card) return;
+            var rafId = null;
+
+            stage.addEventListener('mousemove', function (e) {
+              var rect = stage.getBoundingClientRect();
+              var x = e.clientX - rect.left;
+              var y = e.clientY - rect.top;
+              var px = (x / rect.width) - 0.5;
+              var py = (y / rect.height) - 0.5;
+
+              if (rafId) cancelAnimationFrame(rafId);
+              rafId = requestAnimationFrame(function () {
+                card.style.transform = 'rotateY(' + (px * 9).toFixed(2) + 'deg) rotateX(' + (-py * 8).toFixed(2) + 'deg) translateY(-4px)';
+                card.style.setProperty('--mx', x.toFixed(0) + 'px');
+                card.style.setProperty('--my', y.toFixed(0) + 'px');
+              });
+            });
+
+            stage.addEventListener('mouseleave', function () {
+              if (rafId) cancelAnimationFrame(rafId);
+              card.style.transform = 'rotateY(0deg) rotateX(0deg) translateY(0px)';
+            });
+          })();
+        </script>
 
         @if(!empty($project->facts))
           <dl class="facts">

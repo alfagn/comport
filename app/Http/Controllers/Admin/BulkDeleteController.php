@@ -48,8 +48,8 @@ class BulkDeleteController extends Controller
         'inbox' => [ContactMessage::class, 'manage inbox', null],
         'applications' => [JobApplication::class, 'manage applications', null],
         'subscribers' => [NewsletterSubscriber::class, 'manage inbox', null],
-        'admins' => [User::class, 'manage admin users', null],
-        'roles' => [Role::class, 'manage roles', null],
+        'admins' => [User::class, 'manage admins', null],
+        'roles' => [Role::class, 'manage admins', null],
     ];
 
     public function __invoke(Request $request, string $entity): JsonResponse
@@ -103,6 +103,17 @@ class BulkDeleteController extends Controller
         $count = 0;
 
         foreach ($records as $record) {
+            if ($entity === 'members' && $record instanceof Member && $record->user_id) {
+                $linkedUser = User::find($record->user_id);
+                if ($linkedUser && $linkedUser->id !== (int) $request->user()->id && ! $linkedUser->hasRole(\App\Support\Permissions::OWNER_ROLE)) {
+                    $linkedUser->syncRoles([]);
+                    $linkedUser->delete();
+                }
+            }
+            if ($entity === 'admins' && $record instanceof User) {
+                Member::where('user_id', $record->id)->update(['user_id' => null]);
+                $record->syncRoles([]);
+            }
             $record->delete();
             $count++;
         }
@@ -121,11 +132,11 @@ class BulkDeleteController extends Controller
     private function flushCaches(?string $target): void
     {
         if ($target === 'seo') {
-            app(SeoService::class)->forgetPublicCaches();
+            app(SeoService::class)->flushCaches();
         } elseif ($target === 'nav') {
-            app(NavItemService::class)->forgetNavigationCaches();
+            app(NavItemService::class)->flushMenuCache();
         } elseif ($target === 'lists') {
-            app(ContentListItemService::class)->forgetListItemCaches();
+            app(ContentListItemService::class)->flushListCache();
         }
 
         Cache::forget('footer_links');

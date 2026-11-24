@@ -11,9 +11,69 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Member extends Model
 {
     protected $fillable = [
-        'user_id', 'name', 'slug', 'role', 'kind', 'department', 'focus', 'lead', 'bio', 'expertise', 'photo',
+        'member_code', 'user_id', 'name', 'slug', 'role', 'kind', 'department', 'focus', 'lead', 'bio', 'expertise', 'photo',
         'email', 'linkedin', 'twitter', 'sort_order', 'is_active',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Member $member) {
+            if (blank($member->member_code)) {
+                $member->member_code = static::generateNextCode();
+            } else {
+                $member->member_code = strtoupper(trim((string) $member->member_code));
+            }
+
+            if (is_string($member->email)) {
+                $clean = strtolower(trim($member->email));
+                $member->email = $clean !== '' ? $clean : null;
+            }
+        });
+
+        static::updating(function (Member $member) {
+            if (blank($member->member_code)) {
+                $member->member_code = static::generateNextCode($member->id);
+            } else {
+                $member->member_code = strtoupper(trim((string) $member->member_code));
+            }
+
+            if (is_string($member->email)) {
+                $clean = strtolower(trim($member->email));
+                $member->email = $clean !== '' ? $clean : null;
+            }
+        });
+    }
+
+    /** Generate the next guaranteed-unique sequential Team Member ID (e.g. EMP-001). */
+    public static function generateNextCode(?int $ignoreId = null): string
+    {
+        $codes = static::query()
+            ->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))
+            ->whereNotNull('member_code')
+            ->pluck('member_code');
+
+        $max = 0;
+        foreach ($codes as $code) {
+            if (preg_match('/^EMP-(\d+)$/i', (string) $code, $m)) {
+                $num = (int) $m[1];
+                if ($num > $max) {
+                    $max = $num;
+                }
+            }
+        }
+
+        $next = $max + 1;
+        do {
+            $candidate = 'EMP-'.str_pad((string) $next, 3, '0', STR_PAD_LEFT);
+            $exists = static::query()
+                ->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))
+                ->where('member_code', $candidate)
+                ->exists();
+            $next++;
+        } while ($exists);
+
+        return $candidate;
+    }
 
     protected $casts = [
         'bio' => 'array',

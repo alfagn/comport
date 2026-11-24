@@ -7,6 +7,7 @@
 @php
   $settingLabels = [
     'site_name' => 'Company / Site Name',
+    'site_domain' => 'Official Website Domain (URL)',
     'tagline' => 'Studio Tagline',
     'email' => 'Primary / New Business Email',
     'partners_email' => 'Partnerships Desk Email',
@@ -14,6 +15,7 @@
     'talent_email' => 'Careers & Talent Email',
     'phone' => 'Executive Telephone',
     'address' => 'Headquarters Address',
+    'facebook' => 'Facebook Page URL',
     'linkedin' => 'LinkedIn Profile URL',
     'instagram' => 'Instagram Profile URL',
     'x' => 'X (Twitter) Profile URL',
@@ -26,9 +28,18 @@
   @csrf @method('PUT')
 
   <div class="card card--form">
-    <h2 class="card__title">Brand assets</h2>
-    <p class="card__sub">Favicon and logos displayed across the public website and admin dashboard. Leave empty to keep current assets.</p>
+    <h2 class="card__title">Official Domain &amp; Brand Assets</h2>
+    <p class="card__sub">Primary domain for Empetix, plus the favicon and logos displayed across the public website and admin dashboard.</p>
     <div class="form-grid">
+      <div class="full">
+        <x-admin.input
+          name="settings[site_domain]"
+          label="Official Website Domain (URL)"
+          :value="setting('site_domain', setting('seo_canonical_base', 'https://empetix.com'))"
+          placeholder="https://empetix.com"
+          hint="Primary public domain used across canonical links, sitemaps, and studio showcase badges."
+        />
+      </div>
       <div class="full"><x-admin.image name="brand_favicon" label="Favicon" :current="setting('brand_favicon') ?: 'assets/img/favicon.png'" hint="PNG, SVG or ICO, square. Used as the browser tab icon everywhere."/></div>
       <x-admin.image name="brand_logo" label="Site logo (light / inverse)" :current="setting('brand_logo') ?: 'assets/img/logo/empetix-logo.png'"/>
       <x-admin.image name="brand_logo_dark" label="Site logo (header / dark ink)" :current="setting('brand_logo_dark') ?: 'assets/img/logo/empetix-logo-dark.png'"/>
@@ -95,6 +106,16 @@
         @endswitch
       </p>
       <div class="form-grid">
+        @if($group === 'social' && ! $settings->contains('key', 'facebook'))
+          <div>
+            <x-admin.input
+              name="settings[facebook]"
+              label="Facebook Page URL"
+              :value="setting('facebook', 'https://www.facebook.com')"
+              placeholder="https://www.facebook.com/empetix"
+            />
+          </div>
+        @endif
         @foreach($settings as $setting)
           @php($isWide = in_array($setting->key, ['address', 'tagline'], true))
           <div class="{{ $isWide ? 'full' : '' }}">

@@ -135,6 +135,20 @@
       // New job applications badge on the Careers-adjacent Applications item.
       $newApplications = \App\Models\JobApplication::new()->count();
       $adminUser = auth()->user();
+      $adminRawPhoto = $adminUser?->member?->photo;
+      if (! $adminRawPhoto && $adminUser?->email) {
+          $adminRawPhoto = \App\Models\Member::where('email', $adminUser->email)->value('photo');
+      }
+      if (! $adminRawPhoto && $adminUser) {
+          $firstLower = strtolower(explode(' ', trim((string) $adminUser->name))[0] ?? '');
+          if (in_array($firstLower, ['mohanad', 'mohand', 'ayman', 'bishoy'], true)) {
+              $slugLookup = $firstLower === 'mohand' ? 'mohanad' : $firstLower;
+              $adminRawPhoto = \App\Models\Member::where('slug', $slugLookup)->value('photo');
+          }
+      }
+      $adminPhotoUrl = $adminRawPhoto
+          ? (str_starts_with((string) $adminRawPhoto, 'uploads/') ? asset('storage/'.$adminRawPhoto) : asset($adminRawPhoto))
+          : null;
     @endphp
 
     {{-- Scrollable nav region: the brand and the profile footer stay pinned. --}}
@@ -267,7 +281,13 @@
 
     <div class="sidebar__foot">
       <a href="{{ route('admin.profile.edit') }}" class="user-chip" wire:navigate title="Manage My Profile &amp; Team Details" style="text-decoration:none; color:inherit; display:flex; cursor:pointer;">
-        <div class="user-chip__avatar">{{ strtoupper(substr($adminUser->name, 0, 1)) }}</div>
+        <div class="user-chip__avatar" style="overflow:hidden; padding:0; flex-shrink:0;">
+          @if($adminPhotoUrl)
+            <img src="{{ $adminPhotoUrl }}" alt="{{ $adminUser->name }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;"/>
+          @else
+            {{ strtoupper(substr($adminUser->name, 0, 1)) }}
+          @endif
+        </div>
         <div>
           <div class="user-chip__name">{{ $adminUser->name }}</div>
           <div class="user-chip__role" style="font-size:0.75rem;">Edit Profile &rarr;</div>
@@ -317,7 +337,14 @@
         {{-- Account menu --}}
         <div class="avatar-menu" id="avatar-menu">
           <button class="avatar" type="button" aria-haspopup="true" aria-expanded="false"
-                  onclick="document.getElementById('avatar-menu').classList.toggle('is-open')">{{ strtoupper(substr($adminUser->name, 0, 1)) }}</button>
+                  style="overflow:hidden; padding:0; display:inline-flex; align-items:center; justify-content:center;"
+                  onclick="document.getElementById('avatar-menu').classList.toggle('is-open')">
+            @if($adminPhotoUrl)
+              <img src="{{ $adminPhotoUrl }}" alt="{{ $adminUser->name }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;"/>
+            @else
+              {{ strtoupper(substr($adminUser->name, 0, 1)) }}
+            @endif
+          </button>
           <div class="avatar-menu__drop">
             <div class="avatar-menu__head">
               <strong>{{ $adminUser->name }}</strong>
@@ -704,8 +731,9 @@
           if (lengthBox) {
             topBtn = document.createElement('button');
             topBtn.type = 'button';
-            topBtn.className = 'btn btn--danger btn--sm dt-bulk-delete-btn dt-card-bulk-delete';
-            topBtn.style.cssText = 'display:none; margin-left:14px; vertical-align:middle;';
+            topBtn.hidden = true;
+            topBtn.className = 'btn btn--danger btn--sm dt-bulk-delete-btn dt-card-bulk-delete is-hidden';
+            topBtn.style.cssText = 'margin-left:14px; vertical-align:middle;';
             topBtn.innerHTML = `
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
               <span>Delete Selected (<span class="dt-bulk-count-btn">0</span>)</span>
@@ -714,7 +742,9 @@
           }
         }
         if (topBtn) {
-          topBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+          var hasSelected = count > 0;
+          topBtn.hidden = !hasSelected;
+          topBtn.classList.toggle('is-hidden', !hasSelected);
           var topNum = topBtn.querySelector('.dt-bulk-count-btn');
           if (topNum) topNum.textContent = count;
         }
@@ -777,14 +807,26 @@
           if (window.empetixToast) {
             window.empetixToast(data.message || (count + ' ' + label + ' deleted successfully.'), 'success');
           }
-          if (window.jQuery) {
-            var dt = window.jQuery(table).DataTable();
-            if (dt) dt.ajax.reload(null, false);
-          }
+          var master = table.querySelector('thead .dt-select-all');
+          if (master) { master.checked = false; master.indeterminate = false; }
+          table.querySelectorAll('tbody .dt-row-select').forEach(function(cb) {
+            cb.checked = false;
+            var tr = cb.closest('tr');
+            if (tr) tr.classList.remove('is-selected');
+          });
           var bar = ensureBulkBar();
           bar.classList.remove('is-active');
           bar.__activeTable = null;
           updateBulkBarForTable(table);
+
+          if (window.jQuery) {
+            var dt = window.jQuery(table).DataTable();
+            if (dt) {
+              dt.ajax.reload(function() {
+                updateBulkBarForTable(table);
+              }, false);
+            }
+          }
         })
         .catch(function() {
           if (window.empetixToast) {

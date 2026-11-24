@@ -29,7 +29,11 @@ class AdminUserController extends Controller
     /** Show the create form. */
     public function create(): View
     {
-        return view('admin.admins.form', ['item' => null, 'allRoles' => $this->service->allRoles()]);
+        return view('admin.admins.form', [
+            'item' => null,
+            'allRoles' => $this->service->allRoles(),
+            'availableMembers' => $this->service->availableTeamMembers(),
+        ]);
     }
 
     /** Store a new admin account. */
@@ -37,15 +41,16 @@ class AdminUserController extends Controller
     {
         $this->service->create($request->safe()->except('roles'), $request->validated('roles'), $request->user());
 
-        return redirect()->route('admin.admins.index')->with('success', 'Admin created.');
+        return redirect()->route('admin.admins.index')->with('success', 'Admin access granted.');
     }
 
     /** Show the edit form. */
     public function edit(int $admin): View
     {
         return view('admin.admins.form', [
-            'item' => \App\Models\User::with('roles')->findOrFail($admin),
+            'item' => \App\Models\User::with(['roles', 'member'])->findOrFail($admin),
             'allRoles' => $this->service->allRoles(),
+            'availableMembers' => collect(),
         ]);
     }
 

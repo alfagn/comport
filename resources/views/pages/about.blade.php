@@ -41,7 +41,7 @@
             {{ sec('about', 'hero_lead', 'Empetix Solution was founded in New Cairo by three co-founders uniting executive strategy, operational excellence, and software engineering under one roof—helping ambitious businesses build technology, scale growth, and grow sustainably.') }}
           </p>
           <div class="page-hero__aside">
-            <span class="t-meta">{{ sec('about', 'hero_meta', 'SOFTWARE ENGINEERING · GROWTH MARKETING') }}</span>
+            <span class="t-meta">{{ sec('about', 'hero_meta', 'SOFTWARE ENGINEERING · CLOUD & AI ARCHITECTURE') }}</span>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
         <header class="overview-film__header">
           <h2 id="who-we-are-heading" class="overview-film__title">{{ sec('about', 'who_we_are_heading', 'Who we are') }}</h2>
           <p class="overview-film__lead">
-            {{ sec('about', 'overview_lead', 'Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses.') }}
+            {{ sec('about', 'overview_lead', 'Empetix Solution brings software engineering, cloud architecture, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital platforms.') }}
           </p>
         </header>
 
@@ -116,13 +116,13 @@
       </div>
     </section>
 
-    <!-- STUDIO TIMELINE (STARTED 2025 — ENGINEERING & MARKETING) -->
+    <!-- STUDIO TIMELINE (STARTED 2025 — SOFTWARE & CLOUD ARCHITECTURE) -->
     <section class="section" aria-labelledby="timeline-heading">
       <div class="container">
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="timeline-heading" class="t-h2">{{ sec('about', 'timeline_heading', 'From 2025 onward: software engineering and growth marketing under one roof.') }}</h2>
+            <h2 id="timeline-heading" class="t-h2">{{ sec('about', 'timeline_heading', 'From 2025 onward: software engineering and cloud architecture under one roof.') }}</h2>
           </div>
         </div>
 

@@ -3018,6 +3018,11 @@ tr.is-selected {
   transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease !important;
 }
 
+.dt-bulk-delete-btn[hidden],
+.dt-bulk-delete-btn.is-hidden {
+  display: none !important;
+}
+
 .dt-bulk-delete-btn:hover {
   transform: translateY(-1px) scale(1.02) !important;
   box-shadow: 0 6px 18px rgba(239, 68, 68, 0.55) !important;

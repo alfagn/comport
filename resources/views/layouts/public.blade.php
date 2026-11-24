@@ -175,11 +175,14 @@
       </form>
       <div class="search-panel__hints">
         <span>Quick jump:</span>
-        <a href="{{ url('/work/alfagn') }}">Alfagn Platform</a>
-        <a href="{{ url('/work/western-elearning-academy') }}">Western eLearning</a>
-        <a href="{{ url('/blog/five-day-product-growth-sprint') }}">5-Day Sprint Video</a>
-        <a href="{{ url('/about') }}#founders">Meet the Founders</a>
-        <a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif>Contact Us</a>
+        @foreach(\App\Models\Project::active()->take(2)->get() as $qProj)
+          <a href="{{ route('work.show', $qProj->slug) }}">{{ $qProj->client ?: \Illuminate\Support\Str::limit($qProj->title, 24) }}</a>
+        @endforeach
+        @if($qPost = \App\Models\Post::published()->orderBy('sort_order')->first())
+          <a href="{{ route('blog.show', $qPost->slug) }}">{{ \Illuminate\Support\Str::limit($qPost->title, 26) }}</a>
+        @endif
+        @if(page_active('about')) <a href="{{ url('/about') }}#founders">Meet the Founders</a> @endif
+        @if(page_active('contact')) <a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif>Contact Us</a> @endif
       </div>
     </div>
   </div>
@@ -270,93 +273,227 @@
     </div>
   </header>
 
-  <!-- PARTIAL: mega-menu -->
+  <!-- PARTIAL: mega-menu (100% Real Dynamic CMS Data) -->
+@php
+  $liveMegaServices = \App\Models\Service::active()->get();
+  $publishedServicePagesBySlug = \App\Models\ServicePage::where('locale', 'en')->where('is_published', true)->get()->keyBy('slug');
+  $liveFeaturedProject = page_active('work')
+      ? \App\Models\Project::active()->orderByDesc('is_featured')->orderBy('sort_order')->first()
+      : null;
+  $liveMegaPosts = page_active('blog')
+      ? \App\Models\Post::published()->orderBy('sort_order')->latest('published_at')->take(3)->get()
+      : collect();
+@endphp
 <div id="mega-menu" class="mega" role="region" aria-label="Expanded studio directory">
-  <!-- Panel 1: Capabilities (Software + Marketing) -->
+  <!-- Panel 1: Capabilities & Solutions (Live Services + Live Featured Case Study) -->
   <div id="mega-capabilities" class="mega__panel" data-mega-panel="capabilities">
     <div class="container mega__grid">
       <div class="mega__intro">
         <div>
           <span class="eyebrow">01 / Capabilities</span>
-          <h2 class="mega__title">{{ sec('header', 'capabilities_title', 'One studio. Code and growth under one roof.') }}</h2>
-          <p class="mega__desc">{{ sec('header', 'capabilities_desc', 'We pair senior software engineers with performance marketers and commercial directors so products ship fast and scale profitably.') }}</p>
+          <h2 class="mega__title">{{ sec('header', 'capabilities_title', 'One studio. Software, cloud, and AI under one roof.') }}</h2>
+          <p class="mega__desc">{{ sec('header', 'capabilities_desc', 'We pair principal software architects, mobile engineers, and cloud infrastructure leads so mission-critical platforms ship fast and scale reliably.') }}</p>
         </div>
-        <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="arrow-link">
-          <span>Explore All Case Studies</span>
-          <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </a>
+        @if(page_active('work'))
+          <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="arrow-link">
+            <span>Explore All Case Studies</span>
+            <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </a>
+        @endif
       </div>
 
-      @foreach(nav_mega('mega-capabilities') as $column)
+      @if($liveMegaServices->isNotEmpty())
+        @php
+          $halfCount = (int) ceil($liveMegaServices->count() / 2);
+          $serviceCol1 = $liveMegaServices->take($halfCount);
+          $serviceCol2 = $liveMegaServices->slice($halfCount);
+          // Also include any custom links added by admin under Navigation -> mega-capabilities
+          $customCapLinks = nav_mega('mega-capabilities')
+              ->flatMap(fn ($col) => $col->children)
+              ->filter(fn ($l) => empty($l->image) && ! in_array($l->label, [
+                  'Web & Mobile Platforms',
+                  'E-Commerce & FinTech Core',
+                  'AI Automation & Data Pipelines',
+                  'Enterprise LMS & WebRTC Classrooms',
+                  'ERP Systems & Payment Gateways',
+                  'Cloud DevOps & Observability',
+                  'Performance & Paid Acquisition',
+                  'Brand Systems & Campaign Production',
+                  'CRO, SEO & Lifecycle Retention',
+              ], true));
+        @endphp
+
         <div class="mega__col">
-          <p class="mega__col-title">{{ $column->label }}</p>
-          @if($column->children->contains(fn ($link) => $link->image))
+          <p class="mega__col-title">Software Engineering</p>
+          <ul>
+            @foreach($serviceCol1 as $svc)
+              @php
+                $svcUrl = ($svc->slug && $publishedServicePagesBySlug->has($svc->slug))
+                    ? url($publishedServicePagesBySlug->get($svc->slug)->publicPath())
+                    : ($svc->cta_url ? (str_starts_with($svc->cta_url, 'http') ? $svc->cta_url : url($svc->cta_url)) : url('/#solutions-hub'));
+              @endphp
+              <li>
+                <a href="{{ $svcUrl }}" class="mega__link">
+                  <span class="mega__link-title">
+                    <span>{{ $svc->title }}</span>
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+                  </span>
+                  @if($svc->heading || $svc->description)
+                    <span class="mega__link-sub">{{ \Illuminate\Support\Str::limit($svc->heading ?: $svc->description, 72) }}</span>
+                  @endif
+                </a>
+              </li>
+            @endforeach
+          </ul>
+        </div>
+
+        <div class="mega__col">
+          <p class="mega__col-title">Cloud, AI &amp; Enterprise Systems</p>
+          <ul>
+            @foreach($serviceCol2 as $svc)
+              @php
+                $svcUrl = ($svc->slug && $publishedServicePagesBySlug->has($svc->slug))
+                    ? url($publishedServicePagesBySlug->get($svc->slug)->publicPath())
+                    : ($svc->cta_url ? (str_starts_with($svc->cta_url, 'http') ? $svc->cta_url : url($svc->cta_url)) : url('/#solutions-hub'));
+              @endphp
+              <li>
+                <a href="{{ $svcUrl }}" class="mega__link">
+                  <span class="mega__link-title">
+                    <span>{{ $svc->title }}</span>
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+                  </span>
+                  @if($svc->heading || $svc->description)
+                    <span class="mega__link-sub">{{ \Illuminate\Support\Str::limit($svc->heading ?: $svc->description, 72) }}</span>
+                  @endif
+                </a>
+              </li>
+            @endforeach
+            @foreach($customCapLinks as $cLink)
+              <li>
+                <a href="{{ str_starts_with($cLink->url, 'http') ? $cLink->url : url($cLink->url) }}" class="mega__link">
+                  <span class="mega__link-title">
+                    <span>{{ $cLink->label }}</span>
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+                  </span>
+                  @if($cLink->sub)<span class="mega__link-sub">{{ $cLink->sub }}</span>@endif
+                </a>
+              </li>
+            @endforeach
+          </ul>
+        </div>
+
+        <div class="mega__col">
+          <p class="mega__col-title">Featured Case Study</p>
+          @if($liveFeaturedProject)
+            @php
+              $featImg = $liveFeaturedProject->image ?: $liveFeaturedProject->logo;
+              $featImgUrl = $featImg
+                  ? (str_starts_with((string) $featImg, 'uploads/') ? asset('storage/'.$featImg) : asset($featImg))
+                  : asset('assets/img/work/alfagn/alfagn_seo.png');
+            @endphp
+            <a href="{{ route('work.show', $liveFeaturedProject->slug) }}" class="mega__feature">
+              <div class="frame frame--16x9 frame--zoom">
+                <img src="{{ $featImgUrl }}" alt="{{ $liveFeaturedProject->title }}" width="640" height="360"/>
+              </div>
+              <span class="t-meta">{{ strtoupper(($liveFeaturedProject->client ?: $liveFeaturedProject->kicker ?: 'CASE STUDY').($liveFeaturedProject->year ? ' · '.$liveFeaturedProject->year : '')) }}</span>
+              <p class="mega__feature-title">{{ \Illuminate\Support\Str::limit($liveFeaturedProject->title, 85) }}</p>
+            </a>
+          @endif
+        </div>
+      @else
+        @foreach(nav_mega('mega-capabilities') as $column)
+          <div class="mega__col">
+            <p class="mega__col-title">{{ $column->label }}</p>
+            @if($column->children->contains(fn ($link) => $link->image))
+              @foreach($column->children as $link)
+                <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__feature">
+                  @if($link->image)
+                    <div class="frame frame--16x9 frame--zoom">
+                      <img src="{{ asset($link->image) }}" alt="{{ $link->label }}" width="640" height="360"/>
+                    </div>
+                  @endif
+                  @if($link->meta)<span class="t-meta">{{ $link->meta }}</span>@endif
+                  <p class="mega__feature-title">{{ $link->label }}</p>
+                </a>
+              @endforeach
+            @else
+              <ul>
+                @foreach($column->children as $link)
+                  <li>
+                    <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__link">
+                      <span class="mega__link-title">
+                        <span>{{ $link->label }}</span>
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
+                      </span>
+                      @if($link->sub)<span class="mega__link-sub">{{ $link->sub }}</span>@endif
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
+            @endif
+          </div>
+        @endforeach
+      @endif
+    </div>
+  </div>
+
+  <!-- Panel 2: Journal / Blogs Preview (Live Published Posts) -->
+  <div id="mega-journal" class="mega__panel" data-mega-panel="journal">
+    <div class="container mega__grid">
+      <div class="mega__intro">
+        <div>
+          <span class="eyebrow">02 / Empetix Journal</span>
+          <h2 class="mega__title">{{ sec('header', 'journal_title', 'Engineering articles, system talks & architecture notes.') }}</h2>
+          <p class="mega__desc">{{ sec('header', 'journal_desc', 'Field notes, distributed systems deep-dives, and technical briefings from our engineering leads and founders.') }}</p>
+        </div>
+        @if(page_active('blog'))
+          <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="arrow-link">
+            <span>Open Full Blog Archive</span>
+            <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </a>
+        @endif
+      </div>
+
+      @if($liveMegaPosts->isNotEmpty())
+        @foreach($liveMegaPosts as $megaPost)
+          @php
+            $postImg = $megaPost->cover_image
+                ? (str_starts_with((string) $megaPost->cover_image, 'uploads/') ? asset('storage/'.$megaPost->cover_image) : asset($megaPost->cover_image))
+                : asset('assets/img/blog/talks-engineering.jpg');
+          @endphp
+          <div class="mega__col">
+            <p class="mega__col-title">{{ strtoupper($megaPost->category ?: 'ENGINEERING BRIEF') }}</p>
+            <a href="{{ route('blog.show', $megaPost->slug) }}" class="mega__feature">
+              <div class="frame frame--3x2 frame--zoom">
+                <img src="{{ $postImg }}" alt="{{ $megaPost->title }}" width="600" height="400"/>
+              </div>
+              <span class="t-meta">{{ strtoupper($megaPost->published_at ? $megaPost->published_at->format('d M Y') : 'EMPETIX JOURNAL') }}</span>
+              <p class="mega__feature-title">{{ $megaPost->title }}</p>
+            </a>
+          </div>
+        @endforeach
+      @else
+        @foreach(nav_mega('mega-journal') as $column)
+          <div class="mega__col">
+            <p class="mega__col-title">{{ $column->label }}</p>
             @foreach($column->children as $link)
               <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__feature">
                 @if($link->image)
-                  <div class="frame frame--16x9 frame--zoom">
-                    <img src="{{ asset($link->image) }}" alt="{{ $link->label }}" width="640" height="360"/>
+                  <div class="frame frame--3x2 frame--zoom">
+                    <img src="{{ asset($link->image) }}" alt="{{ $link->label }}" width="600" height="400"/>
                   </div>
                 @endif
                 @if($link->meta)<span class="t-meta">{{ $link->meta }}</span>@endif
                 <p class="mega__feature-title">{{ $link->label }}</p>
               </a>
             @endforeach
-          @else
-            <ul>
-              @foreach($column->children as $link)
-                <li>
-                  <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__link">
-                    <span class="mega__link-title">
-                      <span>{{ $link->label }}</span>
-                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/></svg>
-                    </span>
-                    @if($link->sub)<span class="mega__link-sub">{{ $link->sub }}</span>@endif
-                  </a>
-                </li>
-              @endforeach
-            </ul>
-          @endif
-        </div>
-      @endforeach
-</div>
-  </div>
-
-  <!-- Panel 2: Journal / Blogs Preview -->
-  <div id="mega-journal" class="mega__panel" data-mega-panel="journal">
-    <div class="container mega__grid">
-      <div class="mega__intro">
-        <div>
-          <span class="eyebrow">02 / Empetix Journal</span>
-          <h2 class="mega__title">{{ sec('header', 'journal_title', 'Articles, video episodes & photo essays.') }}</h2>
-          <p class="mega__desc">{{ sec('header', 'journal_desc', 'Field notes from our engineers, product designers, and performance marketers.') }}</p>
-        </div>
-        <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="arrow-link">
-          <span>Open Full Blog Archive</span>
-          <svg class="arrow-link__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </a>
-      </div>
-
-      @foreach(nav_mega('mega-journal') as $column)
-        <div class="mega__col">
-          <p class="mega__col-title">{{ $column->label }}</p>
-          @foreach($column->children as $link)
-            <a href="{{ str_starts_with($link->url, 'http') ? $link->url : url($link->url) }}" class="mega__feature">
-              @if($link->image)
-                <div class="frame frame--3x2 frame--zoom">
-                  <img src="{{ asset($link->image) }}" alt="{{ $link->label }}" width="600" height="400"/>
-                </div>
-              @endif
-              @if($link->meta)<span class="t-meta">{{ $link->meta }}</span>@endif
-              <p class="mega__feature-title">{{ $link->label }}</p>
-            </a>
-          @endforeach
-        </div>
-      @endforeach
+          </div>
+        @endforeach
+      @endif
     </div>
   </div>
 </div>
@@ -436,7 +573,7 @@
         </a>
 
         <p class="foot-grid__summary">
-          {{ sec('footer', 'brand_summary', 'Empetix Solutions is a software engineering and performance marketing partner. We build enterprise web & mobile platforms and scale the brands behind them.') }}
+          {{ sec('footer', 'brand_summary', 'Empetix Solutions is an enterprise software engineering, SaaS, and cloud architecture studio. We build mission-critical web, mobile, and AI platforms engineered for scale.') }}
         </p>
 
         <div class="foot-hq">
@@ -478,37 +615,46 @@
         </ul>
       </div>
 
-      <!-- Col 3 (2 cols): Software Solutions -->
+      <!-- Col 3 (2 cols): Live Capabilities (Real Services from DB) -->
       <div class="foot-grid__col">
-        <h3 class="foot-col__title">Software</h3>
+        <h3 class="foot-col__title">Capabilities</h3>
         <ul class="foot-col__list">
-          <li><a href="{{ url('/work') }}">Web &amp; SaaS Platforms</a></li>
-          <li><a href="{{ url('/work') }}">Mobile Apps (Flutter)</a></li>
-          <li><a href="{{ url('/work') }}">Laravel &amp; Cloud APIs</a></li>
-          <li><a href="{{ url('/work/alfagn') }}">FinTech &amp; Payment Ledgers</a></li>
-          <li><a href="{{ url('/work') }}">Headless E-Commerce</a></li>
-          <li><a href="{{ url('/work') }}">AI &amp; Workflow Agents</a></li>
+          @forelse($liveMegaServices->take(6) as $footSvc)
+            @php
+              $footSvcUrl = ($footSvc->slug && $publishedServicePagesBySlug->has($footSvc->slug))
+                  ? url($publishedServicePagesBySlug->get($footSvc->slug)->publicPath())
+                  : url('/#solutions-hub');
+            @endphp
+            <li><a href="{{ $footSvcUrl }}">{{ $footSvc->title }}</a></li>
+          @empty
+            <li><a href="{{ url('/#solutions-hub') }}">Web &amp; SaaS Platforms</a></li>
+            <li><a href="{{ url('/#solutions-hub') }}">Mobile Apps (Flutter)</a></li>
+            <li><a href="{{ url('/#solutions-hub') }}">Cloud &amp; Distributed APIs</a></li>
+            <li><a href="{{ url('/#solutions-hub') }}">AI &amp; Data Pipelines</a></li>
+          @endforelse
         </ul>
       </div>
 
-      <!-- Col 4 (2 cols): Growth & Marketing -->
+      <!-- Col 4 (2 cols): Live Platforms & Industries (Real Projects & Sectors from DB) -->
       <div class="foot-grid__col">
-        <h3 class="foot-col__title">Marketing</h3>
+        <h3 class="foot-col__title">Platforms &amp; Sectors</h3>
         <ul class="foot-col__list">
-          <li><a href="{{ url('/work') }}">Performance &amp; Paid Media</a></li>
-          <li><a href="{{ url('/blog') }}">Conversion Optimization</a></li>
-          <li><a href="{{ url('/work') }}">Brand Identity Systems</a></li>
-          <li><a href="{{ url('/blog') }}">Commercial Video &amp; Photo</a></li>
-          <li><a href="{{ url('/work') }}">Server-Side Attribution</a></li>
-          <li><a href="{{ url('/work') }}">SEO &amp; Content Engines</a></li>
+          @if(page_active('work'))
+            @foreach(\App\Models\Project::active()->take(3)->get() as $footProj)
+              <li><a href="{{ route('work.show', $footProj->slug) }}">{{ \Illuminate\Support\Str::limit($footProj->client ?: $footProj->title, 26) }}</a></li>
+            @endforeach
+          @endif
+          @foreach(\App\Models\Industry::active()->take(3)->get() as $footInd)
+            <li><a href="{{ page_active('partners') ? url('/partners') : url('/') }}">{{ $footInd->title }}</a></li>
+          @endforeach
         </ul>
       </div>
 
       <!-- Col 5 (2 cols): Newsletter & Social Connect -->
       <div class="foot-grid__newsletter">
-        <h3 class="foot-col__title">{{ sec('footer', 'newsletter_title', 'Insights Dispatch') }}</h3>
+        <h3 class="foot-col__title">{{ sec('footer', 'newsletter_title', 'Engineering Dispatch') }}</h3>
         <p class="foot-grid__summary">
-          {{ sec('footer', 'newsletter_summary', 'Monthly engineering monographs, video episodes, and growth playbooks.') }}
+          {{ sec('footer', 'newsletter_summary', 'Monthly system architecture monographs, engineering talks, and platform release notes.') }}
         </p>
         <form class="foot-sub-form" action="{{ route('subscribe') }}" method="post">
             @csrf
@@ -522,7 +668,12 @@
           </form>
 
         <div class="foot-socials" aria-label="Social media channels">
-          <a href="{{ setting('linkedin', 'https://www.linkedin.com') }}" class="foot-social-btn" rel="noopener noreferrer" aria-label="LinkedIn">
+          @if(setting('facebook', 'https://www.facebook.com'))
+          <a href="{{ setting('facebook', 'https://www.facebook.com') }}" class="foot-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M9.2 14.5V8.7H11.1L11.4 6.4H9.2V5C9.2 4.3 9.4 3.9 10.3 3.9H11.5V1.9C11.3 1.9 10.6 1.8 9.8 1.8 8.1 1.8 6.9 2.8 6.9 4.7V6.4H5V8.7H6.9V14.5H9.2Z"/></svg>
+          </a>
+          @endif
+          <a href="{{ setting('linkedin', 'https://www.linkedin.com') }}" class="foot-social-btn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.5 2A1.5 1.5 0 1 0 3.5 5 1.5 1.5 0 0 0 3.5 2ZM2.2 6.2H4.8V14H2.2V6.2ZM6.4 6.2H8.9V7.3H9C9.4 6.6 10.3 6 11.6 6 14.2 6 14.7 7.7 14.7 10V14H12.1V10.4C12.1 9.5 12.1 8.4 10.8 8.4 9.5 8.4 9.3 9.4 9.3 10.4V14H6.4V6.2Z"/></svg>
           </a>
           <a href="{{ setting('github', 'https://www.github.com') }}" class="foot-social-btn" rel="noopener noreferrer" aria-label="GitHub">

@@ -223,7 +223,7 @@
                 <span class="office__clock"><span data-tz-clock="Africa/Cairo">12:00</span> CAIRO</span>
               </div>
               <h3 class="t-h2">{{ sec('contact', 'hq_city', 'Cairo, Egypt') }}</h3>
-              <p class="t-small">{{ sec('contact', 'hq_desc', 'All software engineering, product design, commercial production, and performance marketing squads operate together under one roof at our New Cairo campus.') }}</p>
+              <p class="t-small">{{ sec('contact', 'hq_desc', 'All software engineering, product design, cloud infrastructure, and AI architecture squads operate together under one roof at our New Cairo campus.') }}</p>
             </div>
 
             <div class="hq-showcase__list">

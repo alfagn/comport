@@ -101,7 +101,7 @@ class ContentListItemService extends BaseService
     }
 
     /** Drop every cached list after a write. */
-    private function flushListCache(): void
+    public function flushListCache(): void
     {
         foreach (array_keys(self::GROUPS) as $group) {
             Cache::forget(self::CACHE_PREFIX.$group);

@@ -139,7 +139,7 @@ class NavItemService extends BaseService
     }
 
     /** Drop every cached menu after a write. */
-    private function flushMenuCache(): void
+    public function flushMenuCache(): void
     {
         foreach (['utility', 'drawer', 'mega-capabilities', 'mega-journal'] as $menu) {
             Cache::forget(self::CACHE_PREFIX.$menu);

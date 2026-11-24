@@ -237,3 +237,30 @@ if (! function_exists('video_embed_url')) {
     }
 }
 
+if (! function_exists('site_domain')) {
+    /**
+     * Resolve the official company website domain / origin configured in Site Settings.
+     * When $hostOnly is true, returns just the clean domain host (e.g. "empetix.com").
+     */
+    function site_domain(bool $hostOnly = false): string
+    {
+        $raw = trim((string) (setting('site_domain') ?: setting('seo_canonical_base') ?: config('app.url', 'https://empetix.com')));
+        if ($raw === '' || str_contains($raw, 'cms.test') || str_contains($raw, 'localhost')) {
+            $raw = setting('site_domain') ?: 'https://empetix.com';
+        }
+        if (! str_starts_with($raw, 'http://') && ! str_starts_with($raw, 'https://')) {
+            $raw = 'https://'.$raw;
+        }
+        $raw = rtrim($raw, '/');
+
+        if ($hostOnly) {
+            $host = parse_url($raw, PHP_URL_HOST) ?: 'empetix.com';
+
+            return preg_replace('/^www\./i', '', $host);
+        }
+
+        return $raw;
+    }
+}
+
+

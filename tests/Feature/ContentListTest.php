@@ -59,7 +59,7 @@ class ContentListTest extends TestCase
         $this->get(route('admin.content-lists.index'))->assertRedirect(route('admin.login'));
     }
 
-    /** Seeded mega-menu columns and links render in the public header. */
+    /** Live mega-menu columns and dynamic CMS records render in the public header. */
     public function test_mega_menu_renders_from_database(): void
     {
         $this->seed(\Database\Seeders\NavItemSeeder::class);
@@ -68,7 +68,7 @@ class ContentListTest extends TestCase
             ->assertOk()
             ->assertSee('Software Engineering')
             ->assertSee('AI Automation &amp; Data Pipelines', false)
-            ->assertSee('Behind the Lens', false);
+            ->assertDontSee('MARKETING &amp; GROWTH', false);
     }
 
     /** A mega link created in the dashboard appears in the header (cache flushed). */

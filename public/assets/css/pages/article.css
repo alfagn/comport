@@ -38,7 +38,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Project Hero Split & Animated Right-Side Emblem Stage
+   Project Hero Split & Executive 3D Obsidian Showcase Stage
    -------------------------------------------------------------------------- */
 .project-hero-split {
   display: grid;
@@ -59,7 +59,7 @@
   .project-hero-split__stage {
     grid-column: 8 / span 5;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
   }
 }
@@ -73,204 +73,400 @@
 
 .project-emblem-stage {
   position: relative;
-  width: clamp(250px, 28vw, 350px);
-  height: clamp(250px, 28vw, 350px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  max-width: 430px;
+  perspective: 1200px;
   isolation: isolate;
 }
 
-/* Ambient breathing radial aura */
-.project-emblem__halo {
+/* Diffused ambient drop shadow & multi-tone halo under the dark stage */
+.showcase-ambient-glow {
   position: absolute;
-  inset: 8%;
-  border-radius: 50%;
+  inset: 10% 4% -6% 4%;
+  border-radius: 32px;
   background: radial-gradient(
-    circle at 50% 45%,
-    rgba(255, 77, 28, 0.14) 0%,
-    rgba(16, 185, 129, 0.08) 42%,
-    rgba(8, 20, 44, 0.04) 70%,
+    circle at 30% 30%,
+    rgba(56, 189, 248, 0.22),
+    rgba(255, 77, 28, 0.20) 52%,
+    rgba(8, 20, 44, 0.16) 85%,
     transparent 100%
   );
-  filter: blur(22px);
+  filter: blur(28px);
   z-index: -2;
-  animation: emblemHaloPulse 5.5s ease-in-out infinite;
+  animation: showcaseGlowBreath 6s ease-in-out infinite;
 }
 
-/* Concentric telemetry orbital rings */
-.project-emblem__orbit {
+/* Tilted stacked architectural deck card behind the primary stage */
+.showcase-backplate {
   position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.project-emblem__orbit--outer {
   inset: 0;
-  border: 1px dashed rgba(8, 20, 44, 0.15);
-  animation: emblemOrbitCw 28s linear infinite;
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(19, 39, 77, 0.14) 0%, rgba(255, 77, 28, 0.12) 100%);
+  border: 1px solid rgba(8, 20, 44, 0.10);
+  transform: rotate(-3.2deg) translate(-6px, 10px) scale(0.97);
+  z-index: -1;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.project-emblem__orbit--inner {
-  inset: 11%;
-  border: 1px solid rgba(8, 20, 44, 0.09);
-  animation: emblemOrbitCcw 19s linear infinite;
+.project-emblem-stage:hover .showcase-backplate {
+  transform: rotate(-4.8deg) translate(-10px, 14px) scale(0.97);
 }
 
-/* Orbiting glowing telemetry nodes */
-.project-emblem__node {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.project-emblem__node--accent {
-  width: 11px;
-  height: 11px;
-  top: -5.5px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-accent-500, #FF4D1C);
-  box-shadow: 0 0 0 4px rgba(255, 77, 28, 0.18), 0 0 14px rgba(255, 77, 28, 0.55);
-}
-
-.project-emblem__node--live {
-  width: 9px;
-  height: 9px;
-  bottom: 14%;
-  right: 7%;
-  background: #10b981;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18), 0 0 12px rgba(16, 185, 129, 0.5);
-}
-
-.project-emblem__node--navy {
-  width: 8px;
-  height: 8px;
-  top: 50%;
-  left: -4px;
-  transform: translateY(-50%);
-  background: var(--color-ink-900, #08142C);
-  box-shadow: 0 0 0 3px rgba(8, 20, 44, 0.12);
-}
-
-/* Levitating glass-porcelain center medallion */
-.project-emblem__core {
+/* Outer frame with animated 360-degree travelling laser beam border */
+.showcase-card {
+  --mx: 215px;
+  --my: 160px;
   position: relative;
-  width: clamp(168px, 18vw, 218px);
-  height: clamp(168px, 18vw, 218px);
-  border-radius: 36px;
-  background: linear-gradient(145deg, #ffffff 0%, #f9f9f7 100%);
-  border: 1px solid rgba(8, 20, 44, 0.09);
+  border-radius: 26px;
+  padding: 1.5px;
+  overflow: hidden;
+  background: rgba(8, 20, 44, 0.9);
   box-shadow:
-    0 24px 54px rgba(8, 20, 44, 0.10),
-    0 6px 18px rgba(8, 20, 44, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 30px 65px -15px rgba(5, 12, 26, 0.38),
+    0 12px 24px -8px rgba(5, 12, 26, 0.22);
+  transform-style: preserve-3d;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+
+.showcase-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 200deg,
+    rgba(56, 189, 248, 0.85) 255deg,
+    rgba(255, 77, 28, 0.95) 315deg,
+    rgba(255, 195, 160, 0.9) 345deg,
+    transparent 360deg
+  );
+  animation: showcaseBeamSpin 7s linear infinite;
+  pointer-events: none;
+}
+
+/* Deep Obsidian Command Chamber */
+.showcase-card__inner {
+  position: relative;
+  z-index: 1;
+  border-radius: 24.5px;
+  background: radial-gradient(125% 100% at 50% 0%, #142B59 0%, #09152E 56%, #050C1A 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Blueprint perspective grid masked softly at the edges */
+.showcase-card__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(circle at 50% 48%, #000 35%, transparent 92%);
+  -webkit-mask-image: radial-gradient(circle at 50% 48%, #000 35%, transparent 92%);
+  pointer-events: none;
+}
+
+/* Cursor-reactive spotlight overlay */
+.showcase-card__spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    280px circle at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.09),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Top Telemetry Window Bar */
+.showcase-topbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 12, 26, 0.42);
+  backdrop-filter: blur(8px);
+}
+
+.showcase-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.showcase-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.showcase-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: block;
+}
+
+.showcase-dots i:nth-child(1) { background: rgba(255, 95, 86, 0.85); }
+.showcase-dots i:nth-child(2) { background: rgba(255, 189, 46, 0.85); }
+.showcase-dots i:nth-child(3) { background: rgba(39, 201, 63, 0.85); }
+
+.showcase-topbar__tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(201, 210, 227, 0.72);
+  text-transform: uppercase;
+}
+
+.showcase-domain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.30);
+  color: #6ee7b7;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-decoration: none;
+  max-width: 195px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+a.showcase-domain-pill:hover {
+  background: rgba(16, 185, 129, 0.24);
+  border-color: rgba(16, 185, 129, 0.55);
+  color: #ffffff;
+}
+
+/* Center Stage Chamber */
+.showcase-stage-body {
+  position: relative;
+  z-index: 2;
+  padding: 28px 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  overflow: hidden;
-  text-decoration: none;
-  animation: emblemFloat 4.8s ease-in-out infinite;
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s ease,
-    border-color 0.35s ease;
+  min-height: 236px;
 }
 
-.project-emblem__core:hover {
-  border-color: rgba(255, 77, 28, 0.45);
-  box-shadow:
-    0 30px 64px rgba(8, 20, 44, 0.14),
-    0 8px 24px rgba(255, 77, 28, 0.14);
-  transform: translateY(-6px) scale(1.035);
-}
-
-/* Subtle diagonal light sheen sweeping across medallion */
-.project-emblem__sheen {
+/* Floating Aurora Orbs inside the chamber */
+.showcase-orb {
   position: absolute;
-  inset: -60%;
-  background: linear-gradient(
-    115deg,
-    transparent 38%,
-    rgba(255, 255, 255, 0.78) 50%,
-    transparent 62%
-  );
-  transform: translateX(-100%) rotate(12deg);
+  border-radius: 50%;
+  filter: blur(26px);
   pointer-events: none;
-  animation: emblemSheenSweep 6.5s ease-in-out infinite;
+  z-index: 0;
 }
 
-.project-emblem__img {
+.showcase-orb--accent {
+  width: 120px;
+  height: 120px;
+  top: 14%;
+  right: 10%;
+  background: rgba(255, 77, 28, 0.30);
+  animation: showcaseOrbFloat 6s ease-in-out infinite;
+}
+
+.showcase-orb--cyan {
+  width: 130px;
+  height: 130px;
+  bottom: 10%;
+  left: 8%;
+  background: rgba(56, 189, 248, 0.26);
+  animation: showcaseOrbFloat 7.5s ease-in-out infinite reverse;
+}
+
+/* Precision CAD Registration Corner Brackets */
+.showcase-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(255, 255, 255, 0.24);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.showcase-corner--tl { top: 16px; left: 16px; border-width: 1.5px 0 0 1.5px; }
+.showcase-corner--tr { top: 16px; right: 16px; border-width: 1.5px 1.5px 0 0; }
+.showcase-corner--bl { bottom: 16px; left: 16px; border-width: 0 0 1.5px 1.5px; }
+.showcase-corner--br { bottom: 16px; right: 16px; border-width: 0 1.5px 1.5px 0; }
+
+/* Luminous Frosted-Pearl Floating Logo Pedestal */
+.showcase-plinth {
   position: relative;
   z-index: 1;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  min-height: 176px;
+  border-radius: 18px;
+  background: linear-gradient(155deg, #ffffff 0%, #f1f5fb 100%);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 22px 44px rgba(0, 0, 0, 0.42),
+    0 0 0 4px rgba(255, 255, 255, 0.06),
+    inset 0 2px 4px rgba(255, 255, 255, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 26px;
+  overflow: hidden;
+  text-decoration: none;
+  animation: showcasePlinthFloat 5s ease-in-out infinite;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+
+a.showcase-plinth:hover {
+  box-shadow:
+    0 26px 52px rgba(0, 0, 0, 0.52),
+    0 0 0 5px rgba(255, 77, 28, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 1);
+}
+
+/* Silky diagonal glass reflection sweep */
+.showcase-plinth__sheen {
+  position: absolute;
+  inset: -70%;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.85) 50%,
+    transparent 60%
+  );
+  transform: translateX(-130%) rotate(14deg);
+  pointer-events: none;
+  animation: showcaseSheen 6.5s ease-in-out infinite;
+}
+
+.showcase-plinth__logo {
+  position: relative;
+  z-index: 1;
+  max-width: 88%;
+  max-height: 136px;
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 6px 14px rgba(8, 20, 44, 0.08));
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 8px 16px rgba(8, 20, 44, 0.10));
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.project-emblem__core:hover .project-emblem__img {
+.showcase-card:hover .showcase-plinth__logo {
   transform: scale(1.06);
 }
 
-/* Floating architectural badge docked at bottom of orbital stage */
-.project-emblem__pill {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: var(--color-ink-900, #08142C);
-  color: #ffffff;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  white-space: nowrap;
-  box-shadow: 0 10px 24px rgba(8, 20, 44, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+/* Bottom Telemetry & Action Dock */
+.showcase-dock {
+  position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 12, 26, 0.55);
 }
 
-@keyframes emblemOrbitCw {
+.showcase-dock__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.showcase-dock__eyebrow {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #FF6B42;
+  text-transform: uppercase;
+}
+
+.showcase-dock__sub {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.86);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.showcase-dock__cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--color-accent-500, #FF4D1C);
+  color: #ffffff;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(255, 77, 28, 0.35);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.showcase-dock__cta:hover {
+  background: var(--color-accent-600, #E03D10);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(255, 77, 28, 0.50);
+  color: #ffffff;
+}
+
+@keyframes showcaseBeamSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-@keyframes emblemOrbitCcw {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-@keyframes emblemFloat {
+@keyframes showcasePlinthFloat {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-7px); }
 }
 
-@keyframes emblemHaloPulse {
-  0%, 100% { transform: scale(0.94); opacity: 0.75; }
-  50% { transform: scale(1.08); opacity: 1; }
+@keyframes showcaseGlowBreath {
+  0%, 100% { opacity: 0.72; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1.03); }
 }
 
-@keyframes emblemSheenSweep {
-  0%, 65% { transform: translateX(-120%) rotate(12deg); }
-  100% { transform: translateX(120%) rotate(12deg); }
+@keyframes showcaseOrbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-10px, 8px) scale(1.12); }
+}
+
+@keyframes showcaseSheen {
+  0%, 62% { transform: translateX(-135%) rotate(14deg); }
+  100% { transform: translateX(135%) rotate(14deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .project-emblem__halo,
-  .project-emblem__orbit--outer,
-  .project-emblem__orbit--inner,
-  .project-emblem__core,
-  .project-emblem__sheen {
+  .showcase-ambient-glow,
+  .showcase-card::before,
+  .showcase-orb--accent,
+  .showcase-orb--cyan,
+  .showcase-plinth,
+  .showcase-plinth__sheen {
     animation: none !important;
   }
 }

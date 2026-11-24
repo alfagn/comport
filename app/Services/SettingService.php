@@ -33,6 +33,7 @@ class SettingService extends BaseService
 
         return $this->repository->all()
             ->filter(fn (Setting $s) => in_array($s->group, self::VISIBLE_GROUPS, true)
+                && $s->key !== 'site_domain'
                 && ! str_starts_with($s->key, 'seo_')
                 && ! str_starts_with($s->key, 'brand_')
                 && ! str_starts_with($s->key, 'cookie_')
@@ -48,6 +49,22 @@ class SettingService extends BaseService
     public function saveGroup(array $values): void
     {
         foreach ($values as $key => $value) {
+            if ($key === 'site_domain' && is_string($value) && trim($value) !== '') {
+                $cleanDomain = trim($value);
+                if (! str_starts_with($cleanDomain, 'http://') && ! str_starts_with($cleanDomain, 'https://')) {
+                    $cleanDomain = 'https://'.$cleanDomain;
+                }
+                $cleanDomain = rtrim($cleanDomain, '/');
+                Setting::setValue('site_domain', $cleanDomain, 'general');
+                if (\App\Support\SeoUrl::validOrigin($cleanDomain)) {
+                    Setting::setValue('seo_canonical_base', $cleanDomain, 'seo');
+                }
+                continue;
+            }
+            if (in_array($key, ['facebook', 'linkedin', 'instagram', 'x', 'youtube', 'github'], true)) {
+                Setting::setValue($key, $value, 'social');
+                continue;
+            }
             Setting::setValue($key, $value);
         }
     }

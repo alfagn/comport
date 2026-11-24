@@ -43,6 +43,7 @@ class MemberDataTable extends AdminDataTable
     protected function decorate(EloquentDataTable $table): void
     {
         $table
+            ->editColumn('member_code', fn ($row) => '<span class="order-badge" style="font-family:var(--font-mono, monospace); font-weight:700; color:var(--accent, #FF4D1C);">'.e($row->member_code ?: '—').'</span>')
             ->editColumn('name', function ($row) {
                 if ($row->photo) {
                     $src = str_starts_with((string) $row->photo, 'uploads/') ? asset('storage/'.$row->photo) : asset($row->photo);
@@ -52,9 +53,11 @@ class MemberDataTable extends AdminDataTable
                     $avatar = '<span class="dt-avatar-fallback">'.$initial.'</span>';
                 }
 
+                $sub = collect([$row->email, $row->role])->filter()->map(fn ($v) => e($v))->implode(' · ');
+
                 return '<div class="dt-media-cell">'.$avatar.'<div>'
                     .'<div class="cell-title">'.e($row->name).'</div>'
-                    .'<div class="cell-sub">'.e($row->role ?? '').'</div></div></div>';
+                    .'<div class="cell-sub">'.$sub.'</div></div></div>';
             })
             ->editColumn('kind', fn ($row) => $row->kind === 'founder'
                 ? '<span class="pill pill--accent">Founder</span>'
@@ -62,12 +65,13 @@ class MemberDataTable extends AdminDataTable
             ->editColumn('sort_order', fn ($row) => $this->orderBadge($row->sort_order))
             ->editColumn('is_active', fn ($row) => $this->statusToggle('members', $row->id, (bool) $row->is_active, 'Live', 'Hidden'))
             ->addColumn('actions', fn ($row) => $this->rowActions($row->id, 'member'))
-            ->rawColumns(['name', 'kind', 'sort_order', 'is_active', 'actions']);
+            ->rawColumns(['member_code', 'name', 'kind', 'sort_order', 'is_active', 'actions']);
     }
 
     protected function columns(): array
     {
         return [
+            Column::make('member_code')->title('ID')->width(105),
             Column::make('name')->title('Person'),
             Column::make('kind')->title('Role Type')->width(130),
             Column::make('sort_order')->title('Order')->searchable(false)->width(90),
@@ -78,6 +82,6 @@ class MemberDataTable extends AdminDataTable
 
     protected function defaultOrder(): array
     {
-        return [2, 'asc'];
+        return [3, 'asc'];
     }
 }

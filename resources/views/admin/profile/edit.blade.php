@@ -37,8 +37,13 @@
 
           {{-- Identity Meta & Upload Trigger --}}
           <div>
-            <div style="display:flex; align-items:center; gap: 8px; margin-bottom: 4px;">
+            <div style="display:flex; align-items:center; flex-wrap:wrap; gap: 8px; margin-bottom: 4px;">
               <h2 style="font-size: 1.35rem; font-weight: 700; margin: 0; color: var(--text, #111);">{{ $user->name }}</h2>
+              @if($member->member_code)
+                <span style="font-family:var(--font-mono, monospace); font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; background: rgba(8, 20, 44, 0.08); color: var(--text, #08142C); font-weight: 700;">
+                  {{ $member->member_code }}
+                </span>
+              @endif
               @if($user->hasRole('owner'))
                 <span style="font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; background: rgba(235, 94, 40, 0.15); color: #eb5e28; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">
                   👑 Founder / Owner

@@ -38,7 +38,7 @@
             <span class="eyebrow">{{ sec('blog', 'hero_eyebrow', 'Studio Publications') }}</span>
           </div>
           <p class="page-hero__lead">
-            {{ sec('blog', 'hero_lead', 'Long-form technical articles, full video episodes with chapter transcripts, and behind-the-scenes photography galleries from our software and marketing teams. Click any entry to open the full post.') }}
+            {{ sec('blog', 'hero_lead', 'Long-form technical articles, system architecture deep-dives, and engineering video episodes from our software and cloud teams. Click any entry to open the full post.') }}
           </p>
           <div class="page-hero__aside">
             <span class="t-meta">{{ sec('blog', 'hero_meta', 'VIDEOS · PHOTOS · ESSAYS') }}</span>
@@ -87,9 +87,8 @@
           <span class="filter__label">Filter posts:</span>
           <button type="button" class="filter__btn" data-filter="all" aria-pressed="true">All Posts<sup>{{ $posts->count() }}</sup></button>
           <button type="button" class="filter__btn" data-filter="video" aria-pressed="false">Video Episodes</button>
-          <button type="button" class="filter__btn" data-filter="photos" aria-pressed="false">Photo Essays</button>
-          <button type="button" class="filter__btn" data-filter="engineering" aria-pressed="false">Engineering</button>
-          <button type="button" class="filter__btn" data-filter="marketing" aria-pressed="false">Growth Marketing</button>
+          <button type="button" class="filter__btn" data-filter="engineering" aria-pressed="false">Software Engineering</button>
+          <button type="button" class="filter__btn" data-filter="architecture" aria-pressed="false">Cloud &amp; Architecture</button>
           <span class="filter__count" data-filter-count>{{ $posts->count() }} {{ \Illuminate\Support\Str::plural('entry', $posts->count()) }}</span>
         </div>
 

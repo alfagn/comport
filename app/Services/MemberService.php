@@ -58,6 +58,9 @@ class MemberService extends BaseService
     {
         $attributes = $this->normalizeExpertise($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['title'] ?? $attributes['name'] ?? '');
+        $attributes['member_code'] = ! empty($attributes['member_code'])
+            ? strtoupper(trim((string) $attributes['member_code']))
+            : \App\Models\Member::generateNextCode();
         $attributes['photo'] = $this->storeUpload($photoFile, 'uploads/members');
 
         return $this->repository->create($attributes);
@@ -69,14 +72,43 @@ class MemberService extends BaseService
         $record = $this->repository->find($id);
         $attributes = $this->normalizeExpertise($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? $record->slug ?? null;
+        $attributes['member_code'] = ! empty($attributes['member_code'])
+            ? strtoupper(trim((string) $attributes['member_code']))
+            : ($record->member_code ?: \App\Models\Member::generateNextCode($record->id));
+        if (empty($attributes['email']) && ! empty($record->email)) {
+            $attributes['email'] = $record->email;
+        }
         $attributes['photo'] = $this->storeUpload($photoFile, 'uploads/members', $record->photo);
 
-        return $this->repository->update($id, $attributes);
+        $updated = $this->repository->update($id, $attributes);
+
+        // Keep linked Admin user's name & email synchronized with Team profile
+        if ($updated->user_id) {
+            $linkedUser = \App\Models\User::find($updated->user_id);
+            if ($linkedUser) {
+                $syncPayload = ['member_id' => $updated->id, 'name' => $updated->name];
+                if (! empty($updated->email) && ! \App\Models\User::where('email', $updated->email)->whereKeyNot($linkedUser->id)->exists()) {
+                    $syncPayload['email'] = $updated->email;
+                }
+                $linkedUser->update($syncPayload);
+            }
+        }
+
+        return $updated;
     }
 
     /** Delete a record. */
     public function delete(int $id): bool
     {
+        $record = $this->repository->find($id);
+        if ($record && $record->user_id) {
+            $linkedUser = \App\Models\User::find($record->user_id);
+            if ($linkedUser && $linkedUser->id !== auth()->id() && ! $linkedUser->hasRole(\App\Support\Permissions::OWNER_ROLE)) {
+                $linkedUser->syncRoles([]);
+                $linkedUser->delete();
+            }
+        }
+
         return $this->repository->delete($id);
     }
 

@@ -53,10 +53,21 @@ class ProfileController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
+        $existingMember = $user->member ?: Member::where('email', $user->email)->first();
+
+        if ($request->has('email') && is_string($request->input('email'))) {
+            $request->merge(['email' => strtolower(trim($request->input('email')))]);
+        }
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:160'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+                Rule::unique('members', 'email')->ignore($existingMember?->id),
+            ],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['nullable', 'string', 'max:160'],
             'department' => ['nullable', 'string', 'max:100'],

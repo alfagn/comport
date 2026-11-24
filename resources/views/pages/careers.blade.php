@@ -62,7 +62,7 @@
           <div class="jobs-console__grid">
             <div class="jobs-console__field">
               <label for="jobs-search-input" class="jobs-console__label">01 / Search Keyword or Skill</label>
-              <input id="jobs-search-input" type="search" class="jobs-console__input" placeholder="e.g. Laravel, Flutter, Next.js, Media Buyer, Designer..."/>
+              <input id="jobs-search-input" type="search" class="jobs-console__input" placeholder="e.g. Laravel, Flutter, Next.js, Cloud DevOps, Product Designer..."/>
             </div>
 
             <div class="jobs-console__field">
@@ -70,7 +70,7 @@
               <select id="jobs-dept-select" class="jobs-console__select">
                 <option value="all">All Departments ({{ $jobs->count() }})</option>
                 <option value="engineering">Software Engineering</option>
-                <option value="marketing">Growth &amp; Marketing</option>
+                <option value="cloud">Cloud &amp; DevOps</option>
                 <option value="design">Product Design</option>
               </select>
             </div>

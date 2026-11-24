@@ -21,7 +21,7 @@ final class SeoUrl
 
     public static function to(string $path = '/'): string
     {
-        $saved = trim(Setting::getValue('seo_canonical_base') ?? '');
+        $saved = trim(Setting::getValue('seo_canonical_base') ?: Setting::getValue('site_domain') ?: '');
         $base = self::validOrigin($saved) ? $saved : config('app.url');
 
         return rtrim($base, '/').'/'.ltrim($path, '/');
