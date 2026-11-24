@@ -8,14 +8,10 @@
   @else
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
   @endif
-  <meta name="author" content="Empetix Solutions | حلول إمبيتكس"/>
+  <meta name="author" content="Empetix Solutions"/>
   <meta name="publisher" content="Empetix Solutions"/>
-  <meta name="keywords" content="{{ seo_keywords() }}"/>
-  <link rel="canonical" href="{{ url()->current() }}"/>
-  <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}"/>
-  <link rel="alternate" hreflang="en" href="{{ url()->current() }}"/>
-  <link rel="alternate" hreflang="ar" href="{{ url()->current() }}"/>
-  <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}"/>
+  <link rel="canonical" href="{{ seo_current_url() }}"/>
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ seo_url('/sitemap.xml') }}"/>
 
   @yield('meta')
   @yield('head_extra')
@@ -37,6 +33,11 @@
 
 </head>
 <body>
+@if(\App\Models\ServicePage::where('locale', 'en')->where('is_published', true)->exists())
+<nav class="published-service-links" aria-label="Service pages" style="background:#0a1426;color:white;padding:10px 24px;text-align:center;font-size:14px">
+  <a href="{{ url('/services') }}">Services</a>
+</nav>
+@endif
 
 <!-- PARTIAL: preloader -->
 <div
@@ -320,7 +321,7 @@
 </aside>
 
 
-  <main id="main-content" @class(['team-page' => ($activePage ?? '') === 'team'])>
+  <main id="main-content" @class([$pageClass ?? (($activePage ?? '') === 'team' ? 'team-page' : null)])>
 @yield('content')
   </main>
 

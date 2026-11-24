@@ -4,6 +4,8 @@ use App\Models\Setting;
 use App\Services\ContentListItemService;
 use App\Services\NavItemService;
 use App\Services\SectionService;
+use App\Support\SeoUrl;
+use Illuminate\Support\Collection;
 
 if (! function_exists('sec')) {
     /**
@@ -34,7 +36,7 @@ if (! function_exists('nav_items')) {
      * Active links of one public menu (utility bar, mobile drawer),
      * dashboard-editable and cached by NavItemService.
      */
-    function nav_items(string $menu): \Illuminate\Support\Collection
+    function nav_items(string $menu): Collection
     {
         return app(NavItemService::class)->menu($menu);
     }
@@ -45,7 +47,7 @@ if (! function_exists('content_list')) {
      * Active cards of one repeating content list (principles, timeline,
      * benefits, ...), dashboard-editable and cached by ContentListItemService.
      */
-    function content_list(string $group): \Illuminate\Support\Collection
+    function content_list(string $group): Collection
     {
         return app(ContentListItemService::class)->list($group);
     }
@@ -56,7 +58,7 @@ if (! function_exists('nav_mega')) {
      * One mega-menu panel (columns with child links / feature cards),
      * dashboard-editable under Navigation and cached by NavItemService.
      */
-    function nav_mega(string $menu): \Illuminate\Support\Collection
+    function nav_mega(string $menu): Collection
     {
         return app(NavItemService::class)->mega($menu);
     }
@@ -71,7 +73,7 @@ if (! function_exists('brand_favicon')) {
     {
         $path = setting('brand_favicon');
 
-        return $path ? asset('storage/'.$path) : asset('assets/img/favicon.svg');
+        return $path ? asset('storage/'.$path) : asset('assets/img/favicon.png');
     }
 }
 
@@ -100,6 +102,7 @@ if (! function_exists('content_asset')) {
         if (str_contains($path, ':') || str_starts_with($path, '//')) {
             return '';
         }
+
         return asset(str_starts_with($path, 'uploads/') ? 'storage/'.$path : $path);
     }
 }
@@ -115,7 +118,7 @@ if (! function_exists('seo_meta_title')) {
             ? 'حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي'
             : 'Empetix Solutions — Software, SaaS & Digital Growth Studio';
 
-        return setting($key) ?: $default;
+        return setting($key, $default);
     }
 }
 
@@ -130,7 +133,7 @@ if (! function_exists('seo_meta_description')) {
             ? 'إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)، المنصات السحابية، والتطبيقات الرقمية المتقدمة بتجربة مستخدم عربية وعالمية فائقة السرعة.'
             : 'Empetix Solutions is a premier digital engineering studio architecting enterprise SaaS platforms, custom software, FinTech solutions, and high-conversion web & mobile apps.';
 
-        return setting($key) ?: $default;
+        return setting($key, $default);
     }
 }
 
@@ -162,3 +165,17 @@ if (! function_exists('seo_og_image')) {
     }
 }
 
+if (! function_exists('seo_url')) {
+    /** Canonical origin plus an explicit public path. */
+    function seo_url(string $path = '/'): string
+    {
+        return SeoUrl::to($path);
+    }
+}
+if (! function_exists('seo_current_url')) {
+    /** Query strings never create a second canonical page. */
+    function seo_current_url(): string
+    {
+        return SeoUrl::current();
+    }
+}

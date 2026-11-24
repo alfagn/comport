@@ -11,7 +11,7 @@
     </div>
     <h1 class="content-header__title">XML Sitemap &amp; URL Inventory</h1>
     <p class="content-header__sub">
-      Live index of all pages, SaaS case studies, engineering articles, open roles, and founders served to Google, Bing, and AI crawlers.
+      Current CMS inventory for discovery documents. Search engines decide which pages to crawl and index.
     </p>
   </div>
   <div class="content-header__actions">
@@ -26,7 +26,7 @@
       @csrf
       <button type="submit" class="btn btn--ghost btn--sm" title="Notify search engines of updates">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
-        <span>Ping Engines</span>
+        <span>Submission Help</span>
       </button>
     </form>
     <a href="{{ url('/sitemap.xml') }}" target="_blank" class="btn btn--ghost btn--sm">
@@ -45,7 +45,7 @@
     </div>
     <div class="stat-card__info">
       <div class="stat-card__val">{{ $stats['total'] }}</div>
-      <div class="stat-card__label">Total URLs Indexed</div>
+      <div class="stat-card__label">Public URLs Listed</div>
     </div>
   </div>
 
@@ -124,7 +124,7 @@
     </div>
     <div>
       <h3 class="card__title">Complete URL Registry</h3>
-      <p class="card__sub">Every public URL indexed by search engines and provided to AI models</p>
+      <p class="card__sub">Current public URL inventory. Listing here does not confirm crawling, indexing, or AI citations.</p>
     </div>
     <div class="sitemap-filter-wrap">
       <input type="text"
@@ -185,7 +185,7 @@
               </td>
               <td>
                 <span class="sitemap-date">
-                  {{ \Illuminate\Support\Carbon::parse($entry['lastmod'])->format('M d, Y') }}
+                  {{ $entry['lastmod'] ? \Illuminate\Support\Carbon::parse($entry['lastmod'])->format('M d, Y') : 'Not supplied' }}
                 </span>
               </td>
               <td class="text-right">

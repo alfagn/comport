@@ -8,8 +8,8 @@
   <meta property="og:site_name" content="Empetix Solution"/>
   <meta property="og:title" content="{{ $post->title }} — Empetix Journal"/>
   <meta property="og:description" content="{{ $post->excerpt }}"/>
-  <meta property="og:url" content="https://empetix.vercel.app/blog/{{ $post->slug }}"/>
-  <meta property="og:image" content="{{ content_asset(sec('global', 'social_preview')) }}"/>
+  <meta property="og:url" content="{{ seo_current_url() }}"/>
+  <meta property="og:image" content="{{ seo_og_image() }}"/>
 @endsection
 
 @section('content')

@@ -2799,3 +2799,46 @@ table.dt-table td.dataTables_empty { text-align: center; color: var(--text-muted
 }
 
 
+
+/* Discovery forms must shrink inside the content column on small screens. */
+.seo-overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.seo-overview-grid > *, .seo-form, .seo-form .card__header > div,
+.seo-form .form-group, .sitemap-table-card { min-width: 0; }
+.seo-form .form-group--full { grid-column: 1 / -1; }
+.seo-form .form-control { width: 100%; min-width: 0; }
+.seo-form .card__header, .seo-overview-grid .card__header { flex-wrap: wrap; }
+.seo-form .form-label { display: block; margin-bottom: 8px; }
+.seo-form .form-hint { display: block; margin-top: 8px; }
+.seo-form .form-toggle-pill__slider { flex-shrink: 0; }
+.sitemap-table-card .table-responsive { max-width: 100%; overflow-x: auto; }
+@media (max-width: 1024px) {
+  .seo-overview-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .seo-form .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .seo-form .form-actions-bar { position: static; }
+  .seo-preview-tabs { flex-wrap: wrap; }
+  .sitemap-table-card .card__header { flex-wrap: wrap; }
+}
+
+.seo-form .form-actions-bar { position: static; }
+.seo-form input.form-control, .seo-form textarea.form-control {
+  box-sizing: border-box; padding: 12px 14px; color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px;
+  font: inherit; line-height: 1.5;
+}
+.seo-overview-grid .seo-audit-checklist { max-height: none; overflow: visible; }
+
+@media (max-width: 600px) {
+  .discovery-admin .topbar { flex-wrap: wrap; }
+  .discovery-admin .topbar__titles { min-width: 0; flex: 1; }
+  .discovery-admin .topbar__actions { margin-left: 0; }
+  .discovery-admin .sidebar__brand-link { max-width: 100%; }
+  .discovery-admin .sidebar__brand-logo { max-width: 100%; }
+}
+@media (max-width: 600px) {
+  .discovery-admin .topbar-search { display: none; }
+  .discovery-admin .topbar__titles h1 { font-size: 16px; line-height: 1.25; }
+}
+.sitemap-table { min-width: 850px; }
+.sitemap-table th:first-child { width: 38%; }

@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Repositories\Contracts;
 use App\Repositories\Eloquent;
+use App\Support\Permissions;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -21,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public array $bindings = [
         Contracts\HeroSlideRepositoryInterface::class => Eloquent\HeroSlideRepository::class,
         Contracts\ServiceRepositoryInterface::class => Eloquent\ServiceRepository::class,
+        Contracts\ServicePageRepositoryInterface::class => Eloquent\ServicePageRepository::class,
         Contracts\IndustryRepositoryInterface::class => Eloquent\IndustryRepository::class,
         Contracts\ProjectRepositoryInterface::class => Eloquent\ProjectRepository::class,
         Contracts\MemberRepositoryInterface::class => Eloquent\MemberRepository::class,
@@ -48,8 +52,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // RBAC: the owner role implicitly holds every permission. All other
         // roles fall through to their granted permissions only.
-        \Illuminate\Support\Facades\Gate::before(function (\App\Models\User $user, string $ability) {
-            return $user->hasRole(\App\Support\Permissions::OWNER_ROLE) ? true : null;
+        Gate::before(function (User $user, string $ability) {
+            return $user->hasRole(Permissions::OWNER_ROLE) ? true : null;
         });
     }
 }

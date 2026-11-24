@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\ContactMessage;
 use App\Models\Project;
 use App\Models\User;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -34,7 +36,7 @@ class DataTablesTest extends TestCase
 
     public function test_index_ajax_returns_yajra_payload_with_real_rows(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         $project = Project::firstOrFail();
 
         $response = $this->actingAs($this->admin())
@@ -45,12 +47,14 @@ class DataTablesTest extends TestCase
 
         $payload = $response->json();
         $this->assertSame(Project::count(), $payload['recordsTotal']);
+        // Title cells are intentionally HTML-escaped in the payload (see the
+        // escaping regression test), so compare against the escaped title.
         $this->assertStringContainsString(e($project->title), json_encode($payload['data']));
     }
 
     public function test_global_search_filters_in_sql(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         $project = Project::firstOrFail();
         $project->update(['title' => 'Zebra Platform']);
         Project::where('id', '!=', $project->id)->update(['title' => 'Alpha Site']);
@@ -75,7 +79,7 @@ class DataTablesTest extends TestCase
 
     public function test_column_sorting_runs_in_sql(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         Project::query()->delete();
         Project::create(['title' => 'Bravo', 'slug' => 'bravo', 'kicker' => 'k', 'description' => 'd']);
         Project::create(['title' => 'Alpha', 'slug' => 'alpha', 'kicker' => 'k', 'description' => 'd']);
@@ -94,7 +98,7 @@ class DataTablesTest extends TestCase
 
     public function test_row_content_is_escaped_in_rendered_cells(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         $project = Project::firstOrFail();
         $project->update(['title' => '<script>alert(1)</script>']);
 
@@ -109,7 +113,7 @@ class DataTablesTest extends TestCase
 
     public function test_server_side_pagination_beyond_the_first_page(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         // Grow past one page (15 rows) so a second page must exist.
         for ($i = 1; $i <= 20; $i++) {
             Project::create(['title' => "Bulk Project $i", 'slug' => "bulk-project-$i", 'kicker' => 'k', 'description' => 'd']);
@@ -146,8 +150,8 @@ class DataTablesTest extends TestCase
 
     public function test_ampersand_displays_once_and_markup_stays_escaped_in_inbox(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
-        \App\Models\ContactMessage::create([
+        $this->seed(DatabaseSeeder::class);
+        ContactMessage::create([
             'name' => '<b>Ampersand</b> Co',
             'email' => 'amp@example.com',
             'services' => ['SaaS & Cloud'],
@@ -169,7 +173,7 @@ class DataTablesTest extends TestCase
 
     public function test_subscribers_listing_is_a_datatable_too(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->actingAs($this->admin())
             ->get(route('admin.inbox.subscribers', ['draw' => 1, 'start' => 0, 'length' => 15]), $this->ajaxHeaders());
@@ -179,7 +183,7 @@ class DataTablesTest extends TestCase
 
     public function test_subscribers_page_renders_its_table(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $html = $this->actingAs($this->admin())
             ->get(route('admin.inbox.subscribers'))
@@ -191,7 +195,7 @@ class DataTablesTest extends TestCase
 
     public function test_index_pages_embed_the_datatable_markup(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $html = $this->actingAs($this->admin())
             ->get(route('admin.projects.index'))
