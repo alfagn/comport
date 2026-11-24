@@ -45,7 +45,9 @@ class DataTablesTest extends TestCase
 
         $payload = $response->json();
         $this->assertSame(Project::count(), $payload['recordsTotal']);
-        $this->assertStringContainsString($project->title, json_encode($payload['data']));
+        // Title cells are intentionally HTML-escaped in the payload (see the
+        // escaping regression test), so compare against the escaped title.
+        $this->assertStringContainsString(e($project->title), json_encode($payload['data']));
     }
 
     public function test_global_search_filters_in_sql(): void
