@@ -14,16 +14,21 @@ class ServicePageService
 
     public function all(): Collection
     {
-        return $this->pages->all();
+        return $this->pages->all()->where('locale', 'en')->values();
     }
 
     public function find(int $id): Model
     {
-        return $this->pages->find($id);
+        $page = $this->pages->find($id);
+        abort_unless($page->locale === 'en', 404);
+
+        return $page;
     }
 
     public function save(int $id, ServicePageData $data): Model
     {
+        $this->find($id);
+
         return $this->pages->update($id, $data->toArray());
     }
 

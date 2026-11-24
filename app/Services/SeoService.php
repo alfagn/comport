@@ -49,15 +49,15 @@ class SeoService
             }
         }
 
-        $editions = ServicePage::where('is_published', true)->get();
+        $editions = ServicePage::where('locale', 'en')->where('is_published', true)->get();
         foreach ($editions as $edition) {
             $urls->push(['url' => seo_url($edition->publicPath()), 'title' => $edition->title,
                 'type' => 'Service Page', 'lastmod' => $edition->updated_at?->toIso8601String(),
                 'image' => null, 'priority' => '0.7', 'changefreq' => 'monthly']);
         }
-        foreach ($editions->pluck('locale')->unique() as $locale) {
-            $urls->push(['url' => seo_url($locale === 'ar' ? '/ar/services' : '/services'),
-                'title' => $locale === 'ar' ? 'الخدمات' : 'Services', 'type' => 'Service Index',
+        if ($editions->isNotEmpty()) {
+            $urls->push(['url' => seo_url('/services'),
+                'title' => 'Services', 'type' => 'Service Index',
                 'lastmod' => null, 'image' => null, 'priority' => '0.7', 'changefreq' => 'monthly']);
         }
 

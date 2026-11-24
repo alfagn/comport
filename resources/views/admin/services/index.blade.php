@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-<p><a class="btn btn--ghost" href="{{ route('admin.service-pages.index') }}" wire:navigate>Bilingual service pages and drafts ↗</a></p>
+<p><a class="btn btn--ghost" href="{{ route('admin.service-pages.index') }}" wire:navigate>English service pages and drafts ↗</a></p>
 <div class="card">
   {{-- Server-side Yajra DataTable: search, sort and pagination run in SQL. --}}
   <div class="table-wrap table-wrap--dt">

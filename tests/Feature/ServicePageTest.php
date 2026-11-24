@@ -24,7 +24,8 @@ class ServicePageTest extends TestCase
         $this->get('/sitemap.xml')->assertDontSee('/services/');
         $this->get('/llms.txt')->assertDontSee('/services/');
         $this->get('/')->assertDontSee('class="published-service-links"', false);
-        $this->get('/ar/services')->assertOk()->assertSee('noindex, nofollow', false)->assertSee('lang="ar" dir="rtl"', false);
+        $this->get('/ar/services')->assertNotFound();
+        $this->get('/services')->assertOk()->assertSee('lang="en" dir="ltr"', false);
     }
 
     public function test_previews_are_private_permission_checked_and_noindex(): void
@@ -35,31 +36,52 @@ class ServicePageTest extends TestCase
         $this->actingAs($this->owner())->get('/admin/service-pages/'.$page->id.'/preview')->assertOk()->assertHeader('X-Robots-Tag', 'noindex, nofollow')->assertSee('Private editorial preview')->assertSee('noindex, nofollow', false);
     }
 
-    public function test_publishing_pair_enables_real_language_urls_and_discovery(): void
+    public function test_only_english_is_public_even_when_an_archived_arabic_row_is_marked_published(): void
     {
         ServicePage::where('slug', 'saas-development')->update(['is_published' => true]);
-        foreach (['en' => '/services/saas-development', 'ar' => '/ar/services/saas-development'] as $locale => $path) {
-            $this->get($path)->assertOk()->assertSee('lang="'.$locale.'"', false)
-                ->assertSee('hreflang="en" href="https://empetix.com/services/saas-development"', false)
-                ->assertSee('hreflang="ar" href="https://empetix.com/ar/services/saas-development"', false)
-                ->assertSee('WebPage', false)->assertDontSee('Private editorial preview');
-        }
-        $this->get('/sitemap.xml')->assertSee('https://empetix.com/services/saas-development', false)->assertSee('https://empetix.com/ar/services/saas-development', false);
-        $this->get('/llms.txt')->assertSee('/ar/services/saas-development');
-        $this->get('/')->assertSee('class="published-service-links"', false);
-        ServicePage::where('locale', 'ar')->update(['is_published' => false]);
-        $this->get('/services/saas-development')->assertDontSee('hreflang="ar"', false);
+        $this->get('/services/saas-development')->assertOk()->assertSee('lang="en" dir="ltr"', false)
+            ->assertSee('WebPage', false)->assertDontSee('Private editorial preview')->assertDontSee('hreflang=', false);
+        $this->get('/services')->assertOk()->assertDontSee('/ar/services');
         $this->get('/ar/services/saas-development')->assertNotFound();
-        $this->get('/sitemap.xml')->assertDontSee('/ar/services');
+        $this->get('/ar/services')->assertNotFound();
+        $this->get('/sitemap.xml')->assertSee('https://empetix.com/services/saas-development', false)->assertDontSee('/ar/services');
+        $this->get('/llms.txt')->assertSee('/services/saas-development')->assertDontSee('/ar/services');
+        $this->get('/llms-full.txt')->assertDontSee('/ar/services');
+        $this->get('/')->assertSee('class="published-service-links"', false)->assertDontSee('/ar/services');
+        ServicePage::where('locale', 'en')->update(['is_published' => false]);
+        $this->get('/')->assertDontSee('class="published-service-links"', false);
+        $this->get('/sitemap.xml')->assertDontSee('/services');
+    }
+
+    public function test_archived_arabic_records_are_preserved_but_cannot_be_edited_published_or_previewed(): void
+    {
+        $page = ServicePage::where('locale', 'ar')->first();
+        $original = $page->toArray();
+        $this->actingAs($this->owner())->get('/admin/service-pages')->assertOk()
+            ->assertDontSee($page->title)->assertSee('English drafts');
+        foreach (['edit', 'preview'] as $action) {
+            $this->get('/admin/service-pages/'.$page->id.'/'.$action)->assertNotFound();
+        }
+        $this->put('/admin/service-pages/'.$page->id, ['title' => 'Must not save', 'summary' => 'Must not save', 'body' => 'Must not save', 'is_published' => '1'])->assertNotFound();
+        $this->assertSame($original, $page->fresh()->toArray());
+        $this->assertSame(3, ServicePage::where('locale', 'ar')->count());
+    }
+
+    public function test_english_seo_form_keeps_archived_metadata_on_save(): void
+    {
+        Setting::setValue('seo_meta_title_ar', 'Archived title');
+        $this->actingAs($this->owner())->get('/admin/seo')->assertOk()->assertDontSee('name="seo_meta_title_ar"', false)->assertDontSee('google-ar');
+        $this->put('/admin/seo', ['seo_meta_title_en' => 'Empetix services'])->assertSessionHasNoErrors();
+        $this->assertSame('Archived title', Setting::getValue('seo_meta_title_ar'));
     }
 
     public function test_owner_can_edit_publish_and_unpublish_without_unsafe_html(): void
     {
-        $page = ServicePage::where('locale', 'ar')->first();
-        $this->actingAs($this->owner())->get('/admin/service-pages/'.$page->id.'/edit')->assertOk()->assertSee('dir="rtl"', false);
-        $payload = ['title' => 'عنوان جديد', 'summary' => 'ملخص', 'body' => "قسم\n<script>alert(1)</script>", 'meta_title' => '', 'meta_description' => '', 'is_published' => '1'];
+        $page = ServicePage::where('locale', 'en')->first();
+        $this->actingAs($this->owner())->get('/admin/service-pages/'.$page->id.'/edit')->assertOk()->assertSee('dir="ltr"', false);
+        $payload = ['title' => 'New service heading', 'summary' => 'Summary', 'body' => "Section\n<script>alert(1)</script>", 'meta_title' => '', 'meta_description' => '', 'is_published' => '1'];
         $this->put('/admin/service-pages/'.$page->id, $payload)->assertSessionHasNoErrors()->assertRedirect();
-        $this->get($page->publicPath())->assertOk()->assertSee('عنوان جديد')->assertDontSee('<script>alert(1)</script>', false)->assertSee('&lt;script&gt;', false);
+        $this->get($page->publicPath())->assertOk()->assertSee('New service heading')->assertDontSee('<script>alert(1)</script>', false)->assertSee('&lt;script&gt;', false);
         $payload['is_published'] = '0';
         $this->put('/admin/service-pages/'.$page->id, $payload)->assertSessionHasNoErrors();
         $this->get($page->publicPath())->assertNotFound();

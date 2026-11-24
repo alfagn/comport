@@ -25,7 +25,7 @@ class ServicePageController extends Controller
     {
         $this->pages->save($id, ServicePageData::fromArray($request->validated()));
 
-        return back()->with('success', 'Language edition saved. Publication affects this installation only.');
+        return back()->with('success', 'English service page saved. Publication affects this installation only.');
     }
 
     public function preview(int $id)

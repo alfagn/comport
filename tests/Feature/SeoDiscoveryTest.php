@@ -59,8 +59,8 @@ class SeoDiscoveryTest extends TestCase
         $this->assertStringContainsString('Sitemap: '.seo_url('/sitemap.xml'), $content);
     }
 
-    /** Public /llms.txt provides standard Markdown context for AI models with Arabic & English identity. */
-    public function test_public_llms_txt_renders_bilingual_studio_context(): void
+    /** Public /llms.txt provides standard Markdown context for AI models with English identity. */
+    public function test_public_llms_txt_renders_english_studio_context(): void
     {
         $response = $this->get('/llms.txt');
 
@@ -88,15 +88,15 @@ class SeoDiscoveryTest extends TestCase
         $this->assertStringContainsString('Technical Essays & Editorial Insights', $content);
     }
 
-    /** Public layout injects JSON-LD Organization schema with Arabic/English aliases. */
+    /** Public layout injects JSON-LD Organization schema with English identity. */
     public function test_public_pages_embed_schema_org_json_ld(): void
     {
         $homeResponse = $this->get('/');
         $homeResponse->assertOk();
         $homeResponse->assertSee('application/ld+json', false);
         $homeResponse->assertSee('Empetix Solutions', false);
-        $homeResponse->assertSee('إمبيتكس', false);
-        $homeResponse->assertSee('حلول إمبيتكس', false);
+        $homeResponse->assertDontSee('إمبيتكس', false);
+        $homeResponse->assertSee('lang="en" dir="ltr"', false);
 
         // Project detail embeds SoftwareApplication schema
         $projectResponse = $this->get('/work/alfagn');

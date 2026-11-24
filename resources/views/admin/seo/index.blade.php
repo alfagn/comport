@@ -12,7 +12,7 @@
     <h1 class="content-header__title">SEO &amp; AI Search Discovery</h1>
     <p class="content-header__sub">
       Configure discovery metadata for
-      <strong>Empetix (إمبيتكس)</strong> and all your <strong>SaaS &amp; Software projects</strong> in both Arabic and English.
+      <strong>Empetix</strong> and all your <strong>SaaS &amp; Software projects</strong> in English.
     </p>
   </div>
   <div class="content-header__actions">
@@ -90,7 +90,6 @@
       {{-- Tab selection for Preview --}}
       <div class="seo-preview-tabs">
         <button type="button" class="seo-preview-tab is-active" onclick="empetixSwitchSeoPreview(event, 'google-en')">Google EN</button>
-        <button type="button" class="seo-preview-tab" onclick="empetixSwitchSeoPreview(event, 'google-ar')">Google AR (إمبيتكس)</button>
         <button type="button" class="seo-preview-tab" onclick="empetixSwitchSeoPreview(event, 'ai-chat')">AI Model Citation</button>
       </div>
 
@@ -113,28 +112,6 @@
         </div>
         <div class="seo-serp-box__sitelinks">
           <span>SaaS Projects</span> &bull; <span>Engineering Blog</span> &bull; <span>Team</span> &bull; <span>Contact</span>
-        </div>
-      </div>
-
-      {{-- Preview 2: Google Arabic --}}
-      <div id="seo-preview-google-ar" class="seo-serp-box is-hidden" dir="rtl">
-        <div class="seo-serp-box__head">
-          <div class="seo-serp-box__fav">
-            <img src="{{ brand_favicon() }}" alt="" width="18" height="18" />
-          </div>
-          <div class="seo-serp-box__meta">
-            <span class="seo-serp-box__site">حلول إمبيتكس للبرمجيات</span>
-            <span class="seo-serp-box__url">{{ seo_url('/') }}</span>
-          </div>
-        </div>
-        <div class="seo-serp-box__title" id="preview-serp-title-ar">
-          {{ $settings['seo_meta_title_ar'] ?? 'حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي' }}
-        </div>
-        <div class="seo-serp-box__snippet" id="preview-serp-desc-ar">
-          {{ $settings['seo_meta_description_ar'] ?? 'إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)، المنصات السحابية، والتطبيقات الرقمية المتقدمة بتجربة مستخدم عربية وعالمية فائقة السرعة.' }}
-        </div>
-        <div class="seo-serp-box__sitelinks">
-          <span>مشاريع الساس والأنظمة</span> &bull; <span>دراسات الحالة (Alfagn)</span> &bull; <span>تطوير تطبيقات الموبايل</span> &bull; <span>تواصل معنا</span>
         </div>
       </div>
 
@@ -162,65 +139,6 @@
 <form action="{{ route('admin.seo.update') }}" method="POST" enctype="multipart/form-data" class="seo-form">
   @csrf
   @method('PUT')
-
-  {{-- Section 1: Arabic Search Discovery (الظهور في محركات البحث بالعربي) --}}
-  <div class="card card--glass form-card">
-    <div class="card__header">
-      <div class="card__header-icon">
-        <img src="{{ asset('assets/images/3d/3d-document.png') }}" alt="" width="28" height="28" />
-      </div>
-      <div>
-        <h3 class="card__title">Arabic Metadata Draft | مسودة البيانات العربية</h3>
-        <p class="card__sub">هذه مسودة محفوظة. الصفحات الحالية بالإنجليزية؛ لا نعلن نسخة عربية قبل نشر ترجمة فعلية.</p>
-      </div>
-    </div>
-    <div class="card__body form-grid" dir="rtl">
-      
-      <div class="form-group form-group--full">
-        <label for="seo_meta_title_ar" class="form-label">
-          <span>عنوان الموقع ومحركات البحث (بالعربي)</span>
-          <span class="form-hint-badge">Title Tag</span>
-        </label>
-        <input type="text"
-               name="seo_meta_title_ar"
-               id="seo_meta_title_ar"
-               class="form-control"
-               value="{{ old('seo_meta_title_ar', $settings['seo_meta_title_ar'] ?? 'حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي') }}"
-               placeholder="حلول إمبيتكس — استوديو هندسة البرمجيات والساس والتحول الرقمي"
-               oninput="document.getElementById('preview-serp-title-ar').innerText = this.value || 'حلول إمبيتكس'" />
-        <span class="form-hint">يظهر كعنوان رئيسي في نتائج بحث جوجل وشاشات المشاركة بالعربية (مفضل 50-60 حرف).</span>
-      </div>
-
-      <div class="form-group form-group--full">
-        <label for="seo_meta_description_ar" class="form-label">
-          <span>الوصف التعريفي لمحركات البحث (بالعربي)</span>
-          <span class="form-hint-badge">Meta Description</span>
-        </label>
-        <textarea name="seo_meta_description_ar"
-                  id="seo_meta_description_ar"
-                  class="form-control form-control--textarea"
-                  rows="3"
-                  placeholder="إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)..."
-                  oninput="document.getElementById('preview-serp-desc-ar').innerText = this.value || ''">{{ old('seo_meta_description_ar', $settings['seo_meta_description_ar'] ?? 'إمبيتكس (Empetix Solutions) هو استوديو هندسي متخصص في بناء وتطوير برمجيات الساس (SaaS)، المنصات السحابية، والتطبيقات الرقمية المتقدمة بتجربة مستخدم عربية وعالمية فائقة السرعة.') }}</textarea>
-        <span class="form-hint">يظهر أسفل العنوان في جوجل لمساعدة الزوار العرب على الضغط والتفاعل.</span>
-      </div>
-
-      <div class="form-group form-group--full">
-        <label for="seo_keywords_ar" class="form-label">
-          <span>الكلمات المفتاحية للبحث ومشاريع البرمجة والساس (بالعربي)</span>
-          <span class="form-hint-badge">Meta Keywords</span>
-        </label>
-        <input type="text"
-               name="seo_keywords_ar"
-               id="seo_keywords_ar"
-               class="form-control"
-               value="{{ old('seo_keywords_ar', $settings['seo_keywords_ar'] ?? 'إمبيتكس, حلول إمبيتكس, شركة إمبيتكس, شركة برمجة, تطوير ساس, برمجة مواقع, تصميم تطبيقات, تحول رقمي, مصر, السعودية, نايل باي, محفظة رقمية') }}"
-               placeholder="إمبيتكس, شركة برمجة, تطوير ساس, تصميم تطبيقات..." />
-        <span class="form-hint">افصل بين الكلمات بفواصل (,). تشمل اسم الشركة والمشاريع البرمجية وتقنيات الاستوديو.</span>
-      </div>
-
-    </div>
-  </div>
 
   {{-- Section 2: English Search Discovery --}}
   <div class="card card--glass form-card">
@@ -390,13 +308,10 @@
     event.currentTarget.classList.add('is-active');
 
     document.getElementById('seo-preview-google-en').classList.add('is-hidden');
-    document.getElementById('seo-preview-google-ar').classList.add('is-hidden');
     document.getElementById('seo-preview-ai-chat').classList.add('is-hidden');
 
     if (tabKey === 'google-en') {
       document.getElementById('seo-preview-google-en').classList.remove('is-hidden');
-    } else if (tabKey === 'google-ar') {
-      document.getElementById('seo-preview-google-ar').classList.remove('is-hidden');
     } else if (tabKey === 'ai-chat') {
       document.getElementById('seo-preview-ai-chat').classList.remove('is-hidden');
     }

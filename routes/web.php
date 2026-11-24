@@ -30,11 +30,9 @@ Route::get('/partners', [PageController::class, 'partners'])->name('partners');
 Route::get('/blog', [PageController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [PageController::class, 'post'])->name('blog.show');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
-// Real language URLs, never automatic language/geo redirects.
+// English service pages. Archived language drafts have no public routes.
 Route::get('/services', [ServicePageController::class, 'index'])->name('services.index');
 Route::get('/services/{slug}', [ServicePageController::class, 'show'])->name('services.show');
-Route::get('/ar/services', [ServicePageController::class, 'index'])->defaults('locale', 'ar')->name('services.ar.index');
-Route::get('/ar/services/{slug}', [ServicePageController::class, 'show'])->defaults('locale', 'ar')->name('services.ar.show');
 
 Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
 Route::post('/subscribe', [NewsletterController::class, 'store'])->name('subscribe');

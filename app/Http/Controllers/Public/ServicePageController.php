@@ -9,16 +9,15 @@ class ServicePageController extends Controller
 {
     public function __construct(private ServicePageService $pages) {}
 
-    public function index(string $locale = 'en')
+    public function index()
     {
-        return view('pages.service-index', ['pages' => $this->pages->published($locale), 'locale' => $locale]);
+        return view('pages.service-index', ['pages' => $this->pages->published('en'), 'locale' => 'en']);
     }
 
-    public function show(string $slug, string $locale = 'en')
+    public function show(string $slug)
     {
-        $page = $this->pages->publicPage($slug, $locale);
-        $alternates = collect(['en', 'ar'])->flatMap(fn ($lang) => $this->pages->published($lang)->where('slug', $slug));
+        $page = $this->pages->publicPage($slug, 'en');
 
-        return view('pages.service-detail', compact('page', 'locale', 'alternates'));
+        return view('pages.service-detail', ['page' => $page, 'locale' => 'en']);
     }
 }
