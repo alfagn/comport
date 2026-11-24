@@ -32,14 +32,21 @@
 }
 
 /* --------------------------------------------------------------------------
-   ROW 1: Top Utility Bar (Matches Link Development Top Row)
+   ROW 1: Top Utility Bar (Desktop Only — Mobile Uses Single Inline Search)
    -------------------------------------------------------------------------- */
 .utility {
+  display: none;
   block-size: 3rem;
   background-color: #FFFFFF;
   color: var(--color-neutral-700);
   border-block-end: var(--border) solid #E6EBF2;
   font-size: var(--text-xs);
+}
+
+@media (min-width: 68rem) {
+  .utility {
+    display: block;
+  }
 }
 
 .utility__inner {
@@ -459,6 +466,19 @@
   background-color: #FF5B1F;
   color: #FFFFFF;
   border-radius: var(--radius-1);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.mobile-search-toggle:hover,
+.mobile-search-toggle[aria-expanded="true"] {
+  background-color: var(--color-ink-900);
+  color: #FFFFFF;
+}
+
+.mobile-search-toggle:active {
+  transform: scale(0.96);
 }
 
 .mobile-search-toggle svg {

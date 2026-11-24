@@ -18,7 +18,10 @@
     var triggers = Array.prototype.slice.call(document.querySelectorAll("[data-mega-trigger]"));
     var panels = Array.prototype.slice.call(document.querySelectorAll("[data-mega-panel]"));
 
-    var searchToggle = document.getElementById("search-toggle");
+    var searchToggles = Array.prototype.slice.call(
+      document.querySelectorAll("#search-toggle, [data-search-toggle]")
+    );
+    var lastSearchTrigger = searchToggles[0] || null;
     var searchPanel = document.getElementById("search-panel");
     var searchInput = document.getElementById("search-input");
     var searchClose = document.getElementById("search-close");
@@ -130,9 +133,9 @@
 
       if (searchPanel && searchPanel.classList.contains("is-open")) {
         searchPanel.classList.remove("is-open");
-        if (searchToggle) {
-          searchToggle.setAttribute("aria-expanded", "false");
-        }
+        searchToggles.forEach(function (t) {
+          t.setAttribute("aria-expanded", "false");
+        });
       }
 
       triggers.forEach(function (b) {
@@ -230,32 +233,39 @@
       }
     });
 
-    // 3. Search Panel
+    // 3. Search Panel (Desktop Utility Toggle + Mobile Header Toggle)
+    var setSearchExpanded = function (expanded) {
+      searchToggles.forEach(function (btn) {
+        btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+      });
+    };
+
     var closeSearch = function () {
       if (!searchPanel) {
         return;
       }
       searchPanel.classList.remove("is-open");
-      if (searchToggle) {
-        searchToggle.setAttribute("aria-expanded", "false");
-      }
+      setSearchExpanded(false);
     };
 
-    if (searchToggle && searchPanel) {
-      searchToggle.addEventListener("click", function () {
-        var open = searchPanel.classList.toggle("is-open");
-        searchToggle.setAttribute("aria-expanded", open ? "true" : "false");
-        if (open) {
-          closeMega(false);
-          if (head) {
-            head.classList.add("is-menu-open");
+    if (searchToggles.length > 0 && searchPanel) {
+      searchToggles.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          lastSearchTrigger = btn;
+          var open = searchPanel.classList.toggle("is-open");
+          setSearchExpanded(open);
+          if (open) {
+            closeMega(false);
+            if (head) {
+              head.classList.add("is-menu-open");
+            }
+            if (searchInput) {
+              searchInput.focus();
+            }
+          } else if (head) {
+            head.classList.remove("is-menu-open");
           }
-          if (searchInput) {
-            searchInput.focus();
-          }
-        } else if (head) {
-          head.classList.remove("is-menu-open");
-        }
+        });
       });
     }
 
@@ -265,8 +275,8 @@
         if (head) {
           head.classList.remove("is-menu-open");
         }
-        if (searchToggle) {
-          searchToggle.focus();
+        if (lastSearchTrigger) {
+          lastSearchTrigger.focus();
         }
       });
     }
@@ -333,8 +343,8 @@
         }
         if (searchPanel && searchPanel.classList.contains("is-open")) {
           closeSearch();
-          if (searchToggle) {
-            searchToggle.focus();
+          if (lastSearchTrigger) {
+            lastSearchTrigger.focus();
           }
         }
         if (drawer && drawer.classList.contains("is-open")) {
