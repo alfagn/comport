@@ -178,7 +178,7 @@
         @foreach(\App\Models\Project::active()->take(2)->get() as $qProj)
           <a href="{{ route('work.show', $qProj->slug) }}">{{ $qProj->client ?: \Illuminate\Support\Str::limit($qProj->title, 24) }}</a>
         @endforeach
-        @if($qPost = \App\Models\Post::published()->orderBy('sort_order')->first())
+        @if($qPost = \App\Models\Post::published()->first())
           <a href="{{ route('blog.show', $qPost->slug) }}">{{ \Illuminate\Support\Str::limit($qPost->title, 26) }}</a>
         @endif
         @if(page_active('about')) <a href="{{ url('/about') }}#founders">Meet the Founders</a> @endif
@@ -281,7 +281,7 @@
       ? \App\Models\Project::active()->orderByDesc('is_featured')->orderBy('sort_order')->first()
       : null;
   $liveMegaPosts = page_active('blog')
-      ? \App\Models\Post::published()->orderBy('sort_order')->latest('published_at')->take(3)->get()
+      ? \App\Models\Post::published()->take(3)->get()
       : collect();
 @endphp
 <div id="mega-menu" class="mega" role="region" aria-label="Expanded studio directory">

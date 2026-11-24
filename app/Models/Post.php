@@ -11,7 +11,7 @@ class Post extends Model
 {
     protected $fillable = [
         'title', 'slug', 'type', 'category', 'excerpt', 'body',
-        'cover_image', 'video_url', 'meta', 'published_at', 'is_published',
+        'cover_image', 'video_url', 'meta', 'published_at', 'is_published', 'sort_order',
     ];
 
     protected $casts = [

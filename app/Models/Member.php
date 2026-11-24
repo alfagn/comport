@@ -64,7 +64,7 @@ class Member extends Model
 
         $next = $max + 1;
         do {
-            $candidate = 'EMP-'.str_pad((string) $next, 3, '0', STR_PAD_LEFT);
+            $candidate = 'EMP-'.str_pad((string) $next, 5, '0', STR_PAD_LEFT);
             $exists = static::query()
                 ->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))
                 ->where('member_code', $candidate)

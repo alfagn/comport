@@ -456,7 +456,7 @@ class ProjectEnhancementTest extends TestCase
         $owner->assignRole('owner');
         \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage members', 'guard_name' => 'web']);
 
-        // 1. Auto-generates sequential unique member_code (EMP-XXX) when omitted
+        // 1. Auto-generates sequential unique member_code (EMP-XXXXX) when omitted
         $this->actingAs($owner)->post('/admin/members', [
             'name' => 'Karim Adel',
             'email' => 'karim.adel@empetix.com',
@@ -468,7 +468,7 @@ class ProjectEnhancementTest extends TestCase
 
         $karim = Member::where('email', 'karim.adel@empetix.com')->first();
         $this->assertNotNull($karim);
-        $this->assertMatchesRegularExpression('/^EMP-\d{3,}$/', (string) $karim->member_code);
+        $this->assertMatchesRegularExpression('/^EMP-\d{5,}$/', (string) $karim->member_code);
 
         // 2. Rejects duplicate email on another team member
         $dupEmailRes = $this->actingAs($owner)->post('/admin/members', [

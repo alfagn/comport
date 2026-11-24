@@ -9,7 +9,7 @@
     @csrf
     @if($item) @method('PUT') @endif
     <div class="form-grid">
-      <x-admin.input name="member_code" label="Unique Team ID" :value="$item?->member_code" placeholder="Auto-generated (e.g. EMP-016)" hint="Leave empty to auto-generate a unique ID, or enter a custom unique ID."/>
+      <x-admin.input name="member_code" label="Unique Team ID" :value="$item?->member_code" placeholder="Auto-generated (e.g. EMP-00001)" hint="Leave empty to auto-generate a unique ID, or enter a custom unique ID."/>
       <x-admin.input name="email" label="Unique Email Address" type="email" :value="$item?->email" :required="true" placeholder="name@empetix.com" hint="Must be unique for each team member."/>
       <x-admin.input name="name" label="Full name" :value="$item?->name" :required="true"/>
       <x-admin.input name="slug" label="Slug" :value="$item?->slug" hint="Used in the founder page URL. Leave empty to generate."/>
