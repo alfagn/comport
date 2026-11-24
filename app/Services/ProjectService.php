@@ -75,11 +75,12 @@ class ProjectService extends BaseService
         return $attributes;
     }
 
-    public function create(ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = []): Project
+    public function create(ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = [], ?UploadedFile $logoFile = null): Project
     {
         $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['title']);
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects');
+        $attributes['logo'] = $this->storeUpload($logoFile, 'uploads/projects/logos', is_string($attributes['logo'] ?? null) ? $attributes['logo'] : null);
 
         $gallery = [];
         if (isset($attributes['gallery'])) {
@@ -107,12 +108,13 @@ class ProjectService extends BaseService
     }
 
     /** Update a project and re-sync its tags. */
-    public function update(int $id, ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = []): Project
+    public function update(int $id, ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = [], ?UploadedFile $logoFile = null): Project
     {
         $record = $this->repository->find($id);
         $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? $record->slug;
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects', $record->image);
+        $attributes['logo'] = $this->storeUpload($logoFile, 'uploads/projects/logos', $record->logo);
 
         $gallery = [];
         if (isset($attributes['gallery'])) {

@@ -38,8 +38,9 @@
       </div>
 
       <div class="full">
-        <h3 style="margin: 1.5rem 0 0.5rem; font-size: 1.1rem; color: var(--text-heading, #111);">Screenshots & Gallery</h3>
+        <h3 style="margin: 1.5rem 0 0.5rem; font-size: 1.1rem; color: var(--text-heading, #111);">Brand Emblem, Screenshots &amp; Gallery</h3>
       </div>
+      <div class="full"><x-admin.image name="logo" label="Project / Client Logo (Animated Hero Emblem on Right)" :current="$item?->logo"/></div>
       <div class="full"><x-admin.image name="image" label="Cover banner image" :current="$item?->image"/></div>
       
       <div class="full">

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Project extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'live_url', 'client', 'kicker', 'location', 'year', 'excerpt',
+        'title', 'slug', 'logo', 'live_url', 'client', 'kicker', 'location', 'year', 'excerpt',
         'body', 'facts', 'stats', 'sections', 'quote', 'quote_cite',
         'video_poster', 'video_src', 'video_url', 'image', 'gallery', 'is_featured', 'is_active', 'sort_order',
     ];

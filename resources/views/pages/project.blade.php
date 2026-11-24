@@ -15,7 +15,23 @@
 @section('content')
 <main id="main-content">
 
-    <section class="article-head">
+    @php
+      $projectLogo = $project->logo
+          ? (str_starts_with((string) $project->logo, 'uploads/') ? asset('storage/'.$project->logo) : asset($project->logo))
+          : null;
+
+      if (! $projectLogo) {
+          if (str_contains((string) $project->slug, 'western') || str_contains((string) $project->slug, 'westvale')) {
+              $projectLogo = asset('assets/img/work/westvale/logo.png');
+          } elseif (str_contains((string) $project->slug, 'alfagn')) {
+              $projectLogo = asset('assets/img/work/alfagn.png');
+          } else {
+              $projectLogo = brand_logo();
+          }
+      }
+    @endphp
+
+    <section class="article-head article-head--project">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
           <li><a href="{{ url('/') }}">Home</a></li>
@@ -23,40 +39,82 @@
           <li aria-current="page">{{ $project->client ?? $project->title }}</li>
         </ol>
 
-        <div class="article-head__meta">
-          @if($project->kicker)<span class="article-head__cat">{{ $project->kicker }}</span>@endif
-          @if($project->location)<span>{{ $project->location }}</span>@endif
-          @if($project->year)<span>{{ $project->year }}</span>@endif
-          @if($project->live_url)
-            <span style="display:inline-flex; align-items:center; gap:5px; color:#10b981; font-weight:700;">
-              <span class="live-pulse"></span> Production Live
-            </span>
-          @endif
-        </div>
+        <div class="project-hero-split">
+          <!-- Left Column: Title, Summary & Quick Action Nav -->
+          <div class="project-hero-split__content">
+            <div class="article-head__meta">
+              @if($project->kicker)<span class="article-head__cat">{{ $project->kicker }}</span>@endif
+              @if($project->location)<span>{{ $project->location }}</span>@endif
+              @if($project->year)<span>{{ $project->year }}</span>@endif
+              @if($project->live_url)
+                <span style="display:inline-flex; align-items:center; gap:5px; color:#10b981; font-weight:700;">
+                  <span class="live-pulse"></span> Production Live
+                </span>
+              @endif
+            </div>
 
-        <h1 class="article-head__title">{{ $project->title }}</h1>
-        @if($project->excerpt)
-          <p class="article-head__dek">{{ $project->excerpt }}</p>
-        @endif
+            <h1 class="article-head__title">{{ $project->title }}</h1>
+            @if($project->excerpt)
+              <p class="article-head__dek">{{ $project->excerpt }}</p>
+            @endif
 
-        <!-- Quick Action Nav -->
-        <div style="display:flex; flex-wrap:wrap; gap:12px; margin: 1.5rem 0 2rem; align-items:center;">
-          @if($project->live_url)
-            <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--accent" style="display:inline-flex; align-items:center; gap:8px; font-weight:700;">
-              <span class="live-pulse"></span>
-              <span>Visit Live Platform</span>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 1.5H14.5V11.5H13V4.06L2.53 14.53L1.47 13.47L11.94 3H4.5V1.5Z"/></svg>
-            </a>
-          @endif
-          @if($project->body)
-            <a href="#architecture" class="btn btn--ghost" style="font-size:0.85rem;">System Architecture &darr;</a>
-          @endif
-          @if(!empty($project->gallery))
-            <a href="#gallery" class="btn btn--ghost" style="font-size:0.85rem;">Interface &amp; Screenshots &darr;</a>
-          @endif
-          @if($project->video_url || $project->video_src)
-            <a href="#video-showcase" class="btn btn--ghost" style="font-size:0.85rem;">Demo Video &darr;</a>
-          @endif
+            <!-- Quick Action Nav -->
+            <div style="display:flex; flex-wrap:wrap; gap:12px; margin: 1.5rem 0 2rem; align-items:center;">
+              @if($project->live_url)
+                <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--accent" style="display:inline-flex; align-items:center; gap:8px; font-weight:700;">
+                  <span class="live-pulse"></span>
+                  <span>Visit Live Platform</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 1.5H14.5V11.5H13V4.06L2.53 14.53L1.47 13.47L11.94 3H4.5V1.5Z"/></svg>
+                </a>
+              @endif
+              @if($project->body)
+                <a href="#architecture" class="btn btn--ghost" style="font-size:0.85rem;">System Architecture &darr;</a>
+              @endif
+              @if(!empty($project->gallery))
+                <a href="#gallery" class="btn btn--ghost" style="font-size:0.85rem;">Interface &amp; Screenshots &darr;</a>
+              @endif
+              @if($project->video_url || $project->video_src)
+                <a href="#video-showcase" class="btn btn--ghost" style="font-size:0.85rem;">Demo Video &darr;</a>
+              @endif
+            </div>
+          </div>
+
+          <!-- Right Column: Animated Project / Brand Emblem Showcase -->
+          <div class="project-hero-split__stage">
+            <div class="project-emblem-stage">
+              <div class="project-emblem__halo" aria-hidden="true"></div>
+
+              <!-- Outer Clockwise Orbital Ring -->
+              <div class="project-emblem__orbit project-emblem__orbit--outer" aria-hidden="true">
+                <span class="project-emblem__node project-emblem__node--accent"></span>
+                <span class="project-emblem__node project-emblem__node--live"></span>
+              </div>
+
+              <!-- Inner Counter-Clockwise Orbital Ring -->
+              <div class="project-emblem__orbit project-emblem__orbit--inner" aria-hidden="true">
+                <span class="project-emblem__node project-emblem__node--navy"></span>
+              </div>
+
+              <!-- Levitating Glass-Porcelain Medallion -->
+              @if($project->live_url)
+                <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer" class="project-emblem__core" title="Open {{ $project->client ?? $project->title }} Live Platform">
+                  <span class="project-emblem__sheen" aria-hidden="true"></span>
+                  <img class="project-emblem__img" src="{{ $projectLogo }}" alt="{{ $project->client ?? $project->title }} Logo" width="220" height="220"/>
+                </a>
+              @else
+                <div class="project-emblem__core">
+                  <span class="project-emblem__sheen" aria-hidden="true"></span>
+                  <img class="project-emblem__img" src="{{ $projectLogo }}" alt="{{ $project->client ?? $project->title }} Logo" width="220" height="220"/>
+                </div>
+              @endif
+
+              <!-- Architectural Status Badge -->
+              <div class="project-emblem__pill">
+                <span class="live-pulse"></span>
+                <span>{{ $project->live_url ? 'VERIFIED PRODUCTION SYSTEM' : 'ARCHITECTED BY EMPETIX' }}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         @if(!empty($project->facts))

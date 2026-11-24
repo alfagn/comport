@@ -24,7 +24,7 @@ class TeamUsersSyncSeeder extends Seeder
             [
                 'slug' => 'mohanad',
                 'name' => 'Mohanad Ahmed Shehata',
-                'email' => 'mohand@gmail.com',
+                'email' => 'mohand@empetix.com',
                 'role' => 'Founder & Chief Technology Officer',
             ],
             [

@@ -192,7 +192,7 @@ class ProjectEnhancementTest extends TestCase
     {
         $this->seed(TeamUsersSyncSeeder::class);
 
-        $mohanad = User::where('email', 'mohand@gmail.com')->first();
+        $mohanad = User::where('email', 'mohand@empetix.com')->first();
         $this->assertNotNull($mohanad);
         $this->assertTrue($mohanad->hasRole('owner'));
         $this->assertEquals('founder', $mohanad->member?->kind);
@@ -228,5 +228,61 @@ class ProjectEnhancementTest extends TestCase
             'kind' => 'founder',
             'is_active' => true,
         ]);
+    }
+
+    public function test_artisan_user_delete_command_deletes_peer_owner_and_linked_member(): void
+    {
+        User::role('owner')->get()->each(fn (User $u) => $u->delete());
+
+        $primaryOwner = User::factory()->create(['name' => 'Primary Owner', 'email' => 'mohand@empetix.com']);
+        $primaryOwner->assignRole('owner');
+
+        $duplicateOwner = User::factory()->create(['name' => 'Mohanad Ahemd Shehata', 'email' => 'mohanad@empetix.com']);
+        $duplicateOwner->assignRole('owner');
+
+        Member::create([
+            'user_id' => $duplicateOwner->id,
+            'name' => 'Mohanad Ahemd Shehata',
+            'slug' => 'mohanad-ahemd-shehata',
+            'email' => 'mohanad@empetix.com',
+            'kind' => 'founder',
+        ]);
+
+        $this->artisan('user:delete', [
+            'identifier' => 'mohanad@empetix.com',
+            '--force' => true,
+        ])->assertSuccessful();
+
+        $this->assertDatabaseMissing('users', ['email' => 'mohanad@empetix.com']);
+        $this->assertDatabaseMissing('members', ['email' => 'mohanad@empetix.com']);
+        $this->assertDatabaseHas('users', ['email' => 'mohand@empetix.com']);
+
+        // Cannot delete the last remaining owner
+        $this->artisan('user:delete', [
+            'identifier' => 'mohand@empetix.com',
+            '--force' => true,
+        ])->assertFailed();
+
+        $this->assertDatabaseHas('users', ['email' => 'mohand@empetix.com']);
+    }
+
+    public function test_project_detail_page_renders_animated_emblem_logo_stage(): void
+    {
+        $project = Project::updateOrCreate(
+            ['slug' => 'western-elearning-academy'],
+            [
+                'title' => 'Western eLearning Academy',
+                'logo' => 'assets/img/work/westvale/logo.png',
+                'live_url' => 'http://westvalelearning.academy/',
+                'is_active' => true,
+                'sort_order' => 1,
+            ]
+        );
+
+        $response = $this->get('/work/western-elearning-academy');
+        $response->assertOk();
+        $response->assertSee('project-emblem-stage', false);
+        $response->assertSee('assets/img/work/westvale/logo.png');
+        $response->assertSee('VERIFIED PRODUCTION SYSTEM');
     }
 }

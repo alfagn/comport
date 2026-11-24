@@ -44,7 +44,8 @@ class ProjectController extends Controller
         $this->service->create(
             ProjectData::fromArray($request->validated()),
             $request->file('image'),
-            $galleryFiles
+            $galleryFiles,
+            $request->file('logo')
         );
 
         return redirect()->route('admin.projects.index')->with('success', 'Project created.');
@@ -68,7 +69,8 @@ class ProjectController extends Controller
             $id,
             ProjectData::fromArray($request->validated()),
             $request->file('image'),
-            $galleryFiles
+            $galleryFiles,
+            $request->file('logo')
         );
 
         return redirect()->route('admin.projects.index')->with('success', 'Project updated.');

@@ -37,6 +37,244 @@
   max-inline-size: 48ch;
 }
 
+/* --------------------------------------------------------------------------
+   Project Hero Split & Animated Right-Side Emblem Stage
+   -------------------------------------------------------------------------- */
+.project-hero-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8) var(--gutter);
+  align-items: center;
+}
+
+@media (min-width: 64rem) {
+  .project-hero-split {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .project-hero-split__content {
+    grid-column: 1 / span 7;
+  }
+
+  .project-hero-split__stage {
+    grid-column: 8 / span 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.project-hero-split__stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-block: var(--space-4);
+}
+
+.project-emblem-stage {
+  position: relative;
+  width: clamp(250px, 28vw, 350px);
+  height: clamp(250px, 28vw, 350px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+}
+
+/* Ambient breathing radial aura */
+.project-emblem__halo {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(255, 77, 28, 0.14) 0%,
+    rgba(16, 185, 129, 0.08) 42%,
+    rgba(8, 20, 44, 0.04) 70%,
+    transparent 100%
+  );
+  filter: blur(22px);
+  z-index: -2;
+  animation: emblemHaloPulse 5.5s ease-in-out infinite;
+}
+
+/* Concentric telemetry orbital rings */
+.project-emblem__orbit {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.project-emblem__orbit--outer {
+  inset: 0;
+  border: 1px dashed rgba(8, 20, 44, 0.15);
+  animation: emblemOrbitCw 28s linear infinite;
+}
+
+.project-emblem__orbit--inner {
+  inset: 11%;
+  border: 1px solid rgba(8, 20, 44, 0.09);
+  animation: emblemOrbitCcw 19s linear infinite;
+}
+
+/* Orbiting glowing telemetry nodes */
+.project-emblem__node {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.project-emblem__node--accent {
+  width: 11px;
+  height: 11px;
+  top: -5.5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-accent-500, #FF4D1C);
+  box-shadow: 0 0 0 4px rgba(255, 77, 28, 0.18), 0 0 14px rgba(255, 77, 28, 0.55);
+}
+
+.project-emblem__node--live {
+  width: 9px;
+  height: 9px;
+  bottom: 14%;
+  right: 7%;
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18), 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+.project-emblem__node--navy {
+  width: 8px;
+  height: 8px;
+  top: 50%;
+  left: -4px;
+  transform: translateY(-50%);
+  background: var(--color-ink-900, #08142C);
+  box-shadow: 0 0 0 3px rgba(8, 20, 44, 0.12);
+}
+
+/* Levitating glass-porcelain center medallion */
+.project-emblem__core {
+  position: relative;
+  width: clamp(168px, 18vw, 218px);
+  height: clamp(168px, 18vw, 218px);
+  border-radius: 36px;
+  background: linear-gradient(145deg, #ffffff 0%, #f9f9f7 100%);
+  border: 1px solid rgba(8, 20, 44, 0.09);
+  box-shadow:
+    0 24px 54px rgba(8, 20, 44, 0.10),
+    0 6px 18px rgba(8, 20, 44, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow: hidden;
+  text-decoration: none;
+  animation: emblemFloat 4.8s ease-in-out infinite;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.project-emblem__core:hover {
+  border-color: rgba(255, 77, 28, 0.45);
+  box-shadow:
+    0 30px 64px rgba(8, 20, 44, 0.14),
+    0 8px 24px rgba(255, 77, 28, 0.14);
+  transform: translateY(-6px) scale(1.035);
+}
+
+/* Subtle diagonal light sheen sweeping across medallion */
+.project-emblem__sheen {
+  position: absolute;
+  inset: -60%;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.78) 50%,
+    transparent 62%
+  );
+  transform: translateX(-100%) rotate(12deg);
+  pointer-events: none;
+  animation: emblemSheenSweep 6.5s ease-in-out infinite;
+}
+
+.project-emblem__img {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(8, 20, 44, 0.08));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-emblem__core:hover .project-emblem__img {
+  transform: scale(1.06);
+}
+
+/* Floating architectural badge docked at bottom of orbital stage */
+.project-emblem__pill {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--color-ink-900, #08142C);
+  color: #ffffff;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(8, 20, 44, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 2;
+}
+
+@keyframes emblemOrbitCw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes emblemOrbitCcw {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes emblemFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes emblemHaloPulse {
+  0%, 100% { transform: scale(0.94); opacity: 0.75; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes emblemSheenSweep {
+  0%, 65% { transform: translateX(-120%) rotate(12deg); }
+  100% { transform: translateX(120%) rotate(12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-emblem__halo,
+  .project-emblem__orbit--outer,
+  .project-emblem__orbit--inner,
+  .project-emblem__core,
+  .project-emblem__sheen {
+    animation: none !important;
+  }
+}
+
 .article-media {
   margin-block-end: var(--space-10);
 }

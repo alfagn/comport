@@ -12,13 +12,14 @@ use App\Core\DTOs\BaseData;
 class ProjectData extends BaseData
 {
     protected static array $fields = [
-        'title', 'slug', 'live_url', 'client', 'kicker', 'location', 'year', 'excerpt',
+        'title', 'slug', 'logo', 'live_url', 'client', 'kicker', 'location', 'year', 'excerpt',
         'body', 'facts', 'stats', 'sections', 'quote', 'quote_cite',
         'video_poster', 'video_src', 'video_url', 'image', 'gallery', 'is_featured', 'is_active', 'sort_order', 'tags'
     ];
 
     public mixed $title = null;
     public mixed $slug = null;
+    public mixed $logo = null;
     public mixed $live_url = null;
     public mixed $client = null;
     public mixed $kicker = null;

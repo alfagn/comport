@@ -35,6 +35,11 @@ class ProjectRequest extends FormRequest
             $this->request->remove('image');
             $this->files->remove('image');
         }
+
+        if ($this->hasFile('logo') && ! $this->file('logo')?->isValid()) {
+            $this->request->remove('logo');
+            $this->files->remove('logo');
+        }
     }
 
     /** @return array<string, array<int, string>> */
@@ -43,6 +48,7 @@ class ProjectRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:200'],
             'slug' => ['nullable', 'string', 'max:220', 'alpha_dash'],
+            'logo' => ['nullable', 'image', 'max:4096'],
             'live_url' => ['nullable', 'url', 'max:500'],
             'location' => ['nullable', 'string', 'max:200'],
             'client' => ['nullable', 'string', 'max:160'],
