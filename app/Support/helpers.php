@@ -179,3 +179,14 @@ if (! function_exists('seo_current_url')) {
         return SeoUrl::current();
     }
 }
+
+if (! function_exists('versioned_asset')) {
+    /** Append file modification timestamp so CDNs (Cloudflare/Nginx) and browsers never serve stale CSS/JS. */
+    function versioned_asset(string $path): string
+    {
+        $full = public_path($path);
+        $ver = is_file($full) ? filemtime($full) : null;
+
+        return asset($path).($ver ? '?v='.$ver : '');
+    }
+}

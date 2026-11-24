@@ -6,8 +6,8 @@
   <meta name="robots" content="noindex, follow"/>
   <title>{{ sec('error', 'meta_title') }}</title>
   <link rel="icon" href="{{ brand_favicon() }}"/>
-  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('assets/css/pages/error.css') }}"/>
+  <link rel="stylesheet" href="{{ versioned_asset('assets/css/main.css') }}"/>
+  <link rel="stylesheet" href="{{ versioned_asset('assets/css/pages/error.css') }}"/>
 </head>
 <body class="error-page">
   <header class="error-header">

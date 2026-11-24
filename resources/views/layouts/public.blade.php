@@ -25,10 +25,34 @@
 
   <link rel="icon" href="{{ brand_favicon() }}"/>
   <link rel="preload" as="image" href="{{ content_asset(sec('global', 'copy_c47b5facbcd3')) }}" fetchpriority="high"/>
-  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"/>
-  <script src="{{ asset('assets/js/preloader-gate.js') }}"></script>
+  @foreach([
+    'assets/css/base/variables.css',
+    'assets/css/base/reset.css',
+    'assets/css/base/typography.css',
+    'assets/css/layout/grid.css',
+    'assets/css/layout/header.css',
+    'assets/css/layout/footer.css',
+    'assets/css/components/preloader.css',
+    'assets/css/components/button.css',
+    'assets/css/components/mega-menu.css',
+    'assets/css/components/hero.css',
+    'assets/css/components/card.css',
+    'assets/css/components/founders.css',
+    'assets/css/components/lists.css',
+    'assets/css/components/media.css',
+    'assets/css/components/form.css',
+    'assets/css/pages/home.css',
+    'assets/css/pages/article.css',
+    'assets/css/pages/inner.css',
+    'assets/css/pages/founder.css',
+    'assets/css/pages/team.css',
+    'assets/css/pages/careers.css',
+  ] as $cssFile)
+  <link rel="stylesheet" href="{{ versioned_asset($cssFile) }}"/>
+  @endforeach
+  <script src="{{ versioned_asset('assets/js/preloader-gate.js') }}"></script>
   <noscript>
-    <link rel="stylesheet" href="{{ asset('assets/css/noscript.css') }}"/>
+    <link rel="stylesheet" href="{{ versioned_asset('assets/css/noscript.css') }}"/>
   </noscript>
 
 </head>
@@ -502,15 +526,15 @@
   {{-- Interaction modules: nav (mega menu, drawer), scroll reveal, animated
        counters, media frames, careers filtering — same bundle the static
        site shipped with. Without these the page renders but stays inert. --}}
-  <script defer src="{{ asset('assets/js/modules/nav.js') }}"></script>
-  <script defer src="{{ asset('assets/js/modules/reveal.js') }}"></script>
-  <script defer src="{{ asset('assets/js/modules/counter.js') }}"></script>
-  <script defer src="{{ asset('assets/js/modules/media.js') }}"></script>
-  <script defer src="{{ asset('assets/js/modules/careers.js') }}"></script>
+  <script defer src="{{ versioned_asset('assets/js/modules/nav.js') }}"></script>
+  <script defer src="{{ versioned_asset('assets/js/modules/reveal.js') }}"></script>
+  <script defer src="{{ versioned_asset('assets/js/modules/counter.js') }}"></script>
+  <script defer src="{{ versioned_asset('assets/js/modules/media.js') }}"></script>
+  <script defer src="{{ versioned_asset('assets/js/modules/careers.js') }}"></script>
   @if(($activePage ?? '') === 'team')
-    <script defer src="{{ asset('assets/js/modules/team.js') }}"></script>
+    <script defer src="{{ versioned_asset('assets/js/modules/team.js') }}"></script>
   @endif
-  <script type="module" src="{{ asset('assets/js/main.js') }}"></script>
+  <script type="module" src="{{ versioned_asset('assets/js/main.js') }}"></script>
 @yield('scripts')
 </body>
 </html>
