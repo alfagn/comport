@@ -10,7 +10,6 @@ use App\Services\ProjectService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\UploadedFile;
 
 /**
  * Dashboard CRUD for Project.
@@ -37,7 +36,16 @@ class ProjectController extends Controller
     /** Store a new record. */
     public function store(ProjectRequest $request): RedirectResponse
     {
-        $this->service->create(ProjectData::fromArray($request->validated()), $request->file('image'));
+        $galleryFiles = $request->file('gallery_files', []);
+        if (!is_array($galleryFiles)) {
+            $galleryFiles = array_filter([$galleryFiles]);
+        }
+
+        $this->service->create(
+            ProjectData::fromArray($request->validated()),
+            $request->file('image'),
+            $galleryFiles
+        );
 
         return redirect()->route('admin.projects.index')->with('success', 'Project created.');
     }
@@ -51,7 +59,17 @@ class ProjectController extends Controller
     /** Update a record. */
     public function update(ProjectRequest $request, int $id): RedirectResponse
     {
-        $this->service->update($id, ProjectData::fromArray($request->validated()), $request->file('image'));
+        $galleryFiles = $request->file('gallery_files', []);
+        if (!is_array($galleryFiles)) {
+            $galleryFiles = array_filter([$galleryFiles]);
+        }
+
+        $this->service->update(
+            $id,
+            ProjectData::fromArray($request->validated()),
+            $request->file('image'),
+            $galleryFiles
+        );
 
         return redirect()->route('admin.projects.index')->with('success', 'Project updated.');
     }

@@ -34,7 +34,6 @@ class ProjectService extends BaseService
         return $this->repository->find($id)->load('tags');
     }
 
-    /** Create a project and sync its tags. */
     /**
      * Dashboard textareas carry the structured case-study blocks as
      * delimited lines; convert them to arrays before JSON storage.
@@ -76,11 +75,29 @@ class ProjectService extends BaseService
         return $attributes;
     }
 
-    public function create(ProjectData $data, ?UploadedFile $imageFile = null): Project
+    public function create(ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = []): Project
     {
         $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['title']);
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects');
+
+        $gallery = [];
+        if (isset($attributes['gallery'])) {
+            if (is_string($attributes['gallery'])) {
+                $gallery = array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $attributes['gallery']))));
+            } elseif (is_array($attributes['gallery'])) {
+                $gallery = $attributes['gallery'];
+            }
+        }
+        foreach ($galleryFiles as $gFile) {
+            if ($gFile instanceof UploadedFile) {
+                $path = $this->storeUpload($gFile, 'uploads/projects/gallery');
+                if ($path) {
+                    $gallery[] = $path;
+                }
+            }
+        }
+        $attributes['gallery'] = !empty($gallery) ? array_values(array_unique($gallery)) : null;
 
         /** @var Project $project */
         $project = $this->repository->create($attributes);
@@ -90,12 +107,33 @@ class ProjectService extends BaseService
     }
 
     /** Update a project and re-sync its tags. */
-    public function update(int $id, ProjectData $data, ?UploadedFile $imageFile = null): Project
+    public function update(int $id, ProjectData $data, ?UploadedFile $imageFile = null, array $galleryFiles = []): Project
     {
         $record = $this->repository->find($id);
         $attributes = $this->normalizeCaseStudy($this->normalizeJsonLines($data->toArray()));
         $attributes['slug'] = $attributes['slug'] ?? $record->slug;
         $attributes['image'] = $this->storeUpload($imageFile, 'uploads/projects', $record->image);
+
+        $gallery = [];
+        if (isset($attributes['gallery'])) {
+            if (is_string($attributes['gallery'])) {
+                $gallery = array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $attributes['gallery']))));
+            } elseif (is_array($attributes['gallery'])) {
+                $gallery = $attributes['gallery'];
+            }
+        } elseif ($record->gallery) {
+            $gallery = (array) $record->gallery;
+        }
+
+        foreach ($galleryFiles as $gFile) {
+            if ($gFile instanceof UploadedFile) {
+                $path = $this->storeUpload($gFile, 'uploads/projects/gallery');
+                if ($path) {
+                    $gallery[] = $path;
+                }
+            }
+        }
+        $attributes['gallery'] = !empty($gallery) ? array_values(array_unique($gallery)) : null;
 
         /** @var Project $project */
         $project = $this->repository->update($id, $attributes);

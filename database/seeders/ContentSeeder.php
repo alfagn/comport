@@ -137,8 +137,13 @@ class ContentSeeder extends Seeder
     /** Founders (kind = founder, full profile) and studio team members. */
     private function seedMembers(): void
     {
+        $defaultUser = \App\Models\User::first();
+
         foreach ($this->data['members'] as $row) {
-            Member::updateOrCreate(['slug' => $row['slug']], $row);
+            $member = Member::updateOrCreate(['slug' => $row['slug']], $row);
+            if ($row['slug'] === 'mohanad' && $defaultUser && ! $member->user_id) {
+                $member->update(['user_id' => $defaultUser->id, 'email' => $defaultUser->email]);
+            }
         }
     }
 

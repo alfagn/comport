@@ -216,3 +216,24 @@ if (! function_exists('page_active')) {
         return app(\App\Services\PageStatusService::class)->isActive($page);
     }
 }
+
+if (! function_exists('video_embed_url')) {
+    /** Convert standard video URLs (YouTube, Vimeo) to iframe-compatible embeds. */
+    function video_embed_url(?string $url): ?string
+    {
+        if (empty($url)) {
+            return null;
+        }
+
+        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $m)) {
+            return 'https://www.youtube-nocookie.com/embed/'.$m[1];
+        }
+
+        if (preg_match('/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)/', $url, $m)) {
+            return 'https://player.vimeo.com/video/'.$m[3];
+        }
+
+        return $url;
+    }
+}
+

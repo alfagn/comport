@@ -37,8 +37,12 @@ class ProjectDataTable extends AdminDataTable
                     $img = '<img class="thumb" src="'.e($src).'" alt=""/>';
                 }
 
+                $liveBadge = $row->live_url
+                    ? ' <a href="'.e($row->live_url).'" target="_blank" rel="noopener noreferrer" class="badge-link" title="Visit Live Platform" style="display:inline-flex; align-items:center; gap:2px; margin-left:6px; font-size:11px; padding:2px 8px; border-radius:12px; background:rgba(235,94,40,0.12); color:#eb5e28; text-decoration:none; font-weight:600;">Live ↗</a>'
+                    : '';
+
                 return '<div class="dt-media-cell">'.$img.'<div>'
-                    .'<div class="cell-title">'.e($row->title).'</div>'
+                    .'<div class="cell-title">'.e($row->title).$liveBadge.'</div>'
                     .'<div class="cell-sub">'.e($row->kicker).'</div></div></div>';
             })
             ->addColumn('tags', function ($row) {

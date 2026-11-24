@@ -96,6 +96,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('/status-toggle/{entity}/{id}', Admin\StatusToggleController::class)->name('status.toggle');
         Route::post('/bulk-delete/{entity}', Admin\BulkDeleteController::class)->name('bulk.delete');
 
+        // Personal account & team profile for any dashboard user / founder
+        Route::get('/profile', [Admin\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [Admin\ProfileController::class, 'update'])->name('profile.update');
+
         // Page content: every editable text/image block of the site.
         Route::middleware('permission:manage pages')->group(function () {
             Route::get('/pages', [Admin\PageSectionController::class, 'index'])->name('pages.index');

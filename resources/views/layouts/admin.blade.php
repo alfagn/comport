@@ -266,13 +266,13 @@
     </nav>
 
     <div class="sidebar__foot">
-      <div class="user-chip">
+      <a href="{{ route('admin.profile.edit') }}" class="user-chip" wire:navigate title="Manage My Profile &amp; Team Details" style="text-decoration:none; color:inherit; display:flex; cursor:pointer;">
         <div class="user-chip__avatar">{{ strtoupper(substr($adminUser->name, 0, 1)) }}</div>
         <div>
           <div class="user-chip__name">{{ $adminUser->name }}</div>
-          <div class="user-chip__role">{{ $adminUser->email }}</div>
+          <div class="user-chip__role" style="font-size:0.75rem;">Edit Profile &rarr;</div>
         </div>
-      </div>
+      </a>
       <form method="post" action="{{ route('admin.logout') }}">
         @csrf
         <button type="submit" class="btn btn--ghost btn--sm sidebar__signout" style="width:100%;justify-content:center;margin-top:10px;" title="Sign out">
@@ -323,6 +323,7 @@
               <strong>{{ $adminUser->name }}</strong>
               <span>{{ $adminUser->email }}</span>
             </div>
+            <a href="{{ route('admin.profile.edit') }}" wire:navigate style="font-weight:600; color:var(--color-text-accent, #eb5e28);">My Profile &amp; Team Details</a>
             <a href="{{ url('/') }}" target="_blank">View website</a>
             <form method="post" action="{{ route('admin.logout') }}">@csrf<button type="submit">Sign out</button></form>
           </div>

@@ -11,10 +11,15 @@ use App\Core\DTOs\BaseData;
  */
 class ProjectData extends BaseData
 {
-    protected static array $fields = ['title', 'slug', 'client', 'kicker', 'location', 'year', 'excerpt', 'body', 'facts', 'stats', 'sections', 'quote', 'quote_cite', 'video_poster', 'video_src', 'image', 'is_featured', 'is_active', 'sort_order', 'tags'];
+    protected static array $fields = [
+        'title', 'slug', 'live_url', 'client', 'kicker', 'location', 'year', 'excerpt',
+        'body', 'facts', 'stats', 'sections', 'quote', 'quote_cite',
+        'video_poster', 'video_src', 'video_url', 'image', 'gallery', 'is_featured', 'is_active', 'sort_order', 'tags'
+    ];
 
     public mixed $title = null;
     public mixed $slug = null;
+    public mixed $live_url = null;
     public mixed $client = null;
     public mixed $kicker = null;
     public mixed $location = null;
@@ -28,7 +33,9 @@ class ProjectData extends BaseData
     public mixed $quote_cite = null;
     public mixed $video_poster = null;
     public mixed $video_src = null;
+    public mixed $video_url = null;
     public mixed $image = null;
+    public mixed $gallery = null;
     public mixed $is_featured = null;
     public mixed $is_active = null;
     public mixed $sort_order = null;

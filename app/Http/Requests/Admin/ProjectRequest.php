@@ -24,6 +24,7 @@ class ProjectRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:200'],
             'slug' => ['nullable', 'string', 'max:220', 'alpha_dash'],
+            'live_url' => ['nullable', 'url', 'max:500'],
             'location' => ['nullable', 'string', 'max:200'],
             'client' => ['nullable', 'string', 'max:160'],
             'kicker' => ['nullable', 'string', 'max:200'],
@@ -37,7 +38,10 @@ class ProjectRequest extends FormRequest
             'quote_cite' => ['nullable', 'string', 'max:255'],
             'video_poster' => ['nullable', 'string', 'max:255'],
             'video_src' => ['nullable', 'string', 'max:255'],
+            'video_url' => ['nullable', 'url', 'max:500'],
             'image' => ['nullable', 'image', 'max:4096'],
+            'gallery_files.*' => ['nullable', 'image', 'max:4096'],
+            'gallery' => ['nullable', 'string'],
             'tags' => ['nullable', 'string', 'max:500'],
             'is_featured' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],

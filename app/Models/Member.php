@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * A person: founder (rich profile + detail page) or team member (grid card).
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     protected $fillable = [
-        'name', 'slug', 'role', 'kind', 'department', 'focus', 'lead', 'bio', 'expertise', 'photo',
+        'user_id', 'name', 'slug', 'role', 'kind', 'department', 'focus', 'lead', 'bio', 'expertise', 'photo',
         'email', 'linkedin', 'twitter', 'sort_order', 'is_active',
     ];
 
@@ -19,6 +20,12 @@ class Member extends Model
         'expertise' => 'array',        // array of paragraphs
         'is_active' => 'boolean',
     ];
+
+    /** Optional relation to admin dashboard user account. */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /** Scope: founders only, in display order. */
     public function scopeFounders($query)
