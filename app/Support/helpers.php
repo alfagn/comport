@@ -208,3 +208,11 @@ if (! function_exists('versioned_asset')) {
         return asset($path).($ver ? '?v='.$ver : '');
     }
 }
+
+if (! function_exists('page_active')) {
+    /** Check whether a public page is active/live. */
+    function page_active(string $page): bool
+    {
+        return app(\App\Services\PageStatusService::class)->isActive($page);
+    }
+}

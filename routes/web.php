@@ -18,27 +18,47 @@ use Illuminate\Support\Facades\Route;
 | (entities + editable page sections) via repositories.
 */
 
-Route::get('/', [PageController::class, 'home'])->name('home');
-Route::get('/about', [PageController::class, 'about'])->name('about');
-Route::get('/work', [PageController::class, 'work'])->name('work');
-Route::get('/work/{slug}', [PageController::class, 'project'])->name('work.show');
-Route::get('/team', [PageController::class, 'team'])->name('team');
-Route::get('/founders/{slug}', [PageController::class, 'founder'])->name('founders.show');
-Route::get('/careers', [PageController::class, 'careers'])->name('careers');
-Route::get('/careers/{slug}', [PageController::class, 'job'])->name('jobs.show');
-Route::post('/careers/{slug}/apply', [JobApplicationController::class, 'store'])->name('jobs.apply');
-Route::get('/partners', [PageController::class, 'partners'])->name('partners');
-Route::get('/blog', [PageController::class, 'blog'])->name('blog');
-Route::get('/blog/{slug}', [PageController::class, 'post'])->name('blog.show');
-Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/', [PageController::class, 'home'])->name('home')->middleware('page.active:home');
+Route::get('/about', [PageController::class, 'about'])->name('about')->middleware('page.active:about');
+
+Route::middleware('page.active:work')->group(function () {
+    Route::get('/work', [PageController::class, 'work'])->name('work');
+    Route::get('/work/{slug}', [PageController::class, 'project'])->name('work.show');
+});
+
+Route::middleware('page.active:team')->group(function () {
+    Route::get('/team', [PageController::class, 'team'])->name('team');
+    Route::get('/founders/{slug}', [PageController::class, 'founder'])->name('founders.show');
+});
+
+Route::middleware('page.active:careers')->group(function () {
+    Route::get('/careers', [PageController::class, 'careers'])->name('careers');
+    Route::get('/careers/{slug}', [PageController::class, 'job'])->name('jobs.show');
+    Route::post('/careers/{slug}/apply', [JobApplicationController::class, 'store'])->name('jobs.apply');
+});
+
+Route::get('/partners', [PageController::class, 'partners'])->name('partners')->middleware('page.active:partners');
+
+Route::middleware('page.active:blog')->group(function () {
+    Route::get('/blog', [PageController::class, 'blog'])->name('blog');
+    Route::get('/blog/{slug}', [PageController::class, 'post'])->name('blog.show');
+});
+
+Route::middleware('page.active:contact')->group(function () {
+    Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+    Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
+});
+
 // English service pages. Archived language drafts have no public routes.
-Route::get('/services', [ServicePageController::class, 'index'])->name('services.index');
-Route::get('/services/{slug}', [ServicePageController::class, 'show'])->name('services.show');
+Route::middleware('page.active:services')->group(function () {
+    Route::get('/services', [ServicePageController::class, 'index'])->name('services.index');
+    Route::get('/services/{slug}', [ServicePageController::class, 'show'])->name('services.show');
+});
+
 Route::get('/media/video/{path}', [MediaStreamController::class, 'video'])
     ->where('path', 'videos/[A-Za-z0-9_\-\./]+')
     ->name('media.video');
 
-Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
 Route::post('/subscribe', [NewsletterController::class, 'store'])->name('subscribe');
 
 /*

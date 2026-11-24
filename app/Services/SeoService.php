@@ -26,15 +26,38 @@ class SeoService
     public function getSitemapUrls(): Collection
     {
         $urls = collect();
-        foreach (['/' => 'Home', '/work' => 'Work', '/about' => 'About', '/team' => 'Team', '/careers' => 'Careers', '/partners' => 'Partners', '/blog' => 'Blog', '/contact' => 'Contact'] as $path => $title) {
+        $staticPages = [
+            '/' => ['Home', 'home'],
+            '/work' => ['Work', 'work'],
+            '/about' => ['About', 'about'],
+            '/team' => ['Team', 'team'],
+            '/careers' => ['Careers', 'careers'],
+            '/partners' => ['Partners', 'partners'],
+            '/blog' => ['Blog', 'blog'],
+            '/contact' => ['Contact', 'contact'],
+        ];
+
+        foreach ($staticPages as $path => [$title, $key]) {
+            if (! page_active($key)) {
+                continue;
+            }
             $urls->push(['url' => seo_url($path), 'title' => $title, 'type' => 'Core Page', 'lastmod' => null, 'image' => null, 'priority' => '0.8', 'changefreq' => 'monthly']);
         }
-        $groups = [
-            [Project::active()->get(), '/work/', 'SaaS Project / Case Study', 'title', 'image'],
-            [Post::published()->get(), '/blog/', 'Editorial / Article', 'title', 'cover_image'],
-            [JobPost::where('is_active', true)->get(), '/careers/', 'Career / Role', 'title', null],
-            [Member::founders()->get(), '/founders/', 'Leadership / Founder', 'name', 'photo'],
-        ];
+
+        $groups = [];
+        if (page_active('work')) {
+            $groups[] = [Project::active()->get(), '/work/', 'SaaS Project / Case Study', 'title', 'image'];
+        }
+        if (page_active('blog')) {
+            $groups[] = [Post::published()->get(), '/blog/', 'Editorial / Article', 'title', 'cover_image'];
+        }
+        if (page_active('careers')) {
+            $groups[] = [JobPost::where('is_active', true)->get(), '/careers/', 'Career / Role', 'title', null];
+        }
+        if (page_active('team')) {
+            $groups[] = [Member::founders()->get(), '/founders/', 'Leadership / Founder', 'name', 'photo'];
+        }
+
         foreach ($groups as [$models, $prefix, $type, $title, $image]) {
             foreach ($models as $model) {
                 if (! $model->slug) {
@@ -51,16 +74,18 @@ class SeoService
             }
         }
 
-        $editions = ServicePage::where('locale', 'en')->where('is_published', true)->get();
-        foreach ($editions as $edition) {
-            $urls->push(['url' => seo_url($edition->publicPath()), 'title' => $edition->title,
-                'type' => 'Service Page', 'lastmod' => $edition->updated_at?->toIso8601String(),
-                'image' => null, 'priority' => '0.7', 'changefreq' => 'monthly']);
-        }
-        if ($editions->isNotEmpty()) {
-            $urls->push(['url' => seo_url('/services'),
-                'title' => 'Services', 'type' => 'Service Index',
-                'lastmod' => null, 'image' => null, 'priority' => '0.7', 'changefreq' => 'monthly']);
+        if (page_active('services')) {
+            $editions = ServicePage::where('locale', 'en')->where('is_published', true)->get();
+            foreach ($editions as $edition) {
+                $urls->push(['url' => seo_url($edition->publicPath()), 'title' => $edition->title,
+                    'type' => 'Service Page', 'lastmod' => $edition->updated_at?->toIso8601String(),
+                    'image' => null, 'priority' => '0.7', 'changefreq' => 'monthly']);
+            }
+            if ($editions->isNotEmpty()) {
+                $urls->push(['url' => seo_url('/services'),
+                    'title' => 'Services', 'type' => 'Service Index',
+                    'lastmod' => null, 'image' => null, 'priority' => '0.7', 'changefreq' => 'monthly']);
+            }
         }
 
         return $urls;

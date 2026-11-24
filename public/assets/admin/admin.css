@@ -971,17 +971,48 @@ table.table { width: 100%; border-collapse: collapse; }
 .page-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
-  padding: 16px 20px;
+  padding: 14px 20px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
   margin-bottom: 12px;
-  text-decoration: none;
   color: var(--text);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
-.page-row:hover { border-color: var(--accent); transform: translateX(4px); }
+.page-row:hover {
+  border-color: rgba(255, 77, 28, 0.4);
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+.page-row__link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+.page-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.page-row__arrow {
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+.page-row__arrow:hover {
+  color: var(--accent);
+  transform: translateX(3px);
+}
 .page-row__icon {
   width: 42px;
   height: 42px;
@@ -996,7 +1027,6 @@ table.table { width: 100%; border-collapse: collapse; }
 .page-row__icon svg { width: 20px; height: 20px; }
 .page-row__name { font-weight: 700; font-size: 15px; }
 .page-row__meta { color: var(--text-muted); font-size: 12.5px; }
-.page-row .arrow { margin-left: auto; color: var(--text-muted); }
 
 /* ---------------- Login ---------------- */
 .login-wrap {

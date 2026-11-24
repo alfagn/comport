@@ -126,17 +126,32 @@
     <div class="utility__inner">
       <ul class="utility__links">
         {{-- Dashboard-editable links (Navigation → Utility bar) with resilient editorial fallback --}}
-        @php($utilityNav = nav_items('utility'))
+        @php
+          $utilityNav = nav_items('utility')->filter(function ($navItem) {
+              $uUrl = strtolower(trim($navItem->url, '/'));
+              $uKey = match(true) {
+                  str_contains($uUrl, 'career') => 'careers',
+                  str_contains($uUrl, 'work') || str_contains($uUrl, 'project') => 'work',
+                  str_contains($uUrl, 'team') || str_contains($uUrl, 'founder') => 'team',
+                  str_contains($uUrl, 'partner') => 'partners',
+                  str_contains($uUrl, 'blog') || str_contains($uUrl, 'post') => 'blog',
+                  str_contains($uUrl, 'contact') => 'contact',
+                  str_contains($uUrl, 'about') => 'about',
+                  default => null,
+              };
+              return ! $uKey || page_active($uKey);
+          });
+        @endphp
         @if($utilityNav->isNotEmpty())
           @foreach($utilityNav as $navItem)
             <li class="utility__item"><a href="{{ str_starts_with($navItem->url, 'http') ? $navItem->url : url($navItem->url) }}" class="utility__link"@if($navItem->label === 'Blog') data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal"@endif>{{ $navItem->label }}</a></li>
           @endforeach
         @else
-          <li class="utility__item"><a href="{{ url('/careers') }}" class="utility__link">Careers</a></li>
-          <li class="utility__item"><a href="{{ url('/work') }}" class="utility__link">Projects</a></li>
-          <li class="utility__item"><a href="{{ url('/team') }}" class="utility__link">Team</a></li>
-          <li class="utility__item"><a href="{{ url('/blog') }}" class="utility__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">Blog & Insights</a></li>
-          <li class="utility__item"><a href="{{ url('/contact') }}" class="utility__link">Contact</a></li>
+          @if(page_active('careers')) <li class="utility__item"><a href="{{ url('/careers') }}" class="utility__link">Careers</a></li> @endif
+          @if(page_active('work')) <li class="utility__item"><a href="{{ url('/work') }}" class="utility__link">Projects</a></li> @endif
+          @if(page_active('team')) <li class="utility__item"><a href="{{ url('/team') }}" class="utility__link">Team</a></li> @endif
+          @if(page_active('blog')) <li class="utility__item"><a href="{{ url('/blog') }}" class="utility__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">Blog &amp; Insights</a></li> @endif
+          @if(page_active('contact')) <li class="utility__item"><a href="{{ url('/contact') }}" class="utility__link">Contact</a></li> @endif
         @endif
       </ul>
 
@@ -192,40 +207,50 @@
               </svg>
             </a>
           </li>
-          <li class="nav__item">
-            <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="nav__link">
-              <span>Projects &amp; Platforms</span>
-            </a>
-          </li>
-          <li class="nav__item">
-            <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="nav__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">
-              <span>Blogs &amp; Media</span>
-              <svg class="nav__chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
-            </a>
-          </li>
-          <li class="nav__item">
-            <a href="{{ url('/partners') }}"@if(($activePage ?? '') === 'partners') aria-current="page"@endif class="nav__link">
-              <span>Partners &amp; Industries</span>
-            </a>
-          </li>
-          <li class="nav__item">
-            <a href="{{ url('/about') }}"@if(($activePage ?? '') === 'about') aria-current="page"@endif class="nav__link">
-              <span>About &amp; Founders</span>
-            </a>
-          </li>
+          @if(page_active('work'))
+            <li class="nav__item">
+              <a href="{{ url('/work') }}"@if(($activePage ?? '') === 'work') aria-current="page"@endif class="nav__link">
+                <span>Projects &amp; Platforms</span>
+              </a>
+            </li>
+          @endif
+          @if(page_active('blog'))
+            <li class="nav__item">
+              <a href="{{ url('/blog') }}"@if(($activePage ?? '') === 'blog') aria-current="page"@endif class="nav__link" data-mega-trigger="journal" aria-expanded="false" aria-controls="mega-journal">
+                <span>Blogs &amp; Media</span>
+                <svg class="nav__chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </a>
+            </li>
+          @endif
+          @if(page_active('partners'))
+            <li class="nav__item">
+              <a href="{{ url('/partners') }}"@if(($activePage ?? '') === 'partners') aria-current="page"@endif class="nav__link">
+                <span>Partners &amp; Industries</span>
+              </a>
+            </li>
+          @endif
+          @if(page_active('about'))
+            <li class="nav__item">
+              <a href="{{ url('/about') }}"@if(($activePage ?? '') === 'about') aria-current="page"@endif class="nav__link">
+                <span>About &amp; Founders</span>
+              </a>
+            </li>
+          @endif
         </ul>
       </nav>
 
-      <div class="nav-bar__actions">
-        <a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif class="nav-bar__cta">
-          <span>Contact Us</span>
-          <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </a>
-      </div>
+      @if(page_active('contact'))
+        <div class="nav-bar__actions">
+          <a href="{{ url('/contact') }}"@if(($activePage ?? '') === 'contact') aria-current="page"@endif class="nav-bar__cta">
+            <span>Contact Us</span>
+            <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </a>
+        </div>
+      @endif
 
       <div class="nav-bar__mobile-actions">
         <button type="button" class="mobile-search-toggle" data-search-toggle aria-expanded="false" aria-controls="search-panel" aria-label="Open site search">
@@ -380,15 +405,19 @@
         </p>
       </div>
       <div class="foot-banner__actions">
-        <a href="{{ url('/contact') }}" class="btn btn--accent btn--lg">
-          <span>{{ sec('footer', 'banner_cta_primary', 'Start a Project') }}</span>
-          <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </a>
-        <a href="{{ url('/careers') }}" class="btn btn--ghost btn--lg">
-          <span>{{ sec('footer', 'banner_cta_secondary', 'Careers Portal') }}</span>
-        </a>
+        @if(page_active('contact'))
+          <a href="{{ url('/contact') }}" class="btn btn--accent btn--lg">
+            <span>{{ sec('footer', 'banner_cta_primary', 'Start a Project') }}</span>
+            <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </a>
+        @endif
+        @if(page_active('careers'))
+          <a href="{{ url('/careers') }}" class="btn btn--ghost btn--lg">
+            <span>{{ sec('footer', 'banner_cta_secondary', 'Careers Portal') }}</span>
+          </a>
+        @endif
       </div>
     </div>
 
@@ -438,14 +467,14 @@
       <div class="foot-grid__col">
         <h3 class="foot-col__title">Company</h3>
         <ul class="foot-col__list">
-          <li><a href="{{ url('/') }}">Home</a></li>
-          <li><a href="{{ url('/about') }}">About &amp; Founders</a></li>
-          <li><a href="{{ url('/team') }}">Our Team</a></li>
-          <li><a href="{{ url('/work') }}">Selected Projects</a></li>
-          <li><a href="{{ url('/partners') }}">Corporate Partners</a></li>
-          <li><a href="{{ url('/blog') }}">Blogs &amp; Media</a></li>
-          <li><a href="{{ url('/careers') }}">Careers Portal</a></li>
-          <li><a href="{{ url('/contact') }}">Contact Us</a></li>
+          @if(page_active('home')) <li><a href="{{ url('/') }}">Home</a></li> @endif
+          @if(page_active('about')) <li><a href="{{ url('/about') }}">About &amp; Founders</a></li> @endif
+          @if(page_active('team')) <li><a href="{{ url('/team') }}">Our Team</a></li> @endif
+          @if(page_active('work')) <li><a href="{{ url('/work') }}">Selected Projects</a></li> @endif
+          @if(page_active('partners')) <li><a href="{{ url('/partners') }}">Corporate Partners</a></li> @endif
+          @if(page_active('blog')) <li><a href="{{ url('/blog') }}">Blogs &amp; Media</a></li> @endif
+          @if(page_active('careers')) <li><a href="{{ url('/careers') }}">Careers Portal</a></li> @endif
+          @if(page_active('contact')) <li><a href="{{ url('/contact') }}">Contact Us</a></li> @endif
         </ul>
       </div>
 

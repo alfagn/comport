@@ -27,16 +27,31 @@
   @endphp
 
   @foreach($sorted as $page => $sections)
-    <a class="page-row" href="{{ route('admin.pages.edit', $page) }}">
-      <span class="page-row__icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
-      </span>
-      <span>
-        <span class="page-row__name">{{ $meta[$page][0] ?? ucfirst($page) }}</span><br/>
-        <span class="page-row__meta">{{ $meta[$page][1] ?? 'Page editorial blocks' }} — {{ count($sections) }} editable {{ \Illuminate\Support\Str::plural('field', count($sections)) }}</span>
-      </span>
-      <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 6l6 6-6 6"/></svg>
-    </a>
+    <div class="page-row">
+      <a class="page-row__link" href="{{ route('admin.pages.edit', $page) }}">
+        <span class="page-row__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+        </span>
+        <span class="page-row__info">
+          <span class="page-row__name">{{ $meta[$page][0] ?? ucfirst($page) }}</span><br/>
+          <span class="page-row__meta">{{ $meta[$page][1] ?? 'Page editorial blocks' }} — {{ count($sections) }} editable {{ \Illuminate\Support\Str::plural('field', count($sections)) }}</span>
+        </span>
+      </a>
+      <div class="page-row__actions">
+        @if(isset(\App\Services\PageStatusService::PAGES[$page]))
+          @include('admin._partials.status-toggle', [
+            'entity' => 'pages',
+            'id' => $page,
+            'active' => page_active($page),
+            'labelOn' => 'Live',
+            'labelOff' => 'Hidden',
+          ])
+        @endif
+        <a class="page-row__arrow" href="{{ route('admin.pages.edit', $page) }}" title="Edit content">
+          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
   @endforeach
 </div>
 @endsection

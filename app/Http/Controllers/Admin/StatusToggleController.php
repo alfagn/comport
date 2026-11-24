@@ -49,15 +49,35 @@ class StatusToggleController extends Controller
         'applications' => [JobApplication::class, 'status', 'manage applications', 'Reviewed', 'New', null],
     ];
 
-    public function __invoke(Request $request, string $entity, int $id): JsonResponse
+    public function __invoke(Request $request, string $entity, string|int $id): JsonResponse
     {
+        if ($entity === 'pages') {
+            abort_unless($request->user()?->can('manage pages'), 403);
+            $pageKey = (string) $id;
+            abort_unless(isset(\App\Services\PageStatusService::PAGES[$pageKey]), 404);
+
+            $pageStatus = app(\App\Services\PageStatusService::class);
+            $nextActive = ! $pageStatus->isActive($pageKey);
+            $pageStatus->setActive($pageKey, $nextActive);
+
+            $pageTitle = \App\Services\PageStatusService::PAGES[$pageKey];
+            $stateLabel = $nextActive ? 'Live' : 'Hidden';
+
+            return response()->json([
+                'ok' => true,
+                'active' => $nextActive,
+                'label' => $stateLabel,
+                'message' => "{$pageTitle} page is now {$stateLabel}.",
+            ]);
+        }
+
         abort_unless(isset(self::ENTITIES[$entity]), 404);
 
         [$modelClass, $column, $permission, $labelOn, $labelOff, $flush] = self::ENTITIES[$entity];
 
         abort_unless($request->user()?->can($permission), 403);
 
-        $record = $modelClass::query()->findOrFail($id);
+        $record = $modelClass::query()->findOrFail((int) $id);
 
         if ($record instanceof ServicePage) {
             abort_unless($record->locale === 'en', 404);

@@ -38,12 +38,24 @@
       </div>
     </div>
 
-    @if($liveUrl)
-      <a class="btn btn--ghost btn--sm" href="{{ $liveUrl }}" target="_blank" rel="noopener">
-        <span>View live page</span>
-        <span aria-hidden="true">↗</span>
-      </a>
-    @endif
+    <div class="form-card__head-actions" style="display:flex;align-items:center;gap:12px">
+      @if(isset(\App\Services\PageStatusService::PAGES[$page]))
+        @include('admin._partials.status-toggle', [
+          'entity' => 'pages',
+          'id' => $page,
+          'active' => page_active($page),
+          'labelOn' => 'Live',
+          'labelOff' => 'Hidden',
+        ])
+      @endif
+
+      @if($liveUrl)
+        <a class="btn btn--ghost btn--sm" href="{{ $liveUrl }}" target="_blank" rel="noopener">
+          <span>View live page</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      @endif
+    </div>
   </div>
 
   <form method="post" enctype="multipart/form-data" action="{{ route('admin.pages.update', $page) }}">
