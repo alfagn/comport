@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Public\ContactMessageController;
 use App\Http\Controllers\Public\JobApplicationController;
+use App\Http\Controllers\Public\MediaStreamController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\SeoDiscoveryController;
@@ -33,6 +34,9 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 // English service pages. Archived language drafts have no public routes.
 Route::get('/services', [ServicePageController::class, 'index'])->name('services.index');
 Route::get('/services/{slug}', [ServicePageController::class, 'show'])->name('services.show');
+Route::get('/media/video/{path}', [MediaStreamController::class, 'video'])
+    ->where('path', 'videos/[A-Za-z0-9_\-\./]+')
+    ->name('media.video');
 
 Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
 Route::post('/subscribe', [NewsletterController::class, 'store'])->name('subscribe');

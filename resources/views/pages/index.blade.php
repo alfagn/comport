@@ -119,6 +119,7 @@
           </p>
         </header>
 
+        @php($homeVideoRef = sec('home', 'copy_29166363eeca'))
         <div class="overview-film__stage">
           <video
             class="overview-film__video"
@@ -129,7 +130,7 @@
             width="1920"
             height="1080"
           >
-            <source src="{{ content_asset(sec('home', 'copy_29166363eeca')) }}" type="video/mp4"/>
+            <source src="{{ content_asset($homeVideoRef) }}" type="{{ video_mime($homeVideoRef) }}"/>
             {{ sec('home', 'copy_8424b4de9ef5') }}
           </video>
         </div>

@@ -92,10 +92,13 @@ if (! function_exists('brand_logo')) {
 }
 
 if (! function_exists('content_asset')) {
-    /** Resolve a CMS media path, supporting uploads and HTTPS-hosted media only. */
+    /** Resolve a CMS media path, supporting private-storage videos, public uploads, and HTTPS media. */
     function content_asset(?string $path): string
     {
         $path = trim($path ?? '');
+        if (str_starts_with($path, 'private:videos/')) {
+            return route('media.video', ['path' => substr($path, strlen('private:'))]);
+        }
         if (str_starts_with($path, 'https://')) {
             return $path;
         }
@@ -104,6 +107,21 @@ if (! function_exists('content_asset')) {
         }
 
         return asset(str_starts_with($path, 'uploads/') ? 'storage/'.$path : $path);
+    }
+}
+
+if (! function_exists('video_mime')) {
+    /** Infer HTML5 <source type="..."> MIME from a CMS video reference or URL. */
+    function video_mime(?string $path): string
+    {
+        $clean = strtolower((string) parse_url((string) $path, PHP_URL_PATH));
+
+        return match (true) {
+            str_ends_with($clean, '.webm') => 'video/webm',
+            str_ends_with($clean, '.ogg'), str_ends_with($clean, '.ogv') => 'video/ogg',
+            str_ends_with($clean, '.mov') => 'video/quicktime',
+            default => 'video/mp4',
+        };
     }
 }
 

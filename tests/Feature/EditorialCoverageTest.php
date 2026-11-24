@@ -40,21 +40,57 @@ class EditorialCoverageTest extends TestCase
         }
     }
 
-    public function test_about_intro_media_directory_and_shared_founders_are_editable(): void
+    public function test_about_intro_media_cards_private_video_and_shared_founders_are_editable(): void
     {
         $owner = User::first();
         $owner->assignRole(Permissions::OWNER_ROLE);
-        $this->actingAs($owner)->put('/admin/pages/about', ['sections' => [
-            'hero_lead' => 'Changed company introduction', 'overview_lead' => 'Changed overview introduction',
-            'overview_video' => 'https://example.com/studio.mp4', 'overview_poster' => 'uploads/pages/poster.jpg',
-        ]])->assertRedirect();
-        $this->actingAs($owner)->put('/admin/pages/founders', ['sections' => ['lead' => 'Changed founders introduction']])->assertRedirect();
-        $this->actingAs($owner)->post('/admin/content-lists', [
-            'group' => 'about.directory', 'title' => 'New Practice Head', 'body' => 'Engineering Director', 'is_active' => true,
+
+        // 1. Direct HTTPS link + inline editable Principles & Timeline cards
+        $this->actingAs($owner)->put('/admin/pages/about', [
+            'sections' => [
+                'hero_lead' => 'Changed company introduction',
+                'overview_lead' => 'Changed overview introduction',
+                'overview_video' => 'https://example.com/studio.mp4',
+                'overview_poster' => 'uploads/pages/poster.jpg',
+            ],
+            'lists' => [
+                'about.principles' => [
+                    ['title' => 'Unified Engineering & Growth Card', 'body' => 'Edited directly from About content blocks.'],
+                ],
+                'about.timeline' => [
+                    ['meta' => '2025', 'title' => 'Started Software & Marketing Studio', 'body' => 'Launched in 2025 uniting code and growth.'],
+                ],
+            ],
         ])->assertRedirect();
-        $this->get('/about')->assertOk()->assertSee('Changed company introduction')->assertSee('Changed overview introduction')
-            ->assertSee('https://example.com/studio.mp4', false)->assertSee('/storage/uploads/pages/poster.jpg', false)
-            ->assertSee('New Practice Head')->assertSee('Engineering Director')->assertSee('Changed founders introduction');
+
+        $this->actingAs($owner)->put('/admin/pages/founders', ['sections' => ['lead' => 'Changed founders introduction']])->assertRedirect();
+
+        $this->get('/about')->assertOk()
+            ->assertSee('Changed company introduction')
+            ->assertSee('Changed overview introduction')
+            ->assertSee('https://example.com/studio.mp4', false)
+            ->assertSee('/storage/uploads/pages/poster.jpg', false)
+            ->assertSee('Unified Engineering &amp; Growth Card', false)
+            ->assertSee('Started Software &amp; Marketing Studio', false)
+            ->assertSee('Changed founders introduction')
+            ->assertDontSee('Senior Principals &amp; Discipline Heads', false);
+
+        // 2. Private Storage video file upload + streaming endpoint
+        \Illuminate\Support\Facades\Storage::fake('local');
+        $fakeVideo = \Illuminate\Http\UploadedFile::fake()->create('overview.mp4', 512, 'video/mp4');
+
+        $this->actingAs($owner)->put('/admin/pages/about', [
+            'sections' => ['hero_lead' => 'Video uploaded to private disk'],
+            'videos' => ['overview_video' => $fakeVideo],
+        ])->assertRedirect();
+
+        $storedValue = PageSection::where('page', 'about')->where('key', 'overview_video')->value('value');
+        $this->assertStringStartsWith('private:videos/pages/', (string) $storedValue);
+        $diskPath = substr((string) $storedValue, strlen('private:'));
+        \Illuminate\Support\Facades\Storage::disk('local')->assertExists($diskPath);
+
+        $this->get('/about')->assertOk()->assertSee('/media/video/'.$diskPath, false);
+        $this->get('/media/video/'.$diskPath)->assertOk();
     }
     public function test_about_poster_upload_and_existing_values_are_visible_in_editor(): void
     {

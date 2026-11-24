@@ -3149,3 +3149,310 @@ form > .form-actions,
   background: rgba(31, 26, 21, 0.9);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
+
+/* ==========================================================================
+   Dual-Mode Private Storage Video Field & Inline Editable Cards System
+   ========================================================================== */
+
+.video-field__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.video-field__head .field__label {
+  margin-bottom: 0;
+}
+
+.video-field__tabs {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  gap: 3px;
+}
+
+.video-field__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 7px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.video-field__tab:hover {
+  color: var(--text);
+}
+
+.video-field__tab.is-active {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(24, 18, 12, 0.08);
+}
+
+.video-field__box {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #FAF8F5;
+  border: 1px solid rgba(23, 20, 15, 0.13);
+  display: grid;
+  gap: 14px;
+}
+
+[data-theme="dark"] .video-field__box {
+  background: #171310;
+  border-color: rgba(245, 241, 236, 0.14);
+}
+
+.video-field__pane {
+  display: none;
+}
+
+.video-field__pane.is-active {
+  display: block;
+}
+
+.video-field__native-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  opacity: 0;
+}
+
+.video-field__dropzone {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1.5px dashed rgba(255, 77, 28, 0.35);
+  border-radius: 12px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.video-field__dropzone:hover,
+.video-field__dropzone.is-dragover {
+  border-color: var(--accent);
+  background: rgba(255, 77, 28, 0.04);
+}
+
+.video-field__drop-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #FFF1E8;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .video-field__drop-ico {
+  background: rgba(255, 77, 28, 0.16);
+}
+
+.video-field__drop-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13.5px;
+  color: var(--text-body);
+}
+
+.video-field__drop-copy strong {
+  color: var(--accent);
+}
+
+.video-field__drop-copy small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.video-field__preview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.video-field__player {
+  width: 240px;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: #050C1A;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.video-field__status {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  flex: 1;
+}
+
+.video-field__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563EB;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.video-field__badge--private {
+  background: rgba(16, 185, 129, 0.14);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.video-field__source-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-all;
+}
+
+/* Inline Editable Page Cards Manager */
+.cms-card-sections {
+  display: grid;
+  gap: 28px;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.cms-cards-block {
+  padding: 22px;
+  border-radius: 16px;
+  background: #FAF8F5;
+  border: 1px solid rgba(23, 20, 15, 0.11);
+}
+
+[data-theme="dark"] .cms-cards-block {
+  background: #171310;
+  border-color: rgba(245, 241, 236, 0.12);
+}
+
+.cms-cards-block__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.cms-cards-block__title {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cms-cards-block__sub {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.cms-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  .cms-cards-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.cms-card-editor {
+  display: grid;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 2px 10px rgba(24, 18, 12, 0.03);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cms-card-editor:hover {
+  border-color: rgba(255, 77, 28, 0.35);
+}
+
+.cms-card-editor .field + .field {
+  margin-top: 0;
+}
+
+.cms-card-editor__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cms-card-editor__num {
+  display: inline-flex;
+  align-items: center;
+  padding: 2.5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #FFF1E8;
+  color: var(--accent);
+}
+
+[data-theme="dark"] .cms-card-editor__num {
+  background: rgba(255, 77, 28, 0.16);
+}
+
+.cms-card-editor__remove {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cms-card-editor__remove:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #EF4444;
+}

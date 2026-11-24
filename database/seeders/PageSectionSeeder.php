@@ -30,7 +30,7 @@ class PageSectionSeeder extends Seeder
             ['who_we_are_heading', '"Who we are" film section title', 'text'],
             ['principles_heading', "Principles section heading", 'text'],
             ['timeline_heading', "Timeline section heading", 'text'],
-            ['directory_heading', "Team directory heading", 'text'],
+            ['directory_heading', "Team directory heading", 'internal'],
         ],
         'work' => [
             ['hero_title', 'Hero title', 'text'],

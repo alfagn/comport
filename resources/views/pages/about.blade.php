@@ -26,23 +26,22 @@
 @section('content')
 <main id="main-content">
 
-
     <section class="page-hero">
       <div class="container">
         <ol class="page-hero__crumbs" aria-label="Breadcrumb">
           <li><a href="{{ url('/') }}">{{ sec('about', 'copy_66b93f927675') }}</a></li>
-          <li aria-current="page">{{ sec('about', 'breadcrumb', 'About &amp; Founders') }}</li>
+          <li aria-current="page">{{ sec('about', 'breadcrumb', 'About & Founders') }}</li>
         </ol>
         <h1 class="page-hero__title">{{ sec('about', 'hero_title', 'Built by engineers and storytellers who got tired of the hand-off gap.') }}</h1>
         <div class="page-hero__row">
           <div class="page-hero__label">
-            <span class="eyebrow">{{ sec('about', 'established', 'Established 2018 &middot; Cairo') }}</span>
+            <span class="eyebrow">{{ sec('about', 'established', 'Established 2025 · Cairo') }}</span>
           </div>
           <p class="page-hero__lead">
             {{ sec('about', 'hero_lead', 'Empetix Solution was founded in New Cairo by three co-founders uniting executive strategy, operational excellence, and software engineering under one roof—helping ambitious businesses build technology, scale growth, and grow sustainably.') }}
           </p>
           <div class="page-hero__aside">
-            <span class="t-meta">{{ sec('about', 'hero_meta', '48 SPECIALISTS &middot; 3 STUDIOS') }}</span>
+            <span class="t-meta">{{ sec('about', 'hero_meta', 'SOFTWARE ENGINEERING · GROWTH MARKETING') }}</span>
           </div>
         </div>
       </div>
@@ -51,6 +50,9 @@
     <!-- ====================================================================
          1.5. COMPANY OVERVIEW FILM ("WHO WE ARE")
          ==================================================================== -->
+    @php
+      $aboutVideoRef = sec('about', 'overview_video', 'assets/video/empetix-overview.mp4');
+    @endphp
     <section id="who-we-are" class="overview-film" aria-labelledby="who-we-are-heading">
       <div class="container">
         <header class="overview-film__header">
@@ -70,7 +72,7 @@
             width="1920"
             height="1080"
           >
-            <source src="{{ content_asset(sec('about', 'overview_video', 'assets/video/empetix-overview.mp4')) }}" type="video/mp4"/>
+            <source src="{{ content_asset($aboutVideoRef) }}" type="{{ video_mime($aboutVideoRef) }}"/>
             {{ sec('about', 'video_fallback', 'Your browser does not support embedded video playback.') }}
           </video>
         </div>
@@ -89,7 +91,7 @@
     <!-- FOUNDERS / OWNERS SECTION (أصحاب المشروع) -->
     @include('partials.founders')
 
-    <!-- OPERATING PRINCIPLES -->
+    <!-- OPERATING PRINCIPLES (ARCHITECTURAL CARDS) -->
     <section class="section is-inverse" aria-labelledby="principles-heading">
       <div class="container">
         <div class="section-head reveal">
@@ -99,25 +101,28 @@
           </div>
         </div>
 
-        <div class="principles">
+        <div class="principles principles--cards">
           @foreach(content_list('about.principles') as $principle)
-            <div class="principle reveal">
-              <span class="principle__num">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+            <article class="principle principle--card reveal">
+              <div class="principle__head">
+                <span class="principle__num">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="principle__line" aria-hidden="true"></span>
+              </div>
               <h3 class="principle__title">{{ $principle->title }}</h3>
               <p class="principle__text">{{ $principle->body }}</p>
-            </div>
+            </article>
           @endforeach
         </div>
       </div>
     </section>
 
-    <!-- STUDIO TIMELINE -->
+    <!-- STUDIO TIMELINE (STARTED 2025 — ENGINEERING & MARKETING) -->
     <section class="section" aria-labelledby="timeline-heading">
       <div class="container">
         <div class="section-head reveal">
           <div class="section-head__label"></div>
           <div class="section-head__title">
-            <h2 id="timeline-heading" class="t-h2">{{ sec('about', 'timeline_heading', 'Eight years of compounding craft.') }}</h2>
+            <h2 id="timeline-heading" class="t-h2">{{ sec('about', 'timeline_heading', 'From 2025 onward: software engineering and growth marketing under one roof.') }}</h2>
           </div>
         </div>
 
@@ -133,21 +138,5 @@
       </div>
     </section>
 
-    <!-- LEADERSHIP & PRACTICE HEADS DIRECTORY -->
-    <section class="section section--alt section--ruled" aria-labelledby="directory-heading">
-      <div class="container">
-        <div class="section-head reveal">
-          <div class="section-head__label"></div>
-          <div class="section-head__title">
-            <h2 id="directory-heading" class="t-h3">{{ sec('about', 'directory_heading', 'Senior Principals & Discipline Heads') }}</h2>
-          </div>
-        </div>
-
-        <ul class="team-list reveal">
-          @foreach(content_list('about.directory') as $person)
-            <li class="team-list__item"><span>{{ $person->title }}</span><span class="team-list__role">{{ $person->body }}</span></li>
-          @endforeach
-        </ul>
-      </div>
-    </section>
+</main>
 @endsection

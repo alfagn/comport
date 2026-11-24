@@ -25,10 +25,9 @@ class ContentListSeeder extends Seeder
             ['Full IP ownership and clean handovers.', 'Every line of Laravel/React code, Figma token, ad account, and raw camera file belongs to our client, documented so your internal team can run with it.', null, null, null, null],
         ],
         'about.timeline' => [
-            ['Founded in Downtown Cairo', 'Omar, Lina, Karim, and Sara launch Empetix in a two-room studio at the Greek Campus, shipping three FinTech and e-commerce platforms in year one.', '2018', null, null, null],
-            ['In-House Film & Performance Lab', 'Added a dedicated commercial film crew, photo studio, and server-side attribution practice to close the loop between software launches and customer acquisition.', '2021', null, null, null],
-            ['Riyadh Studio & London Desk', 'Expanded on-the-ground engineering and growth squads to KAFD in Riyadh and Shoreditch in London to support GCC and European enterprise clients.', '2024', null, null, null],
-            ['48 Specialists & 64+ Shipped Products', 'Operating across 14 countries with audited client platforms processing over USD 1.9B in annual gross transaction volume.', '2026', null, null, null],
+            ['Founded Around Software & Growth Marketing', 'Launched Empetix Solution in Cairo uniting full-stack software engineering and performance marketing under one roof—closing the gap between building digital products and scaling customer acquisition.', '2025', null, null, null],
+            ['Enterprise Platforms & E-Learning Ecosystems', 'Architected and shipped high-concurrency web, mobile, and learning platforms—including AlphaGen Academy and Western International Academy—paired with conversion-engineered funnels.', '2025', null, null, null],
+            ['Scaling Custom SaaS, AI Workflows & Growth Operations', 'Delivering full-stack Laravel, React, and Flutter software alongside data-driven SEO, paid acquisition, and commercial growth partnerships for ambitious regional brands.', '2026', null, null, null],
         ],
         'team.culture' => [
             ['Small senior squads', 'Projects are staffed with experienced engineers, designers, and marketers who work directly in the codebase and campaigns every day.', null, null, null, null],

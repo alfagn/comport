@@ -891,8 +891,8 @@
   {
     "page": "home",
     "key": "copy_29166363eeca",
-    "label": "Media path: assets/video/empetix-overview.mp4",
-    "type": "text",
+    "label": "Company overview video (Upload to Private Storage or Link)",
+    "type": "video",
     "value": "assets/video/empetix-overview.mp4"
   },
   {

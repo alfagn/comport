@@ -10,7 +10,7 @@
       "key": "established",
       "label": "Establishment and location badge",
       "type": "text",
-      "value": "Established 2018 · Cairo"
+      "value": "Established 2025 · Cairo"
     },
     {
       "key": "hero_lead",
@@ -22,13 +22,13 @@
       "key": "hero_meta",
       "label": "Specialist and studio badge",
       "type": "text",
-      "value": "48 SPECIALISTS · 3 STUDIOS"
+      "value": "SOFTWARE ENGINEERING · GROWTH MARKETING"
     },
     {
       "key": "overview_lead",
       "label": "Who we are paragraph",
       "type": "textarea",
-      "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our 40-second overview to see how we build and scale digital businesses."
+      "value": "Empetix Solution brings software engineering, growth marketing, and strategic investment together under one roof in New Cairo. Watch our overview to see how we build and scale digital businesses."
     },
     {
       "key": "overview_poster",
@@ -38,8 +38,8 @@
     },
     {
       "key": "overview_video",
-      "label": "Overview video URL or local public path",
-      "type": "text",
+      "label": "Overview video (Upload to Private Storage or Link)",
+      "type": "video",
       "value": "assets/video/empetix-overview.mp4"
     },
     {
@@ -69,42 +69,5 @@
       "value": "Meet the full team"
     }
   ],
-  "directory": [
-    {
-      "title": "Youssef Nabil",
-      "body": "Principal Laravel Architect"
-    },
-    {
-      "title": "Nourhan Shawky",
-      "body": "Head of Product Design Systems"
-    },
-    {
-      "title": "Hassan El-Kholy",
-      "body": "Staff Mobile Engineer (Flutter)"
-    },
-    {
-      "title": "Mariam Farouk",
-      "body": "Director of Paid Acquisition"
-    },
-    {
-      "title": "Ziad Mansour",
-      "body": "Director of Photography & Film"
-    },
-    {
-      "title": "DinaAbdelrahman",
-      "body": "Head of CRO & Analytics"
-    },
-    {
-      "title": "Mostafa Salem",
-      "body": "Lead DevOps & Cloud Security"
-    },
-    {
-      "title": "Salma Hegazy",
-      "body": "Bilingual Brand & Copy Director"
-    },
-    {
-      "title": "Tامر Al-Qahtani",
-      "body": "Managing Director, Riyadh Studio"
-    }
-  ]
+  "directory": []
 }
