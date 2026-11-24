@@ -105,7 +105,7 @@ class ProjectEnhancementTest extends TestCase
 
         $response = $this->actingAs($user)->get('/admin/profile');
         $response->assertOk();
-        $response->assertSee('Account &amp; Team Profile', false);
+        $response->assertSee('Login &amp; Security Credentials', false);
         $response->assertSee('mohand@example.com');
 
         $updateResponse = $this->actingAs($user)->put('/admin/profile', [
