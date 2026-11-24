@@ -1,4 +1,4 @@
-@extends('layouts.public', ['activePage' => 'team'])
+@extends('layouts.public', ['activePage' => 'team', 'pageClass' => 'founder-page'])
 
 @section('meta')
   <meta name="description" content="{{ $member->name }}, {{ $member->role }} at Empetix Solution."/>
@@ -24,7 +24,7 @@
           <ol class="founder-crumb__list">
             <li class="founder-crumb__item"><a href="{{ url('/') }}" class="founder-crumb__link">{{ sec('founder', 'copy_66b93f927675') }}</a></li>
             <li class="founder-crumb__item"><a href="{{ url('/team') }}" class="founder-crumb__link">{{ sec('founder', 'copy_cdbd990d3384') }}</a></li>
-            <li class="founder-crumb__item" aria-current="page">{{ sec('founder', 'copy_12659584a8fd') }}</li>
+            <li class="founder-crumb__item" aria-current="page">{{ $member->name }}</li>
           </ol>
         </nav>
 
@@ -33,7 +33,7 @@
             <img
               class="founder-hero__photo"
               src="{{ str_starts_with((string) $member->photo, 'uploads/') ? asset('storage/'.$member->photo) : asset($member->photo) }}"
-              alt="{{ sec('founder', 'copy_b135a6b41c48') }}"
+              alt="Portrait of {{ $member->name }}, {{ $member->role }}"
               width="800"
               height="1000"
             />

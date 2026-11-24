@@ -320,7 +320,7 @@
 </aside>
 
 
-  <main id="main-content" @class(['team-page' => ($activePage ?? '') === 'team'])>
+  <main id="main-content" @class([$pageClass ?? (($activePage ?? '') === 'team' ? 'team-page' : null)])>
 @yield('content')
   </main>
 
