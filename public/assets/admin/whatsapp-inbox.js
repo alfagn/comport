@@ -1,0 +1,1176 @@
+/**
+ * Empetix WhatsApp Business Inbox Studio Controller.
+ * Full WhatsApp Web UX: Contacts list, unread badges, photos/videos/documents,
+ * voice note recording with WebAudio waveform, custom voice player, locations,
+ * quoted replies, emoji reactions, read checkmarks, and email alert settings.
+ */
+(function () {
+  if (window.__empetixWaInboxBound) return;
+  window.__empetixWaInboxBound = true;
+
+  var EMOJIS = [
+    '😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','😉','😍','🥰',
+    '😘','😎','🤩','🥳','🤔','🤗','🙌','👏','👍','👎','🤝','🙏','❤️','🔥',
+    '✨','🎉','💯','✅','⚡','🚀','💼','📄','📍','📞','💬','👋','🇪🇬','🇸🇦'
+  ];
+
+  var QUICK_REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
+
+  function csrfToken() {
+    var m = document.querySelector('meta[name="csrf-token"]');
+    return m ? m.getAttribute('content') : '';
+  }
+
+  function escapeHtml(str) {
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : String(str);
+    return d.innerHTML;
+  }
+
+  function formatDuration(sec) {
+    sec = Math.max(0, Math.round(Number(sec) || 0));
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function ticksSvg(status) {
+    if (status === 'failed') {
+      return '<span class="wa-ticks is-failed" title="Delivery failed">⚠</span>';
+    }
+    if (status === 'delivered' || status === 'read') {
+      var cls = status === 'read' ? 'wa-ticks is-read' : 'wa-ticks';
+      return '<span class="' + cls + '" title="' + escapeHtml(status) + '">' +
+        '<svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M11.07.66 4.88 6.85 2.3 4.27.9 5.68l3.98 3.98L12.48 2.07 11.07.66Zm3.98 0L8.86 6.85l-.93-.93-1.41 1.41 2.34 2.33L16.46 2.07 15.05.66Z" fill="currentColor"/></svg>' +
+      '</span>';
+    }
+    return '<span class="wa-ticks" title="Sent">' +
+      '<svg width="12" height="11" viewBox="0 0 12 11" fill="none"><path d="M10.3.66 4.1 6.85 1.53 4.27.12 5.68 4.1 9.66 11.71 2.07 10.3.66Z" fill="currentColor"/></svg>' +
+    '</span>';
+  }
+
+  function mountWhatsappInbox(root) {
+    if (!root || root.__waMounted) return;
+    root.__waMounted = true;
+
+    var urls = {
+      poll: root.getAttribute('data-url-poll'),
+      start: root.getAttribute('data-url-start'),
+      showTpl: root.getAttribute('data-url-show-tpl'),
+      sendTpl: root.getAttribute('data-url-send-tpl'),
+      contactTpl: root.getAttribute('data-url-contact-tpl'),
+      deleteTpl: root.getAttribute('data-url-delete-tpl'),
+      reactTpl: root.getAttribute('data-url-react-tpl'),
+      notifications: root.getAttribute('data-url-notifications')
+    };
+
+    var contactsEl = root.querySelector('[data-wa-contacts]');
+    var searchEl = root.querySelector('[data-wa-search]');
+    var unreadTotalEl = root.querySelector('[data-wa-unread-total]');
+    var welcomeEl = root.querySelector('[data-wa-welcome]');
+    var convEl = root.querySelector('[data-wa-conversation]');
+    var streamEl = root.querySelector('[data-wa-stream]');
+    var messagesEl = root.querySelector('[data-wa-messages]');
+
+    var headAvatar = root.querySelector('[data-wa-head-avatar]');
+    var headName = root.querySelector('[data-wa-head-name]');
+    var headCount = root.querySelector('[data-wa-head-count]');
+    var headSub = root.querySelector('[data-wa-head-sub]');
+    var toggleAiBtn = root.querySelector('[data-wa-toggle-ai]');
+    var toggleAiLabel = root.querySelector('[data-wa-toggle-ai-label]');
+    var togglePinBtn = root.querySelector('[data-wa-toggle-pin]');
+
+    var inchatSearchWrap = root.querySelector('[data-wa-inchat-search]');
+    var inchatInput = root.querySelector('[data-wa-inchat-input]');
+
+    var replyBar = root.querySelector('[data-wa-reply-bar]');
+    var replySender = root.querySelector('[data-wa-reply-sender]');
+    var replyPreview = root.querySelector('[data-wa-reply-preview]');
+    var stagedEl = root.querySelector('[data-wa-staged-files]');
+    var emojiPopover = root.querySelector('[data-wa-emoji-popover]');
+    var attachMenu = root.querySelector('[data-wa-attach-menu]');
+    var fileMediaInput = root.querySelector('[data-wa-file-media]');
+    var fileDocInput = root.querySelector('[data-wa-file-doc]');
+
+    var formEl = root.querySelector('[data-wa-form]');
+    var inputEl = root.querySelector('[data-wa-input]');
+    var micBtn = root.querySelector('[data-wa-btn-mic]');
+    var sendBtn = root.querySelector('[data-wa-btn-send]');
+
+    var recBar = root.querySelector('[data-wa-recorder-bar]');
+    var recTimerEl = root.querySelector('[data-wa-rec-timer]');
+    var recBarsEl = root.querySelector('[data-wa-rec-bars]');
+
+    var drawerEl = root.querySelector('[data-wa-drawer]');
+    var drawerAvatar = root.querySelector('[data-wa-drawer-avatar]');
+    var drawerTitle = root.querySelector('[data-wa-drawer-title]');
+    var drawerPhone = root.querySelector('[data-wa-drawer-phone]');
+    var drawerMsgCount = root.querySelector('[data-wa-drawer-msg-count]');
+    var drawerWindow = root.querySelector('[data-wa-drawer-window]');
+    var crmForm = root.querySelector('[data-wa-crm-form]');
+    var crmName = root.querySelector('[data-wa-crm-name]');
+    var crmEmail = root.querySelector('[data-wa-crm-email]');
+    var crmStatus = root.querySelector('[data-wa-crm-status]');
+    var crmNotes = root.querySelector('[data-wa-crm-notes]');
+    var sharedMediaEl = root.querySelector('[data-wa-shared-media]');
+
+    var lightboxEl = root.querySelector('[data-wa-lightbox]');
+    var lightboxImg = root.querySelector('[data-wa-lightbox-img]');
+    var lightboxCap = root.querySelector('[data-wa-lightbox-caption]');
+    var lightboxDl = root.querySelector('[data-wa-lightbox-download]');
+
+    var state = {
+      contacts: [],
+      activeId: null,
+      activeChat: null,
+      filter: 'all',
+      search: '',
+      inchatFilter: '',
+      replyTo: null,
+      stagedFiles: [],
+      sending: false,
+      msgSignature: '',
+      rec: {
+        active: false,
+        recorder: null,
+        stream: null,
+        chunks: [],
+        startedAt: 0,
+        timerId: null,
+        audioCtx: null,
+        rafId: null
+      }
+    };
+
+    // Populate Emoji Picker
+    if (emojiPopover) {
+      emojiPopover.innerHTML = EMOJIS.map(function (em) {
+        return '<button type="button" data-wa-emoji="' + em + '">' + em + '</button>';
+      }).join('');
+    }
+
+    // Hydrate Initial JSON
+    var initScript = root.querySelector('[data-wa-initial]');
+    if (initScript) {
+      try {
+        var initial = JSON.parse(initScript.textContent || '{}');
+        state.contacts = initial.contacts || [];
+        if (initial.active_chat && initial.active_chat.contact) {
+          state.activeId = initial.active_chat.contact.id;
+          state.activeChat = initial.active_chat;
+        }
+        updateUnreadCounters(initial.total_unread || 0);
+        renderContacts();
+        renderActiveChat(true);
+      } catch (e) {}
+    }
+
+    function updateUnreadCounters(totalUnread) {
+      totalUnread = Number(totalUnread) || 0;
+      if (unreadTotalEl) {
+        unreadTotalEl.hidden = totalUnread <= 0;
+        unreadTotalEl.textContent = totalUnread;
+      }
+      Array.prototype.forEach.call(document.querySelectorAll('[data-sidebar-wa-badge]'), function (b) {
+        b.textContent = totalUnread;
+        b.style.display = totalUnread > 0 ? '' : 'none';
+      });
+    }
+
+    function syncComposerButtons() {
+      var hasContent = ((inputEl && inputEl.value.trim().length > 0) || state.stagedFiles.length > 0);
+      if (micBtn) micBtn.hidden = hasContent;
+      if (sendBtn) sendBtn.hidden = !hasContent;
+    }
+
+    function renderContacts() {
+      if (!contactsEl) return;
+      if (!state.contacts.length) {
+        contactsEl.innerHTML = '<div class="wa-contact-empty">No WhatsApp conversations match this view yet. Click <strong>+</strong> above to start a chat.</div>';
+        return;
+      }
+
+      contactsEl.innerHTML = state.contacts.map(function (c) {
+        var active = c.id === state.activeId ? ' is-active' : '';
+        var unread = c.unread_count > 0 ? ' has-unread' : '';
+        var previewText = c.ai_typing ? '🤖 AI Concierge is replying…' : (c.preview || '');
+
+        return (
+          '<div class="wa-contact-row' + active + unread + '" data-wa-select-contact="' + c.id + '">' +
+            '<div class="wa-avatar" style="background:' + escapeHtml(c.avatar_color || '#00A884') + ';">' + escapeHtml(c.initial) + '</div>' +
+            '<div class="wa-contact-row__main">' +
+              '<div class="wa-contact-row__top">' +
+                '<span class="wa-contact-row__name" dir="auto">' + escapeHtml(c.name) + '</span>' +
+                '<span class="wa-contact-row__time">' + escapeHtml(c.time_label || '') + '</span>' +
+              '</div>' +
+              '<div class="wa-contact-row__bottom">' +
+                '<span class="wa-contact-row__preview" dir="auto">' + escapeHtml(previewText) + '</span>' +
+                '<span class="wa-contact-row__badges">' +
+                  (c.is_pinned ? '<span class="wa-pin-mark" title="Pinned">📌</span>' : '') +
+                  '<span class="wa-total-mini" title="Total messages">' + (c.total_messages || 0) + '</span>' +
+                  (c.unread_count > 0 ? '<span class="wa-unread-badge">' + c.unread_count + '</span>' : '') +
+                '</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    function computeMessagesSignature(msgs, presence) {
+      var parts = (msgs || []).map(function (m) {
+        return m.id + ':' + m.status + ':' + (m.reaction_emoji || '');
+      });
+      parts.push('ai:' + (presence && presence.ai_typing ? '1' : '0'));
+      parts.push('q:' + state.inchatFilter);
+      return parts.join('|');
+    }
+
+    function renderMediaInner(m) {
+      if (m.type === 'image' || m.type === 'sticker') {
+        if (!m.media_url) return '';
+        return '<img src="' + escapeHtml(m.media_url) + '" alt="Photo" class="wa-media-img" data-wa-zoom="' + escapeHtml(m.media_url) + '" data-wa-dl="' + escapeHtml(m.download_url || m.media_url) + '" data-wa-cap="' + escapeHtml(m.body || m.media_filename || 'WhatsApp Photo') + '" loading="lazy"/>';
+      }
+
+      if (m.type === 'video' && m.media_url) {
+        return '<video src="' + escapeHtml(m.media_url) + '" controls preload="metadata" class="wa-media-video"></video>';
+      }
+
+      if ((m.type === 'voice' || m.type === 'audio') && m.media_url) {
+        var bars = '';
+        var heights = [35,60,45,80,55,90,40,70,85,50,65,95,55,40,75,60,85,45,70,50,65,40];
+        for (var i = 0; i < heights.length; i++) {
+          bars += '<span style="height:' + heights[i] + '%"></span>';
+        }
+        return (
+          '<div class="wa-voice-player" data-wa-voice-player>' +
+            '<audio src="' + escapeHtml(m.media_url) + '" preload="metadata"></audio>' +
+            '<button type="button" class="wa-voice-play" data-wa-voice-toggle aria-label="Play voice message">' +
+              '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>' +
+            '</button>' +
+            '<div class="wa-voice-bars" data-wa-voice-scrub>' + bars + '</div>' +
+            '<span class="wa-voice-dur" data-wa-voice-dur style="font-size:0.72rem;color:var(--wa-bubble-sub);min-width:30px;">' + (m.media_duration ? formatDuration(m.media_duration) : '0:00') + '</span>' +
+            '<button type="button" class="wa-voice-speed" data-wa-voice-speed>1x</button>' +
+          '</div>'
+        );
+      }
+
+      if (m.type === 'document') {
+        var fname = m.media_filename || 'Document';
+        var ext = (fname.split('.').pop() || 'FILE').slice(0, 4);
+        var href = m.download_url || m.media_url || '#';
+        return (
+          '<a href="' + escapeHtml(href) + '" target="_blank" rel="noopener" class="wa-doc-card">' +
+            '<span class="wa-doc-card__ext">' + escapeHtml(ext) + '</span>' +
+            '<span class="wa-doc-card__info">' +
+              '<span class="wa-doc-card__name">' + escapeHtml(fname) + '</span>' +
+              '<span class="wa-doc-card__size">' + escapeHtml(m.media_size_human || 'Download file') + '</span>' +
+            '</span>' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+          '</a>'
+        );
+      }
+
+      if (m.type === 'location' && m.location) {
+        var lat = m.location.latitude || 0;
+        var lng = m.location.longitude || 0;
+        var mapUrl = 'https://www.google.com/maps?q=' + encodeURIComponent(lat + ',' + lng);
+        return (
+          '<a href="' + mapUrl + '" target="_blank" rel="noopener" class="wa-loc-card">' +
+            '<span style="font-size:1.4rem;">📍</span>' +
+            '<span>' +
+              '<strong style="display:block;font-size:0.83rem;">' + escapeHtml(m.location.name || 'Shared Location') + '</strong>' +
+              '<span style="font-size:0.73rem;color:var(--wa-bubble-sub);">' + escapeHtml(m.location.address || (lat + ', ' + lng)) + ' &middot; Open Map &rarr;</span>' +
+            '</span>' +
+          '</a>'
+        );
+      }
+
+      return '';
+    }
+
+    function renderActiveChat(forceScroll) {
+      if (!state.activeChat || !state.activeChat.contact) {
+        if (welcomeEl) welcomeEl.hidden = false;
+        if (convEl) convEl.hidden = true;
+        if (drawerEl) drawerEl.hidden = true;
+        root.classList.remove('has-drawer');
+        return;
+      }
+
+      if (welcomeEl) welcomeEl.hidden = true;
+      if (convEl) convEl.hidden = false;
+
+      var c = state.activeChat.contact;
+      var presence = state.activeChat.presence || {};
+
+      if (headAvatar) {
+        headAvatar.textContent = c.initial;
+        headAvatar.style.background = c.avatar_color || '#00A884';
+      }
+      if (headName) headName.textContent = c.name;
+      if (headCount) headCount.textContent = (c.total_messages || 0) + ' msgs';
+      if (headSub) {
+        if (presence.ai_typing) {
+          headSub.textContent = '🤖 Empetix AI is typing a reply…';
+        } else {
+          headSub.textContent = (c.phone || '') + (c.within_24h ? ' · ● 24h Free Service Window Open' : ' · Template Mode (>24h)');
+        }
+      }
+
+      if (toggleAiBtn && toggleAiLabel) {
+        toggleAiBtn.classList.toggle('is-human', !!c.ai_paused);
+        toggleAiLabel.textContent = c.ai_paused ? 'Human Mode' : 'AI Auto';
+      }
+      if (togglePinBtn) {
+        togglePinBtn.classList.toggle('is-active', !!c.is_pinned);
+      }
+
+      // Sync Right CRM Drawer fields (without clobbering active focus)
+      if (drawerAvatar) {
+        drawerAvatar.textContent = c.initial;
+        drawerAvatar.style.background = c.avatar_color || '#00A884';
+      }
+      if (drawerTitle) drawerTitle.textContent = c.name;
+      if (drawerPhone) drawerPhone.textContent = c.phone || '';
+      if (drawerMsgCount) drawerMsgCount.textContent = c.total_messages || 0;
+      if (drawerWindow) drawerWindow.textContent = c.within_24h ? 'Active' : 'Closed';
+      if (crmName && document.activeElement !== crmName) crmName.value = c.visitor_name || '';
+      if (crmEmail && document.activeElement !== crmEmail) crmEmail.value = c.email || '';
+      if (crmStatus && document.activeElement !== crmStatus) crmStatus.value = c.status || 'open';
+      if (crmNotes && document.activeElement !== crmNotes) crmNotes.value = c.contact_notes || '';
+
+      if (sharedMediaEl) {
+        var mediaItems = state.activeChat.shared_media || [];
+        if (!mediaItems.length) {
+          sharedMediaEl.innerHTML = '<p class="wa-muted-note">No photos or files shared yet.</p>';
+        } else {
+          sharedMediaEl.innerHTML = mediaItems.map(function (m) {
+            if (m.type === 'image') {
+              return '<a href="' + escapeHtml(m.media_url) + '" target="_blank" class="wa-shared-thumb"><img src="' + escapeHtml(m.media_url) + '" alt=""/></a>';
+            }
+            var label = m.type === 'voice' ? '🎤 Voice' : ('📄 ' + (m.media_filename || m.type).slice(0, 8));
+            return '<a href="' + escapeHtml(m.download_url || m.media_url) + '" target="_blank" class="wa-shared-thumb">' + escapeHtml(label) + '</a>';
+          }).join('');
+        }
+      }
+
+      var allMsgs = state.activeChat.messages || [];
+      var sig = computeMessagesSignature(allMsgs, presence);
+      if (!forceScroll && sig === state.msgSignature) {
+        return;
+      }
+      state.msgSignature = sig;
+
+      var qLower = state.inchatFilter.toLowerCase();
+      var filtered = qLower
+        ? allMsgs.filter(function (m) { return (m.body || '').toLowerCase().indexOf(qLower) !== -1 || (m.media_filename || '').toLowerCase().indexOf(qLower) !== -1; })
+        : allMsgs;
+
+      var lastDateKey = '';
+      var html = '';
+
+      filtered.forEach(function (m) {
+        if (m.date_key && m.date_key !== lastDateKey) {
+          lastDateKey = m.date_key;
+          html += '<div class="wa-date-divider">' + escapeHtml(m.date_label) + '</div>';
+        }
+
+        var isOut = m.direction === 'outbound';
+        var rowCls = isOut ? 'wa-msg-row wa-msg-row--out' : 'wa-msg-row wa-msg-row--in';
+
+        var quotedHtml = '';
+        if (m.quoted) {
+          quotedHtml = (
+            '<div class="wa-quoted" data-wa-jump-wamid="' + escapeHtml(m.quoted.wamid || '') + '">' +
+              '<strong>' + escapeHtml(m.quoted.sender || 'Message') + '</strong>' +
+              '<span>' + escapeHtml(m.quoted.preview || '') + '</span>' +
+            '</div>'
+          );
+        }
+
+        var reactionBtns = QUICK_REACTIONS.map(function (em) {
+          return '<button type="button" data-wa-react="' + m.id + '" data-wa-emoji-val="' + em + '" title="React ' + em + '">' + em + '</button>';
+        }).join('');
+
+        var hoverBar = (
+          '<div class="wa-msg-actions">' +
+            reactionBtns +
+            (m.wamid ? '<button type="button" data-wa-reply-btn="' + escapeHtml(m.wamid) + '" data-wa-reply-who="' + escapeHtml(isOut ? 'You' : c.name) + '" data-wa-reply-txt="' + escapeHtml((m.body || m.type || 'Message').slice(0, 90)) + '" title="Reply">↩</button>' : '') +
+          '</div>'
+        );
+
+        html += (
+          '<div class="' + rowCls + '" data-wa-msg-id="' + m.id + '" data-wa-wamid="' + escapeHtml(m.wamid || '') + '">' +
+            hoverBar +
+            '<div class="wa-bubble">' +
+              (isOut && m.sender_name ? '<div class="wa-bubble__sender">' + escapeHtml(m.sender_name) + '</div>' : '') +
+              quotedHtml +
+              renderMediaInner(m) +
+              (m.html ? '<div dir="auto">' + m.html + '</div>' : '') +
+              (m.error ? '<div style="font-size:0.72rem;color:#EF4444;margin-top:3px;">⚠ ' + escapeHtml(m.error) + '</div>' : '') +
+              '<div class="wa-bubble__foot">' +
+                '<span>' + escapeHtml(m.time || '') + '</span>' +
+                (isOut ? ticksSvg(m.status) : '') +
+              '</div>' +
+            '</div>' +
+            (m.reaction_emoji ? '<span class="wa-reaction-pill" data-wa-react="' + m.id + '" data-wa-emoji-val="" title="Click to remove reaction">' + escapeHtml(m.reaction_emoji) + '</span>' : '') +
+          '</div>'
+        );
+      });
+
+      if (presence.ai_typing) {
+        html += (
+          '<div class="wa-msg-row wa-msg-row--out">' +
+            '<div class="wa-bubble"><div class="wa-bubble__sender">Empetix AI</div><div style="font-size:0.82rem;opacity:0.8;">Generating reply…</div></div>' +
+          '</div>'
+        );
+      }
+
+      if (messagesEl) {
+        messagesEl.innerHTML = html || '<div class="wa-date-divider">No messages in this conversation yet</div>';
+      }
+      if (streamEl) {
+        streamEl.scrollTop = streamEl.scrollHeight;
+      }
+    }
+
+    function selectContact(id) {
+      id = Number(id);
+      if (!id) return;
+      state.activeId = id;
+      state.msgSignature = '';
+      clearReplyTo();
+      root.classList.add('is-mobile-chat');
+
+      // Optimistically clear unread badge on selected contact
+      state.contacts.forEach(function (c) {
+        if (c.id === id) c.unread_count = 0;
+      });
+      renderContacts();
+
+      var url = urls.showTpl.replace('__ID__', encodeURIComponent(id));
+      fetch(url, {
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        credentials: 'same-origin'
+      })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.ok) return;
+          updateUnreadCounters(data.total_unread || 0);
+          state.activeChat = data.active_chat;
+          renderActiveChat(true);
+        });
+    }
+
+    function pollWorkspace() {
+      if (document.hidden || state.sending || state.rec.active) return;
+
+      var params = new URLSearchParams();
+      if (state.activeId) params.set('active_id', state.activeId);
+      if (state.filter) params.set('filter', state.filter);
+      if (state.search) params.set('q', state.search);
+
+      fetch(urls.poll + '?' + params.toString(), {
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        credentials: 'same-origin'
+      })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.ok) return;
+          state.contacts = data.contacts || [];
+          updateUnreadCounters(data.total_unread || 0);
+          renderContacts();
+
+          if (data.active_chat && state.activeId && data.active_chat.contact && data.active_chat.contact.id === state.activeId) {
+            state.activeChat = data.active_chat;
+            renderActiveChat(false);
+          }
+        })
+        .catch(function () {});
+    }
+
+    function setReplyTo(wamid, sender, preview) {
+      state.replyTo = { wamid: wamid, sender: sender, preview: preview };
+      if (replyBar) replyBar.hidden = false;
+      if (replySender) replySender.textContent = sender;
+      if (replyPreview) replyPreview.textContent = preview;
+      if (inputEl) inputEl.focus();
+    }
+
+    function clearReplyTo() {
+      state.replyTo = null;
+      if (replyBar) replyBar.hidden = true;
+    }
+
+    function addStagedFiles(fileList) {
+      if (!fileList || !fileList.length) return;
+      Array.prototype.forEach.call(fileList, function (f) {
+        if (state.stagedFiles.length >= 5) return;
+        state.stagedFiles.push(f);
+      });
+      renderStagedFiles();
+      syncComposerButtons();
+    }
+
+    function renderStagedFiles() {
+      if (!stagedEl) return;
+      if (!state.stagedFiles.length) {
+        stagedEl.hidden = true;
+        stagedEl.innerHTML = '';
+        return;
+      }
+      stagedEl.hidden = false;
+      stagedEl.innerHTML = state.stagedFiles.map(function (f, i) {
+        return (
+          '<span class="wa-staged-chip">' +
+            '<span>📎 ' + escapeHtml(f.name) + '</span>' +
+            '<button type="button" data-wa-rm-staged="' + i + '">&times;</button>' +
+          '</span>'
+        );
+      }).join('');
+    }
+
+    function sendComposerPayload(extraFormData) {
+      if (!state.activeId || state.sending) return;
+      var fd = extraFormData || new FormData();
+
+      if (!extraFormData) {
+        var text = inputEl ? inputEl.value.trim() : '';
+        if (!text && !state.stagedFiles.length) return;
+        if (text) fd.append('message', text);
+        state.stagedFiles.forEach(function (f) {
+          fd.append('attachments[]', f);
+        });
+      }
+
+      if (state.replyTo && state.replyTo.wamid) {
+        fd.append('reply_to_wamid', state.replyTo.wamid);
+      }
+
+      state.sending = true;
+      if (sendBtn) sendBtn.disabled = true;
+
+      var url = urls.sendTpl.replace('__ID__', encodeURIComponent(state.activeId));
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': csrfToken()
+        },
+        credentials: 'same-origin',
+        body: fd
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (body) {
+          if (!body || !body.ok) {
+            if (window.empetixToast) window.empetixToast((body && body.message) || 'Failed to send WhatsApp message.', 'error');
+            return;
+          }
+          if (!extraFormData) {
+            if (inputEl) {
+              inputEl.value = '';
+              inputEl.style.height = 'auto';
+            }
+            state.stagedFiles = [];
+            renderStagedFiles();
+          }
+          clearReplyTo();
+          syncComposerButtons();
+          state.activeChat = body.active_chat;
+          state.msgSignature = '';
+          renderActiveChat(true);
+          pollWorkspace();
+        })
+        .catch(function () {
+          if (window.empetixToast) window.empetixToast('Network error while sending WhatsApp message.', 'error');
+        })
+        .finally(function () {
+          state.sending = false;
+          if (sendBtn) sendBtn.disabled = false;
+        });
+    }
+
+    // ---------------- Voice Note Recording ----------------
+    function pickSupportedAudioMime() {
+      if (typeof MediaRecorder === 'undefined') return '';
+      var candidates = [
+        'audio/ogg;codecs=opus',
+        'audio/mp4',
+        'audio/webm;codecs=opus',
+        'audio/webm'
+      ];
+      for (var i = 0; i < candidates.length; i++) {
+        if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(candidates[i])) {
+          return candidates[i];
+        }
+      }
+      return '';
+    }
+
+    function startVoiceRecording() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (window.empetixToast) window.empetixToast('Microphone access is not supported in this browser.', 'error');
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function (stream) {
+          var mime = pickSupportedAudioMime();
+          var recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+
+          state.rec.active = true;
+          state.rec.stream = stream;
+          state.rec.recorder = recorder;
+          state.rec.chunks = [];
+          state.rec.startedAt = Date.now();
+
+          recorder.ondataavailable = function (e) {
+            if (e.data && e.data.size > 0) state.rec.chunks.push(e.data);
+          };
+
+          recorder.start(200);
+
+          if (formEl) formEl.hidden = true;
+          if (recBar) recBar.hidden = false;
+          if (recTimerEl) recTimerEl.textContent = '0:00';
+
+          state.rec.timerId = setInterval(function () {
+            var elapsed = Math.floor((Date.now() - state.rec.startedAt) / 1000);
+            if (recTimerEl) recTimerEl.textContent = formatDuration(elapsed);
+          }, 500);
+
+          // Live Audio Visualizer
+          try {
+            var AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx && recBarsEl) {
+              var ctx = new AudioCtx();
+              var src = ctx.createMediaStreamSource(stream);
+              var analyser = ctx.createAnalyser();
+              analyser.fftSize = 64;
+              src.connect(analyser);
+              state.rec.audioCtx = ctx;
+              var dataArr = new Uint8Array(analyser.frequencyBinCount);
+              var spans = recBarsEl.querySelectorAll('span');
+
+              function drawWave() {
+                if (!state.rec.active) return;
+                analyser.getByteFrequencyData(dataArr);
+                for (var i = 0; i < spans.length; i++) {
+                  var val = dataArr[i % dataArr.length] || 0;
+                  var h = Math.max(4, Math.round((val / 255) * 22));
+                  spans[i].style.height = h + 'px';
+                }
+                state.rec.rafId = requestAnimationFrame(drawWave);
+              }
+              drawWave();
+            }
+          } catch (e) {}
+        })
+        .catch(function () {
+          if (window.empetixToast) window.empetixToast('Please allow microphone access to record voice notes.', 'error');
+        });
+    }
+
+    function stopVoiceRecording(shouldSend) {
+      if (!state.rec.active) return;
+      var recorder = state.rec.recorder;
+      var durationSec = Math.max(1, Math.round((Date.now() - state.rec.startedAt) / 1000));
+
+      state.rec.active = false;
+      if (state.rec.timerId) clearInterval(state.rec.timerId);
+      if (state.rec.rafId) cancelAnimationFrame(state.rec.rafId);
+      if (state.rec.audioCtx) {
+        try { state.rec.audioCtx.close(); } catch (e) {}
+      }
+
+      if (recBar) recBar.hidden = true;
+      if (formEl) formEl.hidden = false;
+
+      if (!recorder) return;
+
+      recorder.onstop = function () {
+        if (state.rec.stream) {
+          state.rec.stream.getTracks().forEach(function (t) { t.stop(); });
+        }
+        if (!shouldSend || !state.rec.chunks.length) return;
+
+        var mime = recorder.mimeType || 'audio/ogg';
+        var ext = mime.indexOf('mp4') !== -1 ? 'm4a' : (mime.indexOf('ogg') !== -1 ? 'ogg' : 'webm');
+        var blob = new Blob(state.rec.chunks, { type: mime });
+        var file = new File([blob], 'voice-note.' + ext, { type: mime });
+
+        var fd = new FormData();
+        fd.append('mode', 'voice');
+        fd.append('voice_note', file);
+        fd.append('duration', String(durationSec));
+        sendComposerPayload(fd);
+      };
+
+      try { recorder.stop(); } catch (e) {}
+    }
+
+    function patchContactField(payload, toastMsg) {
+      if (!state.activeId) return;
+      var url = urls.contactTpl.replace('__ID__', encodeURIComponent(state.activeId));
+      fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': csrfToken()
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (body) {
+          if (body && body.ok) {
+            state.activeChat = body.active_chat;
+            renderActiveChat(false);
+            pollWorkspace();
+            if (toastMsg && window.empetixToast) window.empetixToast(toastMsg, 'success');
+          }
+        });
+    }
+
+    // ---------------- Event Listeners ----------------
+    if (searchEl) {
+      var searchTimer = null;
+      searchEl.addEventListener('input', function () {
+        state.search = searchEl.value.trim();
+        if (searchTimer) clearTimeout(searchTimer);
+        searchTimer = setTimeout(pollWorkspace, 260);
+      });
+    }
+
+    if (inchatInput) {
+      inchatInput.addEventListener('input', function () {
+        state.inchatFilter = inchatInput.value.trim();
+        state.msgSignature = '';
+        renderActiveChat(false);
+      });
+    }
+
+    if (inputEl) {
+      inputEl.addEventListener('input', function () {
+        inputEl.style.height = 'auto';
+        inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+        syncComposerButtons();
+      });
+      inputEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendComposerPayload();
+        }
+      });
+      inputEl.addEventListener('paste', function (e) {
+        if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length) {
+          addStagedFiles(e.clipboardData.files);
+        }
+      });
+    }
+
+    if (formEl) {
+      formEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        sendComposerPayload();
+      });
+    }
+
+    if (fileMediaInput) {
+      fileMediaInput.addEventListener('change', function () {
+        addStagedFiles(fileMediaInput.files);
+        fileMediaInput.value = '';
+      });
+    }
+    if (fileDocInput) {
+      fileDocInput.addEventListener('change', function () {
+        addStagedFiles(fileDocInput.files);
+        fileDocInput.value = '';
+      });
+    }
+
+    if (micBtn) micBtn.addEventListener('click', startVoiceRecording);
+    var recCancelBtn = root.querySelector('[data-wa-rec-cancel]');
+    var recSendBtn = root.querySelector('[data-wa-rec-send]');
+    if (recCancelBtn) recCancelBtn.addEventListener('click', function () { stopVoiceRecording(false); });
+    if (recSendBtn) recSendBtn.addEventListener('click', function () { stopVoiceRecording(true); });
+
+    if (crmForm) {
+      crmForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        patchContactField({
+          visitor_name: crmName ? crmName.value : '',
+          visitor_email: crmEmail ? crmEmail.value : '',
+          status: crmStatus ? crmStatus.value : 'open',
+          contact_notes: crmNotes ? crmNotes.value : ''
+        }, 'Contact details saved.');
+      });
+    }
+
+    // Start New Chat Modal Form
+    var startModeEl = root.querySelector('[data-wa-start-mode]');
+    var startContentWrap = root.querySelector('[data-wa-start-content-wrap]');
+    var startContentLabel = root.querySelector('[data-wa-start-content-label]');
+    var startLangWrap = root.querySelector('[data-wa-start-lang-wrap]');
+    if (startModeEl) {
+      startModeEl.addEventListener('change', function () {
+        var m = startModeEl.value;
+        if (startContentWrap) startContentWrap.hidden = m === 'contact_only';
+        if (startLangWrap) startLangWrap.hidden = m !== 'template';
+        if (startContentLabel) startContentLabel.textContent = m === 'template' ? 'Template Name' : 'Message Text';
+      });
+    }
+
+    var startForm = root.querySelector('[data-wa-start-form]');
+    if (startForm) {
+      startForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(startForm);
+        fetch(urls.start, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken() },
+          credentials: 'same-origin',
+          body: fd
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (body) {
+            if (!body || !body.ok) {
+              if (window.empetixToast) window.empetixToast((body && body.message) || 'Could not start chat.', 'error');
+              return;
+            }
+            root.querySelector('[data-wa-modal="new-chat"]').hidden = true;
+            state.activeId = body.contact.id;
+            state.activeChat = body.active_chat;
+            state.msgSignature = '';
+            renderActiveChat(true);
+            pollWorkspace();
+          });
+      });
+    }
+
+    // Notification Settings Form
+    var notifForm = root.querySelector('[data-wa-notif-form]');
+    if (notifForm) {
+      notifForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var enabledCb = notifForm.querySelector('[name="enabled"]');
+        var emailIn = notifForm.querySelector('[name="email"]');
+        var delayIn = notifForm.querySelector('[name="delay_seconds"]');
+
+        fetch(urls.notifications, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken()
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            enabled: !!(enabledCb && enabledCb.checked),
+            email: emailIn ? emailIn.value : '',
+            delay_seconds: delayIn ? Number(delayIn.value) : 90
+          })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (body) {
+            if (body && body.ok) {
+              root.querySelector('[data-wa-modal="notifications"]').hidden = true;
+              if (window.empetixToast) window.empetixToast(body.message || 'Saved.', 'success');
+            }
+          });
+      });
+    }
+
+    // Share Location Form
+    var locForm = root.querySelector('[data-wa-location-form]');
+    if (locForm) {
+      locForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(locForm);
+        fd.append('mode', 'location');
+        root.querySelector('[data-wa-modal="location"]').hidden = true;
+        sendComposerPayload(fd);
+      });
+    }
+
+    var geoBtn = root.querySelector('[data-wa-geo-detect]');
+    if (geoBtn && navigator.geolocation) {
+      geoBtn.addEventListener('click', function () {
+        navigator.geolocation.getCurrentPosition(function (pos) {
+          locForm.querySelector('[name="latitude"]').value = pos.coords.latitude.toFixed(6);
+          locForm.querySelector('[name="longitude"]').value = pos.coords.longitude.toFixed(6);
+        });
+      });
+    }
+
+    // Send Template Modal Form
+    var tplForm = root.querySelector('[data-wa-template-form]');
+    if (tplForm) {
+      tplForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(tplForm);
+        fd.append('mode', 'template');
+        root.querySelector('[data-wa-modal="template"]').hidden = true;
+        sendComposerPayload(fd);
+      });
+    }
+
+    // Delegated Clicks across Workspace
+    root.addEventListener('click', function (e) {
+      var contactRow = e.target.closest('[data-wa-select-contact]');
+      if (contactRow) {
+        selectContact(contactRow.getAttribute('data-wa-select-contact'));
+        return;
+      }
+
+      var filterBtn = e.target.closest('[data-wa-filter]');
+      if (filterBtn) {
+        state.filter = filterBtn.getAttribute('data-wa-filter');
+        Array.prototype.forEach.call(root.querySelectorAll('[data-wa-filter]'), function (b) {
+          b.classList.toggle('is-active', b === filterBtn);
+        });
+        pollWorkspace();
+        return;
+      }
+
+      if (e.target.closest('[data-wa-back]')) {
+        root.classList.remove('is-mobile-chat');
+        return;
+      }
+
+      if (e.target.closest('[data-wa-toggle-ai]')) {
+        var curPaused = state.activeChat && state.activeChat.contact && state.activeChat.contact.ai_paused;
+        patchContactField({ ai_paused: !curPaused }, !curPaused ? 'Human Takeover active (AI paused).' : 'AI Auto-Reply enabled.');
+        return;
+      }
+
+      if (e.target.closest('[data-wa-toggle-pin]')) {
+        var curPinned = state.activeChat && state.activeChat.contact && state.activeChat.contact.is_pinned;
+        patchContactField({ is_pinned: !curPinned }, !curPinned ? 'Conversation pinned.' : 'Conversation unpinned.');
+        return;
+      }
+
+      if (e.target.closest('[data-wa-toggle-drawer]')) {
+        var willOpen = drawerEl.hidden;
+        drawerEl.hidden = !willOpen;
+        root.classList.toggle('has-drawer', willOpen);
+        return;
+      }
+
+      if (e.target.closest('[data-wa-close-drawer]')) {
+        drawerEl.hidden = true;
+        root.classList.remove('has-drawer');
+        return;
+      }
+
+      if (e.target.closest('[data-wa-toggle-msg-search]')) {
+        inchatSearchWrap.hidden = !inchatSearchWrap.hidden;
+        if (!inchatSearchWrap.hidden && inchatInput) inchatInput.focus();
+        return;
+      }
+
+      if (e.target.closest('[data-wa-close-msg-search]')) {
+        inchatSearchWrap.hidden = true;
+        state.inchatFilter = '';
+        if (inchatInput) inchatInput.value = '';
+        state.msgSignature = '';
+        renderActiveChat(false);
+        return;
+      }
+
+      if (e.target.closest('[data-wa-btn-emoji]')) {
+        emojiPopover.hidden = !emojiPopover.hidden;
+        attachMenu.hidden = true;
+        return;
+      }
+
+      var emojiPick = e.target.closest('[data-wa-emoji]');
+      if (emojiPick && inputEl) {
+        inputEl.value += emojiPick.getAttribute('data-wa-emoji');
+        emojiPopover.hidden = true;
+        syncComposerButtons();
+        inputEl.focus();
+        return;
+      }
+
+      if (e.target.closest('[data-wa-btn-attach]')) {
+        attachMenu.hidden = !attachMenu.hidden;
+        emojiPopover.hidden = true;
+        return;
+      }
+
+      var pickItem = e.target.closest('[data-wa-pick]');
+      if (pickItem) {
+        attachMenu.hidden = true;
+        if (pickItem.getAttribute('data-wa-pick') === 'media' && fileMediaInput) fileMediaInput.click();
+        else if (fileDocInput) fileDocInput.click();
+        return;
+      }
+
+      var rmStaged = e.target.closest('[data-wa-rm-staged]');
+      if (rmStaged) {
+        state.stagedFiles.splice(Number(rmStaged.getAttribute('data-wa-rm-staged')), 1);
+        renderStagedFiles();
+        syncComposerButtons();
+        return;
+      }
+
+      var replyTrigger = e.target.closest('[data-wa-reply-btn]');
+      if (replyTrigger) {
+        setReplyTo(
+          replyTrigger.getAttribute('data-wa-reply-btn'),
+          replyTrigger.getAttribute('data-wa-reply-who'),
+          replyTrigger.getAttribute('data-wa-reply-txt')
+        );
+        return;
+      }
+
+      if (e.target.closest('[data-wa-reply-cancel]')) {
+        clearReplyTo();
+        return;
+      }
+
+      var reactBtn = e.target.closest('[data-wa-react]');
+      if (reactBtn && state.activeId) {
+        var msgId = reactBtn.getAttribute('data-wa-react');
+        var emojiVal = reactBtn.getAttribute('data-wa-emoji-val') || '';
+        var reactUrl = urls.reactTpl
+          .replace('__ID__', encodeURIComponent(state.activeId))
+          .replace('__MSG__', encodeURIComponent(msgId));
+        fetch(reactUrl, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken()
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ emoji: emojiVal })
+        }).then(function () { pollWorkspace(); });
+        return;
+      }
+
+      var jumpQuote = e.target.closest('[data-wa-jump-wamid]');
+      if (jumpQuote) {
+        var targetWamid = jumpQuote.getAttribute('data-wa-jump-wamid');
+        var targetEl = targetWamid && messagesEl.querySelector('[data-wa-wamid="' + targetWamid + '"]');
+        if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // Voice Player Controls
+      var voiceToggle = e.target.closest('[data-wa-voice-toggle]');
+      if (voiceToggle) {
+        var player = voiceToggle.closest('[data-wa-voice-player]');
+        var audio = player && player.querySelector('audio');
+        if (!audio) return;
+        if (audio.paused) {
+          audio.play();
+          voiceToggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+          audio.ontimeupdate = function () {
+            var dur = audio.duration || 1;
+            var pct = audio.currentTime / dur;
+            var bars = player.querySelectorAll('[data-wa-voice-scrub] span');
+            var durLabel = player.querySelector('[data-wa-voice-dur]');
+            if (durLabel) durLabel.textContent = formatDuration(audio.currentTime);
+            for (var i = 0; i < bars.length; i++) {
+              bars[i].classList.toggle('is-played', (i / bars.length) <= pct);
+            }
+          };
+          audio.onended = function () {
+            voiceToggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+          };
+        } else {
+          audio.pause();
+          voiceToggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+        }
+        return;
+      }
+
+      var speedBtn = e.target.closest('[data-wa-voice-speed]');
+      if (speedBtn) {
+        var vPlayer = speedBtn.closest('[data-wa-voice-player]');
+        var vAudio = vPlayer && vPlayer.querySelector('audio');
+        if (!vAudio) return;
+        var nextRate = vAudio.playbackRate === 1 ? 1.5 : (vAudio.playbackRate === 1.5 ? 2 : 1);
+        vAudio.playbackRate = nextRate;
+        speedBtn.textContent = nextRate + 'x';
+        return;
+      }
+
+      // Photo Lightbox
+      var zoomImg = e.target.closest('[data-wa-zoom]');
+      if (zoomImg && lightboxEl) {
+        lightboxImg.src = zoomImg.getAttribute('data-wa-zoom');
+        if (lightboxCap) lightboxCap.textContent = zoomImg.getAttribute('data-wa-cap') || 'Photo';
+        if (lightboxDl) lightboxDl.href = zoomImg.getAttribute('data-wa-dl') || zoomImg.getAttribute('data-wa-zoom');
+        lightboxEl.hidden = false;
+        return;
+      }
+
+      if (e.target.closest('[data-wa-lightbox-close]') || e.target === lightboxEl) {
+        lightboxEl.hidden = true;
+        return;
+      }
+
+      // Modals
+      var openModalBtn = e.target.closest('[data-wa-open-modal]');
+      if (openModalBtn) {
+        attachMenu.hidden = true;
+        var modalName = openModalBtn.getAttribute('data-wa-open-modal');
+        var modalEl = root.querySelector('[data-wa-modal="' + modalName + '"]');
+        if (modalEl) modalEl.hidden = false;
+        return;
+      }
+
+      if (e.target.closest('[data-wa-close-modal]') || e.target.hasAttribute('data-wa-modal')) {
+        Array.prototype.forEach.call(root.querySelectorAll('[data-wa-modal]'), function (m) { m.hidden = true; });
+        return;
+      }
+
+      if (e.target.closest('[data-wa-delete-chat]') && state.activeId) {
+        if (!confirm('Delete this WhatsApp conversation and all stored media files?')) return;
+        var delUrl = urls.deleteTpl.replace('__ID__', encodeURIComponent(state.activeId));
+        fetch(delUrl, {
+          method: 'DELETE',
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken() },
+          credentials: 'same-origin'
+        }).then(function () {
+          state.activeId = null;
+          state.activeChat = null;
+          renderActiveChat(true);
+          pollWorkspace();
+        });
+      }
+    });
+
+    // Drag & Drop Attachments onto Stage
+    root.addEventListener('dragover', function (e) { e.preventDefault(); });
+    root.addEventListener('drop', function (e) {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length && state.activeId) {
+        e.preventDefault();
+        addStagedFiles(e.dataTransfer.files);
+      }
+    });
+
+    var pollTimer = setInterval(pollWorkspace, 2000);
+    document.addEventListener('livewire:navigating', function () {
+      clearInterval(pollTimer);
+      stopVoiceRecording(false);
+    }, { once: true });
+  }
+
+  function initAll() {
+    var el = document.querySelector('[data-whatsapp-root]');
+    if (el) mountWhatsappInbox(el);
+  }
+
+  document.addEventListener('DOMContentLoaded', initAll);
+  document.addEventListener('livewire:navigated', initAll);
+})();

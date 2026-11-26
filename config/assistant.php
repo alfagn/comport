@@ -65,6 +65,11 @@ return [
         // Set true in production when running `php artisan queue:work`.
         'queue_webhooks' => (bool) env('WHATSAPP_QUEUE_WEBHOOKS', false),
         'mark_as_read' => (bool) env('WHATSAPP_MARK_AS_READ', true),
+
+        // Email notifications when a new WhatsApp message arrives and goes unseen.
+        'notify_unread_email' => (bool) env('WHATSAPP_NOTIFY_UNREAD_EMAIL', true),
+        'notify_email_to' => env('WHATSAPP_NOTIFY_EMAIL_TO'),
+        'unread_delay_seconds' => (int) env('WHATSAPP_UNREAD_DELAY_SECONDS', 90),
     ],
 
 ];

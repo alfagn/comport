@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Laravel\Ai\Concerns\HasConversations;
 use Laravel\Ai\Models\Conversation;
 
 /**
  * A customer conversation across Website live-chat or Meta WhatsApp Cloud API.
  *
- * Acts as the Laravel AI SDK conversation participant, so the transcript is
- * stored by the SDK and linked back through `conversation_id`.
+ * Acts as the Laravel AI SDK conversation participant, and for WhatsApp threads
+ * also owns rich `WhatsappMessage` records (media, voice notes, locations, ticks).
  */
 class SupportChatSession extends Model
 {
@@ -40,9 +42,11 @@ class SupportChatSession extends Model
 
     protected $fillable = [
         'token', 'conversation_id', 'channel', 'visitor_name', 'visitor_email',
-        'visitor_phone', 'external_thread_id', 'status', 'ai_paused',
-        'handoff_summary', 'contact_message_id', 'message_count', 'ip_address',
-        'user_agent', 'landing_page', 'last_external_message_id', 'last_message_at',
+        'visitor_phone', 'external_thread_id', 'status', 'ai_paused', 'is_pinned',
+        'handoff_summary', 'contact_notes', 'contact_message_id', 'message_count',
+        'unread_count', 'ip_address', 'user_agent', 'landing_page',
+        'last_external_message_id', 'last_message_preview', 'last_message_at',
+        'last_admin_read_at', 'last_customer_message_at', 'last_unread_notified_at',
     ];
 
     /**
@@ -52,15 +56,26 @@ class SupportChatSession extends Model
     {
         return [
             'ai_paused' => 'boolean',
+            'is_pinned' => 'boolean',
             'message_count' => 'integer',
+            'unread_count' => 'integer',
             'last_message_at' => 'datetime',
+            'last_admin_read_at' => 'datetime',
+            'last_customer_message_at' => 'datetime',
+            'last_unread_notified_at' => 'datetime',
         ];
     }
 
-    /** The SDK conversation holding this chat's transcript. */
+    /** The SDK conversation holding this chat's AI transcript. */
     public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class, 'conversation_id');
+    }
+
+    /** Rich WhatsApp messages (text, media, voice notes, statuses, reactions). */
+    public function whatsappMessages(): HasMany
+    {
+        return $this->hasMany(WhatsappMessage::class, 'support_chat_session_id');
     }
 
     /** The Inbox brief created when the chat was handed off to the team. */
@@ -81,10 +96,31 @@ class SupportChatSession extends Model
         return $query->where('channel', self::CHANNEL_WHATSAPP);
     }
 
+    /** Scope: Website widget conversations only. */
+    public function scopeWeb(Builder $query): Builder
+    {
+        return $query->where('channel', self::CHANNEL_WEB);
+    }
+
     /** Whether this session runs over WhatsApp. */
     public function isWhatsapp(): bool
     {
         return $this->channel === self::CHANNEL_WHATSAPP;
+    }
+
+    /** Whether Meta's free 24-hour customer service reply window is currently open. */
+    public function withinCustomerServiceWindow(): bool
+    {
+        if ($this->last_customer_message_at !== null) {
+            return $this->last_customer_message_at->gt(now()->subHours(24));
+        }
+
+        $latestInbound = $this->whatsappMessages()
+            ->where('direction', WhatsappMessage::DIRECTION_INBOUND)
+            ->latest('created_at')
+            ->value('created_at');
+
+        return $latestInbound !== null && Carbon::parse($latestInbound)->gt(now()->subHours(24));
     }
 
     /** Whether the visitor can still send messages. */

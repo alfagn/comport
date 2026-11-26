@@ -165,6 +165,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/conversations/{conversation}', [Admin\AssistantController::class, 'destroy'])->name('destroy');
         });
 
+        // Dedicated WhatsApp Business Inbox Studio (completely separate from Email Inbox).
+        Route::middleware('permission:manage support chats')->prefix('whatsapp')->name('whatsapp.')->group(function () {
+            Route::get('/', [Admin\WhatsappInboxController::class, 'index'])->name('index');
+            Route::get('/poll', [Admin\WhatsappInboxController::class, 'poll'])->name('poll');
+            Route::post('/conversations', [Admin\WhatsappInboxController::class, 'startConversation'])->name('start');
+            Route::get('/conversations/{id}', [Admin\WhatsappInboxController::class, 'show'])->whereNumber('id')->name('show');
+            Route::patch('/conversations/{id}', [Admin\WhatsappInboxController::class, 'updateContact'])->whereNumber('id')->name('contact.update');
+            Route::delete('/conversations/{id}', [Admin\WhatsappInboxController::class, 'destroy'])->whereNumber('id')->name('destroy');
+            Route::post('/conversations/{id}/send', [Admin\WhatsappInboxController::class, 'sendMessage'])->whereNumber('id')->name('send');
+            Route::post('/conversations/{id}/messages/{messageId}/react', [Admin\WhatsappInboxController::class, 'react'])->whereNumber(['id', 'messageId'])->name('react');
+            Route::put('/notification-settings', [Admin\WhatsappInboxController::class, 'updateNotificationSettings'])->name('notifications.update');
+            Route::get('/media/{message}', [Admin\WhatsappInboxController::class, 'media'])->whereNumber('message')->name('media');
+        });
+
         // Public AI Customer Support & WhatsApp Cloud API transcripts & configuration.
         Route::middleware('permission:manage support chats')->prefix('support-chats')->name('support-chats.')->group(function () {
             Route::get('/', [Admin\SupportChatController::class, 'index'])->name('index');

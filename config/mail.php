@@ -115,4 +115,21 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Controls where public Contact Us project briefs are emailed, whether
+    | an automatic confirmation receipt is sent to the sender, and whether
+    | delivery should be pushed to the queue or sent immediately via SMTP.
+    |
+    */
+
+    'contact' => [
+        'to' => env('MAIL_CONTACT_TO'),
+        'send_confirmation' => (bool) env('MAIL_CONTACT_CONFIRMATION', true),
+        'queue' => (bool) env('MAIL_CONTACT_QUEUE', false),
+    ],
+
 ];

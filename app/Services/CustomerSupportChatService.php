@@ -6,6 +6,7 @@ use App\Ai\Agents\CustomerSupportAgent;
 use App\Models\Setting;
 use App\Models\SupportChatSession;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Ai\Contracts\ConversationStore;
 use Laravel\Ai\Enums\MessageStatus;
@@ -348,6 +349,11 @@ class CustomerSupportChatService
         if ($session->conversation_id) {
             ConversationMessage::query()->where('conversation_id', $session->conversation_id)->delete();
             Conversation::query()->where('id', $session->conversation_id)->delete();
+        }
+
+        if ($session->isWhatsapp()) {
+            Storage::disk(WhatsappCustomerSupportService::MEDIA_DISK)
+                ->deleteDirectory(WhatsappCustomerSupportService::MEDIA_DIR.'/'.$session->id);
         }
 
         $session->delete();

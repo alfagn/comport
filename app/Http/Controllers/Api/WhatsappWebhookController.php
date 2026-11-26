@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessIncomingWhatsappMessage;
 use App\Services\WhatsappCloudApiService;
+use App\Services\WhatsappCustomerSupportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,11 +15,14 @@ use Illuminate\Support\Facades\Log;
  * Official Meta WhatsApp Business Cloud API webhook endpoint.
  *
  * - GET  /api/webhooks/whatsapp : Meta verification challenge (`hub.verify_token`)
- * - POST /api/webhooks/whatsapp : Inbound customer messages (`X-Hub-Signature-256`)
+ * - POST /api/webhooks/whatsapp : Inbound messages, media, reactions & delivery/read statuses
  */
 class WhatsappWebhookController extends Controller
 {
-    public function __construct(private WhatsappCloudApiService $whatsapp) {}
+    public function __construct(
+        private WhatsappCloudApiService $whatsapp,
+        private WhatsappCustomerSupportService $whatsappSupport,
+    ) {}
 
     /**
      * Respond to Meta's webhook verification handshake.
@@ -46,7 +50,7 @@ class WhatsappWebhookController extends Controller
     }
 
     /**
-     * Receive inbound WhatsApp events from Meta and dispatch AI/support handling.
+     * Receive inbound WhatsApp messages, media, reactions & status updates from Meta.
      */
     public function handle(Request $request): JsonResponse
     {
@@ -73,8 +77,14 @@ class WhatsappWebhookController extends Controller
             ]);
         }
 
-        $messages = $this->whatsapp->extractIncomingMessages($request->all());
+        $payload = $request->all();
 
+        $statusUpdates = $this->whatsapp->extractStatusUpdates($payload);
+        $statusesProcessed = $statusUpdates !== []
+            ? $this->whatsappSupport->handleStatusUpdates($statusUpdates)
+            : 0;
+
+        $messages = $this->whatsapp->extractIncomingMessages($payload);
         $useQueue = (bool) config('assistant.whatsapp.queue_webhooks', false);
 
         foreach ($messages as $item) {
@@ -83,6 +93,12 @@ class WhatsappWebhookController extends Controller
                 profileName: $item['profile_name'],
                 messageId: $item['message_id'],
                 text: $item['text'],
+                type: $item['type'] ?? 'text',
+                replyToWamid: $item['reply_to_wamid'] ?? null,
+                media: $item['media'] ?? null,
+                location: $item['location'] ?? null,
+                contacts: $item['contacts'] ?? null,
+                reaction: $item['reaction'] ?? null,
             );
 
             if ($useQueue) {
@@ -95,6 +111,7 @@ class WhatsappWebhookController extends Controller
         return response()->json([
             'ok' => true,
             'processed' => count($messages),
+            'statuses_updated' => $statusesProcessed,
         ]);
     }
 }

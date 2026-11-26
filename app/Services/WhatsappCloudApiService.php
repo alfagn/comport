@@ -5,12 +5,17 @@ namespace App\Services;
 use App\Models\Setting;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Throwable;
 
 /**
  * Client & webhook payload parser for the official Meta WhatsApp Business Cloud API.
+ *
+ * Supports text, templates, quoted replies, emoji reactions, locations, and full
+ * inbound/outbound media (photos, videos, voice notes, audio, documents, stickers)
+ * plus delivery/read status callbacks (`sent`, `delivered`, `read`, `failed`).
  */
 class WhatsappCloudApiService
 {
@@ -113,8 +118,7 @@ class WhatsappCloudApiService
     }
 
     /**
-     * Normalize phone numbers to international E.164 digits (handles `00` prefixes
-     * and local Egyptian mobile numbers like `01150949593` or `+2001150949593`).
+     * Normalize phone numbers to international E.164 digits.
      */
     public function normalizePhone(string $phone): string
     {
@@ -124,12 +128,10 @@ class WhatsappCloudApiService
             $digits = substr($digits, 2);
         }
 
-        // Local Egyptian mobile format: 010 / 011 / 012 / 015 + 8 digits (11 digits total)
         if (preg_match('/^0(1[0125]\d{8})$/', $digits, $matches)) {
             return '20'.$matches[1];
         }
 
-        // Common typo: +20 followed by leading 0 (20010 / 20011 / 20012 / 20015 + 8 digits)
         if (preg_match('/^200(1[0125]\d{8})$/', $digits, $matches)) {
             return '20'.$matches[1];
         }
@@ -148,18 +150,22 @@ class WhatsappCloudApiService
     }
 
     /**
-     * Send a standard WhatsApp text message (within the 24h customer window).
+     * Send a standard WhatsApp text message (with optional quoted reply context).
      *
      * @return array<string, mixed>
      */
-    public function sendTextMessage(string $to, string $body, bool $previewUrl = false): array
-    {
+    public function sendTextMessage(
+        string $to,
+        string $body,
+        bool $previewUrl = false,
+        ?string $replyToWamid = null,
+    ): array {
         $recipient = $this->normalizePhone($to);
         if ($recipient === '') {
             throw new RuntimeException('Invalid WhatsApp recipient phone number.');
         }
 
-        return $this->postMessages([
+        $payload = [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
             'to' => $recipient,
@@ -168,7 +174,253 @@ class WhatsappCloudApiService
                 'preview_url' => $previewUrl,
                 'body' => Str::limit(trim($body), 4000, '…'),
             ],
+        ];
+
+        if (filled($replyToWamid)) {
+            $payload['context'] = ['message_id' => $replyToWamid];
+        }
+
+        return $this->postMessages($payload);
+    }
+
+    /**
+     * Upload a binary media file to Meta's WhatsApp `/media` endpoint and return its `media_id`.
+     * Automatically transcodes browser `audio/webm` voice recordings to `audio/ogg` (Opus) when ffmpeg is available.
+     *
+     * @return array{media_id: string, mime_type: string, filename: string}
+     */
+    public function uploadMedia(string $absolutePath, string $mimeType, string $filename): array
+    {
+        if (! $this->isConfigured()) {
+            throw new RuntimeException('WhatsApp Cloud API credentials are not configured yet.');
+        }
+
+        if (! is_file($absolutePath)) {
+            throw new RuntimeException('Media file not found on disk.');
+        }
+
+        $uploadPath = $absolutePath;
+        $uploadMime = strtolower(trim(explode(';', $mimeType)[0]));
+        $uploadFilename = $filename;
+        $tempConverted = null;
+
+        // Browser MediaRecorder on Chromium often outputs audio/webm, whereas Meta WhatsApp expects audio/ogg (Opus) or audio/mp4/mpeg.
+        if (in_array($uploadMime, ['audio/webm', 'video/webm'], true)) {
+            $converted = $this->transcodeWebmToOggOpus($absolutePath);
+            if ($converted !== null) {
+                $tempConverted = $converted;
+                $uploadPath = $converted;
+                $uploadMime = 'audio/ogg';
+                $uploadFilename = pathinfo($filename, PATHINFO_FILENAME).'.ogg';
+            } else {
+                $uploadMime = 'audio/ogg';
+                $uploadFilename = pathinfo($filename, PATHINFO_FILENAME).'.ogg';
+            }
+        }
+
+        $baseUrl = rtrim((string) config('assistant.whatsapp.base_url', 'https://graph.facebook.com'), '/');
+        $endpoint = "{$baseUrl}/{$this->apiVersion()}/{$this->phoneNumberId()}/media";
+
+        try {
+            $contents = (string) file_get_contents($uploadPath);
+            $response = Http::withToken((string) $this->accessToken())
+                ->acceptJson()
+                ->timeout(45)
+                ->attach('file', $contents, $uploadFilename, ['Content-Type' => $uploadMime])
+                ->post($endpoint, [
+                    'messaging_product' => 'whatsapp',
+                    'type' => $uploadMime,
+                ])
+                ->throw();
+        } catch (RequestException $exception) {
+            $apiMsg = $exception->response?->json('error.message') ?: $exception->getMessage();
+            throw new RuntimeException("WhatsApp media upload error: {$apiMsg}", previous: $exception);
+        } finally {
+            if ($tempConverted !== null && is_file($tempConverted)) {
+                @unlink($tempConverted);
+            }
+        }
+
+        $mediaId = (string) ($response->json('id') ?? '');
+        if ($mediaId === '') {
+            throw new RuntimeException('Meta Graph API did not return a media ID.');
+        }
+
+        return [
+            'media_id' => $mediaId,
+            'mime_type' => $uploadMime,
+            'filename' => $uploadFilename,
+        ];
+    }
+
+    /**
+     * Send an uploaded media message (`image`, `video`, `audio`, `document`, `sticker`).
+     *
+     * @return array<string, mixed>
+     */
+    public function sendMediaMessage(
+        string $to,
+        string $type,
+        string $mediaId,
+        ?string $caption = null,
+        ?string $filename = null,
+        ?string $replyToWamid = null,
+        bool $isVoice = false,
+    ): array {
+        $recipient = $this->normalizePhone($to);
+        if ($recipient === '') {
+            throw new RuntimeException('Invalid WhatsApp recipient phone number.');
+        }
+
+        $waType = $type === 'voice' ? 'audio' : $type;
+        if (! in_array($waType, ['image', 'video', 'audio', 'document', 'sticker'], true)) {
+            $waType = 'document';
+        }
+
+        $mediaPayload = ['id' => $mediaId];
+
+        if (in_array($waType, ['image', 'video', 'document'], true) && filled($caption)) {
+            $mediaPayload['caption'] = Str::limit(trim((string) $caption), 1024, '…');
+        }
+
+        if ($waType === 'document' && filled($filename)) {
+            $mediaPayload['filename'] = $filename;
+        }
+
+        if ($waType === 'audio' && ($isVoice || $type === 'voice')) {
+            $mediaPayload['voice'] = true;
+        }
+
+        $payload = [
+            'messaging_product' => 'whatsapp',
+            'recipient_type' => 'individual',
+            'to' => $recipient,
+            'type' => $waType,
+            $waType => $mediaPayload,
+        ];
+
+        if (filled($replyToWamid)) {
+            $payload['context'] = ['message_id' => $replyToWamid];
+        }
+
+        return $this->postMessages($payload);
+    }
+
+    /**
+     * Send a geographic pin / location card on WhatsApp.
+     *
+     * @return array<string, mixed>
+     */
+    public function sendLocationMessage(
+        string $to,
+        float $latitude,
+        float $longitude,
+        ?string $name = null,
+        ?string $address = null,
+        ?string $replyToWamid = null,
+    ): array {
+        $recipient = $this->normalizePhone($to);
+        if ($recipient === '') {
+            throw new RuntimeException('Invalid WhatsApp recipient phone number.');
+        }
+
+        $location = [
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+        ];
+
+        if (filled($name)) {
+            $location['name'] = Str::limit(trim((string) $name), 120, '');
+        }
+        if (filled($address)) {
+            $location['address'] = Str::limit(trim((string) $address), 240, '');
+        }
+
+        $payload = [
+            'messaging_product' => 'whatsapp',
+            'recipient_type' => 'individual',
+            'to' => $recipient,
+            'type' => 'location',
+            'location' => $location,
+        ];
+
+        if (filled($replyToWamid)) {
+            $payload['context'] = ['message_id' => $replyToWamid];
+        }
+
+        return $this->postMessages($payload);
+    }
+
+    /**
+     * Send an emoji reaction (`👍`, `❤️`, `😂`, etc., or `""` to remove) on an existing message.
+     *
+     * @return array<string, mixed>
+     */
+    public function sendReaction(string $to, string $targetWamid, string $emoji): array
+    {
+        $recipient = $this->normalizePhone($to);
+        if ($recipient === '' || trim($targetWamid) === '') {
+            throw new RuntimeException('Recipient phone and target WhatsApp message ID are required.');
+        }
+
+        return $this->postMessages([
+            'messaging_product' => 'whatsapp',
+            'recipient_type' => 'individual',
+            'to' => $recipient,
+            'type' => 'reaction',
+            'reaction' => [
+                'message_id' => $targetWamid,
+                'emoji' => $emoji,
+            ],
         ]);
+    }
+
+    /**
+     * Download an inbound WhatsApp media binary using Meta's two-step Graph lookup.
+     *
+     * @return array{bytes: string, mime_type: string, size: int}|null
+     */
+    public function downloadMedia(string $mediaId): ?array
+    {
+        if (! $this->isConfigured() || trim($mediaId) === '') {
+            return null;
+        }
+
+        $baseUrl = rtrim((string) config('assistant.whatsapp.base_url', 'https://graph.facebook.com'), '/');
+        $metaEndpoint = "{$baseUrl}/{$this->apiVersion()}/{$mediaId}";
+
+        try {
+            $metaRes = Http::withToken((string) $this->accessToken())
+                ->acceptJson()
+                ->timeout(15)
+                ->get($metaEndpoint)
+                ->throw();
+
+            $downloadUrl = (string) ($metaRes->json('url') ?? '');
+            $mimeType = (string) ($metaRes->json('mime_type') ?? 'application/octet-stream');
+
+            if ($downloadUrl === '') {
+                return null;
+            }
+
+            $binaryRes = Http::withToken((string) $this->accessToken())
+                ->timeout(30)
+                ->get($downloadUrl)
+                ->throw();
+
+            $bytes = $binaryRes->body();
+            if ($bytes === '') {
+                return null;
+            }
+
+            return [
+                'bytes' => $bytes,
+                'mime_type' => $mimeType,
+                'size' => strlen($bytes),
+            ];
+        } catch (Throwable) {
+            return null;
+        }
     }
 
     /**
@@ -241,24 +493,19 @@ class WhatsappCloudApiService
     {
         $text = trim($markdown);
 
-        // Convert Markdown links [Label](https://...) -> Label (https://...)
         $text = (string) preg_replace('/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/u', '$1 ($2)', $text);
-
-        // Convert Markdown headings to bold lines
         $text = (string) preg_replace('/^#{1,6}\s+(.+)$/mu', '*$1*', $text);
-
-        // Convert **bold** to WhatsApp *bold*
         $text = (string) preg_replace('/\*\*(.+?)\*\*/su', '*$1*', $text);
 
         return Str::limit(trim($text), 3900, '…');
     }
 
     /**
-     * Extract actionable customer messages from Meta's webhook payload,
-     * ignoring delivery/read status callbacks.
+     * Extract actionable customer messages (including rich media, voice notes,
+     * locations, contacts, reactions, and quoted reply IDs) from Meta's webhook payload.
      *
      * @param  array<string, mixed>  $payload
-     * @return list<array{wa_id: string, profile_name: ?string, message_id: string, text: string, type: string}>
+     * @return list<array<string, mixed>>
      */
     public function extractIncomingMessages(array $payload): array
     {
@@ -286,8 +533,37 @@ class WhatsappCloudApiService
                     }
 
                     $text = $this->extractMessageBody($msg, $type);
-                    if ($text === null || trim($text) === '') {
+                    if ($text === null) {
                         continue;
+                    }
+
+                    $media = null;
+                    if (in_array($type, ['image', 'video', 'audio', 'document', 'sticker'], true) && is_array($msg[$type] ?? null)) {
+                        $mediaBlock = $msg[$type];
+                        $media = [
+                            'id' => (string) ($mediaBlock['id'] ?? ''),
+                            'mime_type' => (string) ($mediaBlock['mime_type'] ?? 'application/octet-stream'),
+                            'filename' => $mediaBlock['filename'] ?? null,
+                            'voice' => (bool) ($mediaBlock['voice'] ?? false),
+                        ];
+                    }
+
+                    $location = null;
+                    if ($type === 'location' && is_array($msg['location'] ?? null)) {
+                        $location = [
+                            'latitude' => (float) ($msg['location']['latitude'] ?? 0),
+                            'longitude' => (float) ($msg['location']['longitude'] ?? 0),
+                            'name' => $msg['location']['name'] ?? null,
+                            'address' => $msg['location']['address'] ?? null,
+                        ];
+                    }
+
+                    $reaction = null;
+                    if ($type === 'reaction' && is_array($msg['reaction'] ?? null)) {
+                        $reaction = [
+                            'message_id' => (string) ($msg['reaction']['message_id'] ?? ''),
+                            'emoji' => (string) ($msg['reaction']['emoji'] ?? ''),
+                        ];
                     }
 
                     $extracted[] = [
@@ -296,12 +572,58 @@ class WhatsappCloudApiService
                         'message_id' => $messageId,
                         'text' => trim($text),
                         'type' => $type,
+                        'reply_to_wamid' => isset($msg['context']['id']) ? (string) $msg['context']['id'] : null,
+                        'media' => $media,
+                        'location' => $location,
+                        'contacts' => $type === 'contacts' ? ($msg['contacts'] ?? []) : null,
+                        'reaction' => $reaction,
                     ];
                 }
             }
         }
 
         return $extracted;
+    }
+
+    /**
+     * Extract outbound delivery & read status updates (`sent`, `delivered`, `read`, `failed`)
+     * from Meta's webhook payload.
+     *
+     * @param  array<string, mixed>  $payload
+     * @return list<array{wamid: string, status: string, recipient_id: string, error: ?string}>
+     */
+    public function extractStatusUpdates(array $payload): array
+    {
+        $updates = [];
+
+        foreach ((array) ($payload['entry'] ?? []) as $entry) {
+            foreach ((array) ($entry['changes'] ?? []) as $change) {
+                $value = (array) ($change['value'] ?? []);
+
+                foreach ((array) ($value['statuses'] ?? []) as $st) {
+                    $wamid = (string) ($st['id'] ?? '');
+                    $status = strtolower((string) ($st['status'] ?? ''));
+
+                    if ($wamid === '' || ! in_array($status, ['sent', 'delivered', 'read', 'failed'], true)) {
+                        continue;
+                    }
+
+                    $errorMsg = null;
+                    if (! empty($st['errors'][0]['title'])) {
+                        $errorMsg = (string) $st['errors'][0]['title'];
+                    }
+
+                    $updates[] = [
+                        'wamid' => $wamid,
+                        'status' => $status,
+                        'recipient_id' => $this->normalizePhone((string) ($st['recipient_id'] ?? '')),
+                        'error' => $errorMsg,
+                    ];
+                }
+            }
+        }
+
+        return $updates;
     }
 
     /**
@@ -320,14 +642,21 @@ class WhatsappCloudApiService
             'image', 'video', 'document' => filled($msg[$type]['caption'] ?? null)
                 ? (string) $msg[$type]['caption']
                 : "[Customer sent a {$type} attachment]",
-            'audio' => '[Customer sent a voice note]',
+            'sticker' => '[Customer sent a sticker]',
+            'audio' => ! empty($msg['audio']['voice'])
+                ? '[Customer sent a voice note]'
+                : '[Customer sent an audio file]',
+            'location' => filled($msg['location']['name'] ?? null)
+                ? '📍 '.$msg['location']['name'].(filled($msg['location']['address'] ?? null) ? ' — '.$msg['location']['address'] : '')
+                : '[Customer shared a location]',
+            'contacts' => '[Customer shared a contact card]',
+            'reaction' => (string) ($msg['reaction']['emoji'] ?? ''),
             default => null,
         };
     }
 
     /**
-     * Subscribe the WhatsApp Business Account (WABA) to this Meta App's webhooks
-     * (`POST /{waba_id}/subscribed_apps`) — required by Meta so real phone messages fire webhooks.
+     * Subscribe the WhatsApp Business Account (WABA) to this Meta App's webhooks.
      *
      * @return array<string, mixed>
      */
@@ -382,5 +711,32 @@ class WhatsappCloudApiService
         }
 
         return (array) $response->json();
+    }
+
+    /**
+     * Convert a WebM audio recording to OGG Opus when ffmpeg is installed on the host.
+     */
+    protected function transcodeWebmToOggOpus(string $sourcePath): ?string
+    {
+        $targetPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'wa_voice_'.Str::uuid().'.ogg';
+
+        try {
+            $result = Process::timeout(15)->run([
+                'ffmpeg', '-y', '-i', $sourcePath,
+                '-vn', '-c:a', 'libopus', '-b:a', '48k',
+                $targetPath,
+            ]);
+
+            if ($result->successful() && is_file($targetPath) && filesize($targetPath) > 0) {
+                return $targetPath;
+            }
+        } catch (Throwable) {
+        }
+
+        if (is_file($targetPath)) {
+            @unlink($targetPath);
+        }
+
+        return null;
     }
 }

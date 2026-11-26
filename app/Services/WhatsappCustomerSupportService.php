@@ -3,40 +3,70 @@
 namespace App\Services;
 
 use App\Ai\Agents\CustomerSupportAgent;
+use App\Jobs\SendUnreadWhatsappAlertJob;
+use App\Mail\UnreadWhatsappMessageMail;
 use App\Models\Setting;
 use App\Models\SupportChatSession;
+use App\Models\User;
+use App\Models\WhatsappMessage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Ai\Contracts\ConversationStore;
 use Laravel\Ai\Enums\MessageStatus;
+use Laravel\Ai\Files\Audio;
+use Laravel\Ai\Files\Document;
+use Laravel\Ai\Files\Image;
 use Laravel\Ai\Messages\UserMessage;
 use Laravel\Ai\Models\Conversation;
 use Laravel\Ai\Models\ConversationMessage;
 use Throwable;
 
 /**
- * Orchestrates inbound & outbound WhatsApp Customer Support conversations,
- * AI auto-responses, and human agent takeover from the CMS dashboard.
+ * Orchestrates inbound & outbound WhatsApp Business conversations, rich media
+ * (photos, videos, voice notes, audio, documents, locations, reactions, replies),
+ * delivery/read checkmarks, AI auto-responses, and unread email notifications.
  */
 class WhatsappCustomerSupportService
 {
+    public const MEDIA_DISK = 'local';
+
+    public const MEDIA_DIR = 'whatsapp-media';
+
     public function __construct(
         private WhatsappCloudApiService $whatsapp,
         private AiRuntimeGuard $guard,
     ) {}
 
     /**
-     * Process an inbound customer message from Meta's webhook.
+     * Process an inbound customer message or reaction from Meta's webhook.
+     *
+     * @param  array<string, mixed>|null  $media
+     * @param  array<string, mixed>|null  $location
+     * @param  array<int, mixed>|null  $contacts
+     * @param  array<string, string>|null  $reaction
      */
     public function handleIncomingMessage(
         string $waId,
         ?string $profileName,
         string $messageId,
         string $text,
+        string $type = 'text',
+        ?string $replyToWamid = null,
+        ?array $media = null,
+        ?array $location = null,
+        ?array $contacts = null,
+        ?array $reaction = null,
     ): ?SupportChatSession {
         $normalizedWaId = $this->whatsapp->normalizePhone($waId);
-        if ($normalizedWaId === '' || trim($text) === '') {
+        if ($normalizedWaId === '') {
+            return null;
+        }
+
+        if ($type !== 'reaction' && trim($text) === '' && $media === null && $location === null && $contacts === null) {
             return null;
         }
 
@@ -47,6 +77,16 @@ class WhatsappCustomerSupportService
 
         $session = $this->findOrCreateWhatsappSession($normalizedWaId, $profileName);
 
+        // Customer emoji reaction on an existing message
+        if ($type === 'reaction' && ! empty($reaction['message_id'])) {
+            WhatsappMessage::query()
+                ->where('support_chat_session_id', $session->id)
+                ->where('wa_message_id', $reaction['message_id'])
+                ->update(['reaction_emoji' => $reaction['emoji'] !== '' ? $reaction['emoji'] : null]);
+
+            return $session;
+        }
+
         if ($messageId !== '' && $session->last_external_message_id === $messageId) {
             return $session;
         }
@@ -55,7 +95,50 @@ class WhatsappCustomerSupportService
             $this->whatsapp->markMessageAsRead($messageId);
         }
 
-        // Human Takeover mode: record the customer's message in the transcript without AI auto-reply
+        $this->syncLegacyMessagesIfNeeded($session);
+
+        // Download & persist inbound media (image, voice note, audio, video, document, sticker)
+        $storedMedia = $this->downloadAndStoreInboundMedia($session, $type, $media);
+        $resolvedType = ($type === 'audio' && ! empty($media['voice'])) ? 'voice' : $type;
+
+        $metadata = array_filter([
+            'location' => $location,
+            'contacts' => $contacts,
+            'quoted_preview' => $this->lookupQuotedPreview($session->id, $replyToWamid),
+        ], fn ($v): bool => $v !== null && $v !== []);
+
+        $adminActivelyViewingThisChat = Cache::has("whatsapp:admin_viewing:{$session->id}");
+
+        $inboundRecord = WhatsappMessage::query()->create([
+            'support_chat_session_id' => $session->id,
+            'wa_message_id' => $messageId ?: null,
+            'reply_to_wa_message_id' => $replyToWamid ?: null,
+            'direction' => WhatsappMessage::DIRECTION_INBOUND,
+            'sender_type' => WhatsappMessage::SENDER_CUSTOMER,
+            'type' => $resolvedType,
+            'body' => $text !== '' ? $text : null,
+            'media_id' => $media['id'] ?? null,
+            'media_disk' => $storedMedia['disk'] ?? null,
+            'media_path' => $storedMedia['path'] ?? null,
+            'media_mime' => $storedMedia['mime'] ?? ($media['mime_type'] ?? null),
+            'media_filename' => $storedMedia['filename'] ?? ($media['filename'] ?? null),
+            'media_size' => $storedMedia['size'] ?? null,
+            'metadata' => $metadata !== [] ? $metadata : null,
+            'status' => WhatsappMessage::STATUS_RECEIVED,
+            'read_at' => $adminActivelyViewingThisChat ? now() : null,
+        ]);
+
+        $nextUnreadCount = $adminActivelyViewingThisChat ? 0 : ($session->unread_count + 1);
+
+        $session->forceFill([
+            'unread_count' => $nextUnreadCount,
+            'last_external_message_id' => $messageId ?: $session->last_external_message_id,
+            'last_message_preview' => $inboundRecord->previewLabel(),
+            'last_customer_message_at' => now(),
+            'last_message_at' => now(),
+        ])->save();
+
+        // Human Takeover mode: record customer message in SDK transcript without AI auto-reply
         if ($session->ai_paused) {
             $conversationId = $this->ensureConversationExists($session);
             resolve(ConversationStore::class)->storeUserMessage(
@@ -69,32 +152,35 @@ class WhatsappCustomerSupportService
             $session->forceFill([
                 'conversation_id' => $conversationId,
                 'message_count' => $session->message_count + 1,
-                'last_external_message_id' => $messageId ?: $session->last_external_message_id,
-                'last_message_at' => now(),
             ])->save();
+
+            if (! $adminActivelyViewingThisChat) {
+                $this->scheduleOrSendUnreadAlert($session->refresh());
+            }
 
             return $session->refresh();
         }
 
+        // AI Auto-Reply Mode
         $agent = new CustomerSupportAgent($session);
         $rawProvider = $agent->provider();
         $primaryProvider = is_array($rawProvider) ? (string) array_key_first($rawProvider) : $rawProvider;
         $provider = $this->guard->resolvedProvider($primaryProvider);
 
         $replyText = null;
+        $sdkAttachments = $this->buildSdkAttachmentsForInbound($storedMedia, $resolvedType);
 
         if ($this->guard->isReady($provider, CustomerSupportAgent::isFaked())) {
             app(CustomerSupportChatService::class)->markTyping($session, 'ai', true, null, 35);
             try {
                 $response = $agent
                     ->continueOrStart($session->conversation_id, as: $session)
-                    ->prompt($text);
+                    ->prompt($text, attachments: $sdkAttachments);
 
                 $session->refresh();
                 $session->forceFill([
                     'conversation_id' => $response->conversationId ?? $session->conversation_id,
                     'message_count' => $session->message_count + 1,
-                    'last_external_message_id' => $messageId ?: $session->last_external_message_id,
                     'last_message_at' => now(),
                 ])->save();
 
@@ -124,15 +210,19 @@ class WhatsappCustomerSupportService
             $session->forceFill([
                 'conversation_id' => $conversationId,
                 'message_count' => $session->message_count + 1,
-                'last_external_message_id' => $messageId ?: $session->last_external_message_id,
                 'last_message_at' => now(),
             ])->save();
         }
 
+        $outboundWamid = null;
+        $outboundStatus = WhatsappMessage::STATUS_SENT;
+
         if ($this->whatsapp->isConfigured()) {
             try {
-                $this->whatsapp->sendTextMessage($normalizedWaId, $replyText);
+                $apiRes = $this->whatsapp->sendTextMessage($normalizedWaId, $replyText);
+                $outboundWamid = $apiRes['messages'][0]['id'] ?? null;
             } catch (Throwable $exception) {
+                $outboundStatus = WhatsappMessage::STATUS_FAILED;
                 Log::error('WhatsApp outbound reply failed', [
                     'to' => $normalizedWaId,
                     'error' => $exception->getMessage(),
@@ -140,31 +230,294 @@ class WhatsappCustomerSupportService
             }
         }
 
+        WhatsappMessage::query()->create([
+            'support_chat_session_id' => $session->id,
+            'wa_message_id' => is_string($outboundWamid) ? $outboundWamid : null,
+            'direction' => WhatsappMessage::DIRECTION_OUTBOUND,
+            'sender_type' => WhatsappMessage::SENDER_AI,
+            'type' => 'text',
+            'body' => $replyText,
+            'status' => $outboundStatus,
+        ]);
+
+        $session->forceFill([
+            'last_message_preview' => Str::limit($replyText, 90),
+            'last_message_at' => now(),
+        ])->save();
+
+        if (! $adminActivelyViewingThisChat) {
+            $this->scheduleOrSendUnreadAlert($session->refresh());
+        }
+
         return $session->refresh();
     }
 
     /**
-     * Send a manual human reply from the Admin Dashboard to an existing WhatsApp thread.
+     * Update outbound message delivery/read checkmarks from Meta's `statuses` webhook.
+     *
+     * @param  list<array{wamid: string, status: string, recipient_id: string, error: ?string}>  $updates
+     */
+    public function handleStatusUpdates(array $updates): int
+    {
+        $updated = 0;
+
+        foreach ($updates as $item) {
+            $matches = WhatsappMessage::query()->where('wa_message_id', $item['wamid'])->get();
+            foreach ($matches as $msg) {
+                $rank = [
+                    WhatsappMessage::STATUS_SENDING => 0,
+                    WhatsappMessage::STATUS_SENT => 1,
+                    WhatsappMessage::STATUS_DELIVERED => 2,
+                    WhatsappMessage::STATUS_READ => 3,
+                    WhatsappMessage::STATUS_FAILED => 4,
+                ];
+
+                $currentRank = $rank[$msg->status] ?? 0;
+                $nextRank = $rank[$item['status']] ?? 0;
+
+                if ($nextRank < $currentRank && $item['status'] !== WhatsappMessage::STATUS_FAILED) {
+                    continue;
+                }
+
+                $attrs = ['status' => $item['status']];
+                if ($item['status'] === WhatsappMessage::STATUS_DELIVERED && ! $msg->delivered_at) {
+                    $attrs['delivered_at'] = now();
+                }
+                if ($item['status'] === WhatsappMessage::STATUS_READ) {
+                    $attrs['delivered_at'] = $msg->delivered_at ?? now();
+                    $attrs['read_at'] = now();
+                }
+                if ($item['error']) {
+                    $meta = is_array($msg->metadata) ? $msg->metadata : [];
+                    $meta['error'] = $item['error'];
+                    $attrs['metadata'] = $meta;
+                }
+
+                $msg->forceFill($attrs)->save();
+                $updated++;
+            }
+        }
+
+        return $updated;
+    }
+
+    /**
+     * Send a manual human text reply from the Admin Dashboard to a WhatsApp thread.
      *
      * @return array<string, mixed>
      */
-    public function sendHumanReply(SupportChatSession $session, string $message, bool $pauseAi = true): array
-    {
+    public function sendHumanReply(
+        SupportChatSession $session,
+        string $message,
+        bool $pauseAi = true,
+        ?User $sender = null,
+        ?string $replyToWamid = null,
+    ): array {
         app(CustomerSupportChatService::class)->markTyping($session, 'admin', false);
 
         $recipient = $session->external_thread_id ?: $session->visitor_phone;
-        $apiResponse = $this->whatsapp->sendTextMessage((string) $recipient, $message);
+        $trimmed = trim($message);
+
+        $apiResponse = $this->whatsapp->sendTextMessage(
+            to: (string) $recipient,
+            body: $trimmed,
+            previewUrl: false,
+            replyToWamid: $replyToWamid,
+        );
+
+        $wamid = $apiResponse['messages'][0]['id'] ?? null;
 
         $conversationId = $this->ensureConversationExists($session);
-        $this->appendManualAssistantMessage($conversationId, $session, trim($message), 'human_agent');
+        $this->appendManualAssistantMessage($conversationId, $session, $trimmed, 'human_agent');
+
+        $quoted = $this->lookupQuotedPreview($session->id, $replyToWamid);
+
+        $waMessage = WhatsappMessage::query()->create([
+            'support_chat_session_id' => $session->id,
+            'wa_message_id' => is_string($wamid) ? $wamid : null,
+            'reply_to_wa_message_id' => $replyToWamid ?: null,
+            'direction' => WhatsappMessage::DIRECTION_OUTBOUND,
+            'sender_type' => WhatsappMessage::SENDER_ADMIN,
+            'sender_user_id' => $sender?->id,
+            'type' => 'text',
+            'body' => $trimmed,
+            'metadata' => $quoted ? ['quoted_preview' => $quoted] : null,
+            'status' => WhatsappMessage::STATUS_SENT,
+        ]);
 
         $session->forceFill([
             'conversation_id' => $conversationId,
             'ai_paused' => $pauseAi,
+            'unread_count' => 0,
+            'last_admin_read_at' => now(),
+            'last_message_preview' => $waMessage->previewLabel(),
             'last_message_at' => now(),
         ])->save();
 
+        $this->markSessionReadByAdmin($session, sendWhatsappReceipt: false);
+
         return $apiResponse;
+    }
+
+    /**
+     * Upload & send a rich media attachment or recorded voice note from the WhatsApp Inbox.
+     */
+    public function sendHumanMediaReply(
+        SupportChatSession $session,
+        UploadedFile $file,
+        ?string $caption = null,
+        bool $isVoice = false,
+        ?int $duration = null,
+        bool $pauseAi = true,
+        ?User $sender = null,
+        ?string $replyToWamid = null,
+    ): WhatsappMessage {
+        app(CustomerSupportChatService::class)->markTyping($session, 'admin', false);
+
+        $originalName = $file->getClientOriginalName() ?: ($isVoice ? 'voice-note.ogg' : 'attachment');
+        $rawMime = (string) ($file->getMimeType() ?: $file->getClientMimeType() ?: 'application/octet-stream');
+        $ext = strtolower($file->getClientOriginalExtension() ?: pathinfo($originalName, PATHINFO_EXTENSION));
+        $size = (int) $file->getSize();
+
+        $safeBase = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME)) ?: 'media';
+        $storedFilename = substr((string) Str::uuid(), 0, 8).'_'.Str::limit($safeBase, 48, '').($ext !== '' ? '.'.$ext : '');
+        $directory = self::MEDIA_DIR.'/'.$session->id;
+        $storedPath = $file->storeAs($directory, $storedFilename, self::MEDIA_DISK);
+
+        $absolutePath = Storage::disk(self::MEDIA_DISK)->path((string) $storedPath);
+
+        $uploaded = $this->whatsapp->uploadMedia($absolutePath, $rawMime, $originalName);
+
+        $mediaType = $this->resolveWhatsappMediaType($uploaded['mime_type'], $ext, $isVoice);
+        $recipient = (string) ($session->external_thread_id ?: $session->visitor_phone);
+
+        $apiResponse = $this->whatsapp->sendMediaMessage(
+            to: $recipient,
+            type: $mediaType,
+            mediaId: $uploaded['media_id'],
+            caption: $caption,
+            filename: $originalName,
+            replyToWamid: $replyToWamid,
+            isVoice: $isVoice,
+        );
+
+        $wamid = $apiResponse['messages'][0]['id'] ?? null;
+
+        $conversationId = $this->ensureConversationExists($session);
+        $transcriptNote = filled($caption) ? trim((string) $caption) : "[Sent {$mediaType}: {$originalName}]";
+        $this->appendManualAssistantMessage($conversationId, $session, $transcriptNote, 'human_agent');
+
+        $quoted = $this->lookupQuotedPreview($session->id, $replyToWamid);
+
+        $waMessage = WhatsappMessage::query()->create([
+            'support_chat_session_id' => $session->id,
+            'wa_message_id' => is_string($wamid) ? $wamid : null,
+            'reply_to_wa_message_id' => $replyToWamid ?: null,
+            'direction' => WhatsappMessage::DIRECTION_OUTBOUND,
+            'sender_type' => WhatsappMessage::SENDER_ADMIN,
+            'sender_user_id' => $sender?->id,
+            'type' => $isVoice ? 'voice' : $mediaType,
+            'body' => filled($caption) ? trim((string) $caption) : null,
+            'media_id' => $uploaded['media_id'],
+            'media_disk' => self::MEDIA_DISK,
+            'media_path' => $storedPath,
+            'media_mime' => $uploaded['mime_type'],
+            'media_filename' => $originalName,
+            'media_size' => $size,
+            'media_duration' => $duration,
+            'metadata' => $quoted ? ['quoted_preview' => $quoted] : null,
+            'status' => WhatsappMessage::STATUS_SENT,
+        ]);
+
+        $session->forceFill([
+            'conversation_id' => $conversationId,
+            'ai_paused' => $pauseAi,
+            'unread_count' => 0,
+            'message_count' => $session->message_count + 1,
+            'last_admin_read_at' => now(),
+            'last_message_preview' => $waMessage->previewLabel(),
+            'last_message_at' => now(),
+        ])->save();
+
+        return $waMessage;
+    }
+
+    /**
+     * Send a location pin from the WhatsApp Inbox.
+     */
+    public function sendHumanLocationReply(
+        SupportChatSession $session,
+        float $latitude,
+        float $longitude,
+        ?string $name = null,
+        ?string $address = null,
+        bool $pauseAi = true,
+        ?User $sender = null,
+        ?string $replyToWamid = null,
+    ): WhatsappMessage {
+        $recipient = (string) ($session->external_thread_id ?: $session->visitor_phone);
+
+        $apiResponse = $this->whatsapp->sendLocationMessage(
+            to: $recipient,
+            latitude: $latitude,
+            longitude: $longitude,
+            name: $name,
+            address: $address,
+            replyToWamid: $replyToWamid,
+        );
+
+        $wamid = $apiResponse['messages'][0]['id'] ?? null;
+
+        $waMessage = WhatsappMessage::query()->create([
+            'support_chat_session_id' => $session->id,
+            'wa_message_id' => is_string($wamid) ? $wamid : null,
+            'reply_to_wa_message_id' => $replyToWamid ?: null,
+            'direction' => WhatsappMessage::DIRECTION_OUTBOUND,
+            'sender_type' => WhatsappMessage::SENDER_ADMIN,
+            'sender_user_id' => $sender?->id,
+            'type' => 'location',
+            'body' => $name ?: $address,
+            'metadata' => [
+                'location' => [
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'name' => $name,
+                    'address' => $address,
+                ],
+            ],
+            'status' => WhatsappMessage::STATUS_SENT,
+        ]);
+
+        $session->forceFill([
+            'ai_paused' => $pauseAi,
+            'unread_count' => 0,
+            'message_count' => $session->message_count + 1,
+            'last_admin_read_at' => now(),
+            'last_message_preview' => $waMessage->previewLabel(),
+            'last_message_at' => now(),
+        ])->save();
+
+        return $waMessage;
+    }
+
+    /**
+     * Send an emoji reaction on a customer or team message.
+     */
+    public function sendHumanReaction(
+        SupportChatSession $session,
+        WhatsappMessage $targetMessage,
+        string $emoji,
+    ): WhatsappMessage {
+        if (filled($targetMessage->wa_message_id) && $this->whatsapp->isConfigured()) {
+            $recipient = (string) ($session->external_thread_id ?: $session->visitor_phone);
+            $this->whatsapp->sendReaction($recipient, (string) $targetMessage->wa_message_id, $emoji);
+        }
+
+        $targetMessage->forceFill([
+            'reaction_emoji' => $emoji !== '' ? $emoji : null,
+        ])->save();
+
+        return $targetMessage->refresh();
     }
 
     /**
@@ -176,29 +529,312 @@ class WhatsappCustomerSupportService
         string $mode,
         string $content,
         string $templateLang = 'en_US',
+        ?User $sender = null,
     ): SupportChatSession {
         $normalized = $this->whatsapp->normalizePhone($phone);
 
         if ($mode === 'template') {
-            $this->whatsapp->sendTemplateMessage($normalized, $content, $templateLang);
+            $apiRes = $this->whatsapp->sendTemplateMessage($normalized, $content, $templateLang);
             $transcriptNote = "[Sent WhatsApp Template: {$content} ({$templateLang})]";
+            $msgType = 'template';
+            $meta = ['template_name' => $content, 'language' => $templateLang];
         } else {
-            $this->whatsapp->sendTextMessage($normalized, $content);
+            $apiRes = $this->whatsapp->sendTextMessage($normalized, $content);
             $transcriptNote = trim($content);
+            $msgType = 'text';
+            $meta = null;
         }
 
+        $wamid = $apiRes['messages'][0]['id'] ?? null;
+
         $session = $this->findOrCreateWhatsappSession($normalized, $customerName);
+        $this->syncLegacyMessagesIfNeeded($session);
 
         $conversationId = $this->ensureConversationExists($session);
         $this->appendManualAssistantMessage($conversationId, $session, $transcriptNote, 'human_agent');
 
+        $waMessage = WhatsappMessage::query()->create([
+            'support_chat_session_id' => $session->id,
+            'wa_message_id' => is_string($wamid) ? $wamid : null,
+            'direction' => WhatsappMessage::DIRECTION_OUTBOUND,
+            'sender_type' => WhatsappMessage::SENDER_ADMIN,
+            'sender_user_id' => $sender?->id,
+            'type' => $msgType,
+            'body' => $transcriptNote,
+            'metadata' => $meta,
+            'status' => WhatsappMessage::STATUS_SENT,
+        ]);
+
         $session->forceFill([
             'conversation_id' => $conversationId,
             'message_count' => $session->message_count + 1,
+            'last_message_preview' => $waMessage->previewLabel(),
             'last_message_at' => now(),
         ])->save();
 
         return $session->refresh();
+    }
+
+    /**
+     * Mark all inbound messages in a WhatsApp thread as viewed by the admin.
+     */
+    public function markSessionReadByAdmin(SupportChatSession $session, bool $sendWhatsappReceipt = true): void
+    {
+        $lastUnreadInbound = WhatsappMessage::query()
+            ->where('support_chat_session_id', $session->id)
+            ->unreadByAdmin()
+            ->latest('id')
+            ->first();
+
+        WhatsappMessage::query()
+            ->where('support_chat_session_id', $session->id)
+            ->unreadByAdmin()
+            ->update(['read_at' => now()]);
+
+        if ($session->unread_count > 0 || $session->last_admin_read_at === null) {
+            $session->forceFill([
+                'unread_count' => 0,
+                'last_admin_read_at' => now(),
+            ])->save();
+        }
+
+        if ($sendWhatsappReceipt && $lastUnreadInbound && filled($lastUnreadInbound->wa_message_id)) {
+            $this->whatsapp->markMessageAsRead((string) $lastUnreadInbound->wa_message_id);
+        }
+    }
+
+    /**
+     * Decide whether to send an unread WhatsApp email notification immediately (when
+     * no admin has the WhatsApp workspace open) or schedule it after the grace delay.
+     */
+    public function scheduleOrSendUnreadAlert(SupportChatSession $session): void
+    {
+        if (! $this->isUnreadEmailEnabled()) {
+            return;
+        }
+
+        $delaySeconds = $this->unreadDelaySeconds();
+        $anyAdminOnline = Cache::has('whatsapp:admin_online_any');
+
+        // If no admin has the WhatsApp Inbox open at all (or delay is 0), notify immediately (with 60s anti-spam cooldown per chat)
+        if (! $anyAdminOnline || $delaySeconds <= 0) {
+            if ($session->last_unread_notified_at && $session->last_unread_notified_at->gt(now()->subSeconds(60))) {
+                return;
+            }
+
+            $this->notifyUnreadForSession($session->id);
+
+            return;
+        }
+
+        // An admin is currently online in the WhatsApp Inbox (looking at another contact): give them the grace window first
+        try {
+            SendUnreadWhatsappAlertJob::dispatch($session->id)->delay(now()->addSeconds($delaySeconds));
+        } catch (Throwable) {
+        }
+    }
+
+    /**
+     * Send an email digest for any still-unseen inbound messages on a specific session.
+     */
+    public function notifyUnreadForSession(int $sessionId): bool
+    {
+        if (! $this->isUnreadEmailEnabled()) {
+            return false;
+        }
+
+        $session = SupportChatSession::query()->find($sessionId);
+        if (! $session || ! $session->isWhatsapp()) {
+            return false;
+        }
+
+        if (Cache::has("whatsapp:admin_viewing:{$session->id}")) {
+            $this->markSessionReadByAdmin($session, sendWhatsappReceipt: false);
+
+            return false;
+        }
+
+        $unreadMessages = WhatsappMessage::query()
+            ->where('support_chat_session_id', $session->id)
+            ->where('direction', WhatsappMessage::DIRECTION_INBOUND)
+            ->whereNull('read_at')
+            ->whereNull('notified_email_at')
+            ->orderBy('id')
+            ->get();
+
+        if ($unreadMessages->isEmpty()) {
+            return false;
+        }
+
+        $recipients = $this->resolveNotificationRecipients();
+        if ($recipients === []) {
+            return false;
+        }
+
+        $inboxUrl = url('/admin/whatsapp?chat='.$session->id);
+
+        try {
+            Mail::to($recipients)->send(new UnreadWhatsappMessageMail(
+                session: $session,
+                unreadMessages: $unreadMessages,
+                inboxUrl: $inboxUrl,
+            ));
+
+            WhatsappMessage::query()
+                ->whereIn('id', $unreadMessages->pluck('id'))
+                ->update(['notified_email_at' => now()]);
+
+            $session->forceFill(['last_unread_notified_at' => now()])->save();
+
+            return true;
+        } catch (Throwable $exception) {
+            Log::warning('Failed to send unread WhatsApp email notification', [
+                'session_id' => $session->id,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return false;
+        }
+    }
+
+    /**
+     * Sweep all WhatsApp sessions that have unseen messages older than the grace delay.
+     */
+    public function dispatchOverdueUnreadEmailAlerts(): int
+    {
+        if (! $this->isUnreadEmailEnabled()) {
+            return 0;
+        }
+
+        $cutoff = now()->subSeconds(max(10, $this->unreadDelaySeconds()));
+
+        $sessionIds = WhatsappMessage::query()
+            ->where('direction', WhatsappMessage::DIRECTION_INBOUND)
+            ->whereNull('read_at')
+            ->whereNull('notified_email_at')
+            ->where('created_at', '<=', $cutoff)
+            ->distinct()
+            ->pluck('support_chat_session_id');
+
+        $sent = 0;
+        foreach ($sessionIds as $sessionId) {
+            if ($this->notifyUnreadForSession((int) $sessionId)) {
+                $sent++;
+            }
+        }
+
+        return $sent;
+    }
+
+    /**
+     * Resolve target email addresses for unread WhatsApp alerts.
+     *
+     * @return list<string>
+     */
+    public function resolveNotificationRecipients(): array
+    {
+        $configured = trim((string) (
+            Setting::getValue('whatsapp_notify_email')
+            ?: config('assistant.whatsapp.notify_email_to')
+        ));
+
+        if ($configured !== '') {
+            $emails = array_values(array_filter(
+                array_map('trim', preg_split('/[,;\s]+/', $configured) ?: []),
+                fn (string $e): bool => filter_var($e, FILTER_VALIDATE_EMAIL) !== false,
+            ));
+
+            if ($emails !== []) {
+                return $emails;
+            }
+        }
+
+        $ownerEmails = User::role('owner')
+            ->pluck('email')
+            ->filter(fn ($e): bool => is_string($e) && filter_var($e, FILTER_VALIDATE_EMAIL) !== false)
+            ->values()
+            ->all();
+
+        if ($ownerEmails !== []) {
+            return $ownerEmails;
+        }
+
+        $siteEmail = trim((string) Setting::getValue('email', ''));
+
+        return filter_var($siteEmail, FILTER_VALIDATE_EMAIL) ? [$siteEmail] : [];
+    }
+
+    public function isUnreadEmailEnabled(): bool
+    {
+        return (bool) config('assistant.whatsapp.notify_unread_email', true)
+            && Setting::getValue('whatsapp_notify_unread_email', '1') !== '0';
+    }
+
+    public function unreadDelaySeconds(): int
+    {
+        $saved = Setting::getValue('whatsapp_unread_delay_seconds');
+
+        return $saved !== null && $saved !== ''
+            ? max(0, (int) $saved)
+            : max(0, (int) config('assistant.whatsapp.unread_delay_seconds', 90));
+    }
+
+    /**
+     * Import historical SDK `ConversationMessage` rows into `whatsapp_messages` once
+     * for pre-existing WhatsApp threads created before the dedicated table existed.
+     */
+    public function syncLegacyMessagesIfNeeded(SupportChatSession $session): void
+    {
+        if (! $session->isWhatsapp() || ! $session->conversation_id) {
+            return;
+        }
+
+        if (WhatsappMessage::query()->where('support_chat_session_id', $session->id)->exists()) {
+            return;
+        }
+
+        $legacyRows = ConversationMessage::query()
+            ->where('conversation_id', $session->conversation_id)
+            ->orderBy('id')
+            ->get();
+
+        $lastInboundAt = null;
+        $lastPreview = null;
+
+        foreach ($legacyRows as $row) {
+            $isCustomer = $row->role === 'user';
+            $source = is_array($row->meta) ? ($row->meta['source'] ?? null) : null;
+
+            $created = WhatsappMessage::query()->create([
+                'support_chat_session_id' => $session->id,
+                'direction' => $isCustomer ? WhatsappMessage::DIRECTION_INBOUND : WhatsappMessage::DIRECTION_OUTBOUND,
+                'sender_type' => $isCustomer
+                    ? WhatsappMessage::SENDER_CUSTOMER
+                    : ($source === 'human_agent' ? WhatsappMessage::SENDER_ADMIN : WhatsappMessage::SENDER_AI),
+                'type' => 'text',
+                'body' => (string) ($row->content ?? ''),
+                'status' => $isCustomer ? WhatsappMessage::STATUS_RECEIVED : WhatsappMessage::STATUS_SENT,
+                'read_at' => $row->created_at ?? now(),
+                'created_at' => $row->created_at ?? now(),
+                'updated_at' => $row->updated_at ?? now(),
+            ]);
+
+            if ($isCustomer && $row->created_at) {
+                $lastInboundAt = $row->created_at;
+            }
+            $lastPreview = $created->previewLabel();
+        }
+
+        $updates = [];
+        if ($lastInboundAt && ! $session->last_customer_message_at) {
+            $updates['last_customer_message_at'] = $lastInboundAt;
+        }
+        if ($lastPreview && ! $session->last_message_preview) {
+            $updates['last_message_preview'] = $lastPreview;
+        }
+        if ($updates !== []) {
+            $session->forceFill($updates)->save();
+        }
     }
 
     /**
@@ -209,7 +845,6 @@ class WhatsappCustomerSupportService
         $session = SupportChatSession::query()
             ->whatsapp()
             ->where('external_thread_id', $normalizedWaId)
-            ->where('status', '!=', SupportChatSession::STATUS_CLOSED)
             ->latest('id')
             ->first();
 
@@ -224,17 +859,146 @@ class WhatsappCustomerSupportService
                 'visitor_name' => $profileName ?: null,
                 'status' => SupportChatSession::STATUS_OPEN,
                 'ai_paused' => false,
+                'is_pinned' => false,
                 'message_count' => 0,
+                'unread_count' => 0,
                 'landing_page' => 'WhatsApp Cloud API',
                 'last_message_at' => now(),
             ]);
         }
 
+        $updates = [];
         if ($profileName && ! $session->visitor_name) {
-            $session->forceFill(['visitor_name' => $profileName])->save();
+            $updates['visitor_name'] = $profileName;
+        }
+        if ($session->status === SupportChatSession::STATUS_CLOSED) {
+            $updates['status'] = SupportChatSession::STATUS_OPEN;
+        }
+        if ($updates !== []) {
+            $session->forceFill($updates)->save();
         }
 
         return $session;
+    }
+
+    /**
+     * Download inbound media from Meta Graph API and save inside `whatsapp-media/{session_id}`.
+     *
+     * @param  array<string, mixed>|null  $media
+     * @return array{disk: string, path: string, mime: string, filename: string, size: int}|null
+     */
+    protected function downloadAndStoreInboundMedia(SupportChatSession $session, string $type, ?array $media): ?array
+    {
+        if (! is_array($media) || empty($media['id'])) {
+            return null;
+        }
+
+        $downloaded = $this->whatsapp->downloadMedia((string) $media['id']);
+        if (! $downloaded) {
+            return null;
+        }
+
+        $mime = strtolower(trim(explode(';', $downloaded['mime_type'])[0]));
+        $ext = $this->extensionForMime($mime, $type);
+        $rawName = ! empty($media['filename'])
+            ? (string) $media['filename']
+            : ($type.'_'.now()->format('Ymd_His').'.'.$ext);
+
+        $safeBase = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($rawName, PATHINFO_FILENAME)) ?: $type;
+        $storedFilename = substr((string) Str::uuid(), 0, 8).'_'.Str::limit($safeBase, 48, '').'.'.$ext;
+        $relativePath = self::MEDIA_DIR.'/'.$session->id.'/'.$storedFilename;
+
+        Storage::disk(self::MEDIA_DISK)->put($relativePath, $downloaded['bytes']);
+
+        return [
+            'disk' => self::MEDIA_DISK,
+            'path' => $relativePath,
+            'mime' => $mime,
+            'filename' => $rawName,
+            'size' => $downloaded['size'],
+        ];
+    }
+
+    /**
+     * Build Laravel AI SDK attachments when a customer sends an image, PDF, or voice note.
+     *
+     * @param  array{disk: string, path: string, mime: string, filename: string, size: int}|null  $storedMedia
+     * @return list<Image|Document|Audio>
+     */
+    protected function buildSdkAttachmentsForInbound(?array $storedMedia, string $resolvedType): array
+    {
+        if (! $storedMedia) {
+            return [];
+        }
+
+        return match (true) {
+            $resolvedType === 'image' => [Image::fromStorage($storedMedia['path'], $storedMedia['disk'])->as($storedMedia['filename'])],
+            in_array($resolvedType, ['voice', 'audio'], true) => [Audio::fromStorage($storedMedia['path'], $storedMedia['disk'])],
+            $storedMedia['mime'] === 'application/pdf' => [Document::fromStorage($storedMedia['path'], $storedMedia['disk'])->as($storedMedia['filename'])],
+            default => [],
+        };
+    }
+
+    /**
+     * @return array{sender: string, preview: string}|null
+     */
+    protected function lookupQuotedPreview(int $sessionId, ?string $replyToWamid): ?array
+    {
+        if (! filled($replyToWamid)) {
+            return null;
+        }
+
+        $target = WhatsappMessage::query()
+            ->where('support_chat_session_id', $sessionId)
+            ->where('wa_message_id', $replyToWamid)
+            ->first();
+
+        if (! $target) {
+            return null;
+        }
+
+        return [
+            'wamid' => $replyToWamid,
+            'sender' => $target->isInbound() ? 'Customer' : 'Empetix',
+            'preview' => $target->previewLabel(),
+        ];
+    }
+
+    protected function resolveWhatsappMediaType(string $mime, string $ext, bool $isVoice): string
+    {
+        if ($isVoice) {
+            return 'audio';
+        }
+        if (str_starts_with($mime, 'image/webp') && $ext === 'webp') {
+            return 'image';
+        }
+        if (str_starts_with($mime, 'image/')) {
+            return 'image';
+        }
+        if (str_starts_with($mime, 'video/')) {
+            return 'video';
+        }
+        if (str_starts_with($mime, 'audio/')) {
+            return 'audio';
+        }
+
+        return 'document';
+    }
+
+    protected function extensionForMime(string $mime, string $fallbackType): string
+    {
+        return match ($mime) {
+            'image/jpeg', 'image/jpg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'image/gif' => 'gif',
+            'audio/ogg', 'application/ogg' => 'ogg',
+            'audio/mpeg', 'audio/mp3' => 'mp3',
+            'audio/mp4', 'audio/aac', 'audio/x-m4a' => 'm4a',
+            'video/mp4' => 'mp4',
+            'application/pdf' => 'pdf',
+            default => $fallbackType === 'image' ? 'jpg' : ($fallbackType === 'audio' ? 'ogg' : 'bin'),
+        };
     }
 
     protected function ensureConversationExists(SupportChatSession $session): string
