@@ -193,6 +193,8 @@ class CustomerSupportChatbotTest extends TestCase
         $this->assertSame(SupportChatSession::STATUS_HANDED_OFF, $session->status);
         $this->assertSame('Salma Tarek', $session->visitor_name);
         $this->assertNotNull($session->contact_message_id);
+        // Handoff pauses AI auto-replies so a human takes over the chat
+        $this->assertTrue((bool) $session->ai_paused);
 
         // Repeat call updates existing Inbox brief instead of creating duplicates
         $handoff->handle(new ToolRequest([

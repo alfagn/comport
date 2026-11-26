@@ -3,14 +3,20 @@
 namespace App\Ai\Tools\Support;
 
 use App\DTOs\ContactMessageData;
+use App\Mail\ContactBriefSubmitted;
 use App\Models\ContactMessage;
+use App\Models\Setting;
 use App\Models\SupportChatSession;
 use App\Services\ContactMessageService;
+use App\Services\WhatsappCustomerSupportService;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 use Stringable;
+use Throwable;
 
 /**
  * Captures a visitor's project brief or human-support request (from Website or
@@ -93,13 +99,49 @@ class SubmitProjectInquiry implements Tool
             'status' => SupportChatSession::STATUS_HANDED_OFF,
             'handoff_summary' => $validated['summary'],
             'contact_message_id' => $message->getKey(),
+            // Once a lead is handed to the team, the bot steps aside (Human
+            // Takeover) so the customer talks to a person. The admin can
+            // resume AI auto-replies from the dashboard chat at any time.
+            'ai_paused' => true,
         ])->save();
+
+        $this->notifyTeamOfHandoff($message);
 
         return (string) json_encode([
             'ok' => true,
             'reference_id' => $message->getKey(),
-            'message' => 'Inquiry recorded in the Empetix team Inbox and linked to this chat transcript. Our co-founders and engineering leads reply within 24 business hours.',
+            'message' => 'Inquiry recorded in the Empetix team Inbox, the team has been notified by email, and a human specialist will continue this conversation shortly. AI auto-replies are now paused on this chat.',
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Email the on-call team right away so a WhatsApp handoff never waits for the
+     * unread-message sweep. The studio inbox already receives the brief from
+     * ContactMessageService, so it is excluded here to avoid duplicates.
+     */
+    protected function notifyTeamOfHandoff(ContactMessage $message): void
+    {
+        if (! $this->session->isWhatsapp()) {
+            return;
+        }
+
+        try {
+            $recipients = app(WhatsappCustomerSupportService::class)->resolveNotificationRecipients();
+            $studioEmail = trim((string) Setting::getValue('email', ''));
+            $recipients = array_values(array_diff($recipients, [$studioEmail]));
+
+            if ($recipients === []) {
+                return;
+            }
+
+            $siteName = Setting::getValue('site_name', 'Empetix Solutions') ?: 'Empetix Solutions';
+            Mail::to($recipients)->send(new ContactBriefSubmitted($message, $siteName));
+        } catch (Throwable $exception) {
+            Log::warning('Failed to email team about WhatsApp handoff', [
+                'session_id' => $this->session->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
     }
 
     public function schema(JsonSchema $schema): array
