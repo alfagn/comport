@@ -3,11 +3,17 @@
 namespace Tests\Feature;
 
 use App\Models\Member;
+use App\Models\Post;
 use App\Models\Project;
+use App\Models\Service;
 use App\Models\User;
 use Database\Seeders\TeamUsersSyncSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Symfony\Component\HttpFoundation\File\File;
 use Tests\TestCase;
 
 class ProjectEnhancementTest extends TestCase
@@ -314,7 +320,7 @@ class ProjectEnhancementTest extends TestCase
             'kind' => 'member',
         ]);
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage members', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'manage members', 'guard_name' => 'web']);
 
         $bulkRes = $this->actingAs($mohanad)->postJson('/admin/bulk-delete/members', [
             'ids' => [$staffMember->id],
@@ -328,7 +334,7 @@ class ProjectEnhancementTest extends TestCase
     {
         $owner = User::factory()->create(['name' => 'Owner User', 'email' => 'owner.test@empetix.com']);
         $owner->assignRole('owner');
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage admins', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'manage admins', 'guard_name' => 'web']);
 
         $teamPerson = Member::create([
             'name' => 'Tarek El-Shenawy',
@@ -371,7 +377,7 @@ class ProjectEnhancementTest extends TestCase
 
     public function test_mega_menu_and_footer_render_live_dynamic_services_projects_and_posts_without_marketing(): void
     {
-        \App\Models\Service::create([
+        Service::create([
             'num' => '01',
             'title' => 'Real-Time Distributed WebRTC Engines',
             'slug' => 'webrtc-engines',
@@ -392,7 +398,7 @@ class ProjectEnhancementTest extends TestCase
             ]
         );
 
-        \App\Models\Post::create([
+        Post::create([
             'title' => 'Scaling PostgreSQL Under 45k Exam Submissions',
             'slug' => 'scaling-postgresql-exams',
             'category' => 'DATABASE ARCHITECTURE',
@@ -412,7 +418,7 @@ class ProjectEnhancementTest extends TestCase
 
     public function test_extensionless_temp_upload_guesses_mime_from_binary_header_without_type_error(): void
     {
-        \Illuminate\Support\Facades\Storage::fake('public');
+        Storage::fake('public');
 
         $owner = User::factory()->create();
         $owner->assignRole('owner');
@@ -428,11 +434,11 @@ class ProjectEnhancementTest extends TestCase
         file_put_contents($tmpPath, $pngBytes);
 
         try {
-            $symfonyFile = new \Symfony\Component\HttpFoundation\File\File($tmpPath);
+            $symfonyFile = new File($tmpPath);
             $this->assertEquals('image/png', $symfonyFile->getMimeType());
             $this->assertEquals('png', $symfonyFile->guessExtension());
 
-            $uploadedLogo = new \Illuminate\Http\UploadedFile($tmpPath, 'logo.png', 'image/png', null, true);
+            $uploadedLogo = new UploadedFile($tmpPath, 'logo.png', 'image/png', null, true);
 
             $res = $this->actingAs($owner)->put("/admin/projects/{$project->id}", [
                 'title' => 'Mime Test Project Updated',
@@ -454,7 +460,7 @@ class ProjectEnhancementTest extends TestCase
     {
         $owner = User::factory()->create();
         $owner->assignRole('owner');
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage members', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'manage members', 'guard_name' => 'web']);
 
         // 1. Auto-generates sequential unique member_code (EMP-XXXXX) when omitted
         $this->actingAs($owner)->post('/admin/members', [
@@ -496,5 +502,30 @@ class ProjectEnhancementTest extends TestCase
         ]);
         $this->assertNotNull($second->member_code);
         $this->assertNotEquals($karim->member_code, $second->member_code);
+    }
+
+    public function test_profile_edit_with_duplicate_name_generates_unique_member_slug(): void
+    {
+        Member::query()->firstOrCreate(
+            ['slug' => 'mohanad'],
+            [
+                'name' => 'Mohanad Ahmed Shehata',
+                'email' => 'mohand@gmail.com',
+                'kind' => 'founder',
+                'is_active' => true,
+            ]
+        );
+
+        $secondMohanad = User::factory()->create([
+            'name' => 'Mohanad',
+            'email' => 'admin@emp.com',
+        ]);
+        $secondMohanad->assignRole('owner');
+
+        $this->actingAs($secondMohanad)->get('/admin/profile')->assertOk();
+
+        $linked = Member::query()->where('email', 'admin@emp.com')->firstOrFail();
+        $this->assertSame('mohanad-2', $linked->slug);
+        $this->assertSame($linked->id, $secondMohanad->fresh()->member_id);
     }
 }

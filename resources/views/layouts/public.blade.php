@@ -42,6 +42,7 @@
     'assets/css/components/media.css',
     'assets/css/components/form.css',
     'assets/css/components/cookie-consent.css',
+    'assets/css/components/support-chatbot.css',
     'assets/css/pages/home.css',
     'assets/css/pages/article.css',
     'assets/css/pages/inner.css',
@@ -702,6 +703,7 @@
 </footer>
 
 @include('partials.cookie-consent')
+@include('partials.support-chatbot')
 
   {{-- Interaction modules: nav (mega menu, drawer), scroll reveal, animated
        counters, media frames, careers filtering, and cookie consent. --}}
@@ -711,6 +713,7 @@
   <script defer src="{{ versioned_asset('assets/js/modules/media.js') }}"></script>
   <script defer src="{{ versioned_asset('assets/js/modules/careers.js') }}"></script>
   <script defer src="{{ versioned_asset('assets/js/modules/cookies.js') }}"></script>
+  <script defer src="{{ versioned_asset('assets/js/modules/support-chatbot.js') }}"></script>
   @if(($activePage ?? '') === 'team')
     <script defer src="{{ versioned_asset('assets/js/modules/team.js') }}"></script>
   @endif

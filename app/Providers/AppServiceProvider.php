@@ -7,7 +7,10 @@ use App\Repositories\Contracts;
 use App\Repositories\Eloquent;
 use App\Support\Permissions;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Application service provider.
@@ -52,8 +55,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // Resilient binary magic-byte MIME guesser so uploads (/tmp/phpXXXX without extension)
         // work reliably even on servers where PHP's ext-fileinfo is disabled (e.g. aaPanel).
-        if (class_exists(\Symfony\Component\Mime\MimeTypes::class)) {
-            \Symfony\Component\Mime\MimeTypes::getDefault()->registerGuesser(new class implements \Symfony\Component\Mime\MimeTypeGuesserInterface {
+        if (class_exists(MimeTypes::class)) {
+            MimeTypes::getDefault()->registerGuesser(new class implements MimeTypeGuesserInterface
+            {
                 public function isGuesserSupported(): bool
                 {
                     return true;
@@ -93,6 +97,7 @@ class AppServiceProvider extends ServiceProvider
                             }
                             if (strlen($head) >= 12 && substr($head, 4, 4) === 'ftyp') {
                                 $brand = substr($head, 8, 4);
+
                                 return $brand === 'qt  ' ? 'video/quicktime' : 'video/mp4';
                             }
                             if (str_starts_with($head, "\x1A\x45\xDF\xA3")) {
@@ -112,6 +117,7 @@ class AppServiceProvider extends ServiceProvider
 
                     // 3. Fallback to file extension if present
                     $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
                     return match ($ext) {
                         'jpg', 'jpeg' => 'image/jpeg',
                         'png' => 'image/png',
@@ -132,6 +138,12 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
         }
+
+        // Avoid 20s+ IPv6 TCP SYN stalls on Windows networks when calling Meta Graph & AI APIs.
+        Http::globalOptions([
+            'force_ip_resolve' => 'v4',
+            'connect_timeout' => 8,
+        ]);
 
         // RBAC: the owner role implicitly holds every permission. All other
         // roles fall through to their granted permissions only.

@@ -43,6 +43,8 @@ class Setting extends Model
             str_starts_with($key, 'brand_') => 'brand',
             str_starts_with($key, 'cookie_') => 'cookies',
             str_starts_with($key, 'sitemap_') => 'sitemap',
+            str_starts_with($key, 'ai_') => 'ai',
+            str_starts_with($key, 'whatsapp_') => 'whatsapp',
             in_array($key, ['email', 'partners_email', 'press_email', 'talent_email', 'phone', 'address'], true) => 'contact',
             in_array($key, ['linkedin', 'instagram', 'x', 'youtube', 'github'], true) => 'social',
             default => 'general',

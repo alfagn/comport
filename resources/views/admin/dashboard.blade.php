@@ -75,7 +75,7 @@
   <h1 class="page-title">Dashboard</h1>
   <p class="page-sub">Here's what's happening with your website today.</p>
 
-  {{-- 6 Alternating Executive Stat Cards (Dark, Light, Dark / Light, Dark, Light) --}}
+  {{-- 6 Executive Stat Cards (All Black / Dark) --}}
   <div class="stat-grid">
     @foreach($gridCards as $card)
       @php
@@ -88,7 +88,7 @@
             'wave_line' => 'M 0,55 C 60,55 100,40 160,45 C 220,50 260,25 300,28',
             'wave_area' => 'M 0,55 C 60,55 100,40 160,45 C 220,50 260,25 300,28 L 300,70 L 0,70 Z',
         ];
-        $dark = $loop->index % 2 === 0;
+        $dark = true;
 
         // Wave: use smoothed points if rich multi-day activity exists, else use reference radiant sine wave
         $points = $card['sparkline'] ?? [];

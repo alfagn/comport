@@ -8,6 +8,7 @@ use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\SeoDiscoveryController;
 use App\Http\Controllers\Public\ServicePageController;
+use App\Http\Controllers\Public\SupportChatController as PublicSupportChatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,6 +61,16 @@ Route::get('/media/video/{path}', [MediaStreamController::class, 'video'])
     ->name('media.video');
 
 Route::post('/subscribe', [NewsletterController::class, 'store'])->name('subscribe');
+
+/*
+|--------------------------------------------------------------------------
+| Public AI Customer Support Chatbot
+|--------------------------------------------------------------------------
+*/
+Route::prefix('support-chat')->name('support-chat.')->group(function () {
+    Route::get('/session', [PublicSupportChatController::class, 'session'])->name('session');
+    Route::post('/message', [PublicSupportChatController::class, 'message'])->name('message');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -140,6 +151,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/inbox/subscribers', [Admin\InboxController::class, 'subscribers'])->name('inbox.subscribers');
             Route::get('/inbox/{id}', [Admin\InboxController::class, 'show'])->name('inbox.show');
             Route::delete('/inbox/{id}', [Admin\InboxController::class, 'destroy'])->name('inbox.destroy');
+        });
+
+        // Dashboard AI Copilot (executes permission-scoped tasks + human approvals).
+        Route::middleware('permission:use ai assistant')->prefix('assistant')->name('assistant.')->group(function () {
+            Route::get('/', [Admin\AssistantController::class, 'index'])->name('index');
+            Route::get('/conversations', [Admin\AssistantController::class, 'conversations'])->name('conversations');
+            Route::get('/conversations/{conversation}', [Admin\AssistantController::class, 'show'])->name('show');
+            Route::post('/message', [Admin\AssistantController::class, 'message'])->name('message');
+            Route::post('/conversations/{conversation}/approve', [Admin\AssistantController::class, 'approve'])->name('approve');
+            Route::delete('/conversations/{conversation}', [Admin\AssistantController::class, 'destroy'])->name('destroy');
+        });
+
+        // Public AI Customer Support & WhatsApp Cloud API transcripts & configuration.
+        Route::middleware('permission:manage support chats')->prefix('support-chats')->name('support-chats.')->group(function () {
+            Route::get('/', [Admin\SupportChatController::class, 'index'])->name('index');
+            Route::get('/dispatch', [Admin\SupportChatController::class, 'dispatchForm'])->name('dispatch');
+            Route::post('/whatsapp/send', [Admin\SupportChatController::class, 'sendWhatsappOutbound'])->name('whatsapp.send');
+            Route::get('/whatsapp', [Admin\SupportChatController::class, 'whatsappSettings'])->name('whatsapp');
+            Route::put('/whatsapp-settings', [Admin\SupportChatController::class, 'updateWhatsappSettings'])->name('whatsapp.settings.update');
+            Route::post('/whatsapp-subscribe', [Admin\SupportChatController::class, 'subscribeWebhook'])->name('whatsapp.subscribe');
+            Route::get('/settings', [Admin\SupportChatController::class, 'aiSettings'])->name('settings');
+            Route::put('/settings', [Admin\SupportChatController::class, 'updateSettings'])->name('settings.update');
+            Route::get('/{id}', [Admin\SupportChatController::class, 'show'])->whereNumber('id')->name('show');
+            Route::post('/{id}/reply', [Admin\SupportChatController::class, 'replyWhatsapp'])->whereNumber('id')->name('reply');
+            Route::patch('/{id}/ai-toggle', [Admin\SupportChatController::class, 'toggleAi'])->whereNumber('id')->name('ai.toggle');
+            Route::patch('/{id}/status', [Admin\SupportChatController::class, 'updateStatus'])->whereNumber('id')->name('status.update');
+            Route::delete('/{id}', [Admin\SupportChatController::class, 'destroy'])->whereNumber('id')->name('destroy');
         });
 
         // Job applications (CVs download only through this authenticated group).

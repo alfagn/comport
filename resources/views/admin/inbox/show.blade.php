@@ -26,8 +26,15 @@
 
   <div class="message-body">{{ $message->brief }}</div>
 
+  @php
+    $linkedChat = \App\Models\SupportChatSession::query()->where('contact_message_id', $message->id)->first();
+  @endphp
+
   <div class="form-actions">
     <a class="btn btn--primary" href="mailto:{{ $message->email }}">Reply by email</a>
+    @if($linkedChat && auth()->user()?->can('manage support chats'))
+      <a class="btn btn--ghost" href="{{ route('admin.support-chats.show', $linkedChat->id) }}" wire:navigate>View AI Chat Transcript &rarr;</a>
+    @endif
     <form method="post" action="{{ route('admin.inbox.destroy', $message->id) }}" data-confirm="Delete this message?" data-confirm-title="Delete Brief">
       @csrf @method('DELETE')
       <button class="btn btn--danger" type="submit">Delete</button>

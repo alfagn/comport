@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 /**
  * A person: founder (rich profile + detail page) or team member (grid card).
@@ -24,6 +25,8 @@ class Member extends Model
                 $member->member_code = strtoupper(trim((string) $member->member_code));
             }
 
+            $member->slug = static::generateUniqueSlug($member->slug ?: $member->name);
+
             if (is_string($member->email)) {
                 $clean = strtolower(trim($member->email));
                 $member->email = $clean !== '' ? $clean : null;
@@ -37,11 +40,35 @@ class Member extends Model
                 $member->member_code = strtoupper(trim((string) $member->member_code));
             }
 
+            if (blank($member->slug) || $member->isDirty('slug')) {
+                $member->slug = static::generateUniqueSlug($member->slug ?: $member->name, $member->id);
+            }
+
             if (is_string($member->email)) {
                 $clean = strtolower(trim($member->email));
                 $member->email = $clean !== '' ? $clean : null;
             }
         });
+    }
+
+    /** Generate a guaranteed-unique URL slug from a name or candidate slug. */
+    public static function generateUniqueSlug(?string $source, ?int $ignoreId = null): string
+    {
+        $base = Str::slug((string) $source) ?: 'member';
+        $candidate = $base;
+        $suffix = 2;
+
+        while (
+            static::query()
+                ->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))
+                ->where('slug', $candidate)
+                ->exists()
+        ) {
+            $candidate = "{$base}-{$suffix}";
+            $suffix++;
+        }
+
+        return $candidate;
     }
 
     /** Generate the next guaranteed-unique sequential Team Member ID (e.g. EMP-001). */

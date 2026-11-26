@@ -4,11 +4,13 @@ namespace App\Services;
 
 use App\Core\Services\BaseService;
 use App\DTOs\MemberData;
+use App\Models\Member;
+use App\Models\User;
 use App\Repositories\Contracts\MemberRepositoryInterface;
+use App\Support\Permissions;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 
 /**
  * Business logic for the Member entity.
@@ -57,10 +59,12 @@ class MemberService extends BaseService
     public function create(MemberData $data, ?UploadedFile $photoFile = null): Model
     {
         $attributes = $this->normalizeExpertise($this->normalizeJsonLines($data->toArray()));
-        $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['title'] ?? $attributes['name'] ?? '');
+        $attributes['slug'] = ! empty($attributes['slug'])
+            ? $attributes['slug']
+            : Member::generateUniqueSlug($attributes['title'] ?? $attributes['name'] ?? '');
         $attributes['member_code'] = ! empty($attributes['member_code'])
             ? strtoupper(trim((string) $attributes['member_code']))
-            : \App\Models\Member::generateNextCode();
+            : Member::generateNextCode();
         $attributes['photo'] = $this->storeUpload($photoFile, 'uploads/members');
 
         return $this->repository->create($attributes);
@@ -74,7 +78,7 @@ class MemberService extends BaseService
         $attributes['slug'] = $attributes['slug'] ?? $record->slug ?? null;
         $attributes['member_code'] = ! empty($attributes['member_code'])
             ? strtoupper(trim((string) $attributes['member_code']))
-            : ($record->member_code ?: \App\Models\Member::generateNextCode($record->id));
+            : ($record->member_code ?: Member::generateNextCode($record->id));
         if (empty($attributes['email']) && ! empty($record->email)) {
             $attributes['email'] = $record->email;
         }
@@ -84,10 +88,10 @@ class MemberService extends BaseService
 
         // Keep linked Admin user's name & email synchronized with Team profile
         if ($updated->user_id) {
-            $linkedUser = \App\Models\User::find($updated->user_id);
+            $linkedUser = User::find($updated->user_id);
             if ($linkedUser) {
                 $syncPayload = ['member_id' => $updated->id, 'name' => $updated->name];
-                if (! empty($updated->email) && ! \App\Models\User::where('email', $updated->email)->whereKeyNot($linkedUser->id)->exists()) {
+                if (! empty($updated->email) && ! User::where('email', $updated->email)->whereKeyNot($linkedUser->id)->exists()) {
                     $syncPayload['email'] = $updated->email;
                 }
                 $linkedUser->update($syncPayload);
@@ -102,8 +106,8 @@ class MemberService extends BaseService
     {
         $record = $this->repository->find($id);
         if ($record && $record->user_id) {
-            $linkedUser = \App\Models\User::find($record->user_id);
-            if ($linkedUser && $linkedUser->id !== auth()->id() && ! $linkedUser->hasRole(\App\Support\Permissions::OWNER_ROLE)) {
+            $linkedUser = User::find($record->user_id);
+            if ($linkedUser && $linkedUser->id !== auth()->id() && ! $linkedUser->hasRole(Permissions::OWNER_ROLE)) {
                 $linkedUser->syncRoles([]);
                 $linkedUser->delete();
             }
@@ -112,7 +116,7 @@ class MemberService extends BaseService
         return $this->repository->delete($id);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     protected function attributeDefaults(): array
     {
         return ['is_active' => true, 'sort_order' => 0];

@@ -38,6 +38,8 @@ final class Permissions
             'manage content lists' => 'Content lists',
             'manage settings' => 'Site settings',
             'manage admins' => 'Admins & roles',
+            'use ai assistant' => 'AI dashboard assistant',
+            'manage support chats' => 'AI support chats',
         ];
     }
 }

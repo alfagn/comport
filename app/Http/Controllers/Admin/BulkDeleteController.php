@@ -17,13 +17,17 @@ use App\Models\Post;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Service;
+use App\Models\SupportChatSession;
 use App\Models\User;
 use App\Services\ContentListItemService;
 use App\Services\NavItemService;
 use App\Services\SeoService;
+use App\Support\Permissions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Laravel\Ai\Models\Conversation;
+use Laravel\Ai\Models\ConversationMessage;
 
 /**
  * Unified bulk deletion endpoint for all CMS DataTables.
@@ -48,6 +52,7 @@ class BulkDeleteController extends Controller
         'inbox' => [ContactMessage::class, 'manage inbox', null],
         'applications' => [JobApplication::class, 'manage applications', null],
         'subscribers' => [NewsletterSubscriber::class, 'manage inbox', null],
+        'support-chats' => [SupportChatSession::class, 'manage support chats', null],
         'admins' => [User::class, 'manage admins', null],
         'roles' => [Role::class, 'manage admins', null],
     ];
@@ -73,6 +78,7 @@ class BulkDeleteController extends Controller
             $currentUserEmail = $request->user()->email;
             $ids = array_values(array_filter($ids, function ($id) use ($currentUserId, $currentUserEmail) {
                 $m = Member::find($id);
+
                 return $m && $m->user_id !== $currentUserId && $m->email !== $currentUserEmail;
             }));
             abort_if(empty($ids), 422, 'You cannot delete your own team profile.');
@@ -81,13 +87,18 @@ class BulkDeleteController extends Controller
         if ($entity === 'admins') {
             // Cannot delete yourself or peer owners
             $currentUserId = (int) $request->user()->id;
-            $isOwner = $request->user()->hasRole(\App\Support\Permissions::OWNER_ROLE);
+            $isOwner = $request->user()->hasRole(Permissions::OWNER_ROLE);
             $ids = array_values(array_filter($ids, function ($id) use ($currentUserId, $isOwner) {
-                if ($id === $currentUserId) return false;
+                if ($id === $currentUserId) {
+                    return false;
+                }
                 if ($isOwner) {
                     $target = User::find($id);
-                    if ($target && $target->hasRole(\App\Support\Permissions::OWNER_ROLE)) return false;
+                    if ($target && $target->hasRole(Permissions::OWNER_ROLE)) {
+                        return false;
+                    }
                 }
+
                 return true;
             }));
             abort_if(empty($ids), 422, 'You cannot delete your own account or peer Owner accounts.');
@@ -105,7 +116,7 @@ class BulkDeleteController extends Controller
         foreach ($records as $record) {
             if ($entity === 'members' && $record instanceof Member && $record->user_id) {
                 $linkedUser = User::find($record->user_id);
-                if ($linkedUser && $linkedUser->id !== (int) $request->user()->id && ! $linkedUser->hasRole(\App\Support\Permissions::OWNER_ROLE)) {
+                if ($linkedUser && $linkedUser->id !== (int) $request->user()->id && ! $linkedUser->hasRole(Permissions::OWNER_ROLE)) {
                     $linkedUser->syncRoles([]);
                     $linkedUser->delete();
                 }
@@ -113,6 +124,10 @@ class BulkDeleteController extends Controller
             if ($entity === 'admins' && $record instanceof User) {
                 Member::where('user_id', $record->id)->update(['user_id' => null]);
                 $record->syncRoles([]);
+            }
+            if ($entity === 'support-chats' && $record instanceof SupportChatSession && $record->conversation_id) {
+                ConversationMessage::query()->where('conversation_id', $record->conversation_id)->delete();
+                Conversation::query()->where('id', $record->conversation_id)->delete();
             }
             $record->delete();
             $count++;

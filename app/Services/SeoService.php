@@ -206,7 +206,7 @@ class SeoService
     /** Clear legacy keys. Never write static public mirrors that bypass fresh CMS data. */
     public function flushCaches(): void
     {
-        foreach ([self::CACHE_SITEMAP, self::CACHE_LLMS, self::CACHE_LLMS_FULL] as $key) {
+        foreach ([self::CACHE_SITEMAP, self::CACHE_LLMS, self::CACHE_LLMS_FULL, 'ai:support_studio_snapshot'] as $key) {
             Cache::forget($key);
         }
         Setting::setValue('sitemap_last_generated_at', now()->toDateTimeString(), 'sitemap');

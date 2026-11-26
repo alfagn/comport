@@ -8,7 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -20,16 +19,18 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $user = $request->user();
-        $member = $user->member ?: Member::where('email', $user->email)->first();
+        $cleanEmail = strtolower(trim((string) $user->email));
+        $member = $user->member
+            ?: ($user->member_id ? Member::find($user->member_id) : null)
+            ?: Member::whereRaw('LOWER(email) = ?', [$cleanEmail])->first();
 
         if (! $member) {
-            $slug = Str::slug($user->name);
             $member = Member::firstOrCreate(
-                ['email' => $user->email],
+                ['email' => $cleanEmail],
                 [
                     'user_id' => $user->id,
                     'name' => $user->name,
-                    'slug' => $slug,
+                    'slug' => Member::generateUniqueSlug($user->name),
                     'kind' => $user->hasRole('owner') ? 'founder' : 'member',
                     'role' => $user->hasRole('owner') ? 'Founder & Principal Architect' : 'Staff Software Engineer',
                     'department' => 'Software Engineering',
@@ -44,6 +45,10 @@ class ProfileController extends Controller
             $member->update(['user_id' => $user->id]);
         }
 
+        if ($user->member_id !== $member->id) {
+            $user->forceFill(['member_id' => $member->id])->save();
+        }
+
         return view('admin.profile.edit', compact('user', 'member'));
     }
 
@@ -53,7 +58,9 @@ class ProfileController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
-        $existingMember = $user->member ?: Member::where('email', $user->email)->first();
+        $existingMember = $user->member
+            ?: ($user->member_id ? Member::find($user->member_id) : null)
+            ?: Member::whereRaw('LOWER(email) = ?', [strtolower(trim((string) $user->email))])->first();
 
         if ($request->has('email') && is_string($request->input('email'))) {
             $request->merge(['email' => strtolower(trim($request->input('email')))]);
@@ -92,11 +99,11 @@ class ProfileController extends Controller
         $user->update($userData);
 
         // 2. Update or Create Member Team Profile
-        $member = $user->member ?: Member::where('email', $user->email)->first();
+        $member = $existingMember ?: Member::whereRaw('LOWER(email) = ?', [strtolower(trim((string) $user->email))])->first();
         if (! $member) {
-            $member = new Member();
+            $member = new Member;
             $member->user_id = $user->id;
-            $member->slug = Str::slug($validated['name']);
+            $member->slug = Member::generateUniqueSlug($validated['name']);
             $member->kind = $user->hasRole('owner') ? 'founder' : 'member';
             $member->is_active = true;
         }
@@ -127,6 +134,10 @@ class ProfileController extends Controller
         $member->linkedin = $validated['linkedin'] ?? $member->linkedin;
         $member->twitter = $validated['twitter'] ?? $member->twitter;
         $member->save();
+
+        if ($user->member_id !== $member->id) {
+            $user->forceFill(['member_id' => $member->id])->save();
+        }
 
         return redirect()->route('admin.profile.edit')->with('success', 'Your profile and team details have been updated.');
     }

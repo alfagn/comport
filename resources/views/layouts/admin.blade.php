@@ -12,6 +12,7 @@
   <link rel="preload" as="font" type="font/woff2" href="{{ asset('assets/fonts/public-sans-400.woff2') }}" crossorigin/>
   <link rel="stylesheet" href="{{ asset('assets/css/base/typography.css') }}"/>
   <link rel="stylesheet" href="{{ asset('assets/admin/admin.css') }}?v={{ file_exists(public_path('assets/admin/admin.css')) ? filemtime(public_path('assets/admin/admin.css')) : time() }}"/>
+  <link rel="stylesheet" href="{{ asset('assets/admin/assistant.css') }}?v={{ file_exists(public_path('assets/admin/assistant.css')) ? filemtime(public_path('assets/admin/assistant.css')) : time() }}"/>
   @livewireStyles
   <script>
     // Theme: persisted admin light/dark choice, applied before first paint.
@@ -134,6 +135,10 @@
       $unread = \App\Models\ContactMessage::unread()->count();
       // New job applications badge on the Careers-adjacent Applications item.
       $newApplications = \App\Models\JobApplication::new()->count();
+      // Support chats handed off to humans by the public AI concierge.
+      $handedOffChats = \Illuminate\Support\Facades\Schema::hasTable('support_chat_sessions')
+          ? \App\Models\SupportChatSession::handedOff()->count()
+          : 0;
       $adminUser = auth()->user();
       $adminRawPhoto = $adminUser?->member?->photo;
       if (! $adminRawPhoto && $adminUser?->email) {
@@ -164,6 +169,46 @@
       <span class="nav-item__text">Inbox</span>
       @if($unread > 0)<span class="badge">{{ $unread }}</span>@endif
     </a>
+    @endcan
+    @can('use ai assistant')
+    <a class="nav-item {{ str_starts_with($r, 'admin.assistant') ? 'is-active' : '' }}" href="{{ route('admin.assistant.index') }}" wire:navigate>
+      <img class="nav-ico" src="{{ asset('assets/images/3d/3d-rocket.png') }}" alt="" width="22" height="22"/>
+      <span class="nav-item__text">AI Copilot</span>
+    </a>
+    @endcan
+    @can('manage support chats')
+    @php($supportNavOpen = str_starts_with($r, 'admin.support-chats'))
+    <div class="nav-group {{ $supportNavOpen ? 'is-open' : '' }}" data-nav-group>
+      <button
+        type="button"
+        class="nav-item nav-group__trigger {{ $supportNavOpen ? 'is-active' : '' }}"
+        aria-expanded="{{ $supportNavOpen ? 'true' : 'false' }}"
+        onclick="if (document.body.classList.contains('sidebar-collapsed')) { empetixToggleSidebar(); } var g = this.closest('[data-nav-group]'); var open = g.classList.toggle('is-open'); this.setAttribute('aria-expanded', open ? 'true' : 'false');"
+      >
+        <img class="nav-ico" src="{{ asset('assets/images/3d/3d-chat-bubbles.png') }}" alt="" width="22" height="22"/>
+        <span class="nav-item__text">Support Chats</span>
+        @if($handedOffChats > 0)<span class="badge">{{ $handedOffChats }}</span>@endif
+        <svg class="nav-group__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="nav-sublist">
+        <a class="nav-subitem {{ in_array($r, ['admin.support-chats.index', 'admin.support-chats.show'], true) ? 'is-active' : '' }}" href="{{ route('admin.support-chats.index') }}" wire:navigate>
+          <span class="nav-subitem__dot"></span>
+          <span>Conversations</span>
+        </a>
+        <a class="nav-subitem {{ $r === 'admin.support-chats.dispatch' ? 'is-active' : '' }}" href="{{ route('admin.support-chats.dispatch') }}" wire:navigate>
+          <span class="nav-subitem__dot"></span>
+          <span>Send WhatsApp</span>
+        </a>
+        <a class="nav-subitem {{ $r === 'admin.support-chats.whatsapp' ? 'is-active' : '' }}" href="{{ route('admin.support-chats.whatsapp') }}" wire:navigate>
+          <span class="nav-subitem__dot"></span>
+          <span>WhatsApp API</span>
+        </a>
+        <a class="nav-subitem {{ $r === 'admin.support-chats.settings' ? 'is-active' : '' }}" href="{{ route('admin.support-chats.settings') }}" wire:navigate>
+          <span class="nav-subitem__dot"></span>
+          <span>Chatbot &amp; AI Settings</span>
+        </a>
+      </div>
+    </div>
     @endcan
     @can('manage pages')
     <a class="nav-item {{ str_starts_with($r, 'admin.pages') ? 'is-active' : '' }}" href="{{ route('admin.pages.index') }}" wire:navigate>
@@ -325,6 +370,17 @@
 
       <div class="topbar__actions">
         @yield('actions')
+        @can('use ai assistant')
+          @if(! str_starts_with($r, 'admin.assistant'))
+            <button class="topbar-copilot-btn" type="button" onclick="empetixOpenCopilotDrawer()" title="Open AI Copilot (Alt+A)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2.5L14.35 8.65L20.5 11L14.35 13.35L12 19.5L9.65 13.35L3.5 11L9.65 8.65L12 2.5Z" fill="#FF5E36" stroke="#FFA082" stroke-width="1.2" stroke-linejoin="round"/>
+                <path d="M19 3L19.75 5.25L22 6L19.75 6.75L19 9L18.25 6.75L16 6L18.25 5.25L19 3Z" fill="#FFFFFF"/>
+              </svg>
+              <span>Copilot</span>
+            </button>
+          @endif
+        @endcan
         {{-- Unread-briefs bell: the badge is the real unread count. --}}
         <button class="icon-btn" type="button" data-theme-toggle onclick="empetixToggleTheme()" aria-label="Toggle dark mode" aria-pressed="false">
           <img class="icon-moon" src="{{ asset('assets/images/3d/3d-moon.png') }}" alt="" width="20" height="20"/>
@@ -378,6 +434,15 @@
         <input type="search" id="quicknav-input" placeholder="Jump to a section…" autocomplete="off"/>
         <ul id="quicknav-list">
           <li data-name="dashboard overview"><a href="{{ route('admin.dashboard') }}" wire:navigate>Dashboard</a></li>
+          @can('use ai assistant')
+          <li data-name="ai copilot assistant tasks agent"><a href="{{ route('admin.assistant.index') }}" wire:navigate>AI Copilot</a></li>
+          @endcan
+          @can('manage support chats')
+          <li data-name="support chats conversations customer"><a href="{{ route('admin.support-chats.index') }}" wire:navigate>Support Chats — Conversations</a></li>
+          <li data-name="send whatsapp outbound template customer"><a href="{{ route('admin.support-chats.dispatch') }}" wire:navigate>Support Chats — Send WhatsApp</a></li>
+          <li data-name="whatsapp api webhook meta token"><a href="{{ route('admin.support-chats.whatsapp') }}" wire:navigate>Support Chats — WhatsApp API</a></li>
+          <li data-name="chatbot ai settings faq gemini openai"><a href="{{ route('admin.support-chats.settings') }}" wire:navigate>Support Chats — Chatbot &amp; AI Settings</a></li>
+          @endcan
           <li data-name="inbox briefs messages contact"><a href="{{ route('admin.inbox.index') }}" wire:navigate>Inbox</a></li>
           <li data-name="pages content sections"><a href="{{ route('admin.pages.index') }}" wire:navigate>Pages &amp; Content</a></li>
           <li data-name="hero slides homepage"><a href="{{ route('admin.hero-slides.index') }}" wire:navigate>Hero Slides</a></li>
@@ -902,6 +967,12 @@
     });
   })();
 </script>
+@can('use ai assistant')
+  @if(! str_starts_with($r, 'admin.assistant'))
+    @include('admin._partials.copilot-drawer')
+  @endif
+@endcan
+<script src="{{ asset('assets/admin/assistant.js') }}?v={{ file_exists(public_path('assets/admin/assistant.js')) ? filemtime(public_path('assets/admin/assistant.js')) : time() }}" data-navigate-once></script>
 @stack('datatables')
 {{-- Livewire drives wire:navigate SPA swaps across the admin shell. --}}
 @livewireScripts

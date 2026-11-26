@@ -19,6 +19,9 @@
   <meta name="twitter:card" content="summary_large_image"/>
   <link rel="icon" href="{{ brand_favicon() }}"/>
   <link rel="stylesheet" href="{{ versioned_asset('assets/css/pages/service-pages.css') }}"/>
+  @if(!($preview ?? false))
+    <link rel="stylesheet" href="{{ versioned_asset('assets/css/components/support-chatbot.css') }}"/>
+  @endif
   @if(isset($page) && !($preview ?? false))
     <script type="application/ld+json">{!! json_encode(['@@context' => 'https://schema.org', '@type' => 'WebPage', 'name' => $page->title, 'description' => $page->summary, 'inLanguage' => $locale, 'url' => seo_url($page->publicPath())], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
   @endif
@@ -35,5 +38,9 @@
 @if($preview ?? false)<aside class="preview-banner" role="status">Private editorial preview. This page is not published. Review the service scope and copy before publishing.</aside>@endif
 <main id="content">@yield('content')</main>
 <footer class="service-footer wrap"><img src="{{ brand_logo() }}" width="175" height="60" alt="Empetix"/><p>Start with a conversation about your project.</p><a href="{{ url('/contact') }}">Contact Empetix ↗</a></footer>
+@if(!($preview ?? false))
+  @include('partials.support-chatbot')
+  <script defer src="{{ versioned_asset('assets/js/modules/support-chatbot.js') }}"></script>
+@endif
 </body>
 </html>
