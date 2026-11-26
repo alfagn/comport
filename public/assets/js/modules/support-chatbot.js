@@ -1,6 +1,7 @@
 /**
  * Empetix Solutions — Public AI Customer Support Chatbot Widget.
- * Persists visitor chat token in localStorage and hydrates lazily on open.
+ * Persists visitor chat token in localStorage, streams real-time typing
+ * heartbeats to the Admin Dashboard, and polls for live human specialist replies.
  */
 (function () {
   var root = document.getElementById('empetix-support-widget');
@@ -8,6 +9,7 @@
 
   var STORAGE_KEY = 'empetix_support_chat_token';
   var sessionUrl = root.getAttribute('data-session-url');
+  var typingUrl = root.getAttribute('data-typing-url');
   var messageUrl = root.getAttribute('data-message-url');
   var csrf = root.getAttribute('data-csrf') || '';
   var defaultGreeting = root.getAttribute('data-greeting') || '';
@@ -26,7 +28,12 @@
     open: false,
     hydrated: false,
     busy: false,
-    token: null
+    token: null,
+    messageCount: 0,
+    lastMessageId: null,
+    lastTypingSentAt: 0,
+    typingStopTimer: null,
+    pollTimer: null
   };
 
   try {
@@ -72,6 +79,39 @@
     if (el) el.remove();
   }
 
+  function sendTypingSignal(isTyping, previewText) {
+    if (!typingUrl) return;
+    var now = Date.now();
+    if (isTyping && now - state.lastTypingSentAt < 2000) {
+      return;
+    }
+    state.lastTypingSentAt = isTyping ? now : 0;
+
+    fetch(typingUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': csrf
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        token: state.token,
+        is_typing: !!isTyping,
+        preview: isTyping ? (previewText || '').slice(0, 140) : '',
+        landing_page: window.location.pathname
+      })
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (data && data.ok && data.token && !state.token) {
+          saveToken(data.token);
+        }
+      })
+      .catch(function () {});
+  }
+
   function renderSession(session) {
     if (!session) return;
     if (session.token) saveToken(session.token);
@@ -80,39 +120,52 @@
       bannerEl.hidden = !session.handed_off;
     }
 
-    Array.prototype.forEach.call(bodyEl.querySelectorAll('[data-dynamic-msg]'), function (n) {
-      n.remove();
-    });
-
     var messages = Array.isArray(session.messages) ? session.messages : [];
-    if (chipsEl) {
-      chipsEl.hidden = messages.length > 0;
+    var latestId = messages.length ? messages[messages.length - 1].id : null;
+    var changed = messages.length !== state.messageCount || latestId !== state.lastMessageId || !!session.fallback_reply;
+
+    if (changed) {
+      state.messageCount = messages.length;
+      state.lastMessageId = latestId;
+
+      Array.prototype.forEach.call(bodyEl.querySelectorAll('[data-dynamic-msg]'), function (n) {
+        n.remove();
+      });
+
+      if (chipsEl) {
+        chipsEl.hidden = messages.length > 0;
+      }
+
+      messages.forEach(function (m) {
+        var wrap = document.createElement('div');
+        wrap.className = 'emp-chat__msg ' + (m.role === 'user' ? 'emp-chat__msg--user' : 'emp-chat__msg--bot');
+        wrap.setAttribute('data-dynamic-msg', '1');
+        wrap.innerHTML = '<div class="emp-chat__bubble" dir="auto">' + (m.html || escapeHtml(m.content || '')) + '</div>';
+        bodyEl.appendChild(wrap);
+      });
+
+      if (session.fallback_reply) {
+        var fb = document.createElement('div');
+        fb.className = 'emp-chat__msg emp-chat__msg--bot';
+        fb.setAttribute('data-dynamic-msg', '1');
+        fb.innerHTML = '<div class="emp-chat__bubble" dir="auto">' + (session.fallback_reply.html || escapeHtml(session.fallback_reply.content || '')) + '</div>';
+        bodyEl.appendChild(fb);
+      }
+
+      scrollBottom();
     }
 
-    messages.forEach(function (m) {
-      var wrap = document.createElement('div');
-      wrap.className = 'emp-chat__msg ' + (m.role === 'user' ? 'emp-chat__msg--user' : 'emp-chat__msg--bot');
-      wrap.setAttribute('data-dynamic-msg', '1');
-      wrap.innerHTML = '<div class="emp-chat__bubble" dir="auto">' + (m.html || escapeHtml(m.content || '')) + '</div>';
-      bodyEl.appendChild(wrap);
-    });
-
-    if (session.fallback_reply) {
-      var fb = document.createElement('div');
-      fb.className = 'emp-chat__msg emp-chat__msg--bot';
-      fb.setAttribute('data-dynamic-msg', '1');
-      fb.innerHTML = '<div class="emp-chat__bubble" dir="auto">' + (session.fallback_reply.html || escapeHtml(session.fallback_reply.content || '')) + '</div>';
-      bodyEl.appendChild(fb);
+    if (!state.busy && session.presence) {
+      if (session.presence.admin_typing || session.presence.ai_typing) {
+        if (!bodyEl.querySelector('[data-chat-typing]')) showTyping();
+      } else {
+        hideTyping();
+      }
     }
-
-    scrollBottom();
   }
 
-  function hydrateIfNeeded() {
-    if (state.hydrated) return;
-    state.hydrated = true;
-    if (!state.token) return;
-
+  function pollSession() {
+    if (!state.open || !state.token || state.busy || document.hidden) return;
     var url = sessionUrl + '?token=' + encodeURIComponent(state.token);
     fetch(url, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -122,6 +175,13 @@
         }
       })
       .catch(function () {});
+  }
+
+  function hydrateIfNeeded() {
+    if (state.hydrated) return;
+    state.hydrated = true;
+    if (!state.token) return;
+    pollSession();
   }
 
   function toggleOpen(force) {
@@ -135,13 +195,24 @@
 
     if (next) {
       hydrateIfNeeded();
+      if (!state.pollTimer) {
+        state.pollTimer = setInterval(pollSession, 2500);
+      }
       setTimeout(function () { if (inputEl) inputEl.focus(); scrollBottom(); }, 100);
+    } else if (state.pollTimer) {
+      clearInterval(state.pollTimer);
+      state.pollTimer = null;
     }
   }
 
   function sendMessage(text) {
     text = (text || '').trim();
     if (!text || state.busy) return;
+
+    if (state.typingStopTimer) {
+      clearTimeout(state.typingStopTimer);
+      state.typingStopTimer = null;
+    }
 
     setBusy(true);
     if (chipsEl) chipsEl.hidden = true;
@@ -176,6 +247,7 @@
       .then(function (result) {
         hideTyping();
         if (result.body && result.body.ok && result.body.session) {
+          state.messageCount = -1;
           renderSession(result.body.session);
         } else {
           var errMsg = (result.body && result.body.message) || 'Sorry, something went wrong. Please try again in a moment.';
@@ -207,7 +279,10 @@
 
   if (resetBtn) {
     resetBtn.addEventListener('click', function () {
+      if (state.token) sendTypingSignal(false, '');
       saveToken(null);
+      state.messageCount = 0;
+      state.lastMessageId = null;
       if (bannerEl) bannerEl.hidden = true;
       Array.prototype.forEach.call(bodyEl.querySelectorAll('[data-dynamic-msg]'), function (n) { n.remove(); });
       if (chipsEl) chipsEl.hidden = false;
@@ -235,6 +310,22 @@
       var next = Math.min(inputEl.scrollHeight, 108);
       inputEl.style.height = next + 'px';
       inputEl.classList.toggle('is-scrollable', inputEl.scrollHeight > 108);
+
+      var val = (inputEl.value || '').trim();
+      if (val.length > 0) {
+        sendTypingSignal(true, val);
+        if (state.typingStopTimer) clearTimeout(state.typingStopTimer);
+        state.typingStopTimer = setTimeout(function () {
+          sendTypingSignal(false, '');
+        }, 4200);
+      } else {
+        if (state.typingStopTimer) clearTimeout(state.typingStopTimer);
+        if (state.token) sendTypingSignal(false, '');
+      }
+    });
+    inputEl.addEventListener('blur', function () {
+      if (state.typingStopTimer) clearTimeout(state.typingStopTimer);
+      if (state.token) sendTypingSignal(false, '');
     });
   }
 

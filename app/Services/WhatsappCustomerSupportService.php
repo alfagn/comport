@@ -84,6 +84,7 @@ class WhatsappCustomerSupportService
         $replyText = null;
 
         if ($this->guard->isReady($provider, CustomerSupportAgent::isFaked())) {
+            app(CustomerSupportChatService::class)->markTyping($session, 'ai', true, null, 35);
             try {
                 $response = $agent
                     ->continueOrStart($session->conversation_id, as: $session)
@@ -100,6 +101,8 @@ class WhatsappCustomerSupportService
                 $replyText = $this->whatsapp->formatForWhatsapp($response->text);
             } catch (Throwable $exception) {
                 Log::warning('WhatsApp AI generation failed', ['error' => $exception->getMessage()]);
+            } finally {
+                app(CustomerSupportChatService::class)->markTyping($session, 'ai', false);
             }
         }
 
@@ -147,6 +150,8 @@ class WhatsappCustomerSupportService
      */
     public function sendHumanReply(SupportChatSession $session, string $message, bool $pauseAi = true): array
     {
+        app(CustomerSupportChatService::class)->markTyping($session, 'admin', false);
+
         $recipient = $session->external_thread_id ?: $session->visitor_phone;
         $apiResponse = $this->whatsapp->sendTextMessage((string) $recipient, $message);
 

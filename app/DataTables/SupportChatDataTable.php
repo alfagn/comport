@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Core\DataTables\AdminDataTable;
 use App\Models\SupportChatSession;
+use App\Services\CustomerSupportChatService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Yajra\DataTables\EloquentDataTable;
@@ -33,11 +34,19 @@ class SupportChatDataTable extends AdminDataTable
                     ? ' <span class="pill pill--accent">Handed off</span>'
                     : '';
 
+                $presence = app(CustomerSupportChatService::class)->presenceFor($row);
+                $liveBadge = '';
+                if ($presence['customer_typing']) {
+                    $liveBadge = ' <span class="pill" style="background:rgba(16,185,129,0.16);color:#10B981;border:1px solid rgba(16,185,129,0.38);">● Typing now…</span>';
+                } elseif ($presence['ai_typing']) {
+                    $liveBadge = ' <span class="pill" style="background:rgba(255,77,28,0.16);color:#FF4D1C;border:1px solid rgba(255,77,28,0.38);">● AI replying…</span>';
+                }
+
                 $sub = $row->visitor_phone
                     ? ($row->visitor_email ? "{$row->visitor_phone} · {$row->visitor_email}" : $row->visitor_phone)
                     : ($row->visitor_email ?: ($row->landing_page ?: 'Public website'));
 
-                return '<div class="cell-title">'.e($row->visitorLabel()).$channelBadge.$handoffBadge.'</div>'
+                return '<div class="cell-title">'.e($row->visitorLabel()).$channelBadge.$handoffBadge.$liveBadge.'</div>'
                     .'<div class="cell-sub">'.e($sub).'</div>';
             })
             ->editColumn('handoff_summary', function (SupportChatSession $row): string {

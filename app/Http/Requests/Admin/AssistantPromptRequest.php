@@ -17,8 +17,10 @@ class AssistantPromptRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'prompt' => ['required', 'string', 'min:1', 'max:6000'],
+            'prompt' => ['nullable', 'required_without:attachments', 'string', 'max:6000'],
             'conversation_id' => ['nullable', 'string', 'max:36'],
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'max:10240'],
         ];
     }
 }

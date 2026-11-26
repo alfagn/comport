@@ -20,10 +20,13 @@ use RuntimeException;
 /**
  * Admin management for Website & WhatsApp AI Customer Support:
  * - index()           : Conversations DataTable & KPIs
+ * - livePulse()       : Real-time typing & new-message pulse for the index table
  * - dispatchForm()    : Outbound WhatsApp Customer Dispatch page
  * - whatsappSettings(): Meta WhatsApp Business Cloud API setup page
  * - aiSettings()      : Website Chatbot & AI Provider settings page
- * - show()            : Individual conversation transcript & human reply
+ * - show()            : Individual conversation transcript & live human reply
+ * - live()            : Real-time JSON delta endpoint for an open conversation
+ * - typing()          : Admin typing heartbeat endpoint
  */
 class SupportChatController extends Controller
 {
@@ -40,13 +43,48 @@ class SupportChatController extends Controller
     public function index(SupportChatDataTable $table): View|JsonResponse
     {
         return $table->handle('admin.support-chats.index', [
-            'stats' => [
-                'total' => SupportChatSession::query()->count(),
-                'whatsapp' => SupportChatSession::whatsapp()->count(),
-                'handed_off' => SupportChatSession::handedOff()->count(),
-                'today' => SupportChatSession::query()->whereDate('created_at', today())->count(),
-            ],
+            'stats' => $this->buildStats(),
             'whatsappConfigured' => $this->whatsappApi->isConfigured(),
+        ]);
+    }
+
+    /**
+     * Real-time pulse for the Support Conversations index page: live KPIs,
+     * active typing sessions, and latest activity signature to trigger table sync.
+     */
+    public function livePulse(): JsonResponse
+    {
+        $recentSessions = SupportChatSession::query()
+            ->latest('updated_at')
+            ->limit(25)
+            ->get();
+
+        $activeTyping = [];
+        $signatureParts = [];
+
+        foreach ($recentSessions as $session) {
+            $presence = $this->supportChats->presenceFor($session);
+            $signatureParts[] = $session->id.':'.$session->message_count.':'.$session->status.':'.($presence['customer_typing'] ? '1' : '0').':'.($presence['ai_typing'] ? '1' : '0');
+
+            if ($presence['customer_typing'] || $presence['ai_typing']) {
+                $activeTyping[] = [
+                    'id' => $session->id,
+                    'visitor_label' => $session->visitorLabel(),
+                    'channel' => $session->channel,
+                    'is_whatsapp' => $session->isWhatsapp(),
+                    'customer_typing' => $presence['customer_typing'],
+                    'customer_preview' => $presence['customer_preview'],
+                    'ai_typing' => $presence['ai_typing'],
+                    'url' => route('admin.support-chats.show', $session->id),
+                ];
+            }
+        }
+
+        return response()->json([
+            'ok' => true,
+            'stats' => $this->buildStats(),
+            'active_typing' => $activeTyping,
+            'signature' => md5(implode('|', $signatureParts)),
         ]);
     }
 
@@ -99,7 +137,7 @@ class SupportChatController extends Controller
     }
 
     /**
-     * Inspect one visitor/WhatsApp chat session and its full transcript.
+     * Inspect one visitor/WhatsApp chat session and its full live transcript.
      */
     public function show(int $id): View
     {
@@ -108,7 +146,34 @@ class SupportChatController extends Controller
         return view('admin.support-chats.show', [
             'session' => $session,
             'transcript' => $this->supportChats->transcriptFor($session, includeTools: true),
+            'presence' => $this->supportChats->presenceFor($session),
             'whatsappConfigured' => $this->whatsappApi->isConfigured(),
+        ]);
+    }
+
+    /**
+     * Real-time JSON snapshot for an open conversation transcript page (messages + typing presence).
+     */
+    public function live(int $id): JsonResponse
+    {
+        $session = SupportChatSession::query()->with('contactMessage')->findOrFail($id);
+
+        return response()->json($this->buildLiveSessionPayload($session));
+    }
+
+    /**
+     * Record an admin typing heartbeat while composing a reply in the Dashboard.
+     */
+    public function typing(Request $request, int $id): JsonResponse
+    {
+        $session = SupportChatSession::query()->findOrFail($id);
+        $isTyping = $request->boolean('is_typing', true);
+
+        $this->supportChats->markTyping($session, 'admin', $isTyping, null, 6);
+
+        return response()->json([
+            'ok' => true,
+            'presence' => $this->supportChats->presenceFor($session),
         ]);
     }
 
@@ -210,46 +275,73 @@ class SupportChatController extends Controller
     }
 
     /**
-     * Send a direct human reply inside an existing WhatsApp chat thread.
+     * Send a direct human reply inside an existing WhatsApp or Website chat thread.
      */
-    public function replyWhatsapp(Request $request, int $id): RedirectResponse
+    public function replyWhatsapp(Request $request, int $id): RedirectResponse|JsonResponse
     {
-        $session = SupportChatSession::query()->findOrFail($id);
-        abort_unless($session->isWhatsapp(), 422, 'Direct WhatsApp replies are only available on WhatsApp threads.');
+        $session = SupportChatSession::query()->with('contactMessage')->findOrFail($id);
 
         $validated = $request->validate([
             'message' => ['required', 'string', 'min:1', 'max:3500'],
             'pause_ai' => ['nullable', 'boolean'],
         ]);
 
+        $pauseAi = (bool) ($validated['pause_ai'] ?? true);
+
         try {
-            $this->whatsappSupport->sendHumanReply(
-                session: $session,
-                message: $validated['message'],
-                pauseAi: (bool) ($validated['pause_ai'] ?? true),
-            );
+            if ($session->isWhatsapp()) {
+                $this->whatsappSupport->sendHumanReply(
+                    session: $session,
+                    message: $validated['message'],
+                    pauseAi: $pauseAi,
+                );
+            } else {
+                $this->supportChats->sendHumanReply(
+                    session: $session,
+                    message: $validated['message'],
+                    pauseAi: $pauseAi,
+                );
+            }
         } catch (RuntimeException $exception) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'ok' => false,
+                    'message' => $exception->getMessage(),
+                ], 422);
+            }
+
             return back()->with('error', $exception->getMessage());
         }
 
-        return back()->with('success', 'WhatsApp reply sent to customer.');
+        if ($request->expectsJson()) {
+            return response()->json($this->buildLiveSessionPayload($session->fresh(['contactMessage'])));
+        }
+
+        return back()->with('success', $session->isWhatsapp() ? 'WhatsApp reply sent to customer.' : 'Live reply sent to website visitor.');
     }
 
     /**
-     * Pause or resume AI auto-replies on a WhatsApp customer thread.
+     * Pause or resume AI auto-replies on a WhatsApp or Website customer thread.
      */
-    public function toggleAi(int $id): RedirectResponse
+    public function toggleAi(Request $request, int $id): RedirectResponse|JsonResponse
     {
         $session = SupportChatSession::query()->findOrFail($id);
         $nextPaused = ! $session->ai_paused;
         $session->forceFill(['ai_paused' => $nextPaused])->save();
 
-        return back()->with(
-            'success',
-            $nextPaused
-                ? 'AI auto-reply paused (Human Takeover active).'
-                : 'AI auto-reply resumed for this customer.',
-        );
+        $notice = $nextPaused
+            ? 'AI auto-reply paused (Human Takeover active).'
+            : 'AI auto-reply resumed for this customer.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'ok' => true,
+                'ai_paused' => $nextPaused,
+                'message' => $notice,
+            ]);
+        }
+
+        return back()->with('success', $notice);
     }
 
     /**
@@ -276,5 +368,47 @@ class SupportChatController extends Controller
         $this->supportChats->deleteSession($session);
 
         return redirect()->route('admin.support-chats.index')->with('success', 'Support chat deleted.');
+    }
+
+    /**
+     * @return array{total: int, whatsapp: int, handed_off: int, today: int}
+     */
+    protected function buildStats(): array
+    {
+        return [
+            'total' => SupportChatSession::query()->count(),
+            'whatsapp' => SupportChatSession::whatsapp()->count(),
+            'handed_off' => SupportChatSession::handedOff()->count(),
+            'today' => SupportChatSession::query()->whereDate('created_at', today())->count(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function buildLiveSessionPayload(SupportChatSession $session): array
+    {
+        return [
+            'ok' => true,
+            'session' => [
+                'id' => $session->id,
+                'channel' => $session->channel,
+                'is_whatsapp' => $session->isWhatsapp(),
+                'visitor_label' => $session->visitorLabel(),
+                'visitor_initial' => strtoupper(substr($session->visitorLabel(), 0, 1)),
+                'visitor_phone' => $session->visitor_phone,
+                'visitor_email' => $session->visitor_email,
+                'status' => $session->status,
+                'status_label' => $session->statusLabel(),
+                'ai_paused' => (bool) $session->ai_paused,
+                'message_count' => $session->message_count,
+                'handoff_summary' => $session->handoff_summary,
+                'contact_message_id' => $session->contact_message_id,
+                'contact_message_url' => $session->contactMessage ? route('admin.inbox.show', $session->contactMessage->id) : null,
+                'last_active_human' => $session->last_message_at?->diffForHumans() ?? 'just now',
+            ],
+            'presence' => $this->supportChats->presenceFor($session),
+            'messages' => $this->supportChats->transcriptFor($session, includeTools: true),
+        ];
     }
 }

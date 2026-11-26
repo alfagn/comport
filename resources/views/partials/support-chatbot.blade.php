@@ -12,6 +12,7 @@
     @if($supportChatEnabled)
       id="empetix-support-widget"
       data-session-url="{{ route('support-chat.session') }}"
+      data-typing-url="{{ route('support-chat.typing') }}"
       data-message-url="{{ route('support-chat.message') }}"
       data-csrf="{{ csrf_token() }}"
       data-greeting="{{ $chatGreeting }}"

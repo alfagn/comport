@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 
 /**
- * Public JSON endpoints for the floating AI Customer Support Chatbot widget.
+ * Public JSON endpoints for the floating AI Customer Support Chatbot widget,
+ * including real-time typing presence heartbeats streamed to the Admin Dashboard.
  */
 class SupportChatController extends Controller
 {
@@ -31,6 +32,46 @@ class SupportChatController extends Controller
             'ok' => true,
             'enabled' => true,
             'session' => $this->supportChats->serializeSession($session),
+        ]);
+    }
+
+    /**
+     * Record a live typing heartbeat from the visitor so the Admin Dashboard
+     * displays "Customer is typing…" in real time.
+     */
+    public function typing(Request $request): JsonResponse
+    {
+        if (! $this->supportChats->isEnabled()) {
+            return response()->json(['ok' => false], 404);
+        }
+
+        $validated = $request->validate([
+            'token' => ['nullable', 'string', 'max:64'],
+            'is_typing' => ['required', 'boolean'],
+            'preview' => ['nullable', 'string', 'max:160'],
+            'landing_page' => ['nullable', 'string', 'max:250'],
+        ]);
+
+        $isTyping = (bool) $validated['is_typing'];
+        $preview = (string) ($validated['preview'] ?? '');
+        $session = $this->supportChats->findByToken($validated['token'] ?? null);
+
+        if (! $session && $isTyping && mb_strlen(trim($preview)) >= 2) {
+            $session = $this->supportChats->createSession(
+                $request->ip(),
+                $request->userAgent(),
+                $validated['landing_page'] ?? null,
+            );
+        }
+
+        if ($session && ! $session->isClosed()) {
+            $this->supportChats->markTyping($session, 'customer', $isTyping, $preview, 6);
+        }
+
+        return response()->json([
+            'ok' => true,
+            'token' => $session?->token,
+            'presence' => $this->supportChats->presenceFor($session),
         ]);
     }
 

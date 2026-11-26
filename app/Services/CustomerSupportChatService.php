@@ -5,14 +5,18 @@ namespace App\Services;
 use App\Ai\Agents\CustomerSupportAgent;
 use App\Models\Setting;
 use App\Models\SupportChatSession;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Laravel\Ai\Contracts\ConversationStore;
+use Laravel\Ai\Enums\MessageStatus;
+use Laravel\Ai\Messages\UserMessage;
 use Laravel\Ai\Models\Conversation;
 use Laravel\Ai\Models\ConversationMessage;
 use Throwable;
 
 /**
- * Powers the public-facing Customer Support AI Chatbot widget and its admin
- * transcript viewer.
+ * Powers the public-facing Customer Support AI Chatbot widget, real-time typing
+ * presence heartbeats, and its live admin transcript viewer & human takeover.
  */
 class CustomerSupportChatService
 {
@@ -50,7 +54,7 @@ class CustomerSupportChatService
     }
 
     /**
-     * Create a new visitor chat session when the first message arrives.
+     * Create a new visitor chat session when the first message or typing event arrives.
      */
     public function createSession(?string $ip, ?string $userAgent, ?string $landingPage): SupportChatSession
     {
@@ -61,7 +65,75 @@ class CustomerSupportChatService
             'ip_address' => $ip ? Str::limit($ip, 45, '') : null,
             'user_agent' => $userAgent ? Str::limit($userAgent, 250, '') : null,
             'landing_page' => $landingPage ? Str::limit($landingPage, 250, '') : null,
+            'last_message_at' => now(),
         ]);
+    }
+
+    /**
+     * Record a real-time typing heartbeat for a session actor ('customer', 'ai', or 'admin').
+     */
+    public function markTyping(
+        SupportChatSession $session,
+        string $actor,
+        bool $isTyping = true,
+        ?string $preview = null,
+        int $ttlSeconds = 6,
+    ): void {
+        $key = $this->typingCacheKey($session->id, $actor);
+
+        if ($isTyping) {
+            Cache::put($key, [
+                'typing' => true,
+                'preview' => $preview !== null && trim($preview) !== '' ? Str::limit(trim($preview), 140) : null,
+                'at' => now()->timestamp,
+            ], now()->addSeconds($ttlSeconds));
+
+            $activeIds = Cache::get('support_chat:active_ids', []);
+            if (is_array($activeIds)) {
+                $activeIds[$session->id] = now()->timestamp;
+                Cache::put('support_chat:active_ids', $activeIds, now()->addMinutes(5));
+            }
+        } else {
+            Cache::forget($key);
+        }
+    }
+
+    /**
+     * Get live typing & online presence state for a support chat session.
+     *
+     * @return array{customer_typing: bool, customer_preview: ?string, ai_typing: bool, admin_typing: bool, ai_paused: bool, online: bool}
+     */
+    public function presenceFor(?SupportChatSession $session): array
+    {
+        if (! $session) {
+            return [
+                'customer_typing' => false,
+                'customer_preview' => null,
+                'ai_typing' => false,
+                'admin_typing' => false,
+                'ai_paused' => false,
+                'online' => false,
+            ];
+        }
+
+        $customer = Cache::get($this->typingCacheKey($session->id, 'customer'));
+        $ai = Cache::get($this->typingCacheKey($session->id, 'ai'));
+        $admin = Cache::get($this->typingCacheKey($session->id, 'admin'));
+
+        $customerTyping = is_array($customer) && ! empty($customer['typing']);
+        $aiTyping = is_array($ai) && ! empty($ai['typing']);
+        $adminTyping = is_array($admin) && ! empty($admin['typing']);
+
+        $recentActivity = $session->last_message_at && $session->last_message_at->gt(now()->subMinutes(5));
+
+        return [
+            'customer_typing' => $customerTyping,
+            'customer_preview' => $customerTyping ? ($customer['preview'] ?? null) : null,
+            'ai_typing' => $aiTyping,
+            'admin_typing' => $adminTyping,
+            'ai_paused' => (bool) $session->ai_paused,
+            'online' => $customerTyping || $aiTyping || $adminTyping || $recentActivity,
+        ];
     }
 
     /**
@@ -82,6 +154,8 @@ class CustomerSupportChatService
             $session = $this->createSession($ip, $userAgent, $landingPage);
         }
 
+        $this->markTyping($session, 'customer', false);
+
         $maxMessages = (int) config('assistant.support.max_messages_per_session', 60);
         if ($session->message_count >= $maxMessages) {
             return [
@@ -89,6 +163,26 @@ class CustomerSupportChatService
                 'limit_reached' => true,
                 'fallback_reply' => $this->fallbackReply('This chat has reached its message limit. You can start a new chat or reach our team directly.'),
             ];
+        }
+
+        // Human Takeover mode on Website Chat: record customer message without invoking AI
+        if ($session->ai_paused) {
+            $conversationId = $this->ensureWebConversationExists($session, $message);
+            resolve(ConversationStore::class)->storeUserMessage(
+                $conversationId,
+                Conversation::participantType($session),
+                Conversation::participantKey($session),
+                CustomerSupportAgent::class,
+                new UserMessage($message),
+            );
+
+            $session->forceFill([
+                'conversation_id' => $conversationId,
+                'message_count' => $session->message_count + 1,
+                'last_message_at' => now(),
+            ])->save();
+
+            return $this->serializeSession($session->refresh());
         }
 
         $agent = new CustomerSupportAgent($session);
@@ -103,15 +197,21 @@ class CustomerSupportChatService
             ];
         }
 
+        $this->markTyping($session, 'ai', true, null, 35);
+
         try {
             $response = $agent
                 ->continueOrStart($session->conversation_id, as: $session)
                 ->prompt($message);
         } catch (Throwable) {
+            $this->markTyping($session, 'ai', false);
+
             return [
                 ...$this->serializeSession($session->refresh()),
                 'fallback_reply' => $this->fallbackReply(),
             ];
+        } finally {
+            $this->markTyping($session, 'ai', false);
         }
 
         $session->refresh();
@@ -122,6 +222,39 @@ class CustomerSupportChatService
         ])->save();
 
         return $this->serializeSession($session->refresh());
+    }
+
+    /**
+     * Send a direct human specialist reply from the Admin Dashboard to a Website chat session.
+     */
+    public function sendHumanReply(SupportChatSession $session, string $message, bool $pauseAi = true): SupportChatSession
+    {
+        $this->markTyping($session, 'admin', false);
+
+        $conversationId = $this->ensureWebConversationExists($session, $message);
+
+        ConversationMessage::query()->create([
+            'id' => (string) Str::uuid7(),
+            'conversation_id' => $conversationId,
+            'participant_type' => Conversation::participantType($session),
+            'participant_id' => Conversation::participantKey($session),
+            'agent' => CustomerSupportAgent::class,
+            'role' => 'assistant',
+            'content' => trim($message),
+            'attachments' => [],
+            'steps' => [],
+            'usage' => [],
+            'meta' => ['source' => 'human_agent'],
+            'status' => MessageStatus::Completed,
+        ]);
+
+        $session->forceFill([
+            'conversation_id' => $conversationId,
+            'ai_paused' => $pauseAi,
+            'last_message_at' => now(),
+        ])->save();
+
+        return $session->refresh();
     }
 
     /**
@@ -137,8 +270,10 @@ class CustomerSupportChatService
                 'status' => SupportChatSession::STATUS_OPEN,
                 'status_label' => 'Open',
                 'handed_off' => false,
+                'ai_paused' => false,
                 'can_send' => true,
                 'greeting' => $this->greeting(),
+                'presence' => $this->presenceFor(null),
                 'messages' => [],
             ];
         }
@@ -150,8 +285,10 @@ class CustomerSupportChatService
             'status' => $session->status,
             'status_label' => $session->statusLabel(),
             'handed_off' => $session->status === SupportChatSession::STATUS_HANDED_OFF,
+            'ai_paused' => (bool) $session->ai_paused,
             'can_send' => ! $session->isClosed() && $session->message_count < $maxMessages,
             'greeting' => $this->greeting(),
+            'presence' => $this->presenceFor($session),
             'messages' => $this->transcriptFor($session, includeTools: false),
         ];
     }
@@ -204,12 +341,34 @@ class CustomerSupportChatService
      */
     public function deleteSession(SupportChatSession $session): void
     {
+        $this->markTyping($session, 'customer', false);
+        $this->markTyping($session, 'ai', false);
+        $this->markTyping($session, 'admin', false);
+
         if ($session->conversation_id) {
             ConversationMessage::query()->where('conversation_id', $session->conversation_id)->delete();
             Conversation::query()->where('id', $session->conversation_id)->delete();
         }
 
         $session->delete();
+    }
+
+    protected function ensureWebConversationExists(SupportChatSession $session, string $seedTitle): string
+    {
+        if ($session->conversation_id) {
+            return $session->conversation_id;
+        }
+
+        return resolve(ConversationStore::class)->storeConversation(
+            Conversation::participantType($session),
+            Conversation::participantKey($session),
+            Str::limit($seedTitle ?: 'Web Support Chat', 50, preserveWords: true),
+        );
+    }
+
+    protected function typingCacheKey(int $sessionId, string $actor): string
+    {
+        return "support_chat:typing:{$sessionId}:{$actor}";
     }
 
     /**

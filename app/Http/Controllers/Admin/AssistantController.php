@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
@@ -95,8 +96,9 @@ class AssistantController extends Controller
         try {
             $conversation = $this->assistant->sendMessage(
                 $user,
-                (string) $request->validated('prompt'),
+                (string) ($request->validated('prompt') ?? ''),
                 $request->validated('conversation_id'),
+                $request->file('attachments', []),
             );
         } catch (HttpExceptionInterface $exception) {
             throw $exception;
@@ -142,6 +144,14 @@ class AssistantController extends Controller
             'ok' => true,
             'conversation' => $updated,
         ]);
+    }
+
+    /**
+     * Stream or download an attachment belonging to a Copilot conversation.
+     */
+    public function attachment(Request $request, string $conversation, string $filename): StreamedResponse
+    {
+        return $this->assistant->streamAttachment($request->user(), $conversation, $filename);
     }
 
     /**

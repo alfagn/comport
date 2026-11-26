@@ -7,6 +7,8 @@ use App\Ai\Tools\Dashboard\CreateJobPostDraft;
 use App\Ai\Tools\Dashboard\DashboardTool;
 use App\Ai\Tools\Dashboard\DeleteInboxMessage;
 use App\Ai\Tools\Dashboard\GetDashboardOverview;
+use App\Ai\Tools\Dashboard\InspectProjectCodeAndLogs;
+use App\Ai\Tools\Dashboard\InspectTechnicalArchitecture;
 use App\Ai\Tools\Dashboard\ListSupportChats;
 use App\Ai\Tools\Dashboard\MarkInboxMessagesRead;
 use App\Ai\Tools\Dashboard\ReadInboxMessage;
@@ -87,15 +89,19 @@ class DashboardAssistantAgent implements Agent, Conversational, HasProviderOptio
         $roles = $this->user->getRoleNames()->implode(', ') ?: 'standard admin';
 
         return <<<PROMPT
-You are **Empetix Command Copilot**, the operational AI assistant built into the {$siteName} CMS dashboard.
+You are **Empetix Command Copilot**, the operational & technical AI architect built into the {$siteName} CMS dashboard.
 You are assisting **{$this->user->name}** ({$this->user->email}, roles: {$roles}).
 
 ## Core Operating Rules
 1. **Language**: Always reply in the same language the admin writes in (Arabic, English, or mixed Arabic/English technical style). Keep responses concise, structured, and actionable.
-2. **Ground Truth Only**: Always call your tools to read live database figures, briefs, applications, support chats, or CMS records. Never invent IDs, metrics, emails, or URLs.
-3. **Permissions**: You only have access to tools permitted for {$this->user->name}. If asked to perform an action outside your available tools, explain clearly which dashboard permission is required.
-4. **Human Approval**: Tools that delete records, publish/hide website content or pages, or create new blog/job drafts automatically pause for confirmation. Never claim an approvable action has already completed until its tool result confirms execution.
-5. **Actionable Links**: When a tool returns an `admin_url` or `public_url`, include helpful Markdown links so the admin can jump directly to the record.
+2. **Full Technical & Operational Capabilities**:
+   - You are both an **Operational CMS Copilot** (managing inbox briefs, job applications, site content, blog/job drafts, and WhatsApp/Website support chats) AND a **Senior Technical Architect** for the {$siteName} web platform.
+   - Whenever the admin asks ANY technical question about the website (routes, controllers, services, database schema/tables, Eloquent models, how a feature works in code, AI/WhatsApp webhook flow, SEO/llms.txt/sitemap, frontend JS/CSS, or debugging errors in `laravel.log`), call `InspectTechnicalArchitecture` and/or `InspectProjectCodeAndLogs` to inspect the live codebase and runtime state before answering.
+   - When the admin uploads **attachments** (images, screenshots, PDFs, logs, code files, JSON, SQL, CSV, or documents), analyze the attached content thoroughly and connect it to the site's technical architecture.
+3. **Ground Truth Only**: Always call your tools to read live database figures, briefs, applications, support chats, CMS records, routes, schema, or code files. Never invent IDs, metrics, emails, or URLs.
+4. **Permissions**: You only have access to operational mutation tools permitted for {$this->user->name}. If asked to perform an action outside your available tools, explain clearly which dashboard permission is required.
+5. **Human Approval**: Tools that delete records, publish/hide website content or pages, send outbound WhatsApp messages, or create new blog/job drafts automatically pause for confirmation. Never claim an approvable action has already completed until its tool result confirms execution.
+6. **Actionable Links**: When a tool returns an `admin_url` or `public_url`, include helpful Markdown links so the admin can jump directly to the record.
 PROMPT;
     }
 
@@ -108,6 +114,8 @@ PROMPT;
     {
         $candidates = [
             new GetDashboardOverview($this->user),
+            new InspectTechnicalArchitecture($this->user),
+            new InspectProjectCodeAndLogs($this->user),
             new SearchInboxMessages($this->user),
             new ReadInboxMessage($this->user),
             new MarkInboxMessagesRead($this->user),

@@ -69,6 +69,7 @@ Route::post('/subscribe', [NewsletterController::class, 'store'])->name('subscri
 */
 Route::prefix('support-chat')->name('support-chat.')->group(function () {
     Route::get('/session', [PublicSupportChatController::class, 'session'])->name('session');
+    Route::post('/typing', [PublicSupportChatController::class, 'typing'])->name('typing');
     Route::post('/message', [PublicSupportChatController::class, 'message'])->name('message');
 });
 
@@ -158,6 +159,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [Admin\AssistantController::class, 'index'])->name('index');
             Route::get('/conversations', [Admin\AssistantController::class, 'conversations'])->name('conversations');
             Route::get('/conversations/{conversation}', [Admin\AssistantController::class, 'show'])->name('show');
+            Route::get('/conversations/{conversation}/attachments/{filename}', [Admin\AssistantController::class, 'attachment'])->name('attachment');
             Route::post('/message', [Admin\AssistantController::class, 'message'])->name('message');
             Route::post('/conversations/{conversation}/approve', [Admin\AssistantController::class, 'approve'])->name('approve');
             Route::delete('/conversations/{conversation}', [Admin\AssistantController::class, 'destroy'])->name('destroy');
@@ -166,6 +168,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Public AI Customer Support & WhatsApp Cloud API transcripts & configuration.
         Route::middleware('permission:manage support chats')->prefix('support-chats')->name('support-chats.')->group(function () {
             Route::get('/', [Admin\SupportChatController::class, 'index'])->name('index');
+            Route::get('/live-pulse', [Admin\SupportChatController::class, 'livePulse'])->name('live-pulse');
             Route::get('/dispatch', [Admin\SupportChatController::class, 'dispatchForm'])->name('dispatch');
             Route::post('/whatsapp/send', [Admin\SupportChatController::class, 'sendWhatsappOutbound'])->name('whatsapp.send');
             Route::get('/whatsapp', [Admin\SupportChatController::class, 'whatsappSettings'])->name('whatsapp');
@@ -174,6 +177,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/settings', [Admin\SupportChatController::class, 'aiSettings'])->name('settings');
             Route::put('/settings', [Admin\SupportChatController::class, 'updateSettings'])->name('settings.update');
             Route::get('/{id}', [Admin\SupportChatController::class, 'show'])->whereNumber('id')->name('show');
+            Route::get('/{id}/live', [Admin\SupportChatController::class, 'live'])->whereNumber('id')->name('live');
+            Route::post('/{id}/typing', [Admin\SupportChatController::class, 'typing'])->whereNumber('id')->name('typing');
             Route::post('/{id}/reply', [Admin\SupportChatController::class, 'replyWhatsapp'])->whereNumber('id')->name('reply');
             Route::patch('/{id}/ai-toggle', [Admin\SupportChatController::class, 'toggleAi'])->whereNumber('id')->name('ai.toggle');
             Route::patch('/{id}/status', [Admin\SupportChatController::class, 'updateStatus'])->whereNumber('id')->name('status.update');

@@ -1,6 +1,8 @@
 /**
  * Empetix Command — Dashboard AI Copilot client controller.
  * Drives both the full /admin/assistant workspace and the global slide-over drawer.
+ * Supports technical codebase inquiries, multi-file attachments (with auto-cleanup
+ * when a session is deleted), and human-in-the-loop tool approvals.
  */
 (function () {
   if (window.__empetixCopilotBound) return;
@@ -17,6 +19,13 @@
     return div.innerHTML;
   }
 
+  function formatBytes(bytes) {
+    bytes = Number(bytes) || 0;
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
   function renderToolBadges(tools) {
     if (!Array.isArray(tools) || !tools.length) return '';
     return '<div class="ai-msg__tools">' + tools.map(function (t) {
@@ -25,6 +34,32 @@
       if (t.pending) { cls += ' is-pending'; prefix = '⏳ '; }
       else if (t.denied || t.failed) { cls += ' is-denied'; prefix = '✕ '; }
       return '<span class="' + cls + '">' + prefix + escapeHtml(t.name) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  function renderMessageAttachments(attachments) {
+    if (!Array.isArray(attachments) || !attachments.length) return '';
+    return '<div class="ai-msg__attachments">' + attachments.map(function (att) {
+      var url = att.url ? escapeHtml(att.url) : '#';
+      var name = escapeHtml(att.name || att.filename || 'Attachment');
+      var size = att.size_human ? ' <span class="ai-att-chip__size">(' + escapeHtml(att.size_human) + ')</span>' : '';
+
+      if (att.is_image && att.url) {
+        return (
+          '<a href="' + url + '" target="_blank" rel="noopener" class="ai-att-image-card" title="' + name + '">' +
+            '<img src="' + url + '" alt="' + name + '" loading="lazy"/>' +
+            '<span class="ai-att-image-card__cap">' + name + '</span>' +
+          '</a>'
+        );
+      }
+
+      return (
+        '<a href="' + url + '" target="_blank" rel="noopener" class="ai-att-chip">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+          '<span class="ai-att-chip__name">' + name + '</span>' +
+          size +
+        '</a>'
+      );
     }).join('') + '</div>';
   }
 
@@ -77,7 +112,6 @@
       deleteTemplate: root.getAttribute('data-url-delete-template')
     };
 
-    var botIconUrl = root.getAttribute('data-bot-icon') || '/assets/images/3d/3d-rocket.png';
     var userInitial = root.getAttribute('data-user-initial') || 'A';
 
     var messagesEl = root.querySelector('[data-ai-messages]');
@@ -85,13 +119,17 @@
     var formEl = root.querySelector('[data-ai-form]');
     var inputEl = root.querySelector('[data-ai-input]');
     var sendBtn = root.querySelector('[data-ai-send]');
+    var attachBtn = root.querySelector('[data-ai-attach-btn]');
+    var fileInputEl = root.querySelector('[data-ai-file-input]');
+    var previewTrayEl = root.querySelector('[data-ai-attachments-preview]');
     var newBtns = root.querySelectorAll('[data-ai-new]');
     var convListEl = root.querySelector('[data-ai-conv-list]');
     var titleEl = root.querySelector('[data-ai-active-title]');
 
     var state = {
       conversationId: root.getAttribute('data-initial-conversation-id') || null,
-      busy: false
+      busy: false,
+      pendingFiles: []
     };
 
     function syncTextareaHeight() {
@@ -100,6 +138,59 @@
       var next = Math.min(inputEl.scrollHeight, 140);
       inputEl.style.height = next + 'px';
       inputEl.classList.toggle('is-scrollable', inputEl.scrollHeight > 140);
+    }
+
+    function addPendingFiles(fileList) {
+      if (!fileList || !fileList.length) return;
+      Array.prototype.forEach.call(fileList, function (file) {
+        if (state.pendingFiles.length >= 5) {
+          if (window.empetixToast) window.empetixToast('Maximum 5 attachments per message.', 'error');
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          if (window.empetixToast) window.empetixToast(file.name + ' exceeds the 10 MB limit.', 'error');
+          return;
+        }
+        state.pendingFiles.push(file);
+      });
+      renderPendingFiles();
+    }
+
+    function removePendingFile(index) {
+      state.pendingFiles.splice(index, 1);
+      renderPendingFiles();
+    }
+
+    function clearPendingFiles() {
+      state.pendingFiles = [];
+      if (fileInputEl) fileInputEl.value = '';
+      renderPendingFiles();
+    }
+
+    function renderPendingFiles() {
+      if (!previewTrayEl) return;
+      if (!state.pendingFiles.length) {
+        previewTrayEl.hidden = true;
+        previewTrayEl.innerHTML = '';
+        return;
+      }
+
+      previewTrayEl.hidden = false;
+      previewTrayEl.innerHTML = state.pendingFiles.map(function (file, idx) {
+        var isImg = file.type && file.type.indexOf('image/') === 0;
+        var thumb = isImg
+          ? '<span class="ai-pending-file__ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>'
+          : '<span class="ai-pending-file__ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>';
+
+        return (
+          '<div class="ai-pending-file">' +
+            thumb +
+            '<span class="ai-pending-file__name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
+            '<span class="ai-pending-file__size">' + formatBytes(file.size) + '</span>' +
+            '<button type="button" class="ai-pending-file__rm" data-ai-rm-file="' + idx + '" aria-label="Remove attachment">&times;</button>' +
+          '</div>'
+        );
+      }).join('');
     }
 
     var initialJson = root.querySelector('[data-ai-initial-payload]');
@@ -122,6 +213,7 @@
       state.busy = busy;
       if (sendBtn) sendBtn.disabled = busy;
       if (inputEl) inputEl.disabled = busy;
+      if (attachBtn) attachBtn.disabled = busy;
     }
 
     function botAvatarHtml() {
@@ -201,6 +293,7 @@
                 (m.created_human ? '<span>&middot; ' + escapeHtml(m.created_human) + '</span>' : '') +
               '</div>' +
               renderToolBadges(m.tools) +
+              renderMessageAttachments(m.attachments) +
               (bodyHtml ? '<div class="ai-msg__bubble" dir="auto">' + bodyHtml + '</div>' : '') +
             '</div>' +
           '</div>'
@@ -223,7 +316,7 @@
     function renderConversationsList(items) {
       if (!convListEl || !Array.isArray(items)) return;
       if (!items.length) {
-        convListEl.innerHTML = '<li class="ai-conv-empty">No saved sessions yet. Start a task on the right!</li>';
+        convListEl.innerHTML = '<li class="ai-conv-empty">No saved sessions yet. Select a command or ask below.</li>';
         return;
       }
 
@@ -237,7 +330,9 @@
               '<div class="ai-conv-item__title" dir="auto">' + escapeHtml(displayTitle) + '</div>' +
               '<div class="ai-conv-item__meta">' + escapeHtml(c.updated_human || '') + '</div>' +
             '</div>' +
-            '<button type="button" class="ai-conv-item__del" data-conv-delete="' + escapeHtml(c.id) + '" title="Delete session" aria-label="Delete session">&times;</button>' +
+            '<button type="button" class="ai-conv-item__del" data-conv-delete="' + escapeHtml(c.id) + '" title="Delete session &amp; attachments" aria-label="Delete session">' +
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+            '</button>' +
           '</li>'
         );
       }).join('');
@@ -250,15 +345,26 @@
       });
     }
 
-    function appendOptimisticUserBubble(text) {
+    function appendOptimisticUserBubble(text, files) {
       if (emptyEl) emptyEl.hidden = true;
+      var optimisticAtts = (files || []).map(function (f) {
+        return {
+          name: f.name,
+          size_human: formatBytes(f.size),
+          is_image: false,
+          url: '#'
+        };
+      });
+
+      var displayPrompt = text || (optimisticAtts.length ? 'Please analyze the attached file(s).' : '');
       var div = document.createElement('div');
       div.className = 'ai-row ai-row--user';
       div.innerHTML =
         userAvatarHtml() +
         '<div class="ai-msg">' +
           '<div class="ai-msg__meta"><span class="ai-msg__author">You</span></div>' +
-          '<div class="ai-msg__bubble" dir="auto">' + escapeHtml(text).replace(/\n/g, '<br>') + '</div>' +
+          renderMessageAttachments(optimisticAtts) +
+          (displayPrompt ? '<div class="ai-msg__bubble" dir="auto">' + escapeHtml(displayPrompt).replace(/\n/g, '<br>') + '</div>' : '') +
         '</div>';
       messagesEl.appendChild(div);
       scrollBottom();
@@ -266,31 +372,48 @@
 
     function sendPrompt(text) {
       text = (text || '').trim();
-      if (!text || state.busy) return;
+      var filesToSend = state.pendingFiles.slice();
+      if ((!text && !filesToSend.length) || state.busy) return;
 
       setBusy(true);
       if (inputEl) {
         inputEl.value = '';
         syncTextareaHeight();
       }
+      clearPendingFiles();
 
-      appendOptimisticUserBubble(text);
+      appendOptimisticUserBubble(text, filesToSend);
       showTyping();
 
-      fetch(endpoints.message, {
+      var fetchOptions = {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
           'X-CSRF-TOKEN': csrfToken()
         },
-        credentials: 'same-origin',
-        body: JSON.stringify({
+        credentials: 'same-origin'
+      };
+
+      if (filesToSend.length > 0) {
+        var fd = new FormData();
+        fd.append('prompt', text);
+        if (state.conversationId) {
+          fd.append('conversation_id', state.conversationId);
+        }
+        filesToSend.forEach(function (file) {
+          fd.append('attachments[]', file);
+        });
+        fetchOptions.body = fd;
+      } else {
+        fetchOptions.headers['Content-Type'] = 'application/json';
+        fetchOptions.body = JSON.stringify({
           prompt: text,
           conversation_id: state.conversationId
-        })
-      })
+        });
+      }
+
+      fetch(endpoints.message, fetchOptions)
         .then(function (res) { return res.json().then(function (body) { return { status: res.status, body: body }; }); })
         .then(function (result) {
           removeTyping();
@@ -398,19 +521,43 @@
           var item = convListEl && convListEl.querySelector('[data-conv-select="' + id + '"]');
           if (item) item.remove();
           if (convListEl && !convListEl.querySelector('[data-conv-select]')) {
-            convListEl.innerHTML = '<li class="ai-conv-empty">No saved sessions yet. Start a task on the right!</li>';
+            convListEl.innerHTML = '<li class="ai-conv-empty">No saved sessions yet. Select a command or ask below.</li>';
           }
           if (state.conversationId === id) {
             renderConversation(null);
           }
-          if (window.empetixToast) window.empetixToast('Session deleted.', 'success');
+          if (window.empetixToast) window.empetixToast('Session and its uploaded attachments deleted.', 'success');
         });
+    }
+
+    if (attachBtn && fileInputEl) {
+      attachBtn.addEventListener('click', function () {
+        if (!state.busy) fileInputEl.click();
+      });
+      fileInputEl.addEventListener('change', function () {
+        addPendingFiles(fileInputEl.files);
+        fileInputEl.value = '';
+      });
     }
 
     if (formEl) {
       formEl.addEventListener('submit', function (e) {
         e.preventDefault();
         sendPrompt(inputEl ? inputEl.value : '');
+      });
+      formEl.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        formEl.classList.add('is-dragover');
+      });
+      formEl.addEventListener('dragleave', function () {
+        formEl.classList.remove('is-dragover');
+      });
+      formEl.addEventListener('drop', function (e) {
+        e.preventDefault();
+        formEl.classList.remove('is-dragover');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+          addPendingFiles(e.dataTransfer.files);
+        }
       });
     }
 
@@ -422,10 +569,16 @@
         }
       });
       inputEl.addEventListener('input', syncTextareaHeight);
+      inputEl.addEventListener('paste', function (e) {
+        if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length) {
+          addPendingFiles(e.clipboardData.files);
+        }
+      });
     }
 
     Array.prototype.forEach.call(newBtns, function (btn) {
       btn.addEventListener('click', function () {
+        clearPendingFiles();
         renderConversation(null);
         highlightActiveConv();
         if (inputEl) inputEl.focus();
@@ -433,6 +586,13 @@
     });
 
     root.addEventListener('click', function (e) {
+      var rmFileBtn = e.target.closest('[data-ai-rm-file]');
+      if (rmFileBtn) {
+        e.preventDefault();
+        removePendingFile(Number(rmFileBtn.getAttribute('data-ai-rm-file')));
+        return;
+      }
+
       var starter = e.target.closest('[data-ai-prompt]');
       if (starter) {
         e.preventDefault();

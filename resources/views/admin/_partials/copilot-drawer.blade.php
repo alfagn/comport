@@ -85,12 +85,24 @@
   </div>
 
   <div class="ai-composer-wrap" style="padding:10px 16px 14px;">
-    <form class="ai-composer" data-ai-form>
-      <span class="ai-composer__spark" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
-        </svg>
-      </span>
+    <div class="ai-attachments-tray" data-ai-attachments-preview hidden></div>
+    <form class="ai-composer" data-ai-form enctype="multipart/form-data">
+      <input
+        type="file"
+        data-ai-file-input
+        multiple
+        hidden
+        accept="image/*,.pdf,.txt,.md,.log,.json,.csv,.xml,.sql,.php,.js,.ts,.css,.html,.yml,.yaml"
+      />
+      <button
+        type="button"
+        class="ai-composer__attach"
+        data-ai-attach-btn
+        title="Attach files or screenshots"
+        aria-label="Attach files"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+      </button>
       <label for="ai-drawer-input" class="ai-sr-only">Ask Copilot</label>
       <textarea
         id="ai-drawer-input"
@@ -98,7 +110,7 @@
         data-ai-input
         rows="1"
         dir="auto"
-        placeholder="Ask Copilot… (العربية / English)"
+        placeholder="Ask technical questions, attach files, or run tasks… (العربية / English)"
       ></textarea>
       <button type="submit" class="ai-composer__send" data-ai-send title="Send" aria-label="Send">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>

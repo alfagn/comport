@@ -7,6 +7,8 @@ use App\Ai\Tools\Dashboard\CreateBlogPostDraft;
 use App\Ai\Tools\Dashboard\CreateJobPostDraft;
 use App\Ai\Tools\Dashboard\DeleteInboxMessage;
 use App\Ai\Tools\Dashboard\GetDashboardOverview;
+use App\Ai\Tools\Dashboard\InspectProjectCodeAndLogs;
+use App\Ai\Tools\Dashboard\InspectTechnicalArchitecture;
 use App\Ai\Tools\Dashboard\MarkInboxMessagesRead;
 use App\Ai\Tools\Dashboard\ReadInboxMessage;
 use App\Ai\Tools\Dashboard\SearchInboxMessages;
@@ -24,6 +26,8 @@ use App\Models\User;
 use App\Services\PageStatusService;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Approvals\PendingApproval;
 use Laravel\Ai\Prompts\AgentPrompt;
 use Laravel\Ai\Responses\AgentResponse;
@@ -255,5 +259,98 @@ class DashboardAssistantTest extends TestCase
         // Delete conversation
         $this->actingAs($adminA)->deleteJson("/admin/assistant/conversations/{$conversationId}")->assertOk();
         $this->assertDatabaseMissing('agent_conversations', ['id' => $conversationId]);
+    }
+
+    public function test_technical_architecture_and_code_inspection_tools_work_and_block_sensitive_paths(): void
+    {
+        $owner = $this->owner();
+
+        $archTool = new InspectTechnicalArchitecture($owner);
+        $overview = json_decode((string) $archTool->handle(new ToolRequest(['topic' => 'overview'])), true);
+        $this->assertArrayHasKey('architecture_stack', $overview);
+
+        $routes = json_decode((string) $archTool->handle(new ToolRequest(['topic' => 'routes', 'filter' => 'assistant'])), true);
+        $this->assertGreaterThan(0, $routes['count_returned']);
+
+        $db = json_decode((string) $archTool->handle(new ToolRequest(['topic' => 'database', 'filter' => 'support_chat_sessions'])), true);
+        $this->assertArrayHasKey('support_chat_sessions', $db['tables']);
+
+        $codeTool = new InspectProjectCodeAndLogs($owner);
+        $readResult = json_decode((string) $codeTool->handle(new ToolRequest([
+            'action' => 'read_file',
+            'path' => 'routes/web.php',
+            'start_line' => 1,
+            'end_line' => 25,
+        ])), true);
+        $this->assertSame('routes/web.php', $readResult['path']);
+        $this->assertStringContainsString('PageController', $readResult['content']);
+
+        $searchResult = json_decode((string) $codeTool->handle(new ToolRequest([
+            'action' => 'search_code',
+            'path' => 'app/Services',
+            'query' => 'DashboardAssistantService',
+        ])), true);
+        $this->assertGreaterThan(0, $searchResult['matches_count']);
+
+        // Sensitive paths (.env or path traversal) must be strictly blocked
+        $blockedEnv = json_decode((string) $codeTool->handle(new ToolRequest([
+            'action' => 'read_file',
+            'path' => '.env',
+        ])), true);
+        $this->assertArrayHasKey('error', $blockedEnv);
+
+        $blockedTraversal = json_decode((string) $codeTool->handle(new ToolRequest([
+            'action' => 'read_file',
+            'path' => '../.env',
+        ])), true);
+        $this->assertArrayHasKey('error', $blockedTraversal);
+    }
+
+    public function test_copilot_attachments_upload_download_and_auto_delete_with_session(): void
+    {
+        Storage::fake('local');
+
+        $adminA = $this->owner();
+        $adminB = $this->owner();
+
+        DashboardAssistantAgent::fake([
+            'I analyzed your architecture diagram and the error.log trace.',
+        ]);
+
+        $imageFile = UploadedFile::fake()->image('architecture.png', 120, 120);
+        $logFile = UploadedFile::fake()->createWithContent('error.log', 'RuntimeException: Undefined webhook key at line 42');
+
+        $res = $this->actingAs($adminA)->post('/admin/assistant/message', [
+            'prompt' => 'Check this screenshot and log file.',
+            'attachments' => [$imageFile, $logFile],
+        ], ['Accept' => 'application/json'])->assertOk()->json();
+
+        $conversationId = $res['conversation']['id'];
+        $userMessage = $res['conversation']['messages'][0];
+        $this->assertSame('Check this screenshot and log file.', $userMessage['content']);
+        $this->assertCount(2, $userMessage['attachments']);
+
+        $filesInStorage = Storage::disk('local')->files("copilot-attachments/{$conversationId}");
+        $this->assertCount(2, $filesInStorage);
+
+        // Owner can download/preview attachment; another admin is blocked (404)
+        $firstAttFilename = $userMessage['attachments'][0]['filename'];
+        $this->actingAs($adminA)
+            ->get("/admin/assistant/conversations/{$conversationId}/attachments/{$firstAttFilename}")
+            ->assertOk();
+
+        $this->actingAs($adminB)
+            ->get("/admin/assistant/conversations/{$conversationId}/attachments/{$firstAttFilename}")
+            ->assertNotFound();
+
+        // Deleting the session must wipe all attachments for that session from storage
+        $this->actingAs($adminA)
+            ->deleteJson("/admin/assistant/conversations/{$conversationId}")
+            ->assertOk();
+
+        foreach ($filesInStorage as $storedPath) {
+            Storage::disk('local')->assertMissing($storedPath);
+        }
+        $this->assertSame([], Storage::disk('local')->files("copilot-attachments/{$conversationId}"));
     }
 }

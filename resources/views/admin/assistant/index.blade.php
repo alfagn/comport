@@ -149,23 +149,23 @@
           </div>
         </div>
 
-        <span class="ai-empty__kicker">Empetix Neural Operations</span>
+        <span class="ai-empty__kicker">Empetix Neural Operations &amp; Technical Architect</span>
         <h3 class="ai-empty__title">Ready when you are, {{ explode(' ', trim($currentAdminName))[0] }}.</h3>
-        <p class="ai-empty__sub">Delegate CMS workflows in Arabic or English — inspect client briefs, review applicants, dispatch WhatsApp messages, or draft content.</p>
+        <p class="ai-empty__sub">Ask any technical question about the platform (routes, database schema, code, logs), upload screenshots/files for analysis, or delegate CMS &amp; WhatsApp operations.</p>
 
         <div class="ai-starters">
-          {{-- 1. Executive Overview --}}
-          <button type="button" class="ai-starter-btn" data-ai-prompt="Give me a complete dashboard overview: unread briefs, new job applications, and today's support chats.">
+          {{-- 1. Technical Architecture & Logs --}}
+          <button type="button" class="ai-starter-btn" data-ai-prompt="Inspect the technical architecture of our website: summarize the backend stack, database tables, AI/WhatsApp integration, and check if there are any recent errors in laravel.log.">
             <span class="ai-starter-btn__ico ai-starter-btn__ico--orange" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 3v18h18"/>
-                <path d="m7 15 4-4 3 3 5-6"/>
-                <circle cx="19" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+                <line x1="14" y1="4" x2="10" y2="20"/>
               </svg>
             </span>
             <span class="ai-starter-btn__copy">
-              <strong>Executive Overview</strong>
-              <span>Live KPIs, unread briefs &amp; today's support activity</span>
+              <strong>Technical Architecture &amp; Logs</strong>
+              <span>Inspect stack, routes, DB schema, code &amp; laravel.log</span>
             </span>
             <span class="ai-starter-btn__arrow" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
@@ -173,7 +173,7 @@
           </button>
 
           {{-- 2. Triage Client Briefs --}}
-          <button type="button" class="ai-starter-btn" data-ai-prompt="Show me the latest unread inbox briefs and summarize what each client is asking for.">
+          <button type="button" class="ai-starter-btn" data-ai-prompt="Give me a complete dashboard overview and summarize the latest unread client briefs and support chats.">
             <span class="ai-starter-btn__ico ai-starter-btn__ico--blue" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
@@ -181,8 +181,8 @@
               </svg>
             </span>
             <span class="ai-starter-btn__copy">
-              <strong>Triage Client Briefs</strong>
-              <span>Read &amp; summarize incoming project inquiries</span>
+              <strong>Executive Overview &amp; Briefs</strong>
+              <span>Live KPIs, unread inquiries &amp; active support threads</span>
             </span>
             <span class="ai-starter-btn__arrow" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
@@ -228,12 +228,24 @@
     </div>
 
     <div class="ai-composer-wrap">
-      <form class="ai-composer" data-ai-form>
-        <span class="ai-composer__spark" aria-hidden="true">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
-          </svg>
-        </span>
+      <div class="ai-attachments-tray" data-ai-attachments-preview hidden></div>
+      <form class="ai-composer" data-ai-form enctype="multipart/form-data">
+        <input
+          type="file"
+          data-ai-file-input
+          multiple
+          hidden
+          accept="image/*,.pdf,.txt,.md,.log,.json,.csv,.xml,.sql,.php,.js,.ts,.css,.html,.yml,.yaml"
+        />
+        <button
+          type="button"
+          class="ai-composer__attach"
+          data-ai-attach-btn
+          title="Attach images, screenshots, logs, PDFs, or code files (deleted automatically when session is deleted)"
+          aria-label="Attach files"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
         <label for="ai-workspace-input" class="ai-sr-only">Message Empetix Copilot</label>
         <textarea
           id="ai-workspace-input"
@@ -241,14 +253,14 @@
           data-ai-input
           rows="1"
           dir="auto"
-          placeholder="Ask Copilot to run a task, inspect briefs, or draft content… (العربية / English)"
+          placeholder="Ask any technical question, attach screenshots/logs/code, or run CMS tasks… (العربية / English)"
         ></textarea>
         <button type="submit" class="ai-composer__send" data-ai-send title="Send message" aria-label="Send message">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         </button>
       </form>
       <div class="ai-composer-hint">
-        <span>Press <kbd>Enter</kbd> to send &middot; <kbd>Shift + Enter</kbd> for new line</span>
+        <span><kbd>Enter</kbd> to send &middot; Paste or attach up to 5 files (auto-deleted when session is deleted)</span>
         <span class="ai-composer-hint__guard">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Destructive &amp; public actions always ask for approval

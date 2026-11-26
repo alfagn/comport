@@ -253,4 +253,53 @@ class CustomerSupportChatbotTest extends TestCase
         $this->assertDatabaseMissing('support_chat_sessions', ['id' => $session->id]);
         $this->assertDatabaseMissing('agent_conversations', ['id' => $convId]);
     }
+
+    public function test_realtime_typing_presence_live_stream_and_human_takeover(): void
+    {
+        Setting::setValue('ai_support_enabled', '1', 'ai');
+        $owner = $this->owner();
+
+        // 1. Visitor starts typing on the website -> creates live session token & typing presence
+        $typingRes = $this->postJson('/support-chat/typing', [
+            'is_typing' => true,
+            'preview' => 'عايز اسأل عن تكلفة بناء منصة',
+            'landing_page' => '/services',
+        ])->assertOk()->json();
+
+        $token = $typingRes['token'];
+        $this->assertNotEmpty($token);
+        $this->assertTrue($typingRes['presence']['customer_typing']);
+
+        $session = SupportChatSession::query()->where('token', $token)->firstOrFail();
+
+        // 2. Admin dashboard live-pulse and live session endpoint immediately reflect customer typing
+        $this->actingAs($owner)->getJson('/admin/support-chats/live-pulse')
+            ->assertOk()
+            ->assertJsonPath('active_typing.0.id', $session->id)
+            ->assertJsonPath('active_typing.0.customer_typing', true);
+
+        $this->actingAs($owner)->getJson("/admin/support-chats/{$session->id}/live")
+            ->assertOk()
+            ->assertJsonPath('presence.customer_typing', true)
+            ->assertJsonPath('presence.customer_preview', 'عايز اسأل عن تكلفة بناء منصة');
+
+        // 3. Admin types and sends a live human reply from the dashboard -> pauses AI & streams to visitor
+        $this->actingAs($owner)->postJson("/admin/support-chats/{$session->id}/typing", [
+            'is_typing' => true,
+        ])->assertOk()->assertJsonPath('presence.admin_typing', true);
+
+        $this->actingAs($owner)->postJson("/admin/support-chats/{$session->id}/reply", [
+            'message' => 'أهلاً بك! أنا معك مباشرة من فريق الهندسة في Empetix.',
+            'pause_ai' => true,
+        ])->assertOk()
+            ->assertJsonPath('session.ai_paused', true)
+            ->assertJsonCount(1, 'messages');
+
+        // 4. Visitor polling /support-chat/session receives the human specialist reply immediately
+        $this->getJson("/support-chat/session?token={$token}")
+            ->assertOk()
+            ->assertJsonPath('session.ai_paused', true)
+            ->assertJsonCount(1, 'session.messages')
+            ->assertJsonPath('session.messages.0.source', 'human_agent');
+    }
 }
