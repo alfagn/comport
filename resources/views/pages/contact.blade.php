@@ -194,7 +194,7 @@
 
             <div class="contact-block">
               <span class="contact-block__title">{{ sec('contact', 'hotline_title', 'Immediate Executive Hotline') }}</span>
-              <a href="tel:{{ setting('phone', '+20227928400') }}" class="contact-block__big">{{ setting('phone', '+20 2 2792 8400') }}</a>
+              <a href="tel:{{ setting('phone', '+201055209612') }}" class="contact-block__big">{{ setting('phone', '+20 105 520 9612') }}</a>
               <p class="t-small">{{ sec('contact', 'hotline_hours', 'Sunday – Thursday, 09:00 – 18:00 Cairo / Riyadh Time.') }}</p>
             </div>
           </aside>
@@ -237,7 +237,7 @@
               </div>
               <div class="hq-showcase__row">
                 <span>Direct Telephone</span>
-                <span><a href="tel:{{ setting('phone', '+20227928400') }}" class="text-link">{{ setting('phone', '+20 2 2792 8400') }}</a></span>
+                <span><a href="tel:{{ setting('phone', '+201055209612') }}" class="text-link">{{ setting('phone', '+20 105 520 9612') }}</a></span>
               </div>
               <div class="hq-showcase__row">
                 <span>New Business Desk</span>

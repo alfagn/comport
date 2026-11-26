@@ -597,7 +597,7 @@
             <svg class="foot-hq__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3.5 2.5H6.5L8 6L6 7.5C6.8 9.2 8.3 10.7 10 11.5L11.5 9.5L15 11V14C15 14.5 14.5 15 13.8 15C7.2 14.6 2.9 10.3 2.5 3.7C2.5 3 3 2.5 3.5 2.5Z" stroke="currentColor" stroke-width="1.4"/>
             </svg>
-            <a href="tel:{{ setting('phone', '+20227928400') }}">{{ setting('phone', '+20 2 2792 8400') }}</a>
+            <a href="tel:{{ setting('phone', '+201055209612') }}">{{ setting('phone', '+20 105 520 9612') }}</a>
           </div>
         </div>
       </div>
