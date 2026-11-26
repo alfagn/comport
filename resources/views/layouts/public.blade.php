@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="facebook-domain-verification" content="bvdfe0u00d59bquv5ky6k4375wfygg" />
   @if(setting('seo_allow_indexing', '1') === '0')
     <meta name="robots" content="noindex, nofollow"/>
   @else
