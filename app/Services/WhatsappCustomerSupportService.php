@@ -137,7 +137,7 @@ class WhatsappCustomerSupportService
 
         $session->forceFill([
             'unread_count' => $nextUnreadCount,
-            'last_external_message_id' => $messageId ?: $session->last_external_message_id,
+            'last_external_message_id' => $messageId !== '' ? Str::limit($messageId, 135, '') : $session->last_external_message_id,
             'last_message_preview' => $inboundRecord->previewLabel(),
             'last_customer_message_at' => now(),
             'last_message_at' => now(),

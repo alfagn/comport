@@ -560,9 +560,10 @@ class WhatsappCloudApiService
 
                 $contactsByWaId = [];
                 foreach ((array) ($value['contacts'] ?? []) as $contact) {
-                    $waId = (string) ($contact['wa_id'] ?? '');
-                    if ($waId !== '') {
-                        $contactsByWaId[$waId] = [
+                    $rawWaId = (string) ($contact['wa_id'] ?? ($contact['user_id'] ?? ''));
+                    $normContactId = $this->normalizePhone($rawWaId) ?: trim($rawWaId);
+                    if ($normContactId !== '') {
+                        $contactsByWaId[$normContactId] = [
                             'name' => $contact['profile']['name'] ?? null,
                             'username' => $contact['profile']['username'] ?? ($contact['username'] ?? null),
                             'avatar' => $contact['profile']['picture_url'] ?? ($contact['profile']['avatar'] ?? null),
@@ -571,11 +572,12 @@ class WhatsappCloudApiService
                 }
 
                 foreach ((array) ($value['messages'] ?? []) as $msg) {
-                    $from = (string) ($msg['from'] ?? '');
+                    $from = (string) ($msg['from'] ?? ($msg['from_user_id'] ?? ''));
+                    $normFrom = $this->normalizePhone($from) ?: trim($from);
                     $messageId = (string) ($msg['id'] ?? '');
                     $type = (string) ($msg['type'] ?? 'unknown');
 
-                    if ($from === '' || $messageId === '') {
+                    if ($normFrom === '' || $messageId === '') {
                         continue;
                     }
 
@@ -613,10 +615,10 @@ class WhatsappCloudApiService
                         ];
                     }
 
-                    $contactInfo = $contactsByWaId[$from] ?? [];
+                    $contactInfo = $contactsByWaId[$normFrom] ?? ($contactsByWaId[$from] ?? []);
 
                     $extracted[] = [
-                        'wa_id' => $this->normalizePhone($from),
+                        'wa_id' => $normFrom,
                         'profile_name' => $contactInfo['name'] ?? null,
                         'username' => $contactInfo['username'] ?? null,
                         'avatar_url' => $contactInfo['avatar'] ?? null,
