@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\AiUsageLog;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\AiRuntimeGuard;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -165,6 +166,12 @@ class AiMonitorTest extends TestCase
         $this->assertSame(55, $json['kpis']['output_tokens']);
         $this->assertSame(1, $json['kpis']['failover_count']);
         $this->assertSame(2, $json['kpis']['error_count']);
+
+        // OpenAI has a 401 error logged above, so Circuit Breaker must auto-quarantine it out of live failover chain
+        config(['ai.providers.openai.key' => 'sk-broken-key']);
+        $liveChain = app(AiRuntimeGuard::class)->providerChainFor('support', 'gemini');
+        $this->assertIsArray($liveChain);
+        $this->assertArrayNotHasKey('openai', $liveChain);
 
         // Clearing errors removes failover/error rows while keeping valid token usage intact
         $this->actingAs($owner)

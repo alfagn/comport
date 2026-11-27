@@ -477,9 +477,12 @@
           </div>
 
           @if($slot['latest_issue'])
-            <div style="margin-top:12px;padding:9px 11px;border-radius:10px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);font-size:0.75rem;">
-              <div style="font-weight:700;color:#b91c1c;margin-bottom:2px;">⚠ {{ $slot['latest_issue']['badge'] }} ({{ $slot['latest_issue']['ago'] }})</div>
-              <div style="color:#7f1d1d;direction:rtl;text-align:right;">{{ $slot['latest_issue']['title_ar'] }}</div>
+            <div style="margin-top:12px;padding:9px 11px;border-radius:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.26);font-size:0.75rem;">
+              <div style="font-weight:700;color:#EF4444;margin-bottom:3px;">⚠ {{ $slot['latest_issue']['badge'] }} ({{ $slot['latest_issue']['ago'] }})</div>
+              <div style="color:var(--ink, #b91c1c);opacity:0.9;direction:rtl;text-align:right;">{{ $slot['latest_issue']['title_ar'] }}</div>
+              @if(! empty($slot['latest_issue']['message']))
+                <div style="margin-top:5px;font-family:monospace;font-size:0.69rem;opacity:0.75;word-break:break-word;">{{ \Illuminate\Support\Str::limit($slot['latest_issue']['message'], 135) }}</div>
+              @endif
             </div>
           @endif
         </div>

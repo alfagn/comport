@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\AiUsageLog;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 /**
@@ -15,7 +17,7 @@ final class AiRuntimeGuard
 {
     private const ENCRYPTED_PREFIX = 'enc:v1:';
 
-    public const DEFAULT_FAILOVER_CHAIN = 'gemini-fallback,deepseek,openai,anthropic,xai';
+    public const DEFAULT_FAILOVER_CHAIN = 'gemini-fallback,gemini,deepseek,openai,anthropic,xai';
 
     /**
      * Isolated & emergency API key slots configurable via `.env` or System Settings.
@@ -164,6 +166,8 @@ final class AiRuntimeGuard
         ];
 
         if ($this->isFailoverEnabled()) {
+            $quarantined = $this->quarantinedProviders();
+
             foreach ($this->configuredFailoverOrder() as $fallbackProvider) {
                 if ($fallbackProvider === $primary || array_key_exists($fallbackProvider, $candidates)) {
                     continue;
@@ -173,8 +177,23 @@ final class AiRuntimeGuard
                     continue;
                 }
 
-                $candidates[$fallbackProvider] = $fallbackProvider === 'gemini-fallback'
-                    ? (string) config('ai.providers.gemini-fallback.models.text.default', 'gemini-3.1-flash-lite')
+                // Skip emergency providers currently quarantined due to 401 Invalid Key or 402 Zero Balance
+                if (isset($quarantined[$fallbackProvider])) {
+                    continue;
+                }
+
+                // Avoid adding shared `gemini` fallback if its API key is identical to an already-queued Gemini slot
+                if ($fallbackProvider === 'gemini') {
+                    $sharedKey = (string) config('ai.providers.gemini.key', '');
+                    $primaryKey = (string) config("ai.providers.{$primary}.key", '');
+                    $backupKey = (string) config('ai.providers.gemini-fallback.key', '');
+                    if ($sharedKey === '' || $sharedKey === $primaryKey || (isset($candidates['gemini-fallback']) && $sharedKey === $backupKey)) {
+                        continue;
+                    }
+                }
+
+                $candidates[$fallbackProvider] = in_array($fallbackProvider, ['gemini-fallback', 'gemini'], true)
+                    ? (string) config("ai.providers.{$fallbackProvider}.models.text.default", 'gemini-3.1-flash-lite')
                     : null;
             }
         }
@@ -356,6 +375,50 @@ final class AiRuntimeGuard
         };
 
         return "AI provider [{$name}] is not configured yet. Add {$envVar} to your .env file or paste the key in System Settings → Chatbot & AI.";
+    }
+
+    /**
+     * Identify providers whose most recent telemetry event in the last 60 minutes
+     * was a hard `401 Invalid API Key` or `402 Insufficient Credits`, so live traffic
+     * skips broken emergency keys until credits/keys are fixed or re-probed (`200 OK`).
+     *
+     * @return array<string, string>
+     */
+    public function quarantinedProviders(): array
+    {
+        try {
+            if (! Schema::hasTable('ai_usage_logs')) {
+                return [];
+            }
+
+            $recent = AiUsageLog::query()
+                ->where('created_at', '>=', now()->subMinutes(60))
+                ->orderByDesc('id')
+                ->limit(100)
+                ->get(['provider', 'status', 'error_category']);
+
+            $seen = [];
+            $quarantined = [];
+
+            foreach ($recent as $row) {
+                $prov = (string) $row->provider;
+                if (isset($seen[$prov])) {
+                    continue;
+                }
+                $seen[$prov] = true;
+
+                if (
+                    in_array($row->status, [AiUsageLog::STATUS_ERROR, AiUsageLog::STATUS_FAILOVER], true)
+                    && in_array($row->error_category, ['invalid_key_401', 'quota_credits_402'], true)
+                ) {
+                    $quarantined[$prov] = (string) $row->error_category;
+                }
+            }
+
+            return $quarantined;
+        } catch (Throwable) {
+            return [];
+        }
     }
 
     private function sanitizeFailoverChain(string $chain): string

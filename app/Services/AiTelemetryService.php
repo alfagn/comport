@@ -13,7 +13,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Laravel\Ai\Attributes\MaxTokens;
 use Laravel\Ai\Contracts\Agent;
+use Laravel\Ai\Contracts\HasProviderOptions;
+use Laravel\Ai\Enums\Lab;
 use Laravel\Ai\Events\AgentFailed;
 use Laravel\Ai\Events\AgentFailedOver;
 use Laravel\Ai\Events\AgentPrompted;
@@ -23,9 +26,8 @@ use Laravel\Ai\Exceptions\InvalidApiKeyException;
 use Laravel\Ai\Exceptions\ProviderConnectionException;
 use Laravel\Ai\Exceptions\ProviderOverloadedException;
 use Laravel\Ai\Exceptions\RateLimitedException;
+use Laravel\Ai\Promptable;
 use Throwable;
-
-use function Laravel\Ai\agent;
 
 /**
  * Real-time AI Quota, Token Usage & Model Error Diagnostics engine.
@@ -303,8 +305,27 @@ final class AiTelemetryService
 
                 $startedAt = hrtime(true);
                 try {
-                    $response = agent(instructions: 'System health probe. Reply strictly with the single word OK.')
-                        ->prompt('Ping', provider: $providerSlot, timeout: 15);
+                    $probeAgent = new #[MaxTokens(12)] class implements Agent, HasProviderOptions
+                    {
+                        use Promptable;
+
+                        public function instructions(): string
+                        {
+                            return 'System health probe. Reply strictly with OK.';
+                        }
+
+                        /**
+                         * @return array<string, mixed>
+                         */
+                        public function providerOptions(Lab|string $provider): array
+                        {
+                            $driver = $provider instanceof Lab ? $provider->value : $provider;
+
+                            return str_starts_with($driver, 'gemini') ? ['thinking_level' => 'minimal'] : [];
+                        }
+                    };
+
+                    $response = $probeAgent->prompt('OK', provider: $providerSlot, timeout: 25);
 
                     $elapsedMs = (int) round((hrtime(true) - $startedAt) / 1_000_000);
                     $resolvedModel = $response->meta->model ?: 'default';

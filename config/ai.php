@@ -117,7 +117,7 @@ return [
 
         'gemini' => [
             'driver' => 'gemini',
-            'key' => env('GEMINI_SUPPORT_API_KEY') ?: env('GEMINI_API_KEY'),
+            'key' => env('GEMINI_API_KEY') ?: env('GEMINI_SUPPORT_API_KEY'),
             'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
             'models' => [
                 'text' => [
