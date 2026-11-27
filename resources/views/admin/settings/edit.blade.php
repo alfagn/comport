@@ -777,6 +777,7 @@
             <h2 class="card__title" style="margin:0;">Isolated API Keys &amp; Emergency Failover Vault</h2>
             <p class="card__sub" style="margin-bottom:0;">Separate Gemini keys per service to isolate quotas, plus emergency keys for DeepSeek, OpenAI, Claude &amp; Grok. Saved keys are encrypted with AES-256; leave any field blank to keep its current key.</p>
           </div>
+          <a href="{{ route('admin.ai-monitor.index') }}" class="btn btn--ghost btn--sm" wire:navigate>📊 Live Quota &amp; Model Issues &rarr;</a>
         </div>
 
         @if(! empty($activeSupportChain))

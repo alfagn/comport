@@ -203,6 +203,16 @@
       <span class="nav-item__text">AI Copilot</span>
     </a>
     @endcan
+    @if(auth()->user()?->can('manage settings') || auth()->user()?->can('manage support chats'))
+    @php($aiIssues24h = app(\App\Services\AiTelemetryService::class)->recentIssueCount24h())
+    <a class="nav-item {{ str_starts_with($r, 'admin.ai-monitor.') ? 'is-active' : '' }}" href="{{ route('admin.ai-monitor.index') }}" wire:navigate>
+      <span class="nav-ico" style="width:22px;height:22px;border-radius:7px;background:linear-gradient(145deg,#F97316,#EC4899);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(249,115,22,0.32);" aria-hidden="true">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </span>
+      <span class="nav-item__text">AI Quota &amp; Health</span>
+      @if($aiIssues24h > 0)<span class="badge" style="background:#EF4444;color:#fff;font-weight:800;">{{ $aiIssues24h }}</span>@endif
+    </a>
+    @endif
     @can('manage pages')
     <a class="nav-item {{ str_starts_with($r, 'admin.pages') ? 'is-active' : '' }}" href="{{ route('admin.pages.index') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-document.png') }}" alt="" width="22" height="22"/>

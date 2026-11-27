@@ -221,6 +221,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/applications/{id}', [Admin\ApplicationController::class, 'destroy'])->name('applications.destroy');
         });
 
+        // AI Quota, Token Telemetry & Per-Model Health / Error Monitor.
+        Route::middleware('permission:manage settings|manage support chats')->prefix('ai-monitor')->name('ai-monitor.')->group(function () {
+            Route::get('/', [Admin\AiMonitorController::class, 'index'])->name('index');
+            Route::post('/probe', [Admin\AiMonitorController::class, 'probe'])->name('probe');
+            Route::delete('/errors', [Admin\AiMonitorController::class, 'clearErrors'])->name('clear-errors');
+        });
+
         // System Settings Hub (Cards for General, WhatsApp & Chatbot), SEO & Sitemap.
         Route::middleware('permission:manage settings')->group(function () {
             Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('settings.edit');

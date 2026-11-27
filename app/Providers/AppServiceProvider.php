@@ -5,13 +5,17 @@ namespace App\Providers;
 use App\Models\User;
 use App\Repositories\Contracts;
 use App\Repositories\Eloquent;
+use App\Services\AiTelemetryService;
 use App\Support\Permissions;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Ai\Events\AgentFailed;
 use Laravel\Ai\Events\AgentFailedOver;
+use Laravel\Ai\Events\AgentPrompted;
+use Laravel\Ai\Events\PromptingAgent;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Mime\MimeTypes;
 
@@ -50,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
     /** Register any application services. */
     public function register(): void
     {
-        //
+        $this->app->singleton(AiTelemetryService::class);
     }
 
     /** Bootstrap any application services. */
@@ -148,8 +152,18 @@ class AppServiceProvider extends ServiceProvider
             'connect_timeout' => 8,
         ]);
 
-        // Log automatic AI emergency failovers (e.g. Gemini 503 -> Secondary Gemini / DeepSeek / OpenAI / Claude / Grok).
+        // Record real-time AI token quota, latency, upstream errors, and emergency failovers.
+        Event::listen(PromptingAgent::class, function (PromptingAgent $event): void {
+            app(AiTelemetryService::class)->recordPrompting($event);
+        });
+
+        Event::listen(AgentPrompted::class, function (AgentPrompted $event): void {
+            app(AiTelemetryService::class)->recordSuccess($event);
+        });
+
         Event::listen(AgentFailedOver::class, function (AgentFailedOver $event): void {
+            app(AiTelemetryService::class)->recordFailover($event);
+
             Log::warning('AI emergency failover triggered', [
                 'invocation_id' => $event->invocationId,
                 'agent' => $event->agent::class,
@@ -157,6 +171,10 @@ class AppServiceProvider extends ServiceProvider
                 'failed_model' => $event->model,
                 'error' => $event->exception->getMessage(),
             ]);
+        });
+
+        Event::listen(AgentFailed::class, function (AgentFailed $event): void {
+            app(AiTelemetryService::class)->recordFailure($event);
         });
 
         // RBAC: the owner role implicitly holds every permission. All other
