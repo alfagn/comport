@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'System Settings')
-@section('crumb', 'Unified configuration hub for General Identity, WhatsApp Cloud API & AI Chatbot')
+@section('page_header', 'hide')
 
 @section('content')
 @php
@@ -38,118 +38,298 @@
   ];
 
   $webWidgetLive = setting('ai_support_enabled', '1') !== '0';
+  $cleanDomain = preg_replace('#^https?://#i', '', rtrim((string) setting('site_domain', 'empetix.com'), '/')) ?: 'empetix.com';
 @endphp
 
 <style>
+  [data-settings-hub][hidden],
+  [data-settings-backbar][hidden],
+  [data-settings-panel][hidden] {
+    display: none !important;
+  }
+
+  .sys-hub-head {
+    margin-bottom: 26px;
+  }
+
   .sys-hub-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    margin-top: 4px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
   }
+
+  @media (max-width: 1080px) {
+    .sys-hub-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .sys-hub-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .sys-hub-card {
+    --card-accent: #FF4D1C;
+    --card-glow: rgba(255, 77, 28, 0.24);
     position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 18px;
-    padding: 26px 26px 22px;
-    border-radius: 20px;
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    box-shadow: 0 12px 32px rgba(10, 16, 24, 0.06);
+    gap: 22px;
+    padding: 28px 26px 22px;
+    border-radius: 22px;
+    background: linear-gradient(165deg, #171412 0%, #0D0B0A 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 20px 48px rgba(10, 10, 12, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: #F5F1EC;
     cursor: pointer;
     text-align: left;
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    font-family: var(--font-body);
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
   }
+
+  .sys-hub-card::before {
+    content: "";
+    position: absolute;
+    top: -70px;
+    right: -60px;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--card-glow) 0%, transparent 68%);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    opacity: 0.75;
+  }
+
+  .sys-hub-card--wa {
+    --card-accent: #25D366;
+    --card-glow: rgba(37, 211, 102, 0.24);
+  }
+
+  .sys-hub-card--ai {
+    --card-accent: #8B5CF6;
+    --card-glow: rgba(139, 92, 246, 0.26);
+  }
+
   .sys-hub-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(255, 77, 28, 0.45);
-    box-shadow: 0 20px 44px rgba(10, 16, 24, 0.12);
+    transform: translateY(-5px);
+    border-color: var(--card-accent);
+    box-shadow: 0 28px 56px rgba(10, 10, 12, 0.28), 0 0 0 1px var(--card-accent);
   }
-  .sys-hub-card--wa:hover {
-    border-color: rgba(37, 211, 102, 0.55);
+
+  .sys-hub-card:hover::before {
+    opacity: 1;
+    transform: scale(1.12);
   }
-  .sys-hub-card--ai:hover {
-    border-color: rgba(124, 58, 237, 0.55);
-  }
+
   .sys-hub-card__top {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
   }
+
   .sys-hub-card__icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 15px;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: #FFFFFF;
     flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.18);
   }
-  .sys-hub-card__title {
-    margin: 14px 0 6px;
-    font-family: var(--font-display);
-    font-size: 1.18rem;
+
+  .sys-hub-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(245, 241, 236, 0.88);
+  }
+
+  .sys-hub-badge--ok {
+    background: rgba(37, 211, 102, 0.14);
+    border-color: rgba(37, 211, 102, 0.36);
+    color: #4ADE80;
+  }
+
+  .sys-hub-badge--ai {
+    background: rgba(139, 92, 246, 0.16);
+    border-color: rgba(139, 92, 246, 0.38);
+    color: #C4B5FD;
+  }
+
+  .sys-hub-badge--warn {
+    background: rgba(251, 191, 36, 0.14);
+    border-color: rgba(251, 191, 36, 0.36);
+    color: #FCD34D;
+  }
+
+  .sys-hub-card__kicker {
+    position: relative;
+    z-index: 1;
+    display: block;
+    margin: 18px 0 6px;
+    font-size: 0.68rem;
     font-weight: 800;
-    color: var(--text);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245, 241, 236, 0.45);
   }
+
+  .sys-hub-card__title {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-size: 1.28rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+
   .sys-hub-card__desc {
+    position: relative;
+    z-index: 1;
     margin: 0;
-    font-size: 0.87rem;
-    line-height: 1.58;
-    color: var(--text-muted);
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: rgba(245, 241, 236, 0.66);
   }
+
+  .sys-hub-tags {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+
+  .sys-hub-tags span {
+    font-size: 0.71rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(245, 241, 236, 0.78);
+  }
+
   .sys-hub-card__foot {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
-    font-size: 0.83rem;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    font-size: 0.84rem;
     font-weight: 700;
-    color: var(--text);
+    color: #FFFFFF;
   }
+
+  .sys-hub-card__arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .sys-hub-card:hover .sys-hub-card__arrow {
+    background: var(--card-accent);
+    border-color: var(--card-accent);
+    color: #FFFFFF;
+    transform: translateX(3px);
+  }
+
+  /* Sleek Obsidian Command Bar shown ONLY inside an opened Card */
   .sys-section-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     padding: 12px 16px;
-    border-radius: 16px;
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
+    border-radius: 18px;
+    background: linear-gradient(165deg, #171412 0%, #0E0C0A 100%);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 12px 30px rgba(10, 10, 12, 0.14);
   }
+
+  .sys-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: 11px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-family: var(--font-body);
+    font-size: 0.83rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .sys-back-btn:hover {
+    background: rgba(255, 77, 28, 0.2);
+    border-color: rgba(255, 77, 28, 0.5);
+  }
+
   .sys-section-tabs {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    padding: 4px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     flex-wrap: wrap;
   }
+
   .sys-tab-pill {
-    border: 1px solid var(--line);
+    border: 0;
     background: transparent;
-    color: var(--text-muted);
+    color: rgba(245, 241, 236, 0.68);
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 700;
-    padding: 6px 13px;
-    border-radius: 999px;
+    padding: 7px 14px;
+    border-radius: 9px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.16s ease;
   }
+
+  .sys-tab-pill:hover {
+    color: #FFFFFF;
+  }
+
   .sys-tab-pill.is-active {
-    background: var(--text);
-    color: var(--surface);
-    border-color: var(--text);
-  }
-  [data-settings-hub][hidden],
-  [data-settings-panel][hidden] {
-    display: none !important;
+    background: #FF4D1C;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(255, 77, 28, 0.35);
   }
 </style>
 
@@ -157,23 +337,37 @@
 
   {{-- ==================== CARDS HUB VIEW (Default when clicking System Settings) ==================== --}}
   <div data-settings-hub @if($activeSection !== null) hidden @endif>
+    <div class="sys-hub-head">
+      <span class="welcome-pill">Control Center &middot; Configuration</span>
+      <h1 class="page-title">System Settings</h1>
+      <p class="page-sub">Select a module below to configure site identity, Meta WhatsApp Cloud API, or your AI Concierge &amp; Copilot.</p>
+    </div>
+
     <div class="sys-hub-grid">
 
       {{-- Card 1: General Settings --}}
       <button type="button" class="sys-hub-card" data-open-settings-card="general">
         <div>
           <div class="sys-hub-card__top">
-            <span class="sys-hub-card__icon" style="background:linear-gradient(145deg,#FF4D1C,#EA580C);box-shadow:0 8px 20px rgba(255,77,28,0.28);">
+            <span class="sys-hub-card__icon" style="background:linear-gradient(145deg,#FF5E36,#D9380F);box-shadow:0 10px 24px rgba(255,77,28,0.34);">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </span>
-            <span class="pill">{{ setting('site_domain', 'empetix.com') }}</span>
+            <span class="sys-hub-badge">🌐 {{ $cleanDomain }}</span>
           </div>
+          <span class="sys-hub-card__kicker">01 &middot; Core Platform</span>
           <h2 class="sys-hub-card__title">General Settings</h2>
-          <p class="sys-hub-card__desc">Official domain, brand logos &amp; favicon, studio contact desks, phone &amp; HQ address, social links, and cookie privacy banner.</p>
+          <p class="sys-hub-card__desc">Official website domain, light &amp; dark brand logos, contact emails, phone &amp; HQ address, social links, and cookie privacy.</p>
+          <div class="sys-hub-tags">
+            <span>Brand &amp; Logos</span>
+            <span>Contact Desks</span>
+            <span>Cookie Consent</span>
+          </div>
         </div>
         <div class="sys-hub-card__foot">
-          <span>Open General Settings</span>
-          <span aria-hidden="true">&rarr;</span>
+          <span>Configure General Settings</span>
+          <span class="sys-hub-card__arrow" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
         </div>
       </button>
 
@@ -181,19 +375,27 @@
       <button type="button" class="sys-hub-card sys-hub-card--wa" data-open-settings-card="whatsapp">
         <div>
           <div class="sys-hub-card__top">
-            <span class="sys-hub-card__icon" style="background:linear-gradient(145deg,#25D366,#128C7E);box-shadow:0 8px 20px rgba(37,211,102,0.28);">
+            <span class="sys-hub-card__icon" style="background:linear-gradient(145deg,#25D366,#0E8A5F);box-shadow:0 10px 24px rgba(37,211,102,0.32);">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.82 11.82 0 0 0 12.06 0C5.52 0 .2 5.32.2 11.86c0 2.09.55 4.13 1.59 5.93L0 24l6.38-1.67a11.83 11.83 0 0 0 5.68 1.45h.01c6.54 0 11.86-5.32 11.86-11.86 0-3.17-1.23-6.15-3.41-8.44ZM12.07 21.78h-.01a9.84 9.84 0 0 1-5.02-1.38l-.36-.21-3.79.99 1.01-3.69-.24-.38a9.83 9.83 0 0 1-1.51-5.25c0-5.44 4.43-9.87 9.88-9.87 2.64 0 5.12 1.03 6.98 2.9a9.81 9.81 0 0 1 2.89 6.98c0 5.44-4.43 9.91-9.83 9.91Zm5.41-7.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35Z"/></svg>
             </span>
-            <span class="pill" style="{{ $whatsappConfigured ? 'background:rgba(37,211,102,0.16);color:#15803d;' : 'background:rgba(245,158,11,0.16);color:#b45309;' }}">
+            <span class="sys-hub-badge {{ $whatsappConfigured ? 'sys-hub-badge--ok' : 'sys-hub-badge--warn' }}">
               {{ $whatsappConfigured ? ($whatsappEnabled ? '● Connected' : '⏸ Paused') : '⚠ Setup Needed' }}
             </span>
           </div>
+          <span class="sys-hub-card__kicker">02 &middot; Messaging Cloud</span>
           <h2 class="sys-hub-card__title">WhatsApp</h2>
-          <p class="sys-hub-card__desc">Meta WhatsApp Cloud API credentials, Phone Number ID, Business Account ID, permanent System User token, and live webhook status.</p>
+          <p class="sys-hub-card__desc">Meta WhatsApp Business Cloud API credentials, Phone Number ID, WABA ID, permanent System User token, and live webhooks.</p>
+          <div class="sys-hub-tags">
+            <span>Cloud API v22</span>
+            <span>Webhooks</span>
+            <span>wa.me Button</span>
+          </div>
         </div>
         <div class="sys-hub-card__foot">
-          <span>Open WhatsApp Settings</span>
-          <span aria-hidden="true">&rarr;</span>
+          <span>Configure WhatsApp API</span>
+          <span class="sys-hub-card__arrow" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
         </div>
       </button>
 
@@ -201,32 +403,43 @@
       <button type="button" class="sys-hub-card sys-hub-card--ai" data-open-settings-card="chatbot">
         <div>
           <div class="sys-hub-card__top">
-            <span class="sys-hub-card__icon" style="background:linear-gradient(145deg,#7C3AED,#4F46E5);box-shadow:0 8px 20px rgba(124,58,237,0.28);">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>
+            <span class="sys-hub-card__icon" style="background:linear-gradient(145deg,#8B5CF6,#4F46E5);box-shadow:0 10px 24px rgba(124,58,237,0.34);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5L14.35 8.65L20.5 11L14.35 13.35L12 19.5L9.65 13.35L3.5 11L9.65 8.65L12 2.5Z"/><path d="M19 3v4"/><path d="M21 5h-4"/></svg>
             </span>
-            <span class="pill">{{ $webWidgetLive ? '● Active: '.strtoupper($providerName) : '⏸ Widget Off' }}</span>
+            <span class="sys-hub-badge {{ $webWidgetLive ? 'sys-hub-badge--ai' : 'sys-hub-badge--warn' }}">
+              {{ $webWidgetLive ? '● Active: '.strtoupper($providerName) : '⏸ Widget Off' }}
+            </span>
           </div>
+          <span class="sys-hub-card__kicker">03 &middot; AI Intelligence</span>
           <h2 class="sys-hub-card__title">Chatbot &amp; AI</h2>
-          <p class="sys-hub-card__desc">Website AI Concierge greeting, public chat widget toggle, shared FAQ knowledge base, and LLM provider/model routing.</p>
+          <p class="sys-hub-card__desc">Website live AI Concierge greeting, public floating chat widget, shared studio FAQ knowledge base, and LLM model routing.</p>
+          <div class="sys-hub-tags">
+            <span>Live Concierge</span>
+            <span>Studio FAQ</span>
+            <span>Gemini / OpenAI</span>
+          </div>
         </div>
         <div class="sys-hub-card__foot">
-          <span>Open Chatbot Settings</span>
-          <span aria-hidden="true">&rarr;</span>
+          <span>Configure Chatbot &amp; AI</span>
+          <span class="sys-hub-card__arrow" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
         </div>
       </button>
 
     </div>
   </div>
 
-  {{-- ==================== SHARED TOP BACK BAR WHEN INSIDE A CARD ==================== --}}
+  {{-- ==================== SHARED TOP BAR (SHOWN ONLY INSIDE AN OPENED CARD) ==================== --}}
   <div class="sys-section-bar" data-settings-backbar @if($activeSection === null) hidden @endif>
-    <button type="button" class="btn btn--ghost btn--sm" data-back-to-cards>
-      &larr; Back to System Settings Cards
+    <button type="button" class="sys-back-btn" data-back-to-cards>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      <span>All System Settings</span>
     </button>
     <div class="sys-section-tabs">
       <button type="button" class="sys-tab-pill {{ $activeSection === 'general' ? 'is-active' : '' }}" data-open-settings-card="general">General Settings</button>
       <button type="button" class="sys-tab-pill {{ $activeSection === 'whatsapp' ? 'is-active' : '' }}" data-open-settings-card="whatsapp">WhatsApp</button>
-      <button type="button" class="sys-tab-pill {{ $activeSection === 'chatbot' ? 'is-active' : '' }}" data-open-settings-card="chatbot">Chatbot</button>
+      <button type="button" class="sys-tab-pill {{ $activeSection === 'chatbot' ? 'is-active' : '' }}" data-open-settings-card="chatbot">Chatbot &amp; AI</button>
     </div>
   </div>
 
