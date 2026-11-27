@@ -43,6 +43,13 @@ class SettingsController extends Controller
             ?: config('assistant.support.provider')
             ?: config('ai.default', 'openai');
 
+        $supportChain = $this->guard->providerChainFor(
+            role: 'support',
+            configuredProvider: is_string($provider) ? $provider : null,
+            configuredModel: Setting::getValue('ai_support_model'),
+        );
+        $primarySupport = is_array($supportChain) ? (string) array_key_first($supportChain) : $supportChain;
+
         return view('admin.settings.edit', [
             'activeSection' => $activeSection,
             'groups' => $this->settings->grouped(),
@@ -50,9 +57,13 @@ class SettingsController extends Controller
             'whatsappEnabled' => $this->whatsappApi->isEnabled(),
             'whatsappVerifyToken' => $this->whatsappApi->verifyToken(),
             'whatsappWebhookUrl' => url('/api/webhooks/whatsapp'),
-            'providerReady' => $this->guard->isReady($provider),
-            'providerName' => $this->guard->resolvedProvider($provider),
-            'providerHint' => $this->guard->missingCredentialsHint($provider),
+            'providerReady' => $this->guard->isReady($primarySupport),
+            'providerName' => $this->guard->resolvedProvider($primarySupport),
+            'providerHint' => $this->guard->missingCredentialsHint($primarySupport),
+            'aiKeyMatrix' => $this->guard->keyStatusMatrix(),
+            'aiFailoverEnabled' => $this->guard->isFailoverEnabled(),
+            'aiFailoverChain' => implode(',', $this->guard->configuredFailoverOrder()),
+            'activeSupportChain' => is_array($supportChain) ? array_keys($supportChain) : [$supportChain],
         ]);
     }
 
@@ -127,22 +138,14 @@ class SettingsController extends Controller
     }
 
     /**
-     * Persist Website AI Chatbot & Dashboard Copilot provider/behavior settings.
+     * Persist Website AI Chatbot, Dashboard Copilot, isolated API keys & emergency failover settings.
      */
     public function updateChatbot(SupportChatSettingsRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-
-        Setting::setValue('ai_support_enabled', ! empty($validated['ai_support_enabled']) ? '1' : '0', 'ai');
-        Setting::setValue('ai_support_greeting', $validated['ai_support_greeting'], 'ai');
-        Setting::setValue('ai_support_knowledge', $validated['ai_support_knowledge'] ?? '', 'ai');
-        Setting::setValue('ai_support_provider', $validated['ai_support_provider'] ?? null, 'ai');
-        Setting::setValue('ai_support_model', $validated['ai_support_model'] ?? null, 'ai');
-        Setting::setValue('ai_dashboard_provider', $validated['ai_dashboard_provider'] ?? null, 'ai');
-        Setting::setValue('ai_dashboard_model', $validated['ai_dashboard_model'] ?? null, 'ai');
+        $this->guard->saveChatbotAndKeySettings($request->validated());
 
         return redirect()
             ->route('admin.settings.edit', ['section' => 'chatbot'])
-            ->with('success', 'Chatbot behavior and AI provider settings saved.');
+            ->with('success', 'Chatbot behavior, isolated API keys, and emergency failover settings saved.');
     }
 }

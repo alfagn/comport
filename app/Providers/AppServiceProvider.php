@@ -6,9 +6,12 @@ use App\Models\User;
 use App\Repositories\Contracts;
 use App\Repositories\Eloquent;
 use App\Support\Permissions;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Ai\Events\AgentFailedOver;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Mime\MimeTypes;
 
@@ -144,6 +147,17 @@ class AppServiceProvider extends ServiceProvider
             'force_ip_resolve' => 'v4',
             'connect_timeout' => 8,
         ]);
+
+        // Log automatic AI emergency failovers (e.g. Gemini 503 -> Secondary Gemini / DeepSeek / OpenAI / Claude / Grok).
+        Event::listen(AgentFailedOver::class, function (AgentFailedOver $event): void {
+            Log::warning('AI emergency failover triggered', [
+                'invocation_id' => $event->invocationId,
+                'agent' => $event->agent::class,
+                'failed_provider' => $event->provider->name(),
+                'failed_model' => $event->model,
+                'error' => $event->exception->getMessage(),
+            ]);
+        });
 
         // RBAC: the owner role implicitly holds every permission. All other
         // roles fall through to their granted permissions only.

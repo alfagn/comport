@@ -21,6 +21,7 @@ use App\Ai\Tools\Dashboard\SetPageVisibility;
 use App\Ai\Tools\Dashboard\UpdateJobApplicationStatus;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\AiRuntimeGuard;
 use Laravel\Ai\Attributes\MaxSteps;
 use Laravel\Ai\Attributes\RepairToolCalls;
 use Laravel\Ai\Attributes\Temperature;
@@ -52,7 +53,7 @@ class DashboardAssistantAgent implements Agent, Conversational, HasProviderOptio
     public function __construct(public User $user) {}
 
     /**
-     * Resolve configured AI provider (with automatic Gemini overload failover).
+     * Resolve configured AI provider (with isolated Copilot key & emergency failover chain).
      *
      * @return array<string, string|null>|string|null
      */
@@ -62,14 +63,11 @@ class DashboardAssistantAgent implements Agent, Conversational, HasProviderOptio
             ?: config('assistant.dashboard.provider')
             ?: config('ai.default');
 
-        if ($configured === 'gemini' && filled($this->model())) {
-            return [
-                'gemini' => $this->model(),
-                'gemini-fallback' => 'gemini-3.1-flash-lite',
-            ];
-        }
-
-        return $configured;
+        return app(AiRuntimeGuard::class)->providerChainFor(
+            role: 'dashboard',
+            configuredProvider: is_string($configured) ? $configured : null,
+            configuredModel: $this->model(),
+        );
     }
 
     /**
@@ -149,7 +147,7 @@ PROMPT;
     {
         $driver = $provider instanceof Lab ? $provider->value : $provider;
 
-        if ($driver === 'gemini') {
+        if (str_starts_with($driver, 'gemini')) {
             return [
                 'thinking_level' => 'minimal',
             ];

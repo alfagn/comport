@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\SupportChatSession;
+use App\Services\AiRuntimeGuard;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Ai\Attributes\MaxSteps;
 use Laravel\Ai\Attributes\MaxTokens;
@@ -52,14 +53,11 @@ class CustomerSupportAgent implements Agent, Conversational, HasProviderOptions,
             ?: config('assistant.support.provider')
             ?: config('ai.default');
 
-        if ($configured === 'gemini' && filled($this->model())) {
-            return [
-                'gemini' => $this->model(),
-                'gemini-fallback' => 'gemini-3.1-flash-lite',
-            ];
-        }
-
-        return $configured;
+        return app(AiRuntimeGuard::class)->providerChainFor(
+            role: 'support',
+            configuredProvider: is_string($configured) ? $configured : null,
+            configuredModel: $this->model(),
+        );
     }
 
     public function model(): ?string
@@ -123,7 +121,7 @@ PROMPT;
     {
         $driver = $provider instanceof Lab ? $provider->value : $provider;
 
-        if ($driver === 'gemini') {
+        if (str_starts_with($driver, 'gemini')) {
             return [
                 'thinking_level' => 'minimal',
             ];

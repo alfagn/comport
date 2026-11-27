@@ -182,15 +182,7 @@ class SupportChatController extends Controller
      */
     public function updateSettings(SupportChatSettingsRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-
-        Setting::setValue('ai_support_enabled', ! empty($validated['ai_support_enabled']) ? '1' : '0', 'ai');
-        Setting::setValue('ai_support_greeting', $validated['ai_support_greeting'], 'ai');
-        Setting::setValue('ai_support_knowledge', $validated['ai_support_knowledge'] ?? '', 'ai');
-        Setting::setValue('ai_support_provider', $validated['ai_support_provider'] ?? null, 'ai');
-        Setting::setValue('ai_support_model', $validated['ai_support_model'] ?? null, 'ai');
-        Setting::setValue('ai_dashboard_provider', $validated['ai_dashboard_provider'] ?? null, 'ai');
-        Setting::setValue('ai_dashboard_model', $validated['ai_dashboard_model'] ?? null, 'ai');
+        $this->guard->saveChatbotAndKeySettings($request->validated());
 
         return back()->with('success', 'Chatbot behavior and AI provider settings saved.');
     }

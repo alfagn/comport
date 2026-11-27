@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Ai\Agents\CustomerSupportAgent;
+use App\Ai\Agents\DashboardAssistantAgent;
 use App\Ai\Tools\Support\GetCompanyOverview;
 use App\Ai\Tools\Support\ListOpenCareers;
 use App\Ai\Tools\Support\SearchPortfolioAndInsights;
@@ -392,5 +393,104 @@ class CustomerSupportChatbotTest extends TestCase
         ])->assertRedirect(route('admin.settings.edit', ['section' => 'chatbot']));
 
         $this->assertSame('مرحباً بك في إمبتكس!', Setting::getValue('ai_support_greeting'));
+    }
+
+    public function test_isolated_gemini_keys_encrypted_vault_and_emergency_failover_chain(): void
+    {
+        $owner = $this->owner();
+
+        // Clear all provider keys first to test deterministic isolation & failover selection
+        foreach (['gemini', 'gemini-support', 'gemini-copilot', 'gemini-fallback', 'deepseek', 'openai', 'anthropic', 'xai'] as $prov) {
+            config(["ai.providers.{$prov}.key" => null]);
+        }
+
+        // 1. Configure separate Support vs Copilot Gemini keys + Secondary Gemini + DeepSeek + OpenAI (leave Claude & Grok empty)
+        config([
+            'ai.default' => 'gemini',
+            'assistant.failover.enabled' => true,
+            'assistant.failover.chain' => 'gemini-fallback,deepseek,openai,anthropic,xai',
+            'ai.providers.gemini-support.key' => 'AIza-support-dedicated-key',
+            'ai.providers.gemini-copilot.key' => 'AIza-copilot-dedicated-key',
+            'ai.providers.gemini-fallback.key' => 'AIza-secondary-backup-key',
+            'ai.providers.deepseek.key' => 'sk-deepseek-emergency',
+            'ai.providers.openai.key' => 'sk-openai-emergency',
+        ]);
+
+        $session = SupportChatSession::query()->create([
+            'token' => '11111111-2222-4333-8444-555555555555',
+            'status' => SupportChatSession::STATUS_OPEN,
+        ]);
+
+        $supportAgent = new CustomerSupportAgent($session);
+        $copilotAgent = new DashboardAssistantAgent($owner);
+
+        $supportChain = $supportAgent->provider();
+        $copilotChain = $copilotAgent->provider();
+
+        $this->assertIsArray($supportChain);
+        $this->assertIsArray($copilotChain);
+
+        // Customer Support uses gemini-support first, Copilot uses gemini-copilot first; unconfigured anthropic/xai are skipped!
+        $this->assertSame(
+            ['gemini-support', 'gemini-fallback', 'deepseek', 'openai'],
+            array_keys($supportChain),
+        );
+        $this->assertSame(
+            ['gemini-copilot', 'gemini-fallback', 'deepseek', 'openai'],
+            array_keys($copilotChain),
+        );
+
+        // 2. If primary Gemini Support key is down/missing, chain starts directly at first ready emergency provider
+        config([
+            'ai.providers.gemini-support.key' => null,
+            'ai.providers.gemini-fallback.key' => null,
+        ]);
+        $degradedSupportChain = $supportAgent->provider();
+        $this->assertIsArray($degradedSupportChain);
+        $this->assertSame(['deepseek', 'openai'], array_keys($degradedSupportChain));
+
+        // 3. Saving isolated & emergency keys via System Settings -> Chatbot & AI encrypts at rest & arms Grok/Claude
+        $this->actingAs($owner)->put('/admin/settings/chatbot', [
+            'ai_support_enabled' => '1',
+            'ai_support_greeting' => 'مرحباً بك!',
+            'ai_support_provider' => 'gemini',
+            'ai_dashboard_provider' => 'gemini',
+            'ai_failover_enabled' => '1',
+            'ai_failover_chain' => 'gemini-fallback,deepseek,openai,anthropic,xai',
+            'ai_key_gemini_support' => 'AIza-vault-support-9999',
+            'ai_key_anthropic' => 'sk-ant-vault-claude-8888',
+            'ai_key_xai' => 'xai-vault-grok-7777',
+        ])->assertRedirect(route('admin.settings.edit', ['section' => 'chatbot']));
+
+        $rawEncryptedSupportKey = (string) DB::table('settings')
+            ->where('key', 'ai_key_gemini_support')
+            ->value('value');
+        $this->assertStringStartsWith('enc:v1:', $rawEncryptedSupportKey);
+        $this->assertStringNotContainsString('AIza-vault-support-9999', $rawEncryptedSupportKey);
+
+        // Blank password fields on subsequent save preserve previously encrypted vault keys
+        $this->actingAs($owner)->put('/admin/settings/chatbot', [
+            'ai_support_enabled' => '1',
+            'ai_support_greeting' => 'مرحباً بك مجدداً!',
+            'ai_support_provider' => 'gemini',
+            'ai_dashboard_provider' => 'gemini',
+            'ai_failover_enabled' => '1',
+            'ai_failover_chain' => 'gemini-fallback,deepseek,openai,anthropic,xai',
+            'ai_key_gemini_support' => '',
+        ])->assertRedirect(route('admin.settings.edit', ['section' => 'chatbot']));
+
+        $armedChain = (new CustomerSupportAgent($session))->provider();
+        $this->assertIsArray($armedChain);
+        $this->assertSame(
+            ['gemini-support', 'deepseek', 'openai', 'anthropic', 'xai'],
+            array_keys($armedChain),
+        );
+
+        // System Settings UI displays the Vault status without leaking raw keys
+        $this->actingAs($owner)->get('/admin/settings?section=chatbot')
+            ->assertOk()
+            ->assertSee('Isolated API Keys &amp; Emergency Failover Vault', false)
+            ->assertDontSee('AIza-vault-support-9999')
+            ->assertDontSee('sk-ant-vault-claude-8888');
     }
 }

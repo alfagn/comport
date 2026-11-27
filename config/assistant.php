@@ -22,6 +22,14 @@
 
 return [
 
+    'failover' => [
+        // Automatically fail over to backup Gemini & emergency providers on 503 / 429 / timeouts.
+        'enabled' => (bool) env('AI_FAILOVER_ENABLED', true),
+
+        // Ordered emergency provider chain (only providers with configured API keys are armed).
+        'chain' => (string) env('AI_FAILOVER_CHAIN', 'gemini-fallback,deepseek,openai,anthropic,xai'),
+    ],
+
     'dashboard' => [
         'provider' => env('AI_DASHBOARD_PROVIDER') ?: null,
         'model' => env('AI_DASHBOARD_MODEL') ?: null,

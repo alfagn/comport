@@ -61,6 +61,11 @@ return [
             'driver' => 'anthropic',
             'key' => env('ANTHROPIC_API_KEY'),
             'url' => env('ANTHROPIC_URL', 'https://api.anthropic.com/v1'),
+            'models' => [
+                'text' => array_filter([
+                    'default' => env('ANTHROPIC_MODEL'),
+                ]),
+            ],
         ],
 
         'azure' => [
@@ -98,6 +103,11 @@ return [
         'deepseek' => [
             'driver' => 'deepseek',
             'key' => env('DEEPSEEK_API_KEY'),
+            'models' => [
+                'text' => array_filter([
+                    'default' => env('DEEPSEEK_MODEL'),
+                ]),
+            ],
         ],
 
         'eleven' => [
@@ -107,7 +117,7 @@ return [
 
         'gemini' => [
             'driver' => 'gemini',
-            'key' => env('GEMINI_API_KEY'),
+            'key' => env('GEMINI_SUPPORT_API_KEY') ?: env('GEMINI_API_KEY'),
             'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
             'models' => [
                 'text' => [
@@ -116,13 +126,35 @@ return [
             ],
         ],
 
-        'gemini-fallback' => [
+        'gemini-support' => [
             'driver' => 'gemini',
-            'key' => env('GEMINI_API_KEY'),
+            'key' => env('GEMINI_SUPPORT_API_KEY') ?: env('GEMINI_API_KEY'),
             'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
             'models' => [
                 'text' => [
-                    'default' => 'gemini-3.1-flash-lite',
+                    'default' => env('GEMINI_SUPPORT_MODEL', env('GEMINI_MODEL', 'gemini-3.1-flash-lite')),
+                ],
+            ],
+        ],
+
+        'gemini-copilot' => [
+            'driver' => 'gemini',
+            'key' => env('GEMINI_COPILOT_API_KEY') ?: env('GEMINI_API_KEY'),
+            'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
+            'models' => [
+                'text' => [
+                    'default' => env('GEMINI_COPILOT_MODEL', env('GEMINI_MODEL', 'gemini-3.1-flash-lite')),
+                ],
+            ],
+        ],
+
+        'gemini-fallback' => [
+            'driver' => 'gemini',
+            'key' => env('GEMINI_FALLBACK_API_KEY') ?: env('GEMINI_SUPPORT_API_KEY') ?: env('GEMINI_API_KEY'),
+            'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
+            'models' => [
+                'text' => [
+                    'default' => env('GEMINI_FALLBACK_MODEL', 'gemini-3.1-flash-lite'),
                 ],
             ],
         ],
@@ -153,6 +185,11 @@ return [
             'key' => env('OPENAI_API_KEY'),
             'url' => env('OPENAI_URL', 'https://api.openai.com/v1'),
             'store' => env('OPENAI_STORE', true),
+            'models' => [
+                'text' => array_filter([
+                    'default' => env('OPENAI_MODEL'),
+                ]),
+            ],
         ],
 
         'openai-compatible' => [
@@ -179,6 +216,11 @@ return [
         'xai' => [
             'driver' => 'xai',
             'key' => env('XAI_API_KEY'),
+            'models' => [
+                'text' => array_filter([
+                    'default' => env('XAI_MODEL'),
+                ]),
+            ],
         ],
     ],
 

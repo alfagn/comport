@@ -717,12 +717,12 @@
         </div>
       </div>
 
-      <div class="card card--form">
+      <div class="card card--form" style="margin-bottom:22px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
           <h2 class="card__title" style="margin:0;">AI Model &amp; Provider Routing</h2>
           <span class="pill">Active: {{ strtoupper($providerName) }}</span>
         </div>
-        <p class="card__sub">Choose which LLM provider powers Customer Support (Website + WhatsApp) and your internal Dashboard Copilot.</p>
+        <p class="card__sub">Choose which LLM provider powers Customer Support (Website + WhatsApp) and your internal Dashboard Copilot. When Google Gemini is selected, each service automatically uses its own isolated API key.</p>
 
         <div class="form-grid">
           <x-admin.select
@@ -750,10 +750,76 @@
             :value="setting('ai_dashboard_model', '')"
             placeholder="Leave blank for provider default"
           />
+
+          <div class="full">
+            <x-admin.toggle
+              name="ai_failover_enabled"
+              label="Enable Automatic Emergency Multi-Provider Failover on 503 / 429 / Outage"
+              :checked="$aiFailoverEnabled ?? true"
+            />
+          </div>
+
+          <div class="full">
+            <x-admin.input
+              name="ai_failover_chain"
+              label="Emergency Failover Priority Chain (Comma-Separated)"
+              :value="$aiFailoverChain ?? 'gemini-fallback,deepseek,openai,anthropic,xai'"
+              placeholder="gemini-fallback,deepseek,openai,anthropic,xai"
+              hint="Only providers with configured API keys below (or in .env) are armed in live traffic. Unconfigured providers are skipped automatically."
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="card card--form">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+          <div>
+            <h2 class="card__title" style="margin:0;">Isolated API Keys &amp; Emergency Failover Vault</h2>
+            <p class="card__sub" style="margin-bottom:0;">Separate Gemini keys per service to isolate quotas, plus emergency keys for DeepSeek, OpenAI, Claude &amp; Grok. Saved keys are encrypted with AES-256; leave any field blank to keep its current key.</p>
+          </div>
+        </div>
+
+        @if(! empty($activeSupportChain))
+          <div style="margin:14px 0 20px;padding:14px 16px;border-radius:14px;background:#0E0C0A;border:1px solid rgba(255,255,255,0.09);color:#F5F1EC;">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.09em;color:rgba(255,255,255,0.52);margin-bottom:8px;">Live Armed Failover Route (Customer Support &amp; WhatsApp)</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              @foreach($activeSupportChain as $idx => $hop)
+                @if($idx > 0)
+                  <span style="color:rgba(255,255,255,0.38);font-weight:700;">&rarr;</span>
+                @endif
+                <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:0.78rem;font-weight:600;background:{{ $idx === 0 ? 'rgba(37,211,102,0.16)' : 'rgba(139,92,246,0.16)' }};color:{{ $idx === 0 ? '#25D366' : '#C4B5FD' }};border:1px solid {{ $idx === 0 ? 'rgba(37,211,102,0.38)' : 'rgba(139,92,246,0.34)' }};">
+                  {{ $idx === 0 ? '● Primary: ' : '⚡ Failover #'.$idx.': ' }}{{ strtoupper($hop) }}
+                </span>
+              @endforeach
+            </div>
+          </div>
+        @endif
+
+        <div class="form-grid">
+          @foreach(($aiKeyMatrix ?? []) as $slot)
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;">
+                <span style="font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);">{{ $slot['role'] }} &middot; <code>{{ $slot['env'] }}</code></span>
+                <span class="pill" style="font-size:0.7rem;padding:2px 9px;{{ $slot['ready'] ? 'background:rgba(37,211,102,0.14);color:#15803d;border:1px solid rgba(37,211,102,0.35);' : '' }}">
+                  @if($slot['ready'])
+                    ● Armed ({{ $slot['source'] === 'vault' ? 'Encrypted Vault' : ($slot['source'] === 'shared_gemini_env' ? 'Shared GEMINI_API_KEY' : '.env') }})
+                  @else
+                    ○ Not Set
+                  @endif
+                </span>
+              </div>
+              <x-admin.input
+                :name="$slot['setting_key']"
+                type="password"
+                :label="$slot['label']"
+                :placeholder="$slot['ready'] ? ($slot['masked'].' (Saved — leave blank to keep)') : ('Paste '.$slot['env'].' or set in .env')"
+              />
+            </div>
+          @endforeach
         </div>
 
         <div class="form-actions">
-          <button class="btn btn--primary" type="submit">Save AI &amp; Chatbot Settings</button>
+          <button class="btn btn--primary" type="submit">Save AI Keys &amp; Failover Settings</button>
         </div>
       </div>
     </form>
