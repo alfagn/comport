@@ -763,9 +763,9 @@
             <x-admin.input
               name="ai_failover_chain"
               label="Emergency Failover Priority Chain (Comma-Separated)"
-              :value="$aiFailoverChain ?? 'gemini-fallback,deepseek,openai,anthropic,xai'"
-              placeholder="gemini-fallback,deepseek,openai,anthropic,xai"
-              hint="Only providers with configured API keys below (or in .env) are armed in live traffic. Unconfigured providers are skipped automatically."
+              :value="$aiFailoverChain ?? 'gemini-fallback,gemini,groq,deepseek,openai,anthropic,xai'"
+              placeholder="gemini-fallback,gemini,groq,deepseek,openai,anthropic,xai"
+              hint="Only providers with configured API keys below (or in .env) are armed in live traffic. Unconfigured or 401/402 broken providers are skipped automatically."
             />
           </div>
         </div>

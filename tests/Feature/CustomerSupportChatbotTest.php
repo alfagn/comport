@@ -400,18 +400,19 @@ class CustomerSupportChatbotTest extends TestCase
         $owner = $this->owner();
 
         // Clear all provider keys first to test deterministic isolation & failover selection
-        foreach (['gemini', 'gemini-support', 'gemini-copilot', 'gemini-fallback', 'deepseek', 'openai', 'anthropic', 'xai'] as $prov) {
+        foreach (['gemini', 'gemini-support', 'gemini-copilot', 'gemini-fallback', 'groq', 'deepseek', 'openai', 'anthropic', 'xai'] as $prov) {
             config(["ai.providers.{$prov}.key" => null]);
         }
 
-        // 1. Configure separate Support vs Copilot Gemini keys + Secondary Gemini + DeepSeek + OpenAI (leave Claude & Grok empty)
+        // 1. Configure separate Support vs Copilot Gemini keys + Secondary Gemini + Groq + DeepSeek + OpenAI (leave Claude & Grok empty)
         config([
             'ai.default' => 'gemini',
             'assistant.failover.enabled' => true,
-            'assistant.failover.chain' => 'gemini-fallback,deepseek,openai,anthropic,xai',
+            'assistant.failover.chain' => 'gemini-fallback,groq,deepseek,openai,anthropic,xai',
             'ai.providers.gemini-support.key' => 'AIza-support-dedicated-key',
             'ai.providers.gemini-copilot.key' => 'AIza-copilot-dedicated-key',
             'ai.providers.gemini-fallback.key' => 'AIza-secondary-backup-key',
+            'ai.providers.groq.key' => 'gsk_free_groq_emergency',
             'ai.providers.deepseek.key' => 'sk-deepseek-emergency',
             'ai.providers.openai.key' => 'sk-openai-emergency',
         ]);
@@ -432,22 +433,22 @@ class CustomerSupportChatbotTest extends TestCase
 
         // Customer Support uses gemini-support first, Copilot uses gemini-copilot first; unconfigured anthropic/xai are skipped!
         $this->assertSame(
-            ['gemini-support', 'gemini-fallback', 'deepseek', 'openai'],
+            ['gemini-support', 'gemini-fallback', 'groq', 'deepseek', 'openai'],
             array_keys($supportChain),
         );
         $this->assertSame(
-            ['gemini-copilot', 'gemini-fallback', 'deepseek', 'openai'],
+            ['gemini-copilot', 'gemini-fallback', 'groq', 'deepseek', 'openai'],
             array_keys($copilotChain),
         );
 
-        // 2. If primary Gemini Support key is down/missing, chain starts directly at first ready emergency provider
+        // 2. If primary Gemini Support key is down/missing, chain starts directly at first ready emergency provider (Groq!)
         config([
             'ai.providers.gemini-support.key' => null,
             'ai.providers.gemini-fallback.key' => null,
         ]);
         $degradedSupportChain = $supportAgent->provider();
         $this->assertIsArray($degradedSupportChain);
-        $this->assertSame(['deepseek', 'openai'], array_keys($degradedSupportChain));
+        $this->assertSame(['groq', 'deepseek', 'openai'], array_keys($degradedSupportChain));
 
         // 3. Saving isolated & emergency keys via System Settings -> Chatbot & AI encrypts at rest & arms Grok/Claude
         $this->actingAs($owner)->put('/admin/settings/chatbot', [

@@ -27,7 +27,7 @@ return [
         'enabled' => (bool) env('AI_FAILOVER_ENABLED', true),
 
         // Ordered emergency provider chain (only providers with configured API keys are armed).
-        'chain' => (string) env('AI_FAILOVER_CHAIN', 'gemini-fallback,deepseek,openai,anthropic,xai'),
+        'chain' => (string) env('AI_FAILOVER_CHAIN', 'gemini-fallback,gemini,groq,deepseek,openai,anthropic,xai'),
     ],
 
     'dashboard' => [

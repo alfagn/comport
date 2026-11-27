@@ -162,6 +162,11 @@ return [
         'groq' => [
             'driver' => 'groq',
             'key' => env('GROQ_API_KEY'),
+            'models' => [
+                'text' => array_filter([
+                    'default' => env('GROQ_MODEL'),
+                ]),
+            ],
         ],
 
         'jina' => [

@@ -36,6 +36,7 @@ class SupportChatSettingsRequest extends FormRequest
             'ai_key_gemini_support' => ['nullable', 'string', 'max:500'],
             'ai_key_gemini_copilot' => ['nullable', 'string', 'max:500'],
             'ai_key_gemini_fallback' => ['nullable', 'string', 'max:500'],
+            'ai_key_groq' => ['nullable', 'string', 'max:500'],
             'ai_key_deepseek' => ['nullable', 'string', 'max:500'],
             'ai_key_openai' => ['nullable', 'string', 'max:500'],
             'ai_key_anthropic' => ['nullable', 'string', 'max:500'],

@@ -44,6 +44,7 @@ final class AiTelemetryService
      */
     private const DEFAULT_BUDGETS = [
         'gemini' => ['rpm' => 15, 'rpd' => 1500, 'tpm' => 250000, 'tier_label' => 'Google AI Studio Quota'],
+        'groq' => ['rpm' => 30, 'rpd' => 14400, 'tpm' => 131072, 'tier_label' => 'Groq Free LPU Quota'],
         'deepseek' => ['rpm' => 60, 'rpd' => 10000, 'tpm' => 500000, 'tier_label' => 'DeepSeek Pay-As-You-Go'],
         'openai' => ['rpm' => 60, 'rpd' => 10000, 'tpm' => 200000, 'tier_label' => 'OpenAI Tier 1+'],
         'anthropic' => ['rpm' => 50, 'rpd' => 5000, 'tpm' => 100000, 'tier_label' => 'Anthropic Tier 1+'],
@@ -985,6 +986,7 @@ final class AiTelemetryService
     {
         return match ($driver) {
             'gemini' => 'gemini-3.1-flash-lite',
+            'groq' => 'openai/gpt-oss-120b',
             'deepseek' => 'deepseek-flash',
             'openai' => 'gpt-6.1-sol',
             'anthropic' => 'claude-sonnet-5-5',

@@ -17,7 +17,7 @@ final class AiRuntimeGuard
 {
     private const ENCRYPTED_PREFIX = 'enc:v1:';
 
-    public const DEFAULT_FAILOVER_CHAIN = 'gemini-fallback,gemini,deepseek,openai,anthropic,xai';
+    public const DEFAULT_FAILOVER_CHAIN = 'gemini-fallback,gemini,groq,deepseek,openai,anthropic,xai';
 
     /**
      * Isolated & emergency API key slots configurable via `.env` or System Settings.
@@ -42,6 +42,12 @@ final class AiRuntimeGuard
             'env' => 'GEMINI_FALLBACK_API_KEY',
             'label' => 'Gemini — Secondary Backup Key (Project #2)',
             'role' => 'Backup #1',
+        ],
+        'ai_key_groq' => [
+            'provider' => 'groq',
+            'env' => 'GROQ_API_KEY',
+            'label' => 'Groq Cloud LPU Key (gsk_... — Free Emergency Failover)',
+            'role' => 'Free Emergency #1',
         ],
         'ai_key_deepseek' => [
             'provider' => 'deepseek',
