@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Ai\Agents\CustomerSupportAgent;
+use App\Jobs\DispatchOutboundWhatsappMessageJob;
 use App\Jobs\SendUnreadWhatsappAlertJob;
 use App\Mail\UnreadWhatsappMessageMail;
 use App\Models\Setting;
 use App\Models\SupportChatSession;
 use App\Models\User;
 use App\Models\WhatsappMessage;
+use App\Support\WebmOpusToOggConverter;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -39,6 +41,7 @@ class WhatsappCustomerSupportService
     public function __construct(
         private WhatsappCloudApiService $whatsapp,
         private AiRuntimeGuard $guard,
+        private WhatsappMediaCrypto $mediaCrypto,
     ) {}
 
     /**
@@ -60,6 +63,8 @@ class WhatsappCustomerSupportService
         ?array $location = null,
         ?array $contacts = null,
         ?array $reaction = null,
+        ?string $username = null,
+        ?string $avatarUrl = null,
     ): ?SupportChatSession {
         $normalizedWaId = $this->whatsapp->normalizePhone($waId);
         if ($normalizedWaId === '') {
@@ -75,7 +80,7 @@ class WhatsappCustomerSupportService
             return null;
         }
 
-        $session = $this->findOrCreateWhatsappSession($normalizedWaId, $profileName);
+        $session = $this->findOrCreateWhatsappSession($normalizedWaId, $profileName, $username, $avatarUrl);
 
         // Customer emoji reaction on an existing message
         if ($type === 'reaction' && ! empty($reaction['message_id'])) {
@@ -386,7 +391,19 @@ class WhatsappCustomerSupportService
 
         $absolutePath = Storage::disk(self::MEDIA_DISK)->path((string) $storedPath);
 
-        $uploaded = $this->whatsapp->uploadMedia($absolutePath, $rawMime, $originalName);
+        $uploaded = $this->whatsapp->uploadMedia($absolutePath, $rawMime, $originalName, isVoice: $isVoice);
+
+        if ($uploaded['converted_bytes'] !== null) {
+            $storedFilename = pathinfo($storedFilename, PATHINFO_FILENAME).'.ogg';
+            $newPath = $directory.'/'.$storedFilename;
+            Storage::disk(self::MEDIA_DISK)->delete((string) $storedPath);
+            $this->mediaCrypto->putEncrypted(self::MEDIA_DISK, $newPath, $uploaded['converted_bytes']);
+            $storedPath = $newPath;
+            $size = strlen($uploaded['converted_bytes']);
+        } else {
+            $plainBytes = (string) file_get_contents($absolutePath);
+            $this->mediaCrypto->putEncrypted(self::MEDIA_DISK, (string) $storedPath, $plainBytes);
+        }
 
         $mediaType = $this->resolveWhatsappMediaType($uploaded['mime_type'], $ext, $isVoice);
         $recipient = (string) ($session->external_thread_id ?: $session->visitor_phone);
@@ -399,6 +416,7 @@ class WhatsappCustomerSupportService
             filename: $originalName,
             replyToWamid: $replyToWamid,
             isVoice: $isVoice,
+            uploadedMime: $uploaded['mime_type'],
         );
 
         $wamid = $apiResponse['messages'][0]['id'] ?? null;
@@ -498,6 +516,275 @@ class WhatsappCustomerSupportService
         ])->save();
 
         return $waMessage;
+    }
+
+    /**
+     * Queue an outbound message in `sending` (`🕒`) state with strict idempotency
+     * protection, and dispatch the Meta Cloud API call immediately after the HTTP
+     * response flushes to the browser (`dispatchAfterResponse`) for zero UI delay.
+     *
+     * @param  array<string, mixed>  $attributes
+     */
+    public function queueInstantOutboundMessage(
+        SupportChatSession $session,
+        array $attributes,
+        string $transcriptNote,
+        bool $pauseAi = true,
+        ?string $idempotencyKey = null,
+    ): WhatsappMessage {
+        app(CustomerSupportChatService::class)->markTyping($session, 'admin', false);
+
+        if ($idempotencyKey !== null && $idempotencyKey !== '') {
+            $existing = WhatsappMessage::query()
+                ->where('idempotency_key', $idempotencyKey)
+                ->first();
+
+            if ($existing) {
+                return $existing;
+            }
+        }
+
+        $conversationId = $this->ensureConversationExists($session);
+        $this->appendManualAssistantMessage($conversationId, $session, $transcriptNote, 'human_agent');
+
+        $waMessage = WhatsappMessage::query()->create([
+            ...$attributes,
+            'support_chat_session_id' => $session->id,
+            'idempotency_key' => $idempotencyKey ?: null,
+            'direction' => WhatsappMessage::DIRECTION_OUTBOUND,
+            'sender_type' => WhatsappMessage::SENDER_ADMIN,
+            'status' => WhatsappMessage::STATUS_SENDING,
+        ]);
+
+        $session->forceFill([
+            'conversation_id' => $conversationId,
+            'ai_paused' => $pauseAi,
+            'unread_count' => 0,
+            'message_count' => $session->message_count + 1,
+            'last_admin_read_at' => now(),
+            'last_message_preview' => $waMessage->previewLabel(),
+            'last_message_at' => now(),
+        ])->save();
+
+        $this->markSessionReadByAdmin($session, sendWhatsappReceipt: false);
+
+        DispatchOutboundWhatsappMessageJob::dispatchAfterResponse($waMessage->id);
+
+        return $waMessage;
+    }
+
+    /**
+     * Store an uploaded file/voice note encrypted at rest and immediately queue its
+     * outbound `sending` (`🕒`) message for post-response Meta Cloud API delivery.
+     */
+    public function queueInstantMediaReply(
+        SupportChatSession $session,
+        UploadedFile $file,
+        ?string $caption = null,
+        bool $isVoice = false,
+        ?int $duration = null,
+        bool $pauseAi = true,
+        ?User $sender = null,
+        ?string $replyToWamid = null,
+        ?string $idempotencyKey = null,
+    ): WhatsappMessage {
+        if ($idempotencyKey !== null && $idempotencyKey !== '') {
+            $existing = WhatsappMessage::query()->where('idempotency_key', $idempotencyKey)->first();
+            if ($existing) {
+                return $existing;
+            }
+        }
+
+        $originalName = $file->getClientOriginalName() ?: ($isVoice ? 'voice-note.ogg' : 'attachment');
+        $rawMime = strtolower(trim(explode(';', (string) ($file->getMimeType() ?: $file->getClientMimeType() ?: 'application/octet-stream'))[0]));
+        $ext = strtolower($file->getClientOriginalExtension() ?: pathinfo($originalName, PATHINFO_EXTENSION));
+        $plainBytes = (string) $file->get();
+        $size = strlen($plainBytes);
+
+        // Pre-convert WebM Opus voice notes locally right away if ffmpeg isn't needed so browser playback is also clean Ogg
+        if ($isVoice && str_starts_with(substr($plainBytes, 0, 4), "\x1A\x45\xDF\xA3")) {
+            $oggBytes = WebmOpusToOggConverter::convertBytes($plainBytes);
+            if ($oggBytes !== null) {
+                $plainBytes = $oggBytes;
+                $rawMime = 'audio/ogg';
+                $ext = 'ogg';
+                $originalName = pathinfo($originalName, PATHINFO_FILENAME).'.ogg';
+                $size = strlen($plainBytes);
+            }
+        }
+
+        $safeBase = preg_replace('/[^A-Za-z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME)) ?: 'media';
+        $storedFilename = substr((string) Str::uuid(), 0, 8).'_'.Str::limit($safeBase, 48, '').($ext !== '' ? '.'.$ext : '');
+        $relativePath = self::MEDIA_DIR.'/'.$session->id.'/'.$storedFilename;
+
+        $this->mediaCrypto->putEncrypted(self::MEDIA_DISK, $relativePath, $plainBytes);
+
+        $mediaType = $this->resolveWhatsappMediaType($rawMime, $ext, $isVoice);
+        $quoted = $this->lookupQuotedPreview($session->id, $replyToWamid);
+        $transcriptNote = filled($caption) ? trim((string) $caption) : "[Sent {$mediaType}: {$originalName}]";
+
+        return $this->queueInstantOutboundMessage(
+            session: $session,
+            attributes: [
+                'reply_to_wa_message_id' => $replyToWamid ?: null,
+                'sender_user_id' => $sender?->id,
+                'type' => $isVoice ? 'voice' : $mediaType,
+                'body' => filled($caption) ? trim((string) $caption) : null,
+                'media_disk' => self::MEDIA_DISK,
+                'media_path' => $relativePath,
+                'media_mime' => $rawMime,
+                'media_filename' => $originalName,
+                'media_size' => $size,
+                'media_duration' => $duration,
+                'metadata' => $quoted ? ['quoted_preview' => $quoted] : null,
+            ],
+            transcriptNote: $transcriptNote,
+            pauseAi: $pauseAi,
+            idempotencyKey: $idempotencyKey,
+        );
+    }
+
+    /**
+     * Deliver a pending `sending` (`🕒`) outbound message to Meta Cloud API and
+     * transition its status to `sent` (`✓`) or `failed` (`⚠`).
+     */
+    public function deliverPendingOutboundMessage(WhatsappMessage $message): void
+    {
+        if ($message->status !== WhatsappMessage::STATUS_SENDING) {
+            return;
+        }
+
+        $session = $message->session;
+        if (! $session) {
+            return;
+        }
+
+        $recipient = (string) ($session->external_thread_id ?: $session->visitor_phone);
+        $meta = is_array($message->metadata) ? $message->metadata : [];
+
+        try {
+            if ($message->type === 'text') {
+                $apiRes = $this->whatsapp->sendTextMessage(
+                    to: $recipient,
+                    body: (string) ($message->body ?? ''),
+                    previewUrl: false,
+                    replyToWamid: $message->reply_to_wa_message_id,
+                );
+                $wamid = $apiRes['messages'][0]['id'] ?? null;
+                $message->forceFill([
+                    'wa_message_id' => is_string($wamid) ? $wamid : null,
+                    'status' => WhatsappMessage::STATUS_SENT,
+                ])->save();
+
+                return;
+            }
+
+            if ($message->type === 'template') {
+                $tplName = (string) ($meta['template_name'] ?? 'hello_world');
+                $tplLang = (string) ($meta['language'] ?? 'en_US');
+                $apiRes = $this->whatsapp->sendTemplateMessage($recipient, $tplName, $tplLang);
+                $wamid = $apiRes['messages'][0]['id'] ?? null;
+                $message->forceFill([
+                    'wa_message_id' => is_string($wamid) ? $wamid : null,
+                    'status' => WhatsappMessage::STATUS_SENT,
+                ])->save();
+
+                return;
+            }
+
+            if ($message->type === 'location') {
+                $loc = (array) ($meta['location'] ?? []);
+                $apiRes = $this->whatsapp->sendLocationMessage(
+                    to: $recipient,
+                    latitude: (float) ($loc['latitude'] ?? 0),
+                    longitude: (float) ($loc['longitude'] ?? 0),
+                    name: $loc['name'] ?? null,
+                    address: $loc['address'] ?? null,
+                    replyToWamid: $message->reply_to_wa_message_id,
+                );
+                $wamid = $apiRes['messages'][0]['id'] ?? null;
+                $message->forceFill([
+                    'wa_message_id' => is_string($wamid) ? $wamid : null,
+                    'status' => WhatsappMessage::STATUS_SENT,
+                ])->save();
+
+                return;
+            }
+
+            // Media / Voice note delivery
+            $disk = $message->media_disk ?: self::MEDIA_DISK;
+            $plainBytes = $message->media_path
+                ? $this->mediaCrypto->getDecrypted($disk, $message->media_path)
+                : null;
+
+            if ($plainBytes === null || $plainBytes === '') {
+                throw new \RuntimeException('Stored media payload could not be read for upload.');
+            }
+
+            $isVoice = $message->type === 'voice';
+            $ext = pathinfo((string) ($message->media_filename ?: 'media'), PATHINFO_EXTENSION) ?: ($isVoice ? 'ogg' : 'bin');
+            $tempFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.'wa_out_'.Str::uuid().'.'.$ext;
+            file_put_contents($tempFile, $plainBytes);
+
+            try {
+                $uploaded = $this->whatsapp->uploadMedia(
+                    absolutePath: $tempFile,
+                    mimeType: (string) ($message->media_mime ?: 'application/octet-stream'),
+                    filename: (string) ($message->media_filename ?: ('media.'.$ext)),
+                    isVoice: $isVoice,
+                );
+            } finally {
+                if (is_file($tempFile)) {
+                    @unlink($tempFile);
+                }
+            }
+
+            // Persist transcoded Ogg bytes back to encrypted storage if ffmpeg converted the file
+            $updatedPath = $message->media_path;
+            $updatedSize = $message->media_size;
+            if ($uploaded['converted_bytes'] !== null && $message->media_path) {
+                $newPath = preg_replace('/\.[A-Za-z0-9]+$/', '.ogg', $message->media_path) ?: ($message->media_path.'.ogg');
+                if ($newPath !== $message->media_path) {
+                    Storage::disk($disk)->delete($message->media_path);
+                }
+                $this->mediaCrypto->putEncrypted($disk, $newPath, $uploaded['converted_bytes']);
+                $updatedPath = $newPath;
+                $updatedSize = strlen($uploaded['converted_bytes']);
+            }
+
+            $waMediaType = $isVoice ? 'audio' : $message->type;
+            $apiRes = $this->whatsapp->sendMediaMessage(
+                to: $recipient,
+                type: $waMediaType,
+                mediaId: $uploaded['media_id'],
+                caption: $message->body,
+                filename: $message->media_filename,
+                replyToWamid: $message->reply_to_wa_message_id,
+                isVoice: $isVoice,
+                uploadedMime: $uploaded['mime_type'],
+            );
+
+            $wamid = $apiRes['messages'][0]['id'] ?? null;
+            $message->forceFill([
+                'wa_message_id' => is_string($wamid) ? $wamid : null,
+                'media_id' => $uploaded['media_id'],
+                'media_path' => $updatedPath,
+                'media_mime' => $uploaded['mime_type'],
+                'media_size' => $updatedSize,
+                'status' => WhatsappMessage::STATUS_SENT,
+            ])->save();
+        } catch (Throwable $exception) {
+            $meta['error'] = $exception->getMessage();
+            $message->forceFill([
+                'status' => WhatsappMessage::STATUS_FAILED,
+                'metadata' => $meta,
+            ])->save();
+
+            Log::warning('Async outbound WhatsApp dispatch failed', [
+                'message_id' => $message->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -840,8 +1127,12 @@ class WhatsappCustomerSupportService
     /**
      * Find the active WhatsApp session for a phone number or open a new one.
      */
-    public function findOrCreateWhatsappSession(string $normalizedWaId, ?string $profileName = null): SupportChatSession
-    {
+    public function findOrCreateWhatsappSession(
+        string $normalizedWaId,
+        ?string $profileName = null,
+        ?string $username = null,
+        ?string $avatarUrl = null,
+    ): SupportChatSession {
         $session = SupportChatSession::query()
             ->whatsapp()
             ->where('external_thread_id', $normalizedWaId)
@@ -849,6 +1140,7 @@ class WhatsappCustomerSupportService
             ->first();
 
         $displayPhone = $this->whatsapp->displayPhone($normalizedWaId);
+        $cleanUsername = $username !== null ? ltrim(trim($username), '@') : null;
 
         if (! $session) {
             return SupportChatSession::query()->create([
@@ -857,6 +1149,8 @@ class WhatsappCustomerSupportService
                 'external_thread_id' => $normalizedWaId,
                 'visitor_phone' => $displayPhone,
                 'visitor_name' => $profileName ?: null,
+                'visitor_username' => $cleanUsername ?: null,
+                'visitor_avatar' => $avatarUrl ?: null,
                 'status' => SupportChatSession::STATUS_OPEN,
                 'ai_paused' => false,
                 'is_pinned' => false,
@@ -871,6 +1165,12 @@ class WhatsappCustomerSupportService
         if ($profileName && ! $session->visitor_name) {
             $updates['visitor_name'] = $profileName;
         }
+        if ($cleanUsername && $cleanUsername !== $session->visitor_username) {
+            $updates['visitor_username'] = $cleanUsername;
+        }
+        if ($avatarUrl && ! $session->visitor_avatar) {
+            $updates['visitor_avatar'] = $avatarUrl;
+        }
         if ($session->status === SupportChatSession::STATUS_CLOSED) {
             $updates['status'] = SupportChatSession::STATUS_OPEN;
         }
@@ -882,10 +1182,10 @@ class WhatsappCustomerSupportService
     }
 
     /**
-     * Download inbound media from Meta Graph API and save inside `whatsapp-media/{session_id}`.
+     * Download inbound media from Meta Graph API and save AES-256 encrypted inside `whatsapp-media/{session_id}`.
      *
      * @param  array<string, mixed>|null  $media
-     * @return array{disk: string, path: string, mime: string, filename: string, size: int}|null
+     * @return array{disk: string, path: string, mime: string, filename: string, size: int, bytes: string}|null
      */
     protected function downloadAndStoreInboundMedia(SupportChatSession $session, string $type, ?array $media): ?array
     {
@@ -908,7 +1208,7 @@ class WhatsappCustomerSupportService
         $storedFilename = substr((string) Str::uuid(), 0, 8).'_'.Str::limit($safeBase, 48, '').'.'.$ext;
         $relativePath = self::MEDIA_DIR.'/'.$session->id.'/'.$storedFilename;
 
-        Storage::disk(self::MEDIA_DISK)->put($relativePath, $downloaded['bytes']);
+        $this->mediaCrypto->putEncrypted(self::MEDIA_DISK, $relativePath, $downloaded['bytes']);
 
         return [
             'disk' => self::MEDIA_DISK,
@@ -916,13 +1216,14 @@ class WhatsappCustomerSupportService
             'mime' => $mime,
             'filename' => $rawName,
             'size' => $downloaded['size'],
+            'bytes' => $downloaded['bytes'],
         ];
     }
 
     /**
-     * Build Laravel AI SDK attachments when a customer sends an image, PDF, or voice note.
+     * Build Laravel AI SDK attachments in-memory from decrypted media bytes.
      *
-     * @param  array{disk: string, path: string, mime: string, filename: string, size: int}|null  $storedMedia
+     * @param  array{disk: string, path: string, mime: string, filename: string, size: int, bytes?: string}|null  $storedMedia
      * @return list<Image|Document|Audio>
      */
     protected function buildSdkAttachmentsForInbound(?array $storedMedia, string $resolvedType): array
@@ -931,10 +1232,17 @@ class WhatsappCustomerSupportService
             return [];
         }
 
+        $plainBytes = $storedMedia['bytes'] ?? $this->mediaCrypto->getDecrypted($storedMedia['disk'], $storedMedia['path']);
+        if ($plainBytes === null || $plainBytes === '') {
+            return [];
+        }
+
+        $b64 = base64_encode($plainBytes);
+
         return match (true) {
-            $resolvedType === 'image' => [Image::fromStorage($storedMedia['path'], $storedMedia['disk'])->as($storedMedia['filename'])],
-            in_array($resolvedType, ['voice', 'audio'], true) => [Audio::fromStorage($storedMedia['path'], $storedMedia['disk'])],
-            $storedMedia['mime'] === 'application/pdf' => [Document::fromStorage($storedMedia['path'], $storedMedia['disk'])->as($storedMedia['filename'])],
+            $resolvedType === 'image' => [Image::fromBase64($b64, $storedMedia['mime'])->as($storedMedia['filename'])],
+            in_array($resolvedType, ['voice', 'audio'], true) => [Audio::fromBase64($b64, $storedMedia['mime'])],
+            $storedMedia['mime'] === 'application/pdf' => [Document::fromBase64($b64, $storedMedia['mime'])->as($storedMedia['filename'])],
             default => [],
         };
     }

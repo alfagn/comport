@@ -1,8 +1,11 @@
 /**
  * Empetix WhatsApp Business Inbox Studio Controller.
- * Full WhatsApp Web UX: Contacts list, unread badges, photos/videos/documents,
- * voice note recording with WebAudio waveform, custom voice player, locations,
- * quoted replies, emoji reactions, read checkmarks, and email alert settings.
+ * Authentic WhatsApp Web System Design:
+ * - Zero-latency optimistic send (0ms bubble insertion with WhatsApp Clock SVG `🕒` -> `✓` -> `✓✓` -> blue `✓✓`)
+ * - Strict client + server per-message idempotency (`X-Idempotency-Key` UUID)
+ * - Unread-only WhatsApp green badges, bold unread names, green timestamps & numbers
+ * - Contact profile photos, `@username` handles, and formatted phone numbers
+ * - Browser Ogg/WebM Opus voice note recording, waveform player, media lightbox & reactions
  */
 (function () {
   if (window.__empetixWaInboxBound) return;
@@ -21,10 +24,39 @@
     return m ? m.getAttribute('content') : '';
   }
 
+  function makeIdempotencyKey() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return 'wa_' + window.crypto.randomUUID();
+    }
+    return 'wa_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 12);
+  }
+
+  function nowTimeHHMM() {
+    var d = new Date();
+    var h = d.getHours();
+    var m = d.getMinutes();
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+
+  function todayDateKey() {
+    var d = new Date();
+    var m = d.getMonth() + 1;
+    var day = d.getDate();
+    return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day;
+  }
+
   function escapeHtml(str) {
     var d = document.createElement('div');
     d.textContent = str == null ? '' : String(str);
     return d.innerHTML;
+  }
+
+  function formatClientTextHtml(text) {
+    var escaped = escapeHtml(text || '');
+    escaped = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    escaped = escaped.replace(/(^|\s)\*([^*\n]+)\*(?=\s|$)/g, '$1<strong>$2</strong>');
+    escaped = escaped.replace(/(https?:\/\/[^\s<]+)/gi, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:var(--wa-green);font-weight:600;text-decoration:underline;">$1</a>');
+    return escaped.replace(/\n/g, '<br>');
   }
 
   function formatDuration(sec) {
@@ -34,7 +66,23 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  /**
+   * Authentic WhatsApp delivery status icons:
+   * - `sending`: WhatsApp Clock SVG (`🕒`)
+   * - `sent`: Single grey check (`✓`)
+   * - `delivered`: Double grey check (`✓✓`)
+   * - `read`: Double blue `#53BDEB` check (`✓✓`)
+   * - `failed`: Red warning (`⚠`)
+   */
   function ticksSvg(status) {
+    if (status === 'sending') {
+      return '<span class="wa-ticks is-sending" title="Sending…">' +
+        '<svg width="12" height="12" viewBox="0 0 16 16" fill="none">' +
+          '<circle cx="8" cy="8" r="6.4" stroke="currentColor" stroke-width="1.5"/>' +
+          '<path d="M8 4.4V8.2L10.6 9.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>' +
+      '</span>';
+    }
     if (status === 'failed') {
       return '<span class="wa-ticks is-failed" title="Delivery failed">⚠</span>';
     }
@@ -46,6 +94,38 @@
     }
     return '<span class="wa-ticks" title="Sent">' +
       '<svg width="12" height="11" viewBox="0 0 12 11" fill="none"><path d="M10.3.66 4.1 6.85 1.53 4.27.12 5.68 4.1 9.66 11.71 2.07 10.3.66Z" fill="currentColor"/></svg>' +
+    '</span>';
+  }
+
+  /**
+   * Authentic WhatsApp Avatar: real profile photo when available, or WhatsApp silhouette + monogram.
+   */
+  function avatarInnerHtml(contact) {
+    if (contact && contact.avatar_url) {
+      return '<img src="' + escapeHtml(contact.avatar_url) + '" alt="' + escapeHtml(contact.name || 'Contact') + '" class="wa-avatar__img" loading="lazy"/>';
+    }
+    var initial = contact && contact.initial ? contact.initial : '';
+    if (initial && initial !== '+' && !/^\d$/.test(initial)) {
+      return '<span class="wa-avatar__initial">' + escapeHtml(initial) + '</span>';
+    }
+    return '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity="0.92"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5Zm0 2c-3.34 0-10 1.68-10 5v2h20v-2c0-3.32-6.66-5-10-5Z"/></svg>';
+  }
+
+  function applyAvatarToElement(el, contact) {
+    if (!el || !contact) return;
+    if (contact.avatar_url) {
+      el.style.background = 'transparent';
+      el.classList.add('has-photo');
+    } else {
+      el.style.background = contact.avatar_color || '#6A7175';
+      el.classList.remove('has-photo');
+    }
+    el.innerHTML = avatarInnerHtml(contact);
+  }
+
+  function pinIconSvg() {
+    return '<span class="wa-pin-mark" title="Pinned">' +
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2Z"/></svg>' +
     '</span>';
   }
 
@@ -74,7 +154,7 @@
 
     var headAvatar = root.querySelector('[data-wa-head-avatar]');
     var headName = root.querySelector('[data-wa-head-name]');
-    var headCount = root.querySelector('[data-wa-head-count]');
+    var headUsername = root.querySelector('[data-wa-head-username]');
     var headSub = root.querySelector('[data-wa-head-sub]');
     var toggleAiBtn = root.querySelector('[data-wa-toggle-ai]');
     var toggleAiLabel = root.querySelector('[data-wa-toggle-ai-label]');
@@ -103,12 +183,15 @@
 
     var drawerEl = root.querySelector('[data-wa-drawer]');
     var drawerAvatar = root.querySelector('[data-wa-drawer-avatar]');
+    var avatarInput = root.querySelector('[data-wa-avatar-input]');
     var drawerTitle = root.querySelector('[data-wa-drawer-title]');
+    var drawerUsername = root.querySelector('[data-wa-drawer-username]');
     var drawerPhone = root.querySelector('[data-wa-drawer-phone]');
     var drawerMsgCount = root.querySelector('[data-wa-drawer-msg-count]');
     var drawerWindow = root.querySelector('[data-wa-drawer-window]');
     var crmForm = root.querySelector('[data-wa-crm-form]');
     var crmName = root.querySelector('[data-wa-crm-name]');
+    var crmUsername = root.querySelector('[data-wa-crm-username]');
     var crmEmail = root.querySelector('[data-wa-crm-email]');
     var crmStatus = root.querySelector('[data-wa-crm-status]');
     var crmNotes = root.querySelector('[data-wa-crm-notes]');
@@ -128,7 +211,10 @@
       inchatFilter: '',
       replyTo: null,
       stagedFiles: [],
-      sending: false,
+      draftKey: makeIdempotencyKey(),
+      dispatchedKeys: {},
+      optimisticByChat: {},
+      inFlightCount: 0,
       msgSignature: '',
       rec: {
         active: false,
@@ -142,14 +228,12 @@
       }
     };
 
-    // Populate Emoji Picker
     if (emojiPopover) {
       emojiPopover.innerHTML = EMOJIS.map(function (em) {
         return '<button type="button" data-wa-emoji="' + em + '">' + em + '</button>';
       }).join('');
     }
 
-    // Hydrate Initial JSON
     var initScript = root.querySelector('[data-wa-initial]');
     if (initScript) {
       try {
@@ -183,6 +267,13 @@
       if (sendBtn) sendBtn.hidden = !hasContent;
     }
 
+    /**
+     * Render Left Contacts Rail with 100% Authentic WhatsApp Web System Design:
+     * - Avatar photo (or silhouette/monogram)
+     * - Bold name + green timestamp + green phone & green circular unread badge ONLY when `unread_count > 0`
+     * - Zero numeric badge when `unread_count === 0`
+     * - Outbound status clock/ticks (`🕒` / `✓` / `✓✓` / blue `✓✓`) in preview line
+     */
     function renderContacts() {
       if (!contactsEl) return;
       if (!state.contacts.length) {
@@ -192,23 +283,44 @@
 
       contactsEl.innerHTML = state.contacts.map(function (c) {
         var active = c.id === state.activeId ? ' is-active' : '';
-        var unread = c.unread_count > 0 ? ' has-unread' : '';
-        var previewText = c.ai_typing ? '🤖 AI Concierge is replying…' : (c.preview || '');
+        var hasUnread = Number(c.unread_count) > 0;
+        var unreadCls = hasUnread ? ' has-unread' : '';
+
+        var avatarStyle = c.avatar_url ? 'background:transparent;' : ('background:' + escapeHtml(c.avatar_color || '#6A7175') + ';');
+        var avatarCls = c.avatar_url ? 'wa-avatar has-photo' : 'wa-avatar';
+
+        var showPhoneLine = c.phone && c.name && c.name.replace(/\s+/g, '') !== c.phone.replace(/\s+/g, '');
+        var handleHtml = c.username ? '<span class="wa-contact-row__handle">' + escapeHtml(c.username) + '</span>' : '';
+        var subIdentityHtml = showPhoneLine
+          ? '<div class="wa-contact-row__identity">' +
+              '<span class="wa-contact-row__phone" dir="ltr">' + escapeHtml(c.phone) + '</span>' +
+              handleHtml +
+            '</div>'
+          : (handleHtml ? '<div class="wa-contact-row__identity">' + handleHtml + '</div>' : '');
+
+        var previewTicks = '';
+        if (!c.ai_typing && c.last_direction === 'outbound') {
+          previewTicks = ticksSvg(c.last_status || 'sent') + ' ';
+        }
+
+        var previewContent = c.ai_typing
+          ? '<span class="wa-typing-green">typing…</span>'
+          : (previewTicks + '<span>' + escapeHtml(c.preview || '') + '</span>');
 
         return (
-          '<div class="wa-contact-row' + active + unread + '" data-wa-select-contact="' + c.id + '">' +
-            '<div class="wa-avatar" style="background:' + escapeHtml(c.avatar_color || '#00A884') + ';">' + escapeHtml(c.initial) + '</div>' +
+          '<div class="wa-contact-row' + active + unreadCls + '" data-wa-select-contact="' + c.id + '">' +
+            '<div class="' + avatarCls + '" style="' + avatarStyle + '">' + avatarInnerHtml(c) + '</div>' +
             '<div class="wa-contact-row__main">' +
               '<div class="wa-contact-row__top">' +
                 '<span class="wa-contact-row__name" dir="auto">' + escapeHtml(c.name) + '</span>' +
                 '<span class="wa-contact-row__time">' + escapeHtml(c.time_label || '') + '</span>' +
               '</div>' +
+              subIdentityHtml +
               '<div class="wa-contact-row__bottom">' +
-                '<span class="wa-contact-row__preview" dir="auto">' + escapeHtml(previewText) + '</span>' +
+                '<span class="wa-contact-row__preview" dir="auto">' + previewContent + '</span>' +
                 '<span class="wa-contact-row__badges">' +
-                  (c.is_pinned ? '<span class="wa-pin-mark" title="Pinned">📌</span>' : '') +
-                  '<span class="wa-total-mini" title="Total messages">' + (c.total_messages || 0) + '</span>' +
-                  (c.unread_count > 0 ? '<span class="wa-unread-badge">' + c.unread_count + '</span>' : '') +
+                  (c.is_pinned ? pinIconSvg() : '') +
+                  (hasUnread ? '<span class="wa-unread-badge">' + (c.unread_count > 99 ? '99+' : c.unread_count) + '</span>' : '') +
                 '</span>' +
               '</div>' +
             '</div>' +
@@ -217,12 +329,44 @@
       }).join('');
     }
 
-    function computeMessagesSignature(msgs, presence) {
+    /**
+     * Merge server messages with any still-pending local 0ms optimistic messages,
+     * deduplicating seamlessly by `idempotency_key` so there is never a jump or double render.
+     */
+    function getMergedMessages(chatId, serverMsgs) {
+      serverMsgs = serverMsgs || [];
+      var optList = state.optimisticByChat[chatId] || [];
+      if (!optList.length) return serverMsgs;
+
+      var seenKeys = {};
+      serverMsgs.forEach(function (m) {
+        if (m.idempotency_key) {
+          seenKeys[m.idempotency_key] = true;
+        }
+      });
+
+      var remainingOpt = optList.filter(function (opt) {
+        if (opt.idempotency_key && seenKeys[opt.idempotency_key]) {
+          if (opt._blobUrl) {
+            try { URL.revokeObjectURL(opt._blobUrl); } catch (e) {}
+          }
+          return false;
+        }
+        return true;
+      });
+
+      state.optimisticByChat[chatId] = remainingOpt;
+
+      return serverMsgs.concat(remainingOpt);
+    }
+
+    function computeMessagesSignature(msgs, presence, contact) {
       var parts = (msgs || []).map(function (m) {
-        return m.id + ':' + m.status + ':' + (m.reaction_emoji || '');
+        return m.id + ':' + m.status + ':' + (m.reaction_emoji || '') + ':' + (m.error || '');
       });
       parts.push('ai:' + (presence && presence.ai_typing ? '1' : '0'));
       parts.push('q:' + state.inchatFilter);
+      parts.push('av:' + (contact && contact.avatar_url ? contact.avatar_url : ''));
       return parts.join('|');
     }
 
@@ -304,17 +448,25 @@
       var c = state.activeChat.contact;
       var presence = state.activeChat.presence || {};
 
-      if (headAvatar) {
-        headAvatar.textContent = c.initial;
-        headAvatar.style.background = c.avatar_color || '#00A884';
-      }
+      applyAvatarToElement(headAvatar, c);
       if (headName) headName.textContent = c.name;
-      if (headCount) headCount.textContent = (c.total_messages || 0) + ' msgs';
+      if (headUsername) {
+        if (c.username) {
+          headUsername.hidden = false;
+          headUsername.textContent = c.username;
+        } else {
+          headUsername.hidden = true;
+        }
+      }
+
       if (headSub) {
         if (presence.ai_typing) {
-          headSub.textContent = '🤖 Empetix AI is typing a reply…';
+          headSub.innerHTML = '<span class="wa-typing-green">typing…</span>';
         } else {
-          headSub.textContent = (c.phone || '') + (c.within_24h ? ' · ● 24h Free Service Window Open' : ' · Template Mode (>24h)');
+          var subParts = [];
+          if (c.phone) subParts.push('<span dir="ltr">' + escapeHtml(c.phone) + '</span>');
+          subParts.push(c.within_24h ? '<span style="color:var(--wa-green);font-weight:600;">● 24h Window Open</span>' : 'Template Mode (&gt;24h)');
+          headSub.innerHTML = subParts.join(' &middot; ');
         }
       }
 
@@ -326,16 +478,22 @@
         togglePinBtn.classList.toggle('is-active', !!c.is_pinned);
       }
 
-      // Sync Right CRM Drawer fields (without clobbering active focus)
-      if (drawerAvatar) {
-        drawerAvatar.textContent = c.initial;
-        drawerAvatar.style.background = c.avatar_color || '#00A884';
-      }
+      // Sync Right Contact Info Drawer
+      applyAvatarToElement(drawerAvatar, c);
       if (drawerTitle) drawerTitle.textContent = c.name;
+      if (drawerUsername) {
+        if (c.username) {
+          drawerUsername.hidden = false;
+          drawerUsername.textContent = c.username;
+        } else {
+          drawerUsername.hidden = true;
+        }
+      }
       if (drawerPhone) drawerPhone.textContent = c.phone || '';
       if (drawerMsgCount) drawerMsgCount.textContent = c.total_messages || 0;
       if (drawerWindow) drawerWindow.textContent = c.within_24h ? 'Active' : 'Closed';
       if (crmName && document.activeElement !== crmName) crmName.value = c.visitor_name || '';
+      if (crmUsername && document.activeElement !== crmUsername) crmUsername.value = c.username || '';
       if (crmEmail && document.activeElement !== crmEmail) crmEmail.value = c.email || '';
       if (crmStatus && document.activeElement !== crmStatus) crmStatus.value = c.status || 'open';
       if (crmNotes && document.activeElement !== crmNotes) crmNotes.value = c.contact_notes || '';
@@ -355,11 +513,12 @@
         }
       }
 
-      var allMsgs = state.activeChat.messages || [];
-      var sig = computeMessagesSignature(allMsgs, presence);
+      var allMsgs = getMergedMessages(c.id, state.activeChat.messages || []);
+      var sig = computeMessagesSignature(allMsgs, presence, c);
       if (!forceScroll && sig === state.msgSignature) {
         return;
       }
+      var wasNearBottom = !streamEl || (streamEl.scrollHeight - streamEl.scrollTop - streamEl.clientHeight < 140);
       state.msgSignature = sig;
 
       var qLower = state.inchatFilter.toLowerCase();
@@ -368,7 +527,12 @@
         : allMsgs;
 
       var lastDateKey = '';
-      var html = '';
+      var html = (
+        '<div class="wa-e2ee-banner">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2Zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2Zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2Z"/></svg>' +
+          '<span>Messages and media are end-to-end TLS protected &amp; AES-256 encrypted at rest.</span>' +
+        '</div>'
+      );
 
       filtered.forEach(function (m) {
         if (m.date_key && m.date_key !== lastDateKey) {
@@ -377,7 +541,8 @@
         }
 
         var isOut = m.direction === 'outbound';
-        var rowCls = isOut ? 'wa-msg-row wa-msg-row--out' : 'wa-msg-row wa-msg-row--in';
+        var isOpt = String(m.id || '').indexOf('opt_') === 0;
+        var rowCls = (isOut ? 'wa-msg-row wa-msg-row--out' : 'wa-msg-row wa-msg-row--in') + (m.status === 'sending' ? ' is-sending' : '');
 
         var quotedHtml = '';
         if (m.quoted) {
@@ -389,26 +554,29 @@
           );
         }
 
-        var reactionBtns = QUICK_REACTIONS.map(function (em) {
-          return '<button type="button" data-wa-react="' + m.id + '" data-wa-emoji-val="' + em + '" title="React ' + em + '">' + em + '</button>';
-        }).join('');
+        var hoverBar = '';
+        if (!isOpt) {
+          var reactionBtns = QUICK_REACTIONS.map(function (em) {
+            return '<button type="button" data-wa-react="' + m.id + '" data-wa-emoji-val="' + em + '" title="React ' + em + '">' + em + '</button>';
+          }).join('');
 
-        var hoverBar = (
-          '<div class="wa-msg-actions">' +
-            reactionBtns +
-            (m.wamid ? '<button type="button" data-wa-reply-btn="' + escapeHtml(m.wamid) + '" data-wa-reply-who="' + escapeHtml(isOut ? 'You' : c.name) + '" data-wa-reply-txt="' + escapeHtml((m.body || m.type || 'Message').slice(0, 90)) + '" title="Reply">↩</button>' : '') +
-          '</div>'
-        );
+          hoverBar = (
+            '<div class="wa-msg-actions">' +
+              reactionBtns +
+              (m.wamid ? '<button type="button" data-wa-reply-btn="' + escapeHtml(m.wamid) + '" data-wa-reply-who="' + escapeHtml(isOut ? 'You' : c.name) + '" data-wa-reply-txt="' + escapeHtml((m.body || m.type || 'Message').slice(0, 90)) + '" title="Reply">↩</button>' : '') +
+            '</div>'
+          );
+        }
 
         html += (
-          '<div class="' + rowCls + '" data-wa-msg-id="' + m.id + '" data-wa-wamid="' + escapeHtml(m.wamid || '') + '">' +
+          '<div class="' + rowCls + '" data-wa-msg-id="' + escapeHtml(m.id) + '" data-wa-wamid="' + escapeHtml(m.wamid || '') + '">' +
             hoverBar +
             '<div class="wa-bubble">' +
               (isOut && m.sender_name ? '<div class="wa-bubble__sender">' + escapeHtml(m.sender_name) + '</div>' : '') +
               quotedHtml +
               renderMediaInner(m) +
-              (m.html ? '<div dir="auto">' + m.html + '</div>' : '') +
-              (m.error ? '<div style="font-size:0.72rem;color:#EF4444;margin-top:3px;">⚠ ' + escapeHtml(m.error) + '</div>' : '') +
+              (m.html ? '<div class="wa-bubble__text" dir="auto">' + m.html + '</div>' : '') +
+              (m.error ? '<div class="wa-bubble__err">⚠ ' + escapeHtml(m.error) + '</div>' : '') +
               '<div class="wa-bubble__foot">' +
                 '<span>' + escapeHtml(m.time || '') + '</span>' +
                 (isOut ? ticksSvg(m.status) : '') +
@@ -428,9 +596,11 @@
       }
 
       if (messagesEl) {
-        messagesEl.innerHTML = html || '<div class="wa-date-divider">No messages in this conversation yet</div>';
+        messagesEl.innerHTML = filtered.length || presence.ai_typing
+          ? html
+          : html + '<div class="wa-date-divider">No messages in this conversation yet</div>';
       }
-      if (streamEl) {
+      if (streamEl && (forceScroll || wasNearBottom)) {
         streamEl.scrollTop = streamEl.scrollHeight;
       }
     }
@@ -443,10 +613,18 @@
       clearReplyTo();
       root.classList.add('is-mobile-chat');
 
-      // Optimistically clear unread badge on selected contact
+      // Optimistically clear unread badge on selected contact immediately
+      var clearedCount = 0;
       state.contacts.forEach(function (c) {
-        if (c.id === id) c.unread_count = 0;
+        if (c.id === id && c.unread_count > 0) {
+          clearedCount += Number(c.unread_count) || 0;
+          c.unread_count = 0;
+        }
       });
+      if (clearedCount > 0 && unreadTotalEl) {
+        var nextTotal = Math.max(0, (Number(unreadTotalEl.textContent) || 0) - clearedCount);
+        updateUnreadCounters(nextTotal);
+      }
       renderContacts();
 
       var url = urls.showTpl.replace('__ID__', encodeURIComponent(id));
@@ -464,7 +642,7 @@
     }
 
     function pollWorkspace() {
-      if (document.hidden || state.sending || state.rec.active) return;
+      if (document.hidden || state.rec.active) return;
 
       var params = new URLSearchParams();
       if (state.activeId) params.set('active_id', state.activeId);
@@ -531,33 +709,172 @@
       }).join('');
     }
 
-    function sendComposerPayload(extraFormData) {
-      if (!state.activeId || state.sending) return;
+    function pushOptimisticBubble(chatId, optMsg, sidebarPreview) {
+      if (!state.optimisticByChat[chatId]) {
+        state.optimisticByChat[chatId] = [];
+      }
+      state.optimisticByChat[chatId].push(optMsg);
+
+      // Move active contact to top (respecting pinned order) & show 🕒 status immediately
+      state.contacts.forEach(function (c) {
+        if (c.id === chatId) {
+          c.preview = sidebarPreview;
+          c.last_direction = 'outbound';
+          c.last_status = 'sending';
+          c.time_label = optMsg.time;
+        }
+      });
+
+      state.msgSignature = '';
+      renderContacts();
+      renderActiveChat(true);
+    }
+
+    function markOptimisticFailed(chatId, idemKey, errMsg) {
+      var list = state.optimisticByChat[chatId] || [];
+      list.forEach(function (m) {
+        if (m.idempotency_key === idemKey) {
+          m.status = 'failed';
+          m.error = errMsg || 'Failed to send';
+        }
+      });
+      state.msgSignature = '';
+      renderActiveChat(false);
+    }
+
+    /**
+     * Zero-Latency WhatsApp Send Pipeline:
+     * 1. Enforces per-draft `idempotency_key` so rapid double-clicks in the same millisecond NEVER duplicate
+     * 2. Clears composer in 0ms (never blocks typing/sending consecutive messages!)
+     * 3. Renders message immediately with WhatsApp Clock SVG (`🕒`)
+     * 4. Reconciles seamlessly with server `sent` (`✓`) -> `delivered` (`✓✓`) -> `read` (blue `✓✓`)
+     */
+    function sendComposerPayload(extraFormData, optimisticMeta) {
+      if (!state.activeId) return;
+      var targetChatId = state.activeId;
+      var idemKey = extraFormData ? makeIdempotencyKey() : state.draftKey;
+
+      // Client-side idempotency guard: drop rapid double-clicks on the exact same draft
+      if (state.dispatchedKeys[idemKey]) {
+        return;
+      }
+
       var fd = extraFormData || new FormData();
+      var quotedSnapshot = state.replyTo ? {
+        wamid: state.replyTo.wamid,
+        sender: state.replyTo.sender,
+        preview: state.replyTo.preview
+      } : null;
+
+      var optType = (optimisticMeta && optimisticMeta.type) || 'text';
+      var optBody = (optimisticMeta && optimisticMeta.body) || '';
+      var optHtml = '';
+      var optBlobUrl = (optimisticMeta && optimisticMeta.blobUrl) || null;
+      var optDuration = (optimisticMeta && optimisticMeta.duration) || null;
+      var optFilename = (optimisticMeta && optimisticMeta.filename) || null;
+      var optLocation = (optimisticMeta && optimisticMeta.location) || null;
+      var sidebarPreview = 'Message';
 
       if (!extraFormData) {
         var text = inputEl ? inputEl.value.trim() : '';
-        if (!text && !state.stagedFiles.length) return;
+        var filesSnapshot = state.stagedFiles.slice();
+        if (!text && !filesSnapshot.length) return;
+
+        // Rotate draft key & clear composer IMMEDIATELY (0ms non-blocking UX!)
+        state.dispatchedKeys[idemKey] = true;
+        state.draftKey = makeIdempotencyKey();
+
+        if (inputEl) {
+          inputEl.value = '';
+          inputEl.style.height = 'auto';
+          inputEl.focus();
+        }
+        state.stagedFiles = [];
+        renderStagedFiles();
+        clearReplyTo();
+        syncComposerButtons();
+
         if (text) fd.append('message', text);
-        state.stagedFiles.forEach(function (f) {
+        filesSnapshot.forEach(function (f) {
           fd.append('attachments[]', f);
         });
+
+        if (filesSnapshot.length > 0) {
+          var firstFile = filesSnapshot[0];
+          var fMime = (firstFile.type || '').toLowerCase();
+          optFilename = firstFile.name;
+          if (fMime.indexOf('image/') === 0) {
+            optType = 'image';
+            optBlobUrl = URL.createObjectURL(firstFile);
+            sidebarPreview = text ? ('📷 ' + text) : '📷 Photo';
+          } else if (fMime.indexOf('video/') === 0) {
+            optType = 'video';
+            optBlobUrl = URL.createObjectURL(firstFile);
+            sidebarPreview = text ? ('🎥 ' + text) : '🎥 Video';
+          } else {
+            optType = 'document';
+            sidebarPreview = '📄 ' + firstFile.name;
+          }
+          optBody = text;
+          optHtml = text ? formatClientTextHtml(text) : '';
+        } else {
+          optType = 'text';
+          optBody = text;
+          optHtml = formatClientTextHtml(text);
+          sidebarPreview = text;
+        }
+      } else {
+        state.dispatchedKeys[idemKey] = true;
+        clearReplyTo();
+        if (optType === 'voice') {
+          sidebarPreview = '🎤 Voice message';
+        } else if (optType === 'location') {
+          sidebarPreview = '📍 ' + ((optLocation && optLocation.name) || 'Shared location');
+        } else if (optType === 'template') {
+          optHtml = '<span style="display:inline-flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:600;color:var(--wa-green);">📋 Template sent: <strong>' + escapeHtml(optBody) + '</strong></span>';
+          sidebarPreview = '📋 Template: ' + optBody;
+        }
       }
 
-      if (state.replyTo && state.replyTo.wamid) {
-        fd.append('reply_to_wamid', state.replyTo.wamid);
+      fd.append('idempotency_key', idemKey);
+      if (quotedSnapshot && quotedSnapshot.wamid) {
+        fd.append('reply_to_wamid', quotedSnapshot.wamid);
       }
 
-      state.sending = true;
-      if (sendBtn) sendBtn.disabled = true;
+      // Render 0ms optimistic bubble with WhatsApp Clock SVG (`🕒`)
+      pushOptimisticBubble(targetChatId, {
+        id: 'opt_' + idemKey,
+        idempotency_key: idemKey,
+        wamid: null,
+        quoted: quotedSnapshot,
+        direction: 'outbound',
+        sender_type: 'admin',
+        sender_name: null,
+        type: optType,
+        body: optBody,
+        html: optHtml,
+        media_url: optBlobUrl,
+        download_url: optBlobUrl,
+        media_filename: optFilename,
+        media_duration: optDuration,
+        location: optLocation,
+        status: 'sending',
+        time: nowTimeHHMM(),
+        date_key: todayDateKey(),
+        date_label: 'Today',
+        _blobUrl: optBlobUrl
+      }, sidebarPreview);
 
-      var url = urls.sendTpl.replace('__ID__', encodeURIComponent(state.activeId));
+      state.inFlightCount++;
+      var url = urls.sendTpl.replace('__ID__', encodeURIComponent(targetChatId));
+
       fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-TOKEN': csrfToken()
+          'X-CSRF-TOKEN': csrfToken(),
+          'X-Idempotency-Key': idemKey
         },
         credentials: 'same-origin',
         body: fd
@@ -565,41 +882,44 @@
         .then(function (r) { return r.json(); })
         .then(function (body) {
           if (!body || !body.ok) {
-            if (window.empetixToast) window.empetixToast((body && body.message) || 'Failed to send WhatsApp message.', 'error');
+            var errMsg = (body && body.message) || 'Failed to send WhatsApp message.';
+            markOptimisticFailed(targetChatId, idemKey, errMsg);
+            if (window.empetixToast) window.empetixToast(errMsg, 'error');
             return;
           }
-          if (!extraFormData) {
-            if (inputEl) {
-              inputEl.value = '';
-              inputEl.style.height = 'auto';
-            }
-            state.stagedFiles = [];
-            renderStagedFiles();
+
+          if (targetChatId === state.activeId && body.active_chat) {
+            state.activeChat = body.active_chat;
+            state.msgSignature = '';
+            renderActiveChat(false);
           }
-          clearReplyTo();
-          syncComposerButtons();
-          state.activeChat = body.active_chat;
-          state.msgSignature = '';
-          renderActiveChat(true);
-          pollWorkspace();
+
+          // Schedule fast follow-up polls so post-response Meta `sent` (`✓`) & `delivered` (`✓✓`) ticks appear immediately
+          setTimeout(pollWorkspace, 700);
+          setTimeout(pollWorkspace, 1900);
         })
         .catch(function () {
+          markOptimisticFailed(targetChatId, idemKey, 'Network error while sending');
           if (window.empetixToast) window.empetixToast('Network error while sending WhatsApp message.', 'error');
         })
         .finally(function () {
-          state.sending = false;
-          if (sendBtn) sendBtn.disabled = false;
+          state.inFlightCount = Math.max(0, state.inFlightCount - 1);
         });
     }
 
     // ---------------- Voice Note Recording ----------------
+    /**
+     * Prefer native Ogg Opus (Firefox) -> WebM Opus (Chrome/Edge/Brave, remuxed to RFC 7845 OggS on server)
+     * -> MP4 AAC last (Safari). Never pick Chrome's Opus-in-MP4 ahead of WebM Opus!
+     */
     function pickSupportedAudioMime() {
       if (typeof MediaRecorder === 'undefined') return '';
       var candidates = [
         'audio/ogg;codecs=opus',
-        'audio/mp4',
         'audio/webm;codecs=opus',
-        'audio/webm'
+        'audio/webm',
+        'audio/mp4;codecs=mp4a.40.2',
+        'audio/mp4'
       ];
       for (var i = 0; i < candidates.length; i++) {
         if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(candidates[i])) {
@@ -641,7 +961,6 @@
             if (recTimerEl) recTimerEl.textContent = formatDuration(elapsed);
           }, 500);
 
-          // Live Audio Visualizer
           try {
             var AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (AudioCtx && recBarsEl) {
@@ -696,16 +1015,22 @@
         }
         if (!shouldSend || !state.rec.chunks.length) return;
 
-        var mime = recorder.mimeType || 'audio/ogg';
-        var ext = mime.indexOf('mp4') !== -1 ? 'm4a' : (mime.indexOf('ogg') !== -1 ? 'ogg' : 'webm');
+        var mime = recorder.mimeType || 'audio/webm;codecs=opus';
+        var ext = mime.indexOf('ogg') !== -1 ? 'ogg' : (mime.indexOf('mp4') !== -1 ? 'm4a' : 'webm');
         var blob = new Blob(state.rec.chunks, { type: mime });
+        var localBlobUrl = URL.createObjectURL(blob);
         var file = new File([blob], 'voice-note.' + ext, { type: mime });
 
         var fd = new FormData();
         fd.append('mode', 'voice');
         fd.append('voice_note', file);
         fd.append('duration', String(durationSec));
-        sendComposerPayload(fd);
+
+        sendComposerPayload(fd, {
+          type: 'voice',
+          blobUrl: localBlobUrl,
+          duration: durationSec
+        });
       };
 
       try { recorder.stop(); } catch (e) {}
@@ -729,11 +1054,44 @@
         .then(function (body) {
           if (body && body.ok) {
             state.activeChat = body.active_chat;
+            state.msgSignature = '';
             renderActiveChat(false);
             pollWorkspace();
             if (toastMsg && window.empetixToast) window.empetixToast(toastMsg, 'success');
           }
         });
+    }
+
+    // Contact Avatar Upload in Right Drawer
+    if (avatarInput) {
+      avatarInput.addEventListener('change', function () {
+        if (!avatarInput.files || !avatarInput.files[0] || !state.activeId) return;
+        var fd = new FormData();
+        fd.append('avatar', avatarInput.files[0]);
+        avatarInput.value = '';
+
+        var url = urls.contactTpl.replace('__ID__', encodeURIComponent(state.activeId));
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken()
+          },
+          credentials: 'same-origin',
+          body: fd
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (body) {
+            if (body && body.ok) {
+              state.activeChat = body.active_chat;
+              state.msgSignature = '';
+              renderActiveChat(false);
+              pollWorkspace();
+              if (window.empetixToast) window.empetixToast('Contact photo updated.', 'success');
+            }
+          });
+      });
     }
 
     // ---------------- Event Listeners ----------------
@@ -742,7 +1100,7 @@
       searchEl.addEventListener('input', function () {
         state.search = searchEl.value.trim();
         if (searchTimer) clearTimeout(searchTimer);
-        searchTimer = setTimeout(pollWorkspace, 260);
+        searchTimer = setTimeout(pollWorkspace, 240);
       });
     }
 
@@ -804,6 +1162,7 @@
         e.preventDefault();
         patchContactField({
           visitor_name: crmName ? crmName.value : '',
+          visitor_username: crmUsername ? crmUsername.value : '',
           visitor_email: crmEmail ? crmEmail.value : '',
           status: crmStatus ? crmStatus.value : 'open',
           contact_notes: crmNotes ? crmNotes.value : ''
@@ -893,8 +1252,15 @@
         e.preventDefault();
         var fd = new FormData(locForm);
         fd.append('mode', 'location');
+        var lat = parseFloat(locForm.querySelector('[name="latitude"]').value) || 0;
+        var lng = parseFloat(locForm.querySelector('[name="longitude"]').value) || 0;
+        var locName = locForm.querySelector('[name="location_name"]').value || '';
+        var locAddr = locForm.querySelector('[name="location_address"]').value || '';
         root.querySelector('[data-wa-modal="location"]').hidden = true;
-        sendComposerPayload(fd);
+        sendComposerPayload(fd, {
+          type: 'location',
+          location: { latitude: lat, longitude: lng, name: locName, address: locAddr }
+        });
       });
     }
 
@@ -915,8 +1281,13 @@
         e.preventDefault();
         var fd = new FormData(tplForm);
         fd.append('mode', 'template');
+        var tplName = tplForm.querySelector('[name="template_name"]').value || 'hello_world';
+        var tplLang = tplForm.querySelector('[name="template_language"]').value || 'en_US';
         root.querySelector('[data-wa-modal="template"]').hidden = true;
-        sendComposerPayload(fd);
+        sendComposerPayload(fd, {
+          type: 'template',
+          body: tplName + ' (' + tplLang + ')'
+        });
       });
     }
 
@@ -1150,7 +1521,6 @@
       }
     });
 
-    // Drag & Drop Attachments onto Stage
     root.addEventListener('dragover', function (e) { e.preventDefault(); });
     root.addEventListener('drop', function (e) {
       if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length && state.activeId) {
@@ -1159,7 +1529,7 @@
       }
     });
 
-    var pollTimer = setInterval(pollWorkspace, 2000);
+    var pollTimer = setInterval(pollWorkspace, 1800);
     document.addEventListener('livewire:navigating', function () {
       clearInterval(pollTimer);
       stopVoiceRecording(false);

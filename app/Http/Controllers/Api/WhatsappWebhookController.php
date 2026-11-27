@@ -99,6 +99,8 @@ class WhatsappWebhookController extends Controller
                 location: $item['location'] ?? null,
                 contacts: $item['contacts'] ?? null,
                 reaction: $item['reaction'] ?? null,
+                username: $item['username'] ?? null,
+                avatarUrl: $item['avatar_url'] ?? null,
             );
 
             if ($useQueue) {

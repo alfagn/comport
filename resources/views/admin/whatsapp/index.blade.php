@@ -93,11 +93,12 @@
           <button type="button" class="wa-icon-btn wa-mobile-back" data-wa-back aria-label="Back to contacts">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <div class="wa-avatar" data-wa-head-avatar>W</div>
+          <div class="wa-avatar" data-wa-head-avatar data-wa-toggle-drawer style="cursor:pointer;"></div>
           <div class="wa-chat-head__meta" data-wa-toggle-drawer style="cursor:pointer;">
             <div class="wa-chat-head__title-row">
               <h3 class="wa-chat-head__name" data-wa-head-name>Contact</h3>
-              <span class="wa-msg-counter-pill" data-wa-head-count>0 msgs</span>
+              <span class="wa-username-pill" data-wa-head-username hidden>@username</span>
+              <span class="wa-enc-pill" title="Messages &amp; media are encrypted at rest with AES-256">🔒 Encrypted</span>
             </div>
             <p class="wa-chat-head__sub" data-wa-head-sub>+20…</p>
           </div>
@@ -247,8 +248,15 @@
 
     <div class="wa-info-drawer__body">
       <div class="wa-info-profile">
-        <div class="wa-avatar wa-avatar--lg" data-wa-drawer-avatar>W</div>
+        <div class="wa-avatar-upload-wrap">
+          <div class="wa-avatar wa-avatar--lg" data-wa-drawer-avatar></div>
+          <label class="wa-avatar-cam-btn" title="Upload contact profile photo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <input type="file" accept="image/*" hidden data-wa-avatar-input/>
+          </label>
+        </div>
         <h4 data-wa-drawer-title>Contact</h4>
+        <div class="wa-drawer-handle" data-wa-drawer-username hidden>@username</div>
         <p data-wa-drawer-phone>+20…</p>
         <div class="wa-info-kpis">
           <div><strong data-wa-drawer-msg-count>0</strong><span>Messages</span></div>
@@ -260,6 +268,10 @@
         <label class="wa-field">
           <span>Contact Name</span>
           <input type="text" name="visitor_name" class="input" data-wa-crm-name placeholder="Client name"/>
+        </label>
+        <label class="wa-field">
+          <span>WhatsApp @username</span>
+          <input type="text" name="visitor_username" class="input" data-wa-crm-username placeholder="@username (if available)"/>
         </label>
         <label class="wa-field">
           <span>Email (Optional CRM tag)</span>
@@ -311,6 +323,10 @@
         <label class="wa-field">
           <span>Contact Name</span>
           <input type="text" name="customer_name" class="input" placeholder="e.g. Ahmed Tarek"/>
+        </label>
+        <label class="wa-field">
+          <span>WhatsApp @username (Optional)</span>
+          <input type="text" name="username" class="input" placeholder="e.g. @ahmedtarek"/>
         </label>
         <label class="wa-field">
           <span>Initial Action</span>

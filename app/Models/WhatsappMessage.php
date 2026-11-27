@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\EncryptedJsonOrPlain;
+use App\Casts\EncryptedTextOrPlain;
 use Database\Factories\WhatsappMessageFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +50,7 @@ class WhatsappMessage extends Model
     protected $fillable = [
         'support_chat_session_id',
         'wa_message_id',
+        'idempotency_key',
         'reply_to_wa_message_id',
         'direction',
         'sender_type',
@@ -75,9 +78,10 @@ class WhatsappMessage extends Model
     protected function casts(): array
     {
         return [
+            'body' => EncryptedTextOrPlain::class,
+            'metadata' => EncryptedJsonOrPlain::class,
             'media_size' => 'integer',
             'media_duration' => 'integer',
-            'metadata' => 'array',
             'delivered_at' => 'datetime',
             'read_at' => 'datetime',
             'notified_email_at' => 'datetime',

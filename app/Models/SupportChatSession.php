@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\EncryptedTextOrPlain;
 use Database\Factories\SupportChatSessionFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,12 +42,13 @@ class SupportChatSession extends Model
     ];
 
     protected $fillable = [
-        'token', 'conversation_id', 'channel', 'visitor_name', 'visitor_email',
-        'visitor_phone', 'external_thread_id', 'status', 'ai_paused', 'is_pinned',
-        'handoff_summary', 'contact_notes', 'contact_message_id', 'message_count',
-        'unread_count', 'ip_address', 'user_agent', 'landing_page',
-        'last_external_message_id', 'last_message_preview', 'last_message_at',
-        'last_admin_read_at', 'last_customer_message_at', 'last_unread_notified_at',
+        'token', 'conversation_id', 'channel', 'visitor_name', 'visitor_username',
+        'visitor_avatar', 'visitor_email', 'visitor_phone', 'external_thread_id',
+        'status', 'ai_paused', 'is_pinned', 'handoff_summary', 'contact_notes',
+        'contact_message_id', 'message_count', 'unread_count', 'ip_address',
+        'user_agent', 'landing_page', 'last_external_message_id', 'last_message_preview',
+        'last_message_at', 'last_admin_read_at', 'last_customer_message_at',
+        'last_unread_notified_at',
     ];
 
     /**
@@ -59,6 +61,9 @@ class SupportChatSession extends Model
             'is_pinned' => 'boolean',
             'message_count' => 'integer',
             'unread_count' => 'integer',
+            'last_message_preview' => EncryptedTextOrPlain::class,
+            'contact_notes' => EncryptedTextOrPlain::class,
+            'handoff_summary' => EncryptedTextOrPlain::class,
             'last_message_at' => 'datetime',
             'last_admin_read_at' => 'datetime',
             'last_customer_message_at' => 'datetime',

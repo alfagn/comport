@@ -33,6 +33,8 @@ class ProcessIncomingWhatsappMessage implements ShouldQueue
         public ?array $location = null,
         public ?array $contacts = null,
         public ?array $reaction = null,
+        public ?string $username = null,
+        public ?string $avatarUrl = null,
     ) {}
 
     public function handle(WhatsappCustomerSupportService $support): void
@@ -48,6 +50,8 @@ class ProcessIncomingWhatsappMessage implements ShouldQueue
             location: $this->location,
             contacts: $this->contacts,
             reaction: $this->reaction,
+            username: $this->username,
+            avatarUrl: $this->avatarUrl,
         );
     }
 }

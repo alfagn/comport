@@ -171,7 +171,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/poll', [Admin\WhatsappInboxController::class, 'poll'])->name('poll');
             Route::post('/conversations', [Admin\WhatsappInboxController::class, 'startConversation'])->name('start');
             Route::get('/conversations/{id}', [Admin\WhatsappInboxController::class, 'show'])->whereNumber('id')->name('show');
-            Route::patch('/conversations/{id}', [Admin\WhatsappInboxController::class, 'updateContact'])->whereNumber('id')->name('contact.update');
+            Route::match(['patch', 'post'], '/conversations/{id}', [Admin\WhatsappInboxController::class, 'updateContact'])->whereNumber('id')->name('contact.update');
+            Route::get('/conversations/{id}/avatar', [Admin\WhatsappInboxController::class, 'avatar'])->whereNumber('id')->name('contact.avatar');
             Route::delete('/conversations/{id}', [Admin\WhatsappInboxController::class, 'destroy'])->whereNumber('id')->name('destroy');
             Route::post('/conversations/{id}/send', [Admin\WhatsappInboxController::class, 'sendMessage'])->whereNumber('id')->name('send');
             Route::post('/conversations/{id}/messages/{messageId}/react', [Admin\WhatsappInboxController::class, 'react'])->whereNumber(['id', 'messageId'])->name('react');

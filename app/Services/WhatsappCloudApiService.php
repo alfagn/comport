@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use App\Support\WebmOpusToOggConverter;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Process;
@@ -140,13 +141,34 @@ class WhatsappCloudApiService
     }
 
     /**
-     * Human-readable E.164 phone string (+2010...).
+     * Human-readable E.164 phone string (+20 10 5520 9612).
      */
     public function displayPhone(string $phone): string
     {
         $digits = $this->normalizePhone($phone);
 
         return $digits !== '' ? '+'.$digits : $phone;
+    }
+
+    /**
+     * Spaced international phone string for WhatsApp Web style headers & cards.
+     */
+    public function formattedPhone(string $phone): string
+    {
+        $digits = $this->normalizePhone($phone);
+        if ($digits === '') {
+            return $phone;
+        }
+
+        if (preg_match('/^20(\d{2})(\d{4})(\d{4})$/', $digits, $m)) {
+            return "+20 {$m[1]} {$m[2]} {$m[3]}";
+        }
+
+        if (preg_match('/^966(\d{2})(\d{3})(\d{4})$/', $digits, $m)) {
+            return "+966 {$m[1]} {$m[2]} {$m[3]}";
+        }
+
+        return '+'.$digits;
     }
 
     /**
@@ -185,12 +207,17 @@ class WhatsappCloudApiService
 
     /**
      * Upload a binary media file to Meta's WhatsApp `/media` endpoint and return its `media_id`.
-     * Automatically transcodes browser `audio/webm` voice recordings to `audio/ogg` (Opus) when ffmpeg is available.
+     * Automatically converts browser `audio/webm` (or voice recordings) into RFC 7845 `audio/ogg`
+     * Opus via `ffmpeg` when installed or our built-in pure-PHP `WebmOpusToOggConverter`.
      *
-     * @return array{media_id: string, mime_type: string, filename: string}
+     * @return array{media_id: string, mime_type: string, filename: string, converted_bytes: ?string}
      */
-    public function uploadMedia(string $absolutePath, string $mimeType, string $filename): array
-    {
+    public function uploadMedia(
+        string $absolutePath,
+        string $mimeType,
+        string $filename,
+        bool $isVoice = false,
+    ): array {
         if (! $this->isConfigured()) {
             throw new RuntimeException('WhatsApp Cloud API credentials are not configured yet.');
         }
@@ -203,18 +230,30 @@ class WhatsappCloudApiService
         $uploadMime = strtolower(trim(explode(';', $mimeType)[0]));
         $uploadFilename = $filename;
         $tempConverted = null;
+        $convertedBytes = null;
 
-        // Browser MediaRecorder on Chromium often outputs audio/webm, whereas Meta WhatsApp expects audio/ogg (Opus) or audio/mp4/mpeg.
-        if (in_array($uploadMime, ['audio/webm', 'video/webm'], true)) {
+        $headBytes = (string) file_get_contents($absolutePath, false, null, 0, 16);
+        $isOggContainer = str_starts_with($headBytes, 'OggS');
+        $isWebmContainer = str_starts_with($headBytes, "\x1A\x45\xDF\xA3");
+
+        if ($isOggContainer) {
+            $uploadMime = 'audio/ogg';
+            $uploadFilename = pathinfo($filename, PATHINFO_FILENAME).'.ogg';
+        } elseif ($isWebmContainer || in_array($uploadMime, ['audio/webm', 'video/webm'], true) || ($isVoice && $uploadMime !== 'audio/ogg')) {
             $converted = $this->transcodeWebmToOggOpus($absolutePath);
-            if ($converted !== null) {
+            if ($converted === null && $isWebmContainer) {
+                $converted = WebmOpusToOggConverter::convertFile($absolutePath);
+            }
+
+            if ($converted !== null && is_file($converted)) {
                 $tempConverted = $converted;
                 $uploadPath = $converted;
                 $uploadMime = 'audio/ogg';
                 $uploadFilename = pathinfo($filename, PATHINFO_FILENAME).'.ogg';
-            } else {
-                $uploadMime = 'audio/ogg';
-                $uploadFilename = pathinfo($filename, PATHINFO_FILENAME).'.ogg';
+                $convertedBytes = (string) file_get_contents($converted);
+            } elseif ($uploadMime === 'audio/x-m4a' || $uploadMime === 'audio/m4a') {
+                $uploadMime = 'audio/mp4';
+                $uploadFilename = pathinfo($filename, PATHINFO_FILENAME).'.m4a';
             }
         }
 
@@ -222,7 +261,7 @@ class WhatsappCloudApiService
         $endpoint = "{$baseUrl}/{$this->apiVersion()}/{$this->phoneNumberId()}/media";
 
         try {
-            $contents = (string) file_get_contents($uploadPath);
+            $contents = $convertedBytes ?? (string) file_get_contents($uploadPath);
             $response = Http::withToken((string) $this->accessToken())
                 ->acceptJson()
                 ->timeout(45)
@@ -250,6 +289,7 @@ class WhatsappCloudApiService
             'media_id' => $mediaId,
             'mime_type' => $uploadMime,
             'filename' => $uploadFilename,
+            'converted_bytes' => $convertedBytes,
         ];
     }
 
@@ -266,6 +306,7 @@ class WhatsappCloudApiService
         ?string $filename = null,
         ?string $replyToWamid = null,
         bool $isVoice = false,
+        ?string $uploadedMime = null,
     ): array {
         $recipient = $this->normalizePhone($to);
         if ($recipient === '') {
@@ -287,7 +328,9 @@ class WhatsappCloudApiService
             $mediaPayload['filename'] = $filename;
         }
 
-        if ($waType === 'audio' && ($isVoice || $type === 'voice')) {
+        // Meta strictly requires `audio/ogg` (Opus) when `voice: true` is set; non-OGG audio (e.g. Safari AAC MP4) must omit `voice: true` to avoid #131053 Media upload error.
+        $canFlagNativeVoice = $uploadedMime === null || $uploadedMime === '' || $uploadedMime === 'audio/ogg';
+        if ($waType === 'audio' && ($isVoice || $type === 'voice') && $canFlagNativeVoice) {
             $mediaPayload['voice'] = true;
         }
 
@@ -519,7 +562,11 @@ class WhatsappCloudApiService
                 foreach ((array) ($value['contacts'] ?? []) as $contact) {
                     $waId = (string) ($contact['wa_id'] ?? '');
                     if ($waId !== '') {
-                        $contactsByWaId[$waId] = $contact['profile']['name'] ?? null;
+                        $contactsByWaId[$waId] = [
+                            'name' => $contact['profile']['name'] ?? null,
+                            'username' => $contact['profile']['username'] ?? ($contact['username'] ?? null),
+                            'avatar' => $contact['profile']['picture_url'] ?? ($contact['profile']['avatar'] ?? null),
+                        ];
                     }
                 }
 
@@ -566,9 +613,13 @@ class WhatsappCloudApiService
                         ];
                     }
 
+                    $contactInfo = $contactsByWaId[$from] ?? [];
+
                     $extracted[] = [
                         'wa_id' => $this->normalizePhone($from),
-                        'profile_name' => $contactsByWaId[$from] ?? null,
+                        'profile_name' => $contactInfo['name'] ?? null,
+                        'username' => $contactInfo['username'] ?? null,
+                        'avatar_url' => $contactInfo['avatar'] ?? null,
                         'message_id' => $messageId,
                         'text' => trim($text),
                         'type' => $type,
@@ -609,8 +660,13 @@ class WhatsappCloudApiService
                     }
 
                     $errorMsg = null;
-                    if (! empty($st['errors'][0]['title'])) {
-                        $errorMsg = (string) $st['errors'][0]['title'];
+                    if (! empty($st['errors'][0])) {
+                        $errObj = (array) $st['errors'][0];
+                        $title = (string) ($errObj['title'] ?? '');
+                        $details = (string) ($errObj['error_data']['details'] ?? '');
+                        $errorMsg = $details !== '' && $details !== $title
+                            ? "{$title}: {$details}"
+                            : ($title ?: (string) ($errObj['message'] ?? 'Delivery failed'));
                     }
 
                     $updates[] = [
@@ -723,7 +779,7 @@ class WhatsappCloudApiService
         try {
             $result = Process::timeout(15)->run([
                 'ffmpeg', '-y', '-i', $sourcePath,
-                '-vn', '-c:a', 'libopus', '-b:a', '48k',
+                '-vn', '-c:a', 'libopus', '-b:a', '32k', '-ar', '48000', '-ac', '1', '-application', 'voip',
                 $targetPath,
             ]);
 

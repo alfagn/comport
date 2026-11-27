@@ -304,25 +304,64 @@
 }
 
 .wa-avatar {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: #00A884;
+  background: #6A7175;
   color: #FFFFFF;
-  font-weight: 800;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.02rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   position: relative;
+  overflow: hidden;
+}
+
+.wa-avatar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .wa-avatar--lg {
-  width: 74px;
-  height: 74px;
-  font-size: 1.65rem;
+  width: 82px;
+  height: 82px;
+  font-size: 1.7rem;
+  margin: 0;
+}
+
+.wa-avatar-upload-wrap {
+  position: relative;
+  width: 82px;
+  height: 82px;
   margin: 0 auto 10px;
+}
+
+.wa-avatar-cam-btn {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--wa-green);
+  color: #FFFFFF;
+  border: 2px solid var(--wa-sidebar-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
+}
+
+.wa-drawer-handle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--wa-green);
+  margin-bottom: 3px;
 }
 
 .wa-contact-row__main {
@@ -335,27 +374,68 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 3px;
+  margin-bottom: 1px;
 }
 
 .wa-contact-row__name {
-  font-size: 0.92rem;
-  font-weight: 700;
+  font-size: 0.94rem;
+  font-weight: 500;
   color: var(--wa-bubble-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.wa-contact-row.has-unread .wa-contact-row__name {
+  font-weight: 800;
+  color: var(--wa-bubble-text);
+}
+
+.wa-contact-row__identity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+  font-size: 0.72rem;
+  color: var(--wa-bubble-sub);
+}
+
+.wa-contact-row__phone {
+  font-variant-numeric: tabular-nums;
+}
+
+.wa-contact-row.has-unread .wa-contact-row__phone {
+  color: #1FA855;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .wa-contact-row.has-unread .wa-contact-row__phone {
+  color: var(--wa-green-bright);
+}
+
+.wa-contact-row__handle {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--wa-green);
+  background: rgba(0, 168, 132, 0.11);
+  padding: 0 6px;
+  border-radius: 999px;
+}
+
 .wa-contact-row__time {
   font-size: 0.72rem;
   color: var(--wa-bubble-sub);
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .wa-contact-row.has-unread .wa-contact-row__time {
-  color: var(--wa-green-bright);
+  color: #1FA855;
   font-weight: 700;
+}
+
+[data-theme="dark"] .wa-contact-row.has-unread .wa-contact-row__time {
+  color: var(--wa-green-bright);
 }
 
 .wa-contact-row__bottom {
@@ -366,17 +446,29 @@
 }
 
 .wa-contact-row__preview {
-  font-size: 0.81rem;
+  font-size: 0.82rem;
   color: var(--wa-bubble-sub);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .wa-contact-row.has-unread .wa-contact-row__preview {
   color: var(--wa-bubble-text);
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.wa-typing-green {
+  color: #1FA855;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .wa-typing-green {
+  color: var(--wa-green-bright);
 }
 
 .wa-contact-row__badges {
@@ -391,27 +483,26 @@
   height: 20px;
   padding: 0 6px;
   border-radius: 999px;
-  background: var(--wa-green-bright);
-  color: #052E16;
+  background: #25D366;
+  color: #FFFFFF;
   font-size: 0.72rem;
   font-weight: 800;
+  line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 1px 3px rgba(37, 211, 102, 0.35);
+}
+
+[data-theme="dark"] .wa-unread-badge {
+  background: #00A884;
+  color: #111B21;
 }
 
 .wa-pin-mark {
   color: var(--wa-bubble-sub);
-  font-size: 0.76rem;
-}
-
-.wa-total-mini {
-  font-size: 0.67rem;
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: rgba(134, 150, 160, 0.15);
-  color: var(--wa-bubble-sub);
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* ---------------- Center Chat Stage ---------------- */
@@ -550,13 +641,61 @@
   text-overflow: ellipsis;
 }
 
-.wa-msg-counter-pill {
-  font-size: 0.69rem;
+.wa-username-pill {
+  font-size: 0.71rem;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 1px 8px;
   border-radius: 999px;
   background: rgba(0, 168, 132, 0.14);
   color: var(--wa-green);
+}
+
+.wa-username-pill[hidden],
+.wa-drawer-handle[hidden] {
+  display: none !important;
+}
+
+.wa-enc-pill {
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(134, 150, 160, 0.14);
+  color: var(--wa-bubble-sub);
+}
+
+.wa-e2ee-banner {
+  align-self: center;
+  max-width: 520px;
+  margin: 4px 0 10px;
+  padding: 6px 13px;
+  border-radius: 8px;
+  background: #FFF5C4;
+  color: #54656F;
+  font-size: 0.73rem;
+  line-height: 1.4;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(11, 20, 26, 0.08);
+}
+
+[data-theme="dark"] .wa-e2ee-banner {
+  background: #182229;
+  color: #FFD279;
+}
+
+.wa-bubble__err {
+  font-size: 0.72rem;
+  color: #EF4444;
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+.wa-ticks.is-sending {
+  color: var(--wa-bubble-sub);
+  opacity: 0.85;
 }
 
 .wa-chat-head__sub {

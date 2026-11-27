@@ -9,22 +9,27 @@ use App\Models\WhatsappMessage;
 use App\Services\CustomerSupportChatService;
 use App\Services\WhatsappCloudApiService;
 use App\Services\WhatsappCustomerSupportService;
+use App\Services\WhatsappMediaCrypto;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Dedicated WhatsApp Business Inbox Studio (/admin/whatsapp).
  *
- * Completely independent from the Email Inbox: provides a WhatsApp Web /
- * Enterprise CRM layout with contacts list, unread counters, photos, videos,
- * voice note recording & waveform playback, document attachments, locations,
- * quoted replies, emoji reactions, blue read checkmarks, and unread email alerts.
+ * Authentic WhatsApp Web + Enterprise CRM architecture:
+ * - Zero-latency optimistic send (`status = sending` clock `🕒` -> `✓` -> `✓✓` -> blue `✓✓`)
+ * - Strict per-message idempotency (`X-Idempotency-Key` + unique DB index + burst lock)
+ * - Full AES-256 encryption at rest for messages, metadata, notes, and media binaries
+ * - Contact profile photos, `@username`, and formatted international phone numbers
+ * - Authentic unread-only green badges, bold unread contact names, and green timestamps
  */
 class WhatsappInboxController extends Controller
 {
@@ -36,6 +41,7 @@ class WhatsappInboxController extends Controller
         private WhatsappCloudApiService $whatsappApi,
         private WhatsappCustomerSupportService $whatsappSupport,
         private CustomerSupportChatService $supportChats,
+        private WhatsappMediaCrypto $mediaCrypto,
     ) {}
 
     /**
@@ -47,7 +53,7 @@ class WhatsappInboxController extends Controller
 
         $requestedChatId = (int) $request->query('chat', 0);
 
-        $contacts = $this->queryContacts()->limit(80)->get();
+        $contacts = $this->loadContacts();
         $activeSession = null;
 
         if ($requestedChatId > 0) {
@@ -66,9 +72,7 @@ class WhatsappInboxController extends Controller
             $initialPayload = $this->serializeActiveChat($activeSession);
         }
 
-        $contactsPayload = $this->queryContacts()
-            ->limit(80)
-            ->get()
+        $contactsPayload = $this->loadContacts()
             ->map(fn (SupportChatSession $s): array => $this->serializeContact($s))
             ->values()
             ->all();
@@ -118,9 +122,7 @@ class WhatsappInboxController extends Controller
         // Trigger email notifications for any unseen messages on OTHER threads past the grace delay
         $this->whatsappSupport->dispatchOverdueUnreadEmailAlerts();
 
-        $contacts = $this->queryContacts($filter, $search)
-            ->limit(100)
-            ->get()
+        $contacts = $this->loadContacts($filter, $search, 100)
             ->map(fn (SupportChatSession $s): array => $this->serializeContact($s))
             ->values()
             ->all();
@@ -161,6 +163,7 @@ class WhatsappInboxController extends Controller
         $validated = $request->validate([
             'phone' => ['required', 'string', 'min:7', 'max:30'],
             'customer_name' => ['nullable', 'string', 'max:120'],
+            'username' => ['nullable', 'string', 'max:120'],
             'mode' => ['required', 'in:contact_only,text,template'],
             'content' => ['nullable', 'string', 'max:3500'],
             'template_language' => ['nullable', 'string', 'max:20'],
@@ -176,6 +179,7 @@ class WhatsappInboxController extends Controller
                 $session = $this->whatsappSupport->findOrCreateWhatsappSession(
                     $normalized,
                     $validated['customer_name'] ?? null,
+                    $validated['username'] ?? null,
                 );
             } else {
                 $content = trim((string) ($validated['content'] ?? ''));
@@ -191,6 +195,10 @@ class WhatsappInboxController extends Controller
                     templateLang: $validated['template_language'] ?: 'en_US',
                     sender: $request->user(),
                 );
+
+                if (filled($validated['username'] ?? null)) {
+                    $session->forceFill(['visitor_username' => ltrim(trim((string) $validated['username']), '@')])->save();
+                }
             }
         } catch (RuntimeException $exception) {
             return response()->json([
@@ -208,6 +216,10 @@ class WhatsappInboxController extends Controller
 
     /**
      * Send text, photos, videos, documents, voice notes, locations, or templates inside an open thread.
+     *
+     * Enforces strict idempotency (`idempotency_key` / `X-Idempotency-Key` + burst guard)
+     * and dispatches to Meta Cloud API asynchronously after flushing the HTTP response
+     * so messages appear in 0ms with the WhatsApp clock (`🕒`) state.
      */
     public function sendMessage(Request $request, int $id): JsonResponse
     {
@@ -217,6 +229,7 @@ class WhatsappInboxController extends Controller
 
         $validated = $request->validate([
             'mode' => ['nullable', 'in:text,media,voice,location,template'],
+            'idempotency_key' => ['nullable', 'string', 'max:100'],
             'message' => ['nullable', 'string', 'max:4000'],
             'reply_to_wamid' => ['nullable', 'string', 'max:190'],
             'pause_ai' => ['nullable', 'boolean'],
@@ -233,14 +246,60 @@ class WhatsappInboxController extends Controller
         ]);
 
         $mode = (string) ($validated['mode'] ?? 'text');
-        $pauseAi = $request->has('pause_ai') ? $request->boolean('pause_ai') : (bool) $session->ai_paused || true;
+        $pauseAi = $request->has('pause_ai') ? $request->boolean('pause_ai') : true;
         $replyToWamid = $validated['reply_to_wamid'] ?? null;
         $captionOrBody = trim((string) ($validated['message'] ?? ''));
         $user = $request->user();
 
+        $rawKey = trim((string) ($request->header('X-Idempotency-Key') ?: ($validated['idempotency_key'] ?? '')));
+        $idempotencyKey = (string) Str::limit((string) preg_replace('/[^A-Za-z0-9._:-]/', '', $rawKey), 90, '');
+
+        // 1. Explicit Idempotency Key Guard (DB + Atomic Cache Lock)
+        if ($idempotencyKey !== '') {
+            $existing = WhatsappMessage::query()
+                ->where('idempotency_key', $idempotencyKey)
+                ->first();
+
+            if ($existing || ! Cache::add("whatsapp:idem_lock:{$idempotencyKey}", true, now()->addMinutes(10))) {
+                $session->refresh();
+
+                return response()->json([
+                    'ok' => true,
+                    'duplicate' => true,
+                    'contact' => $this->serializeContact($session),
+                    'active_chat' => $this->serializeActiveChat($session),
+                ]);
+            }
+        } else {
+            // 2. Rapid Double-Click Burst Guard (same user + chat + payload within 1 second)
+            $burstFingerprint = hash('sha256', implode('|', [
+                $session->id,
+                $user?->id ?? 0,
+                $mode,
+                $captionOrBody,
+                $validated['template_name'] ?? '',
+                $validated['latitude'] ?? '',
+                $validated['longitude'] ?? '',
+                $request->hasFile('voice_note') ? ($request->file('voice_note')->getSize() ?: 'v') : '',
+                count($request->file('attachments', [])),
+                (string) floor(microtime(true)),
+            ]));
+
+            if (! Cache::add("whatsapp:burst:{$burstFingerprint}", true, now()->addSeconds(2))) {
+                $session->refresh();
+
+                return response()->json([
+                    'ok' => true,
+                    'duplicate' => true,
+                    'contact' => $this->serializeContact($session),
+                    'active_chat' => $this->serializeActiveChat($session),
+                ]);
+            }
+        }
+
         try {
             if ($request->hasFile('voice_note')) {
-                $this->whatsappSupport->sendHumanMediaReply(
+                $this->whatsappSupport->queueInstantMediaReply(
                     session: $session,
                     file: $request->file('voice_note'),
                     caption: null,
@@ -249,11 +308,13 @@ class WhatsappInboxController extends Controller
                     pauseAi: $pauseAi,
                     sender: $user,
                     replyToWamid: $replyToWamid,
+                    idempotencyKey: $idempotencyKey ?: null,
                 );
             } elseif ($request->hasFile('attachments')) {
                 $files = $request->file('attachments', []);
                 foreach ($files as $idx => $file) {
-                    $this->whatsappSupport->sendHumanMediaReply(
+                    $itemKey = $idempotencyKey !== '' ? ($idx === 0 ? $idempotencyKey : "{$idempotencyKey}_{$idx}") : null;
+                    $this->whatsappSupport->queueInstantMediaReply(
                         session: $session,
                         file: $file,
                         caption: $idx === 0 && $captionOrBody !== '' ? $captionOrBody : null,
@@ -262,27 +323,54 @@ class WhatsappInboxController extends Controller
                         pauseAi: $pauseAi,
                         sender: $user,
                         replyToWamid: $idx === 0 ? $replyToWamid : null,
+                        idempotencyKey: $itemKey,
                     );
                 }
             } elseif ($mode === 'location' && isset($validated['latitude'], $validated['longitude'])) {
-                $this->whatsappSupport->sendHumanLocationReply(
+                $lat = (float) $validated['latitude'];
+                $lng = (float) $validated['longitude'];
+                $locName = $validated['location_name'] ?? null;
+                $locAddr = $validated['location_address'] ?? null;
+
+                $this->whatsappSupport->queueInstantOutboundMessage(
                     session: $session,
-                    latitude: (float) $validated['latitude'],
-                    longitude: (float) $validated['longitude'],
-                    name: $validated['location_name'] ?? null,
-                    address: $validated['location_address'] ?? null,
+                    attributes: [
+                        'reply_to_wa_message_id' => $replyToWamid ?: null,
+                        'sender_user_id' => $user?->id,
+                        'type' => 'location',
+                        'body' => $locName ?: $locAddr,
+                        'metadata' => [
+                            'location' => [
+                                'latitude' => $lat,
+                                'longitude' => $lng,
+                                'name' => $locName,
+                                'address' => $locAddr,
+                            ],
+                        ],
+                    ],
+                    transcriptNote: '[Sent Location: '.($locName ?: "{$lat}, {$lng}").']',
                     pauseAi: $pauseAi,
-                    sender: $user,
-                    replyToWamid: $replyToWamid,
+                    idempotencyKey: $idempotencyKey ?: null,
                 );
             } elseif ($mode === 'template' && filled($validated['template_name'] ?? null)) {
-                $this->whatsappSupport->sendOutboundCustomerMessage(
-                    phone: (string) ($session->external_thread_id ?: $session->visitor_phone),
-                    customerName: $session->visitor_name,
-                    mode: 'template',
-                    content: (string) $validated['template_name'],
-                    templateLang: $validated['template_language'] ?: 'en_US',
-                    sender: $user,
+                $tplName = trim((string) $validated['template_name']);
+                $tplLang = trim((string) ($validated['template_language'] ?: 'en_US'));
+                $note = "[Sent WhatsApp Template: {$tplName} ({$tplLang})]";
+
+                $this->whatsappSupport->queueInstantOutboundMessage(
+                    session: $session,
+                    attributes: [
+                        'sender_user_id' => $user?->id,
+                        'type' => 'template',
+                        'body' => $note,
+                        'metadata' => [
+                            'template_name' => $tplName,
+                            'language' => $tplLang,
+                        ],
+                    ],
+                    transcriptNote: $note,
+                    pauseAi: $pauseAi,
+                    idempotencyKey: $idempotencyKey ?: null,
                 );
             } else {
                 if ($captionOrBody === '') {
@@ -292,12 +380,33 @@ class WhatsappInboxController extends Controller
                     ], 422);
                 }
 
-                $this->whatsappSupport->sendHumanReply(
+                $quoted = null;
+                if (filled($replyToWamid)) {
+                    $target = WhatsappMessage::query()
+                        ->where('support_chat_session_id', $session->id)
+                        ->where('wa_message_id', $replyToWamid)
+                        ->first();
+                    if ($target) {
+                        $quoted = [
+                            'wamid' => $replyToWamid,
+                            'sender' => $target->isInbound() ? 'Customer' : 'Empetix',
+                            'preview' => $target->previewLabel(),
+                        ];
+                    }
+                }
+
+                $this->whatsappSupport->queueInstantOutboundMessage(
                     session: $session,
-                    message: $captionOrBody,
+                    attributes: [
+                        'reply_to_wa_message_id' => $replyToWamid ?: null,
+                        'sender_user_id' => $user?->id,
+                        'type' => 'text',
+                        'body' => $captionOrBody,
+                        'metadata' => $quoted ? ['quoted_preview' => $quoted] : null,
+                    ],
+                    transcriptNote: $captionOrBody,
                     pauseAi: $pauseAi,
-                    sender: $user,
-                    replyToWamid: $replyToWamid,
+                    idempotencyKey: $idempotencyKey ?: null,
                 );
             }
         } catch (RuntimeException $exception) {
@@ -348,7 +457,7 @@ class WhatsappInboxController extends Controller
     }
 
     /**
-     * Update contact CRM metadata, pin state, AI auto-reply toggle, or workflow status.
+     * Update contact CRM metadata, `@username`, profile photo, pin state, AI toggle, or workflow status.
      */
     public function updateContact(Request $request, int $id): JsonResponse
     {
@@ -356,11 +465,14 @@ class WhatsappInboxController extends Controller
 
         $validated = $request->validate([
             'visitor_name' => ['nullable', 'string', 'max:120'],
+            'visitor_username' => ['nullable', 'string', 'max:120'],
             'visitor_email' => ['nullable', 'email', 'max:160'],
             'contact_notes' => ['nullable', 'string', 'max:3000'],
             'status' => ['nullable', 'in:open,handed_off,closed'],
             'is_pinned' => ['nullable', 'boolean'],
             'ai_paused' => ['nullable', 'boolean'],
+            'avatar' => ['nullable', 'image', 'max:5120'],
+            'remove_avatar' => ['nullable', 'boolean'],
         ]);
 
         $updates = [];
@@ -369,11 +481,43 @@ class WhatsappInboxController extends Controller
                 $updates[$field] = $validated[$field] ?? null;
             }
         }
+
+        if ($request->exists('visitor_username')) {
+            $cleanUser = ltrim(trim((string) ($validated['visitor_username'] ?? '')), '@');
+            $updates['visitor_username'] = $cleanUser !== '' ? $cleanUser : null;
+        }
+
         if ($request->has('is_pinned')) {
             $updates['is_pinned'] = $request->boolean('is_pinned');
         }
         if ($request->has('ai_paused')) {
             $updates['ai_paused'] = $request->boolean('ai_paused');
+        }
+
+        if ($request->boolean('remove_avatar')) {
+            if ($session->visitor_avatar && str_starts_with($session->visitor_avatar, 'local:')) {
+                Storage::disk(WhatsappCustomerSupportService::MEDIA_DISK)
+                    ->delete(substr($session->visitor_avatar, 6));
+            }
+            $updates['visitor_avatar'] = null;
+        } elseif ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+            $mime = strtolower((string) ($file->getMimeType() ?: 'image/jpeg'));
+            $avatarPath = WhatsappCustomerSupportService::MEDIA_DIR.'/'.$session->id.'/avatar_'.substr((string) Str::uuid(), 0, 8).'.'.$ext;
+
+            if ($session->visitor_avatar && str_starts_with($session->visitor_avatar, 'local:')) {
+                $oldMeta = explode('|', substr($session->visitor_avatar, 6), 2);
+                Storage::disk(WhatsappCustomerSupportService::MEDIA_DISK)->delete($oldMeta[0]);
+            }
+
+            $this->mediaCrypto->putEncrypted(
+                WhatsappCustomerSupportService::MEDIA_DISK,
+                $avatarPath,
+                (string) $file->get(),
+            );
+
+            $updates['visitor_avatar'] = "local:{$avatarPath}|{$mime}";
         }
 
         if ($updates !== []) {
@@ -386,6 +530,41 @@ class WhatsappInboxController extends Controller
             'ok' => true,
             'contact' => $this->serializeContact($session),
             'active_chat' => $this->serializeActiveChat($session),
+        ]);
+    }
+
+    /**
+     * Stream a contact's encrypted profile photo securely.
+     */
+    public function avatar(int $id): Response
+    {
+        $session = SupportChatSession::whatsapp()->findOrFail($id);
+        $avatar = (string) ($session->visitor_avatar ?? '');
+
+        if ($avatar === '') {
+            throw new NotFoundHttpException('Contact avatar not set.');
+        }
+
+        if (str_starts_with($avatar, 'https://') || str_starts_with($avatar, 'http://')) {
+            return redirect()->away($avatar);
+        }
+
+        if (! str_starts_with($avatar, 'local:')) {
+            throw new NotFoundHttpException('Invalid avatar reference.');
+        }
+
+        [$path, $mime] = array_pad(explode('|', substr($avatar, 6), 2), 2, 'image/jpeg');
+        $bytes = $this->mediaCrypto->getDecrypted(WhatsappCustomerSupportService::MEDIA_DISK, $path);
+
+        if ($bytes === null || $bytes === '') {
+            throw new NotFoundHttpException('Avatar file missing.');
+        }
+
+        return response($bytes, 200, [
+            'Content-Type' => $mime ?: 'image/jpeg',
+            'Content-Length' => (string) strlen($bytes),
+            'Cache-Control' => 'private, max-age=3600',
+            'X-Content-Type-Options' => 'nosniff',
         ]);
     }
 
@@ -425,9 +604,10 @@ class WhatsappInboxController extends Controller
     }
 
     /**
-     * Stream an authenticated WhatsApp media file (image, voice note, audio, video, document).
+     * Decrypt and stream an authenticated WhatsApp media file (image, voice note, audio, video, document)
+     * with full HTTP Range (`206 Partial Content`) support for instant audio/video scrubbing.
      */
-    public function media(Request $request, int $messageId): BinaryFileResponse
+    public function media(Request $request, int $messageId): Response
     {
         $message = WhatsappMessage::query()->findOrFail($messageId);
 
@@ -436,34 +616,63 @@ class WhatsappInboxController extends Controller
         }
 
         $diskName = $message->media_disk ?: WhatsappCustomerSupportService::MEDIA_DISK;
-        $disk = Storage::disk($diskName);
+        $bytes = $this->mediaCrypto->getDecrypted($diskName, $message->media_path);
 
-        if (! $disk->exists($message->media_path)) {
+        if ($bytes === null || $bytes === '') {
             throw new NotFoundHttpException('Media file missing on disk.');
         }
 
-        $fullPath = $disk->path($message->media_path);
         $mime = $message->media_mime ?: 'application/octet-stream';
-        $filename = $message->media_filename ?: basename($message->media_path);
+        $filename = preg_replace('/[^A-Za-z0-9._-]/', '_', (string) ($message->media_filename ?: basename($message->media_path))) ?: 'media';
+        $totalLen = strlen($bytes);
 
         if ($request->boolean('download')) {
-            return response()->download($fullPath, $filename, [
+            return response($bytes, 200, [
                 'Content-Type' => $mime,
+                'Content-Length' => (string) $totalLen,
+                'Content-Disposition' => 'attachment; filename="'.$filename.'"',
                 'X-Content-Type-Options' => 'nosniff',
             ]);
         }
 
-        return response()->file($fullPath, [
+        $rangeHeader = $request->header('Range');
+        if (is_string($rangeHeader) && preg_match('/bytes=(\d*)-(\d*)/i', $rangeHeader, $matches) && $totalLen > 0) {
+            $start = $matches[1] !== '' ? (int) $matches[1] : 0;
+            $end = $matches[2] !== '' ? min($totalLen - 1, (int) $matches[2]) : ($totalLen - 1);
+
+            if ($start <= $end && $start < $totalLen) {
+                $slice = substr($bytes, $start, ($end - $start) + 1);
+
+                return response($slice, 206, [
+                    'Content-Type' => $mime,
+                    'Content-Length' => (string) strlen($slice),
+                    'Content-Range' => "bytes {$start}-{$end}/{$totalLen}",
+                    'Accept-Ranges' => 'bytes',
+                    'Cache-Control' => 'private, max-age=3600',
+                    'X-Content-Type-Options' => 'nosniff',
+                ]);
+            }
+        }
+
+        return response($bytes, 200, [
             'Content-Type' => $mime,
+            'Content-Length' => (string) $totalLen,
             'Accept-Ranges' => 'bytes',
+            'Cache-Control' => 'private, max-age=3600',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
 
-    protected function queryContacts(string $filter = 'all', string $search = '')
+    /**
+     * Load contacts with encrypted-aware search & latest message metadata eager-loaded.
+     *
+     * @return Collection<int, SupportChatSession>
+     */
+    protected function loadContacts(string $filter = 'all', string $search = '', int $limit = 80): Collection
     {
         $query = SupportChatSession::query()
             ->whatsapp()
+            ->with(['whatsappMessages' => fn ($q) => $q->latest('id')->limit($search !== '' ? 20 : 1)])
             ->orderByDesc('is_pinned')
             ->orderByDesc('last_message_at')
             ->orderByDesc('id');
@@ -478,18 +687,38 @@ class WhatsappInboxController extends Controller
             $query->where('ai_paused', true);
         }
 
-        if ($search !== '') {
-            $like = '%'.$search.'%';
-            $query->where(function ($q) use ($like) {
-                $q->where('visitor_name', 'like', $like)
-                    ->orWhere('visitor_phone', 'like', $like)
-                    ->orWhere('external_thread_id', 'like', $like)
-                    ->orWhere('last_message_preview', 'like', $like)
-                    ->orWhereHas('whatsappMessages', fn ($mq) => $mq->where('body', 'like', $like));
-            });
+        if ($search === '') {
+            return $query->limit($limit)->get();
         }
 
-        return $query;
+        $needle = mb_strtolower($search);
+        $candidates = $query->limit(250)->get();
+
+        return $candidates
+            ->filter(function (SupportChatSession $s) use ($needle): bool {
+                $haystack = implode(' ', [
+                    (string) $s->visitor_name,
+                    (string) $s->visitor_username,
+                    (string) $s->visitor_phone,
+                    (string) $s->external_thread_id,
+                    (string) $s->last_message_preview,
+                    (string) $s->contact_notes,
+                ]);
+
+                if (str_contains(mb_strtolower($haystack), $needle)) {
+                    return true;
+                }
+
+                foreach ($s->whatsappMessages as $m) {
+                    if (str_contains(mb_strtolower((string) ($m->body ?? '')), $needle)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            })
+            ->take($limit)
+            ->values();
     }
 
     /**
@@ -498,7 +727,13 @@ class WhatsappInboxController extends Controller
     protected function serializeContact(SupportChatSession $session): array
     {
         $presence = $this->supportChats->presenceFor($session);
-        $label = $session->visitorLabel();
+        $rawPhone = $session->visitor_phone ?: ($session->external_thread_id ? '+'.$session->external_thread_id : '');
+        $formattedPhone = $rawPhone !== '' ? $this->whatsappApi->formattedPhone($rawPhone) : '';
+        $displayName = trim((string) ($session->visitor_name ?? '')) !== ''
+            ? trim((string) $session->visitor_name)
+            : ($formattedPhone ?: $session->visitorLabel());
+
+        $cleanUsername = ltrim(trim((string) ($session->visitor_username ?? '')), '@');
         $paletteIdx = abs(crc32((string) ($session->external_thread_id ?: $session->id))) % count(self::AVATAR_PALETTE);
 
         $timeLabel = '';
@@ -508,18 +743,33 @@ class WhatsappInboxController extends Controller
                 : ($session->last_message_at->isYesterday() ? 'Yesterday' : $session->last_message_at->format('d/m/Y'));
         }
 
+        $latestMsg = $session->relationLoaded('whatsappMessages')
+            ? $session->whatsappMessages->first()
+            : WhatsappMessage::query()->where('support_chat_session_id', $session->id)->latest('id')->first();
+
         $totalMsgs = WhatsappMessage::query()->where('support_chat_session_id', $session->id)->count();
         if ($totalMsgs === 0 && $session->message_count > 0) {
             $totalMsgs = $session->message_count;
         }
 
+        $avatarUrl = null;
+        if (filled($session->visitor_avatar)) {
+            $avatarUrl = str_starts_with((string) $session->visitor_avatar, 'http')
+                ? (string) $session->visitor_avatar
+                : route('admin.whatsapp.contact.avatar', $session->id).'?v='.substr(md5((string) $session->visitor_avatar), 0, 8);
+        }
+
         return [
             'id' => $session->id,
-            'name' => $label,
+            'name' => $displayName,
             'visitor_name' => $session->visitor_name ?? '',
-            'phone' => $session->visitor_phone ?: ($session->external_thread_id ? '+'.$session->external_thread_id : ''),
+            'username' => $cleanUsername !== '' ? '@'.$cleanUsername : '',
+            'raw_username' => $cleanUsername,
+            'phone' => $formattedPhone ?: $rawPhone,
+            'raw_phone' => $rawPhone,
             'email' => $session->visitor_email ?? '',
-            'initial' => mb_strtoupper(mb_substr($label, 0, 1)) ?: 'W',
+            'avatar_url' => $avatarUrl,
+            'initial' => mb_strtoupper(mb_substr($displayName, 0, 1)) ?: 'W',
             'avatar_color' => self::AVATAR_PALETTE[$paletteIdx],
             'unread_count' => (int) $session->unread_count,
             'total_messages' => $totalMsgs,
@@ -528,7 +778,9 @@ class WhatsappInboxController extends Controller
             'status' => $session->status,
             'status_label' => $session->statusLabel(),
             'within_24h' => $session->withinCustomerServiceWindow(),
-            'preview' => $session->last_message_preview ?: ($session->handoff_summary ?: 'Start chatting on WhatsApp'),
+            'preview' => $session->last_message_preview ?: ($latestMsg?->previewLabel() ?: ($session->handoff_summary ?: 'Start chatting on WhatsApp')),
+            'last_direction' => $latestMsg?->direction,
+            'last_status' => $latestMsg?->status,
             'time_label' => $timeLabel,
             'ai_typing' => $presence['ai_typing'],
         ];
@@ -555,12 +807,14 @@ class WhatsappInboxController extends Controller
                 && (str_starts_with($body, '[Customer sent ') || str_starts_with($body, '[Customer shared '));
 
             $displayBody = $hideAutoPlaceholder ? '' : $body;
+            $meta = is_array($msg->metadata) ? $msg->metadata : [];
 
             return [
                 'id' => $msg->id,
                 'wamid' => $msg->wa_message_id,
+                'idempotency_key' => $msg->idempotency_key,
                 'reply_to_wamid' => $msg->reply_to_wa_message_id,
-                'quoted' => $msg->metadata['quoted_preview'] ?? null,
+                'quoted' => $meta['quoted_preview'] ?? null,
                 'direction' => $msg->direction,
                 'sender_type' => $msg->sender_type,
                 'sender_name' => match ($msg->sender_type) {
@@ -579,12 +833,13 @@ class WhatsappInboxController extends Controller
                 'media_filename' => $msg->media_filename,
                 'media_size_human' => $msg->media_size ? $this->formatBytes((int) $msg->media_size) : null,
                 'media_duration' => $msg->media_duration,
-                'location' => $msg->metadata['location'] ?? null,
-                'contacts' => $msg->metadata['contacts'] ?? null,
-                'template_name' => $msg->metadata['template_name'] ?? null,
-                'error' => $msg->metadata['error'] ?? null,
+                'location' => $meta['location'] ?? null,
+                'contacts' => $meta['contacts'] ?? null,
+                'template_name' => $meta['template_name'] ?? null,
+                'error' => $meta['error'] ?? null,
                 'reaction_emoji' => $msg->reaction_emoji,
                 'status' => $msg->status,
+                'encrypted' => true,
                 'time' => $msg->created_at?->format('H:i') ?? '',
                 'date_key' => $msg->created_at?->format('Y-m-d') ?? '',
                 'date_label' => $msg->created_at

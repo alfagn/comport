@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Request as HttpClientRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -32,6 +33,7 @@ class WhatsappCustomerApiTest extends TestCase
         $this->seed(RolesAndPermissionsSeeder::class);
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
+        config(['assistant.whatsapp.app_secret' => null]);
         Setting::setValue('whatsapp_enabled', '1', 'whatsapp');
         Setting::setValue('whatsapp_phone_number_id', '109988776655', 'whatsapp');
         Setting::setValue('whatsapp_access_token', 'test-meta-bearer-token', 'whatsapp');
@@ -394,5 +396,151 @@ class WhatsappCustomerApiTest extends TestCase
 
         $this->assertSame(0, $session->fresh()->unread_count);
         Mail::assertNothingSent();
+    }
+
+    public function test_whatsapp_inbox_enforces_idempotency_aes256_encryption_webm_voice_remux_and_contact_profiles(): void
+    {
+        Storage::fake('local');
+
+        Http::fake([
+            'https://graph.facebook.com/v22.0/109988776655/media' => Http::response([
+                'id' => 'UPLOADED_OGG_VOICE_1',
+            ], 200),
+            'https://graph.facebook.com/v22.0/109988776655/messages' => Http::response([
+                'messaging_product' => 'whatsapp',
+                'messages' => [['id' => 'wamid.IDEMPOTENT_OUT_1']],
+            ], 200),
+        ]);
+
+        CustomerSupportAgent::fake()->preventStrayPrompts();
+        $owner = $this->owner();
+
+        // 1. Inbound message with @username while AI is paused -> increments unread_count and stores AES-256 encrypted body
+        $session = SupportChatSession::query()->create([
+            'token' => 'wa-test-token-1',
+            'channel' => SupportChatSession::CHANNEL_WHATSAPP,
+            'external_thread_id' => '201150949593',
+            'visitor_phone' => '+201150949593',
+            'ai_paused' => true,
+            'status' => SupportChatSession::STATUS_OPEN,
+        ]);
+
+        $this->postJson('/api/webhooks/whatsapp', [
+            'entry' => [[
+                'changes' => [[
+                    'value' => [
+                        'contacts' => [[
+                            'wa_id' => '201150949593',
+                            'profile' => [
+                                'name' => 'Mohanad',
+                                'username' => 'mohanad_empetix',
+                            ],
+                        ]],
+                        'messages' => [[
+                            'from' => '201150949593',
+                            'id' => 'wamid.ENC_IN_1',
+                            'type' => 'text',
+                            'text' => ['body' => 'رسالة سرية جداً للمشروع'],
+                        ]],
+                    ],
+                ]],
+            ]],
+        ])->assertOk();
+
+        $session->refresh();
+        $this->assertSame(1, $session->unread_count);
+        $this->assertSame('mohanad_empetix', $session->visitor_username);
+
+        // Verify raw database values are AES-256 encrypted (`enc:v1:...`), never plaintext
+        $rawMsgBody = (string) DB::table('whatsapp_messages')
+            ->where('wa_message_id', 'wamid.ENC_IN_1')
+            ->value('body');
+        $rawPreview = (string) DB::table('support_chat_sessions')
+            ->where('id', $session->id)
+            ->value('last_message_preview');
+
+        $this->assertStringStartsWith('enc:v1:', $rawMsgBody);
+        $this->assertStringNotContainsString('رسالة سرية', $rawMsgBody);
+        $this->assertStringStartsWith('enc:v1:', $rawPreview);
+
+        // Encrypted search in poll endpoint still finds the contact by decrypted message content & exposes @username + formatted phone
+        $pollRes = $this->actingAs($owner)
+            ->getJson('/admin/whatsapp/poll?q='.urlencode('رسالة سرية'))
+            ->assertOk()
+            ->json();
+
+        $this->assertCount(1, $pollRes['contacts']);
+        $this->assertSame('@mohanad_empetix', $pollRes['contacts'][0]['username']);
+        $this->assertSame('+20 11 5094 9593', $pollRes['contacts'][0]['phone']);
+        $this->assertSame(1, $pollRes['contacts'][0]['unread_count']);
+
+        // 2. Double-clicking Send with the same idempotency_key sends ONLY ONE message to Meta
+        $idemKey = 'wa_double_click_key_001';
+
+        $firstSend = $this->actingAs($owner)->postJson("/admin/whatsapp/conversations/{$session->id}/send", [
+            'message' => 'تم استلام الرسالة فوراً',
+            'idempotency_key' => $idemKey,
+        ], ['X-Idempotency-Key' => $idemKey])->assertOk()->json();
+
+        $secondSend = $this->actingAs($owner)->postJson("/admin/whatsapp/conversations/{$session->id}/send", [
+            'message' => 'تم استلام الرسالة فوراً',
+            'idempotency_key' => $idemKey,
+        ], ['X-Idempotency-Key' => $idemKey])->assertOk()->json();
+
+        $this->assertArrayNotHasKey('duplicate', $firstSend);
+        $this->assertTrue($secondSend['duplicate']);
+        $this->assertSame(1, WhatsappMessage::query()->where('idempotency_key', $idemKey)->count());
+
+        // 3. Browser WebM Opus voice recording (`\x1A\x45\xDF\xA3`) remuxes cleanly to `OggS` (`audio/ogg`) with encrypted disk storage
+        $opusTocPacket = "\xFC\x01\x02\x03\x04\x05\x06\x07"; // 20ms CELT FB mono Opus packet
+        $simpleBlockPayload = "\x81\x00\x00\x80".$opusTocPacket;
+        $minimalWebmOpus = "\x1A\x45\xDF\xA3\x84\x42\x86\x81\x01" // EBML header
+            ."\x18\x53\x80\x67\x01\xFF\xFF\xFF\xFF\xFF\xFF\xFF"   // Segment (streaming size)
+            ."\x1F\x43\xB6\x75\x01\xFF\xFF\xFF\xFF\xFF\xFF\xFF"   // Cluster (streaming size)
+            ."\xA3".chr(0x80 | strlen($simpleBlockPayload)).$simpleBlockPayload;
+
+        $webmVoiceFile = UploadedFile::fake()->createWithContent('voice-note.webm', $minimalWebmOpus);
+
+        $this->actingAs($owner)->post("/admin/whatsapp/conversations/{$session->id}/send", [
+            'mode' => 'voice',
+            'voice_note' => $webmVoiceFile,
+            'duration' => 10,
+            'idempotency_key' => 'wa_voice_webm_001',
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $voiceMsg = WhatsappMessage::query()->where('idempotency_key', 'wa_voice_webm_001')->firstOrFail();
+        $this->assertSame('audio/ogg', $voiceMsg->media_mime);
+        $this->assertSame('sent', $voiceMsg->status);
+
+        // Stored media file on disk is AES-256 encrypted (`EMPWAENC1:`), while streaming endpoint returns valid decrypted `OggS` bytes & supports HTTP Range
+        $rawDiskBytes = Storage::disk('local')->get($voiceMsg->media_path);
+        $this->assertStringStartsWith('EMPWAENC1:', (string) $rawDiskBytes);
+
+        $streamRes = $this->actingAs($owner)->get("/admin/whatsapp/media/{$voiceMsg->id}")->assertOk();
+        $this->assertStringStartsWith('OggS', $streamRes->getContent());
+
+        $rangeRes = $this->actingAs($owner)
+            ->withHeaders(['Range' => 'bytes=0-3'])
+            ->get("/admin/whatsapp/media/{$voiceMsg->id}")
+            ->assertStatus(206);
+        $this->assertSame('OggS', $rangeRes->getContent());
+
+        // Verify Meta received `voice: true` on the converted `audio/ogg` payload
+        Http::assertSent(function (HttpClientRequest $req): bool {
+            return str_contains($req->url(), '/messages')
+                && ($req['type'] ?? null) === 'audio'
+                && ($req['audio']['voice'] ?? false) === true
+                && ($req['audio']['id'] ?? null) === 'UPLOADED_OGG_VOICE_1';
+        });
+
+        // 4. Uploading contact profile photo encrypts on disk and exposes `avatar_url`
+        $avatarImg = UploadedFile::fake()->image('client-avatar.jpg', 120, 120);
+        $contactUpdate = $this->actingAs($owner)->post("/admin/whatsapp/conversations/{$session->id}", [
+            'avatar' => $avatarImg,
+            'contact_notes' => 'عميل VIP مهتم بمنصة SaaS',
+        ], ['Accept' => 'application/json'])->assertOk()->json();
+
+        $this->assertNotEmpty($contactUpdate['contact']['avatar_url']);
+        $this->actingAs($owner)->get("/admin/whatsapp/conversations/{$session->id}/avatar")->assertOk();
     }
 }
