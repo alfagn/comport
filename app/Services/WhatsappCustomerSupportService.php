@@ -66,7 +66,7 @@ class WhatsappCustomerSupportService
         ?string $username = null,
         ?string $avatarUrl = null,
     ): ?SupportChatSession {
-        $normalizedWaId = $this->whatsapp->normalizePhone($waId);
+        $normalizedWaId = $this->whatsapp->normalizeRecipientId($waId);
         if ($normalizedWaId === '') {
             return null;
         }
@@ -1139,7 +1139,8 @@ class WhatsappCustomerSupportService
             ->latest('id')
             ->first();
 
-        $displayPhone = $this->whatsapp->displayPhone($normalizedWaId);
+        $isBsuid = $this->whatsapp->isBsuid($normalizedWaId);
+        $displayPhone = $isBsuid ? null : $this->whatsapp->displayPhone($normalizedWaId);
         $cleanUsername = $username !== null ? ltrim(trim($username), '@') : null;
 
         if (! $session) {

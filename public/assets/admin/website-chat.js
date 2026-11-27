@@ -100,6 +100,9 @@
     };
 
     var contactsEl = root.querySelector('[data-wc-contacts]');
+    var archiveHeadEl = root.querySelector('[data-wc-archive-head]');
+    var filtersBarEl = root.querySelector('[data-wc-filters-bar]');
+    var ctxMenuEl = root.querySelector('[data-wc-ctx-menu]');
     var searchEl = root.querySelector('[data-wc-search]');
     var unreadTotalEl = root.querySelector('[data-wc-unread-total]');
     var welcomeEl = root.querySelector('[data-wc-welcome]');
@@ -113,6 +116,7 @@
     var headSub = root.querySelector('[data-wc-head-sub]');
     var toggleAiBtn = root.querySelector('[data-wc-toggle-ai]');
     var toggleAiLabel = root.querySelector('[data-wc-toggle-ai-label]');
+    var toggleArchiveBtn = root.querySelector('[data-wc-toggle-archive]');
     var togglePinBtn = root.querySelector('[data-wc-toggle-pin]');
 
     var inchatSearchWrap = root.querySelector('[data-wc-inchat-search]');
@@ -144,6 +148,9 @@
       activeId: null,
       activeChat: null,
       filter: 'all',
+      prevFilter: 'all',
+      archivedCount: 0,
+      archivedUnread: 0,
       search: '',
       inchatFilter: '',
       draftKey: makeIdempotencyKey(),
@@ -164,6 +171,8 @@
       try {
         var initial = JSON.parse(initScript.textContent || '{}');
         state.contacts = initial.contacts || [];
+        state.archivedCount = Number(initial.archived_count) || 0;
+        state.archivedUnread = Number(initial.archived_unread) || 0;
         if (initial.active_chat && initial.active_chat.contact) {
           state.activeId = initial.active_chat.contact.id;
           state.activeChat = initial.active_chat;
@@ -186,14 +195,38 @@
       });
     }
 
+    function syncArchiveUi() {
+      var inArch = state.filter === 'archived';
+      if (archiveHeadEl) archiveHeadEl.hidden = !inArch;
+      if (filtersBarEl) filtersBarEl.hidden = inArch;
+    }
+
     function renderContacts() {
       if (!contactsEl) return;
+      syncArchiveUi();
+
+      var topArchivedRow = '';
+      if (state.filter !== 'archived' && !state.search && state.archivedCount > 0) {
+        var archBadge = state.archivedUnread > 0
+          ? '<span class="wa-unread-badge">' + state.archivedUnread + '</span>'
+          : '<span class="wa-archived-row__count">' + state.archivedCount + '</span>';
+        topArchivedRow = (
+          '<div class="wa-archived-row" data-wc-enter-archive>' +
+            '<span class="wa-archived-row__ico">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>' +
+            '</span>' +
+            '<span class="wa-archived-row__label">Archived</span>' +
+            archBadge +
+          '</div>'
+        );
+      }
+
       if (!state.contacts.length) {
-        contactsEl.innerHTML = '<div class="wa-contact-empty">No website conversations match this filter yet.</div>';
+        contactsEl.innerHTML = topArchivedRow + '<div class="wa-contact-empty">' + (state.filter === 'archived' ? 'No archived chats.' : 'No website conversations match this filter yet.') + '</div>';
         return;
       }
 
-      contactsEl.innerHTML = state.contacts.map(function (c) {
+      contactsEl.innerHTML = topArchivedRow + state.contacts.map(function (c) {
         var active = c.id === state.activeId ? ' is-active' : '';
         var hasUnread = Number(c.unread_count) > 0;
         var unreadCls = hasUnread ? ' has-unread' : '';
@@ -232,6 +265,9 @@
                 '<span class="wa-contact-row__badges">' +
                   (c.is_pinned ? pinIconSvg() : '') +
                   (hasUnread ? '<span class="wa-unread-badge">' + (c.unread_count > 99 ? '99+' : c.unread_count) + '</span>' : '') +
+                  '<button type="button" class="wa-row-menu-btn" data-wc-row-menu="' + c.id + '" title="Chat options">' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+                  '</button>' +
                 '</span>' +
               '</div>' +
             '</div>' +
@@ -304,6 +340,9 @@
       if (toggleAiBtn && toggleAiLabel) {
         toggleAiBtn.classList.toggle('is-human', !!c.ai_paused);
         toggleAiLabel.textContent = c.ai_paused ? 'Human Mode' : 'AI Auto';
+      }
+      if (toggleArchiveBtn) {
+        toggleArchiveBtn.classList.toggle('is-active', !!c.is_archived);
       }
       if (togglePinBtn) {
         togglePinBtn.classList.toggle('is-active', !!c.is_pinned);
@@ -378,7 +417,7 @@
         }
 
         html += (
-          '<div class="' + rowCls + '">' +
+          '<div class="' + rowCls + '" data-wc-msg-body="' + escapeHtml(m.body || '') + '">' +
             '<div class="wa-bubble">' +
               (isOut && m.sender_name ? '<div class="wa-bubble__sender">' + escapeHtml(m.sender_name) + '</div>' : '') +
               toolsHtml +
@@ -470,6 +509,8 @@
         .then(function (data) {
           if (!data || !data.ok) return;
           state.contacts = data.contacts || [];
+          if (typeof data.archived_count !== 'undefined') state.archivedCount = Number(data.archived_count) || 0;
+          if (typeof data.archived_unread !== 'undefined') state.archivedUnread = Number(data.archived_unread) || 0;
           updateUnreadCounters(data.total_unread || 0);
           renderContacts();
 
@@ -574,9 +615,9 @@
         });
     }
 
-    function patchVisitorField(payload, toastMsg) {
-      if (!state.activeId) return;
-      var url = urls.visitorTpl.replace('__ID__', encodeURIComponent(state.activeId));
+    function patchVisitorById(targetId, payload, toastMsg) {
+      if (!targetId) return;
+      var url = urls.visitorTpl.replace('__ID__', encodeURIComponent(targetId));
       fetch(url, {
         method: 'PATCH',
         headers: {
@@ -591,13 +632,76 @@
         .then(function (r) { return r.json(); })
         .then(function (body) {
           if (body && body.ok) {
-            state.activeChat = body.active_chat;
-            state.msgSignature = '';
-            renderActiveChat(false);
+            if (typeof body.archived_count !== 'undefined') state.archivedCount = Number(body.archived_count) || 0;
+            if (typeof body.archived_unread !== 'undefined') state.archivedUnread = Number(body.archived_unread) || 0;
+            if (typeof body.total_unread !== 'undefined') updateUnreadCounters(body.total_unread);
+            if (Number(targetId) === Number(state.activeId)) {
+              state.activeChat = body.active_chat;
+              state.msgSignature = '';
+              renderActiveChat(false);
+            }
             pollWorkspace();
             if (toastMsg && window.empetixToast) window.empetixToast(toastMsg, 'success');
           }
         });
+    }
+
+    function patchVisitorField(payload, toastMsg) {
+      patchVisitorById(state.activeId, payload, toastMsg);
+    }
+
+    function closeCtxMenu() {
+      if (ctxMenuEl) ctxMenuEl.hidden = true;
+    }
+
+    function positionCtxMenu(x, y) {
+      if (!ctxMenuEl) return;
+      ctxMenuEl.hidden = false;
+      ctxMenuEl.style.left = '0px';
+      ctxMenuEl.style.top = '0px';
+      var rect = ctxMenuEl.getBoundingClientRect();
+      ctxMenuEl.style.left = Math.max(10, Math.min(x, window.innerWidth - rect.width - 10)) + 'px';
+      ctxMenuEl.style.top = Math.max(10, Math.min(y, window.innerHeight - rect.height - 10)) + 'px';
+    }
+
+    function openVisitorContextMenu(visitorId, x, y) {
+      if (!ctxMenuEl) return;
+      var c = state.contacts.find(function (item) { return Number(item.id) === Number(visitorId); })
+        || (state.activeChat && state.activeChat.contact && Number(state.activeChat.contact.id) === Number(visitorId) ? state.activeChat.contact : null);
+      if (!c) return;
+
+      var isArch = !!c.is_archived;
+      var isPinned = !!c.is_pinned;
+      var hasUnread = Number(c.unread_count) > 0;
+      var isPaused = !!c.ai_paused;
+
+      ctxMenuEl.innerHTML = (
+        '<button type="button" class="wa-ctx-item" data-wc-ctx-act="archive" data-wc-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>' +
+          '<span>' + (isArch ? 'Unarchive chat' : 'Archive chat') + '</span>' +
+        '</button>' +
+        (!isArch ? (
+          '<button type="button" class="wa-ctx-item" data-wc-ctx-act="pin" data-wc-ctx-id="' + c.id + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>' +
+            '<span>' + (isPinned ? 'Unpin chat' : 'Pin chat') + '</span>' +
+          '</button>'
+        ) : '') +
+        '<button type="button" class="wa-ctx-item" data-wc-ctx-act="unread" data-wc-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+          '<span>' + (hasUnread ? 'Mark as read' : 'Mark as unread') + '</span>' +
+        '</button>' +
+        '<button type="button" class="wa-ctx-item" data-wc-ctx-act="ai" data-wc-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9.5 15a3.5 3.5 0 0 0 5 0"/></svg>' +
+          '<span>' + (isPaused ? 'Enable AI Auto-Reply' : 'Switch to Human Mode') + '</span>' +
+        '</button>' +
+        '<div class="wa-ctx-sep"></div>' +
+        '<button type="button" class="wa-ctx-item wa-ctx-item--danger" data-wc-ctx-act="delete" data-wc-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+          '<span>Delete chat</span>' +
+        '</button>'
+      );
+
+      positionCtxMenu(x, y);
     }
 
     if (avatarInput) {
@@ -688,7 +792,123 @@
       });
     }
 
+    root.addEventListener('contextmenu', function (e) {
+      var vRow = e.target.closest('[data-wc-select]');
+      if (vRow) {
+        e.preventDefault();
+        openVisitorContextMenu(vRow.getAttribute('data-wc-select'), e.clientX, e.clientY);
+        return;
+      }
+
+      var mRow = e.target.closest('[data-wc-msg-body]');
+      if (mRow && ctxMenuEl) {
+        var mTxt = mRow.getAttribute('data-wc-msg-body') || '';
+        if (!mTxt) return;
+        e.preventDefault();
+        ctxMenuEl.innerHTML = (
+          '<button type="button" class="wa-ctx-item" data-wc-ctx-copy="' + escapeHtml(mTxt) + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+            '<span>Copy text</span>' +
+          '</button>'
+        );
+        positionCtxMenu(e.clientX, e.clientY);
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (ctxMenuEl && !ctxMenuEl.hidden && !e.target.closest('[data-wc-row-menu]')) {
+        closeCtxMenu();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeCtxMenu();
+    });
+
     root.addEventListener('click', function (e) {
+      var rMenuBtn = e.target.closest('[data-wc-row-menu]');
+      if (rMenuBtn) {
+        e.stopPropagation();
+        var rr = rMenuBtn.getBoundingClientRect();
+        openVisitorContextMenu(rMenuBtn.getAttribute('data-wc-row-menu'), rr.left, rr.bottom + 4);
+        return;
+      }
+
+      if (e.target.closest('[data-wc-enter-archive]')) {
+        state.prevFilter = state.filter !== 'archived' ? state.filter : 'all';
+        state.filter = 'archived';
+        syncArchiveUi();
+        pollWorkspace();
+        return;
+      }
+
+      if (e.target.closest('[data-wc-exit-archive]')) {
+        state.filter = state.prevFilter || 'all';
+        syncArchiveUi();
+        pollWorkspace();
+        return;
+      }
+
+      var ctxBtn = e.target.closest('[data-wc-ctx-act]');
+      if (ctxBtn) {
+        var vid = Number(ctxBtn.getAttribute('data-wc-ctx-id'));
+        var vAct = ctxBtn.getAttribute('data-wc-ctx-act');
+        closeCtxMenu();
+        var tc = state.contacts.find(function (x) { return Number(x.id) === vid; })
+          || (state.activeChat && state.activeChat.contact && Number(state.activeChat.contact.id) === vid ? state.activeChat.contact : null);
+        if (!tc) return;
+
+        if (vAct === 'archive') {
+          var nextArch = !tc.is_archived;
+          if (nextArch && state.filter !== 'archived') {
+            state.contacts = state.contacts.filter(function (x) { return Number(x.id) !== vid; });
+            state.archivedCount = (state.archivedCount || 0) + 1;
+            renderContacts();
+          }
+          patchVisitorById(vid, { is_archived: nextArch }, nextArch ? 'Chat archived.' : 'Chat unarchived.');
+        } else if (vAct === 'pin') {
+          patchVisitorById(vid, { is_pinned: !tc.is_pinned }, !tc.is_pinned ? 'Chat pinned.' : 'Chat unpinned.');
+        } else if (vAct === 'unread') {
+          var nextUn = !(Number(tc.unread_count) > 0);
+          patchVisitorById(vid, { mark_unread: nextUn }, nextUn ? 'Marked as unread.' : 'Marked as read.');
+        } else if (vAct === 'ai') {
+          patchVisitorById(vid, { ai_paused: !tc.ai_paused }, !tc.ai_paused ? 'Switched to Human Mode.' : 'AI Auto-Reply enabled.');
+        } else if (vAct === 'delete') {
+          if (!confirm('Delete this website conversation permanently?')) return;
+          fetch(urls.deleteTpl.replace('__ID__', encodeURIComponent(vid)), {
+            method: 'DELETE',
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken() },
+            credentials: 'same-origin'
+          }).then(function () {
+            if (Number(state.activeId) === vid) {
+              state.activeId = null;
+              state.activeChat = null;
+              renderActiveChat(true);
+            }
+            pollWorkspace();
+          });
+        }
+        return;
+      }
+
+      var cpBtn = e.target.closest('[data-wc-ctx-copy]');
+      if (cpBtn) {
+        var cpTxt = cpBtn.getAttribute('data-wc-ctx-copy') || '';
+        closeCtxMenu();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(cpTxt).then(function () {
+            if (window.empetixToast) window.empetixToast('Copied to clipboard.', 'success');
+          });
+        }
+        return;
+      }
+
+      if (e.target.closest('[data-wc-toggle-archive]') && state.activeId) {
+        var curArch = state.activeChat && state.activeChat.contact && state.activeChat.contact.is_archived;
+        patchVisitorField({ is_archived: !curArch }, !curArch ? 'Conversation archived.' : 'Conversation unarchived.');
+        return;
+      }
+
       var row = e.target.closest('[data-wc-select]');
       if (row) {
         selectVisitor(row.getAttribute('data-wc-select'));

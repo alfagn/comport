@@ -119,10 +119,55 @@ class WhatsappCloudApiService
     }
 
     /**
+     * Detect whether an identifier is a Meta Business-Scoped User ID (BSUID, e.g. `EG.134912...`)
+     * used when a WhatsApp customer hides their phone number behind `@username`.
+     */
+    public function isBsuid(string $identifier): bool
+    {
+        return preg_match('/^[A-Za-z]{2}\.[A-Za-z0-9_-]{4,}$/', trim($identifier)) === 1;
+    }
+
+    /**
+     * Normalize either a BSUID (`EG.xxx`) or an international E.164 phone number.
+     */
+    public function normalizeRecipientId(string $identifier): string
+    {
+        $trimmed = trim($identifier);
+        if ($this->isBsuid($trimmed)) {
+            [$cc, $rest] = explode('.', $trimmed, 2);
+
+            return strtoupper($cc).'.'.$rest;
+        }
+
+        return $this->normalizePhone($trimmed);
+    }
+
+    /**
+     * Build Meta's Graph API target field: `recipient` for BSUIDs, `to` for phone numbers.
+     *
+     * @return array{to?: string, recipient?: string}
+     */
+    public function buildRecipientField(string $to): array
+    {
+        $normalized = $this->normalizeRecipientId($to);
+        if ($normalized === '') {
+            throw new RuntimeException('Invalid WhatsApp recipient phone number or user ID.');
+        }
+
+        return $this->isBsuid($normalized)
+            ? ['recipient' => $normalized]
+            : ['to' => $normalized];
+    }
+
+    /**
      * Normalize phone numbers to international E.164 digits.
      */
     public function normalizePhone(string $phone): string
     {
+        if ($this->isBsuid($phone)) {
+            return '';
+        }
+
         $digits = (string) preg_replace('/\D+/', '', $phone);
 
         if (str_starts_with($digits, '00')) {
@@ -145,6 +190,10 @@ class WhatsappCloudApiService
      */
     public function displayPhone(string $phone): string
     {
+        if ($this->isBsuid($phone)) {
+            return '';
+        }
+
         $digits = $this->normalizePhone($phone);
 
         return $digits !== '' ? '+'.$digits : $phone;
@@ -155,6 +204,10 @@ class WhatsappCloudApiService
      */
     public function formattedPhone(string $phone): string
     {
+        if ($this->isBsuid($phone)) {
+            return '';
+        }
+
         $digits = $this->normalizePhone($phone);
         if ($digits === '') {
             return $phone;
@@ -182,15 +235,12 @@ class WhatsappCloudApiService
         bool $previewUrl = false,
         ?string $replyToWamid = null,
     ): array {
-        $recipient = $this->normalizePhone($to);
-        if ($recipient === '') {
-            throw new RuntimeException('Invalid WhatsApp recipient phone number.');
-        }
+        $targetField = $this->buildRecipientField($to);
 
         $payload = [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
-            'to' => $recipient,
+            ...$targetField,
             'type' => 'text',
             'text' => [
                 'preview_url' => $previewUrl,
@@ -308,10 +358,7 @@ class WhatsappCloudApiService
         bool $isVoice = false,
         ?string $uploadedMime = null,
     ): array {
-        $recipient = $this->normalizePhone($to);
-        if ($recipient === '') {
-            throw new RuntimeException('Invalid WhatsApp recipient phone number.');
-        }
+        $targetField = $this->buildRecipientField($to);
 
         $waType = $type === 'voice' ? 'audio' : $type;
         if (! in_array($waType, ['image', 'video', 'audio', 'document', 'sticker'], true)) {
@@ -337,7 +384,7 @@ class WhatsappCloudApiService
         $payload = [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
-            'to' => $recipient,
+            ...$targetField,
             'type' => $waType,
             $waType => $mediaPayload,
         ];
@@ -362,10 +409,7 @@ class WhatsappCloudApiService
         ?string $address = null,
         ?string $replyToWamid = null,
     ): array {
-        $recipient = $this->normalizePhone($to);
-        if ($recipient === '') {
-            throw new RuntimeException('Invalid WhatsApp recipient phone number.');
-        }
+        $targetField = $this->buildRecipientField($to);
 
         $location = [
             'latitude' => $latitude,
@@ -382,7 +426,7 @@ class WhatsappCloudApiService
         $payload = [
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
-            'to' => $recipient,
+            ...$targetField,
             'type' => 'location',
             'location' => $location,
         ];
@@ -401,15 +445,16 @@ class WhatsappCloudApiService
      */
     public function sendReaction(string $to, string $targetWamid, string $emoji): array
     {
-        $recipient = $this->normalizePhone($to);
-        if ($recipient === '' || trim($targetWamid) === '') {
-            throw new RuntimeException('Recipient phone and target WhatsApp message ID are required.');
+        if (trim($targetWamid) === '') {
+            throw new RuntimeException('Target WhatsApp message ID is required.');
         }
+
+        $targetField = $this->buildRecipientField($to);
 
         return $this->postMessages([
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
-            'to' => $recipient,
+            ...$targetField,
             'type' => 'reaction',
             'reaction' => [
                 'message_id' => $targetWamid,
@@ -478,10 +523,7 @@ class WhatsappCloudApiService
         string $languageCode = 'en_US',
         array $components = [],
     ): array {
-        $recipient = $this->normalizePhone($to);
-        if ($recipient === '') {
-            throw new RuntimeException('Invalid WhatsApp recipient phone number.');
-        }
+        $targetField = $this->buildRecipientField($to);
 
         $normalizedTemplateName = strtolower((string) preg_replace('/\s+/', '_', trim($templateName)));
 
@@ -497,7 +539,7 @@ class WhatsappCloudApiService
         return $this->postMessages([
             'messaging_product' => 'whatsapp',
             'recipient_type' => 'individual',
-            'to' => $recipient,
+            ...$targetField,
             'type' => 'template',
             'template' => $template,
         ]);
@@ -560,8 +602,8 @@ class WhatsappCloudApiService
 
                 $contactsByWaId = [];
                 foreach ((array) ($value['contacts'] ?? []) as $contact) {
-                    $rawWaId = (string) ($contact['wa_id'] ?? ($contact['user_id'] ?? ''));
-                    $normContactId = $this->normalizePhone($rawWaId) ?: trim($rawWaId);
+                    $rawWaId = (string) (($contact['wa_id'] ?? '') !== '' ? $contact['wa_id'] : ($contact['user_id'] ?? ''));
+                    $normContactId = $this->normalizeRecipientId($rawWaId);
                     if ($normContactId !== '') {
                         $contactsByWaId[$normContactId] = [
                             'name' => $contact['profile']['name'] ?? null,
@@ -572,8 +614,8 @@ class WhatsappCloudApiService
                 }
 
                 foreach ((array) ($value['messages'] ?? []) as $msg) {
-                    $from = (string) ($msg['from'] ?? ($msg['from_user_id'] ?? ''));
-                    $normFrom = $this->normalizePhone($from) ?: trim($from);
+                    $from = (string) (($msg['from'] ?? '') !== '' ? $msg['from'] : ($msg['user_id'] ?? ($msg['from_user_id'] ?? '')));
+                    $normFrom = $this->normalizeRecipientId($from);
                     $messageId = (string) ($msg['id'] ?? '');
                     $type = (string) ($msg['type'] ?? 'unknown');
 
@@ -664,17 +706,20 @@ class WhatsappCloudApiService
                     $errorMsg = null;
                     if (! empty($st['errors'][0])) {
                         $errObj = (array) $st['errors'][0];
-                        $title = (string) ($errObj['title'] ?? '');
-                        $details = (string) ($errObj['error_data']['details'] ?? '');
-                        $errorMsg = $details !== '' && $details !== $title
-                            ? "{$title}: {$details}"
+                        $code = isset($errObj['code']) ? (string) $errObj['code'] : '';
+                        $title = trim((string) ($errObj['title'] ?? ''));
+                        $details = trim((string) ($errObj['error_data']['details'] ?? ''));
+                        $sameText = strtolower(rtrim($details, '.')) === strtolower(rtrim($title, '.'));
+                        $baseMsg = ($details !== '' && ! $sameText)
+                            ? ($title !== '' ? "{$title}: {$details}" : $details)
                             : ($title ?: (string) ($errObj['message'] ?? 'Delivery failed'));
+                        $errorMsg = $code !== '' ? "(#{$code}) {$baseMsg}" : $baseMsg;
                     }
 
                     $updates[] = [
                         'wamid' => $wamid,
                         'status' => $status,
-                        'recipient_id' => $this->normalizePhone((string) ($st['recipient_id'] ?? '')),
+                        'recipient_id' => $this->normalizeRecipientId((string) ($st['recipient_id'] ?? ($st['recipient_user_id'] ?? ''))),
                         'error' => $errorMsg,
                     ];
                 }

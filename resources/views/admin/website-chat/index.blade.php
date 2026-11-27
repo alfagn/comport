@@ -19,6 +19,8 @@
       'contacts' => $contacts,
       'active_chat' => $activeChat,
       'total_unread' => $totalUnread,
+      'archived_count' => $archivedCount ?? 0,
+      'archived_unread' => $archivedUnread ?? 0,
   ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) !!}</script>
 
   {{-- ==================== 1. LEFT VISITORS RAIL ==================== --}}
@@ -51,7 +53,14 @@
       </div>
     </div>
 
-    <div class="wa-filters" role="tablist" aria-label="Filter website chats">
+    <div class="wa-archive-head" data-wc-archive-head hidden>
+      <button type="button" class="wa-icon-btn" data-wc-exit-archive aria-label="Back to chats">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+      <strong>Archived</strong>
+    </div>
+
+    <div class="wa-filters" data-wc-filters-bar role="tablist" aria-label="Filter website chats">
       <button type="button" class="wa-filter-chip is-active" data-wc-filter="all">All</button>
       <button type="button" class="wa-filter-chip" data-wc-filter="unread">
         Unread <span class="wa-filter-chip__count" data-wc-unread-total {{ $totalUnread > 0 ? '' : 'hidden' }}>{{ $totalUnread }}</span>
@@ -99,6 +108,10 @@
 
           <button type="button" class="wa-icon-btn" data-wc-toggle-msg-search title="Search in conversation" aria-label="Search messages">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+
+          <button type="button" class="wa-icon-btn" data-wc-toggle-archive title="Archive / Unarchive conversation" aria-label="Archive conversation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
           </button>
 
           <button type="button" class="wa-icon-btn" data-wc-toggle-pin title="Pin / Unpin conversation" aria-label="Pin conversation">
@@ -213,5 +226,7 @@
       </div>
     </div>
   </aside>
+
+  <div class="wa-ctx-menu" data-wc-ctx-menu hidden></div>
 </div>
 @endsection

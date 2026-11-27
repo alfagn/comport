@@ -141,10 +141,14 @@
       contactTpl: root.getAttribute('data-url-contact-tpl'),
       deleteTpl: root.getAttribute('data-url-delete-tpl'),
       reactTpl: root.getAttribute('data-url-react-tpl'),
+      delMsgTpl: root.getAttribute('data-url-del-msg-tpl'),
       notifications: root.getAttribute('data-url-notifications')
     };
 
     var contactsEl = root.querySelector('[data-wa-contacts]');
+    var archiveHeadEl = root.querySelector('[data-wa-archive-head]');
+    var filtersBarEl = root.querySelector('[data-wa-filters-bar]');
+    var ctxMenuEl = root.querySelector('[data-wa-ctx-menu]');
     var searchEl = root.querySelector('[data-wa-search]');
     var unreadTotalEl = root.querySelector('[data-wa-unread-total]');
     var welcomeEl = root.querySelector('[data-wa-welcome]');
@@ -158,6 +162,7 @@
     var headSub = root.querySelector('[data-wa-head-sub]');
     var toggleAiBtn = root.querySelector('[data-wa-toggle-ai]');
     var toggleAiLabel = root.querySelector('[data-wa-toggle-ai-label]');
+    var toggleArchiveBtn = root.querySelector('[data-wa-toggle-archive]');
     var togglePinBtn = root.querySelector('[data-wa-toggle-pin]');
 
     var inchatSearchWrap = root.querySelector('[data-wa-inchat-search]');
@@ -207,6 +212,9 @@
       activeId: null,
       activeChat: null,
       filter: 'all',
+      prevFilter: 'all',
+      archivedCount: 0,
+      archivedUnread: 0,
       search: '',
       inchatFilter: '',
       replyTo: null,
@@ -239,6 +247,8 @@
       try {
         var initial = JSON.parse(initScript.textContent || '{}');
         state.contacts = initial.contacts || [];
+        state.archivedCount = Number(initial.archived_count) || 0;
+        state.archivedUnread = Number(initial.archived_unread) || 0;
         if (initial.active_chat && initial.active_chat.contact) {
           state.activeId = initial.active_chat.contact.id;
           state.activeChat = initial.active_chat;
@@ -274,14 +284,41 @@
      * - Zero numeric badge when `unread_count === 0`
      * - Outbound status clock/ticks (`🕒` / `✓` / `✓✓` / blue `✓✓`) in preview line
      */
+    function syncArchiveModeUi() {
+      var inArch = state.filter === 'archived';
+      if (archiveHeadEl) archiveHeadEl.hidden = !inArch;
+      if (filtersBarEl) filtersBarEl.hidden = inArch;
+    }
+
     function renderContacts() {
       if (!contactsEl) return;
+      syncArchiveModeUi();
+
+      var topArchivedRow = '';
+      if (state.filter !== 'archived' && !state.search && state.archivedCount > 0) {
+        var archBadge = state.archivedUnread > 0
+          ? '<span class="wa-unread-badge">' + state.archivedUnread + '</span>'
+          : '<span class="wa-archived-row__count">' + state.archivedCount + '</span>';
+        topArchivedRow = (
+          '<div class="wa-archived-row" data-wa-enter-archive>' +
+            '<span class="wa-archived-row__ico">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>' +
+            '</span>' +
+            '<span class="wa-archived-row__label">Archived</span>' +
+            archBadge +
+          '</div>'
+        );
+      }
+
       if (!state.contacts.length) {
-        contactsEl.innerHTML = '<div class="wa-contact-empty">No WhatsApp conversations match this view yet. Click <strong>+</strong> above to start a chat.</div>';
+        var emptyMsg = state.filter === 'archived'
+          ? 'No archived conversations.'
+          : 'No WhatsApp conversations match this view yet. Click <strong>+</strong> above to start a chat.';
+        contactsEl.innerHTML = topArchivedRow + '<div class="wa-contact-empty">' + emptyMsg + '</div>';
         return;
       }
 
-      contactsEl.innerHTML = state.contacts.map(function (c) {
+      contactsEl.innerHTML = topArchivedRow + state.contacts.map(function (c) {
         var active = c.id === state.activeId ? ' is-active' : '';
         var hasUnread = Number(c.unread_count) > 0;
         var unreadCls = hasUnread ? ' has-unread' : '';
@@ -321,6 +358,9 @@
                 '<span class="wa-contact-row__badges">' +
                   (c.is_pinned ? pinIconSvg() : '') +
                   (hasUnread ? '<span class="wa-unread-badge">' + (c.unread_count > 99 ? '99+' : c.unread_count) + '</span>' : '') +
+                  '<button type="button" class="wa-row-menu-btn" data-wa-row-menu="' + c.id + '" title="Chat options" aria-label="Chat options">' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+                  '</button>' +
                 '</span>' +
               '</div>' +
             '</div>' +
@@ -473,6 +513,10 @@
       if (toggleAiBtn && toggleAiLabel) {
         toggleAiBtn.classList.toggle('is-human', !!c.ai_paused);
         toggleAiLabel.textContent = c.ai_paused ? 'Human Mode' : 'AI Auto';
+      }
+      if (toggleArchiveBtn) {
+        toggleArchiveBtn.classList.toggle('is-active', !!c.is_archived);
+        toggleArchiveBtn.title = c.is_archived ? 'Unarchive conversation' : 'Archive conversation';
       }
       if (togglePinBtn) {
         togglePinBtn.classList.toggle('is-active', !!c.is_pinned);
@@ -657,6 +701,8 @@
         .then(function (data) {
           if (!data || !data.ok) return;
           state.contacts = data.contacts || [];
+          if (typeof data.archived_count !== 'undefined') state.archivedCount = Number(data.archived_count) || 0;
+          if (typeof data.archived_unread !== 'undefined') state.archivedUnread = Number(data.archived_unread) || 0;
           updateUnreadCounters(data.total_unread || 0);
           renderContacts();
 
@@ -1036,9 +1082,9 @@
       try { recorder.stop(); } catch (e) {}
     }
 
-    function patchContactField(payload, toastMsg) {
-      if (!state.activeId) return;
-      var url = urls.contactTpl.replace('__ID__', encodeURIComponent(state.activeId));
+    function patchContactById(targetId, payload, toastMsg) {
+      if (!targetId) return;
+      var url = urls.contactTpl.replace('__ID__', encodeURIComponent(targetId));
       fetch(url, {
         method: 'PATCH',
         headers: {
@@ -1053,13 +1099,126 @@
         .then(function (r) { return r.json(); })
         .then(function (body) {
           if (body && body.ok) {
-            state.activeChat = body.active_chat;
-            state.msgSignature = '';
-            renderActiveChat(false);
+            if (typeof body.archived_count !== 'undefined') state.archivedCount = Number(body.archived_count) || 0;
+            if (typeof body.archived_unread !== 'undefined') state.archivedUnread = Number(body.archived_unread) || 0;
+            if (typeof body.total_unread !== 'undefined') updateUnreadCounters(body.total_unread);
+            if (Number(targetId) === Number(state.activeId)) {
+              state.activeChat = body.active_chat;
+              state.msgSignature = '';
+              renderActiveChat(false);
+            }
             pollWorkspace();
             if (toastMsg && window.empetixToast) window.empetixToast(toastMsg, 'success');
           }
         });
+    }
+
+    function patchContactField(payload, toastMsg) {
+      patchContactById(state.activeId, payload, toastMsg);
+    }
+
+    function closeCtxMenu() {
+      if (ctxMenuEl) ctxMenuEl.hidden = true;
+    }
+
+    function positionCtxMenu(x, y) {
+      if (!ctxMenuEl) return;
+      ctxMenuEl.hidden = false;
+      ctxMenuEl.style.left = '0px';
+      ctxMenuEl.style.top = '0px';
+      var rect = ctxMenuEl.getBoundingClientRect();
+      var maxX = window.innerWidth - rect.width - 10;
+      var maxY = window.innerHeight - rect.height - 10;
+      ctxMenuEl.style.left = Math.max(10, Math.min(x, maxX)) + 'px';
+      ctxMenuEl.style.top = Math.max(10, Math.min(y, maxY)) + 'px';
+    }
+
+    function openContactContextMenu(contactId, x, y) {
+      if (!ctxMenuEl) return;
+      var c = state.contacts.find(function (item) { return Number(item.id) === Number(contactId); });
+      if (!c && state.activeChat && state.activeChat.contact && Number(state.activeChat.contact.id) === Number(contactId)) {
+        c = state.activeChat.contact;
+      }
+      if (!c) return;
+
+      var isArch = !!c.is_archived;
+      var isPinned = !!c.is_pinned;
+      var hasUnread = Number(c.unread_count) > 0;
+      var isPaused = !!c.ai_paused;
+
+      ctxMenuEl.innerHTML = (
+        '<button type="button" class="wa-ctx-item" data-wa-ctx-act="archive" data-wa-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>' +
+          '<span>' + (isArch ? 'Unarchive chat' : 'Archive chat') + '</span>' +
+        '</button>' +
+        (!isArch ? (
+          '<button type="button" class="wa-ctx-item" data-wa-ctx-act="pin" data-wa-ctx-id="' + c.id + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>' +
+            '<span>' + (isPinned ? 'Unpin chat' : 'Pin chat') + '</span>' +
+          '</button>'
+        ) : '') +
+        '<button type="button" class="wa-ctx-item" data-wa-ctx-act="unread" data-wa-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+          '<span>' + (hasUnread ? 'Mark as read' : 'Mark as unread') + '</span>' +
+        '</button>' +
+        '<button type="button" class="wa-ctx-item" data-wa-ctx-act="ai" data-wa-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9.5 15a3.5 3.5 0 0 0 5 0"/></svg>' +
+          '<span>' + (isPaused ? 'Enable AI Auto-Reply' : 'Switch to Human Mode') + '</span>' +
+        '</button>' +
+        '<div class="wa-ctx-sep"></div>' +
+        '<button type="button" class="wa-ctx-item wa-ctx-item--danger" data-wa-ctx-act="delete" data-wa-ctx-id="' + c.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+          '<span>Delete chat</span>' +
+        '</button>'
+      );
+
+      positionCtxMenu(x, y);
+    }
+
+    function openMessageContextMenu(msgId, x, y) {
+      if (!ctxMenuEl || !state.activeChat) return;
+      if (String(msgId || '').indexOf('opt_') === 0) return;
+
+      var msgs = state.activeChat.messages || [];
+      var m = msgs.find(function (item) { return String(item.id) === String(msgId); });
+      if (!m) return;
+
+      var c = state.activeChat.contact || {};
+      var isOut = m.direction === 'outbound';
+      var reactStrip = '<div class="wa-ctx-reactions">' +
+        QUICK_REACTIONS.map(function (em) {
+          return '<button type="button" data-wa-react="' + m.id + '" data-wa-emoji-val="' + em + '">' + em + '</button>';
+        }).join('') +
+      '</div>';
+
+      ctxMenuEl.innerHTML = (
+        reactStrip +
+        (m.wamid ? (
+          '<button type="button" class="wa-ctx-item" data-wa-reply-btn="' + escapeHtml(m.wamid) + '" data-wa-reply-who="' + escapeHtml(isOut ? 'You' : (c.name || 'Customer')) + '" data-wa-reply-txt="' + escapeHtml((m.body || m.type || 'Message').slice(0, 90)) + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>' +
+            '<span>Reply</span>' +
+          '</button>'
+        ) : '') +
+        (m.body ? (
+          '<button type="button" class="wa-ctx-item" data-wa-ctx-copy="' + escapeHtml(m.body) + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+            '<span>Copy text</span>' +
+          '</button>'
+        ) : '') +
+        (m.download_url || m.media_url ? (
+          '<a href="' + escapeHtml(m.download_url || m.media_url) + '" target="_blank" rel="noopener" class="wa-ctx-item">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+            '<span>Download media</span>' +
+          '</a>'
+        ) : '') +
+        '<div class="wa-ctx-sep"></div>' +
+        '<button type="button" class="wa-ctx-item wa-ctx-item--danger" data-wa-ctx-del-msg="' + m.id + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+          '<span>Delete message</span>' +
+        '</button>'
+      );
+
+      positionCtxMenu(x, y);
     }
 
     // Contact Avatar Upload in Right Drawer
@@ -1291,8 +1450,142 @@
       });
     }
 
+    // Right-Click (`contextmenu`) on Contact Rows & Message Bubbles
+    root.addEventListener('contextmenu', function (e) {
+      var contactRow = e.target.closest('[data-wa-select-contact]');
+      if (contactRow) {
+        e.preventDefault();
+        openContactContextMenu(contactRow.getAttribute('data-wa-select-contact'), e.clientX, e.clientY);
+        return;
+      }
+
+      var msgRow = e.target.closest('[data-wa-msg-id]');
+      if (msgRow) {
+        e.preventDefault();
+        openMessageContextMenu(msgRow.getAttribute('data-wa-msg-id'), e.clientX, e.clientY);
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (ctxMenuEl && !ctxMenuEl.hidden && !e.target.closest('[data-wa-row-menu]')) {
+        closeCtxMenu();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeCtxMenu();
+    });
+
     // Delegated Clicks across Workspace
     root.addEventListener('click', function (e) {
+      var rowMenuBtn = e.target.closest('[data-wa-row-menu]');
+      if (rowMenuBtn) {
+        e.stopPropagation();
+        var r = rowMenuBtn.getBoundingClientRect();
+        openContactContextMenu(rowMenuBtn.getAttribute('data-wa-row-menu'), r.left, r.bottom + 4);
+        return;
+      }
+
+      if (e.target.closest('[data-wa-enter-archive]')) {
+        state.prevFilter = state.filter !== 'archived' ? state.filter : 'all';
+        state.filter = 'archived';
+        syncArchiveModeUi();
+        pollWorkspace();
+        return;
+      }
+
+      if (e.target.closest('[data-wa-exit-archive]')) {
+        state.filter = state.prevFilter || 'all';
+        syncArchiveModeUi();
+        pollWorkspace();
+        return;
+      }
+
+      var ctxActBtn = e.target.closest('[data-wa-ctx-act]');
+      if (ctxActBtn) {
+        var cid = Number(ctxActBtn.getAttribute('data-wa-ctx-id'));
+        var act = ctxActBtn.getAttribute('data-wa-ctx-act');
+        closeCtxMenu();
+        var targetC = state.contacts.find(function (x) { return Number(x.id) === cid; })
+          || (state.activeChat && state.activeChat.contact && Number(state.activeChat.contact.id) === cid ? state.activeChat.contact : null);
+        if (!targetC) return;
+
+        if (act === 'archive') {
+          var nextArch = !targetC.is_archived;
+          if (nextArch && state.filter !== 'archived') {
+            state.contacts = state.contacts.filter(function (x) { return Number(x.id) !== cid; });
+            state.archivedCount = (state.archivedCount || 0) + 1;
+            renderContacts();
+          }
+          patchContactById(cid, { is_archived: nextArch }, nextArch ? 'Chat archived.' : 'Chat unarchived.');
+        } else if (act === 'pin') {
+          patchContactById(cid, { is_pinned: !targetC.is_pinned }, !targetC.is_pinned ? 'Chat pinned.' : 'Chat unpinned.');
+        } else if (act === 'unread') {
+          var nextUnread = !(Number(targetC.unread_count) > 0);
+          patchContactById(cid, { mark_unread: nextUnread }, nextUnread ? 'Marked as unread.' : 'Marked as read.');
+        } else if (act === 'ai') {
+          patchContactById(cid, { ai_paused: !targetC.ai_paused }, !targetC.ai_paused ? 'Switched to Human Mode.' : 'AI Auto-Reply enabled.');
+        } else if (act === 'delete') {
+          if (!confirm('Delete this WhatsApp conversation and all stored media files?')) return;
+          fetch(urls.deleteTpl.replace('__ID__', encodeURIComponent(cid)), {
+            method: 'DELETE',
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken() },
+            credentials: 'same-origin'
+          }).then(function () {
+            if (Number(state.activeId) === cid) {
+              state.activeId = null;
+              state.activeChat = null;
+              renderActiveChat(true);
+            }
+            pollWorkspace();
+          });
+        }
+        return;
+      }
+
+      var copyBtn = e.target.closest('[data-wa-ctx-copy]');
+      if (copyBtn) {
+        var txt = copyBtn.getAttribute('data-wa-ctx-copy') || '';
+        closeCtxMenu();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(function () {
+            if (window.empetixToast) window.empetixToast('Message copied to clipboard.', 'success');
+          });
+        }
+        return;
+      }
+
+      var delMsgBtn = e.target.closest('[data-wa-ctx-del-msg]');
+      if (delMsgBtn && state.activeId && urls.delMsgTpl) {
+        var mid = delMsgBtn.getAttribute('data-wa-ctx-del-msg');
+        closeCtxMenu();
+        if (!confirm('Delete this message from the dashboard?')) return;
+        var delMsgUrl = urls.delMsgTpl
+          .replace('__ID__', encodeURIComponent(state.activeId))
+          .replace('__MSG__', encodeURIComponent(mid));
+        fetch(delMsgUrl, {
+          method: 'DELETE',
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken() },
+          credentials: 'same-origin'
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (body) {
+            if (body && body.ok) {
+              state.activeChat = body.active_chat;
+              state.msgSignature = '';
+              renderActiveChat(false);
+              pollWorkspace();
+            }
+          });
+        return;
+      }
+
+      if (e.target.closest('[data-wa-toggle-archive]') && state.activeId) {
+        var curArch = state.activeChat && state.activeChat.contact && state.activeChat.contact.is_archived;
+        patchContactField({ is_archived: !curArch }, !curArch ? 'Conversation archived.' : 'Conversation unarchived.');
+        return;
+      }
+
       var contactRow = e.target.closest('[data-wa-select-contact]');
       if (contactRow) {
         selectContact(contactRow.getAttribute('data-wa-select-contact'));

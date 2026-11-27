@@ -176,6 +176,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/conversations/{id}', [Admin\WhatsappInboxController::class, 'destroy'])->whereNumber('id')->name('destroy');
             Route::post('/conversations/{id}/send', [Admin\WhatsappInboxController::class, 'sendMessage'])->whereNumber('id')->name('send');
             Route::post('/conversations/{id}/messages/{messageId}/react', [Admin\WhatsappInboxController::class, 'react'])->whereNumber(['id', 'messageId'])->name('react');
+            Route::delete('/conversations/{id}/messages/{messageId}', [Admin\WhatsappInboxController::class, 'destroyMessage'])->whereNumber(['id', 'messageId'])->name('message.destroy');
             Route::put('/notification-settings', [Admin\WhatsappInboxController::class, 'updateNotificationSettings'])->name('notifications.update');
             Route::get('/media/{message}', [Admin\WhatsappInboxController::class, 'media'])->whereNumber('message')->name('media');
         });

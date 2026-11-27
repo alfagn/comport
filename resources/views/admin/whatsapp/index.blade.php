@@ -16,6 +16,7 @@
   data-url-contact-tpl="{{ route('admin.whatsapp.contact.update', '__ID__') }}"
   data-url-delete-tpl="{{ route('admin.whatsapp.destroy', '__ID__') }}"
   data-url-react-tpl="{{ route('admin.whatsapp.react', ['id' => '__ID__', 'messageId' => '__MSG__']) }}"
+  data-url-del-msg-tpl="{{ route('admin.whatsapp.message.destroy', ['id' => '__ID__', 'messageId' => '__MSG__']) }}"
   data-url-notifications="{{ route('admin.whatsapp.notifications.update') }}"
   data-url-api-settings="{{ route('admin.settings.edit', ['section' => 'whatsapp']) }}"
 >
@@ -23,6 +24,8 @@
       'contacts' => $contacts,
       'active_chat' => $activeChat,
       'total_unread' => $totalUnread,
+      'archived_count' => $archivedCount ?? 0,
+      'archived_unread' => $archivedUnread ?? 0,
       'notifications' => $notificationSettings,
   ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) !!}</script>
 
@@ -62,7 +65,14 @@
       </div>
     </div>
 
-    <div class="wa-filters" role="tablist" aria-label="Filter conversations">
+    <div class="wa-archive-head" data-wa-archive-head hidden>
+      <button type="button" class="wa-icon-btn" data-wa-exit-archive aria-label="Back to chats">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+      <strong>Archived</strong>
+    </div>
+
+    <div class="wa-filters" data-wa-filters-bar role="tablist" aria-label="Filter conversations">
       <button type="button" class="wa-filter-chip is-active" data-wa-filter="all">All</button>
       <button type="button" class="wa-filter-chip" data-wa-filter="unread">
         Unread <span class="wa-filter-chip__count" data-wa-unread-total {{ $totalUnread > 0 ? '' : 'hidden' }}>{{ $totalUnread }}</span>
@@ -113,6 +123,10 @@
 
           <button type="button" class="wa-icon-btn" data-wa-toggle-msg-search title="Search in conversation" aria-label="Search messages">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+
+          <button type="button" class="wa-icon-btn" data-wa-toggle-archive title="Archive / Unarchive conversation" aria-label="Archive conversation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
           </button>
 
           <button type="button" class="wa-icon-btn" data-wa-toggle-pin title="Pin / Unpin conversation" aria-label="Pin conversation">
@@ -461,5 +475,8 @@
     </div>
     <img src="" alt="" data-wa-lightbox-img/>
   </div>
+
+  {{-- 6. Right-Click Context Menu (WhatsApp Web Style) --}}
+  <div class="wa-ctx-menu" data-wa-ctx-menu hidden></div>
 </div>
 @endsection

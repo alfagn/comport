@@ -82,7 +82,9 @@ class WhatsappInboxController extends Controller
             'whatsappEnabled' => $this->whatsappApi->isEnabled(),
             'contacts' => $contactsPayload,
             'activeChat' => $initialPayload,
-            'totalUnread' => (int) SupportChatSession::whatsapp()->sum('unread_count'),
+            'totalUnread' => (int) SupportChatSession::whatsapp()->where('is_archived', false)->sum('unread_count'),
+            'archivedCount' => SupportChatSession::whatsapp()->where('is_archived', true)->count(),
+            'archivedUnread' => (int) SupportChatSession::whatsapp()->where('is_archived', true)->sum('unread_count'),
             'notificationSettings' => [
                 'enabled' => $this->whatsappSupport->isUnreadEmailEnabled(),
                 'email' => Setting::getValue('whatsapp_notify_email')
@@ -129,7 +131,9 @@ class WhatsappInboxController extends Controller
 
         return response()->json([
             'ok' => true,
-            'total_unread' => (int) SupportChatSession::whatsapp()->sum('unread_count'),
+            'total_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', false)->sum('unread_count'),
+            'archived_count' => SupportChatSession::whatsapp()->where('is_archived', true)->count(),
+            'archived_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', true)->sum('unread_count'),
             'total_contacts' => SupportChatSession::whatsapp()->count(),
             'contacts' => $contacts,
             'active_chat' => $activePayload,
@@ -211,6 +215,9 @@ class WhatsappInboxController extends Controller
             'ok' => true,
             'contact' => $this->serializeContact($session),
             'active_chat' => $this->serializeActiveChat($session),
+            'total_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', false)->sum('unread_count'),
+            'archived_count' => SupportChatSession::whatsapp()->where('is_archived', true)->count(),
+            'archived_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', true)->sum('unread_count'),
         ]);
     }
 
@@ -422,6 +429,9 @@ class WhatsappInboxController extends Controller
             'ok' => true,
             'contact' => $this->serializeContact($session),
             'active_chat' => $this->serializeActiveChat($session),
+            'total_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', false)->sum('unread_count'),
+            'archived_count' => SupportChatSession::whatsapp()->where('is_archived', true)->count(),
+            'archived_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', true)->sum('unread_count'),
         ]);
     }
 
@@ -470,6 +480,8 @@ class WhatsappInboxController extends Controller
             'contact_notes' => ['nullable', 'string', 'max:3000'],
             'status' => ['nullable', 'in:open,handed_off,closed'],
             'is_pinned' => ['nullable', 'boolean'],
+            'is_archived' => ['nullable', 'boolean'],
+            'mark_unread' => ['nullable', 'boolean'],
             'ai_paused' => ['nullable', 'boolean'],
             'avatar' => ['nullable', 'image', 'max:5120'],
             'remove_avatar' => ['nullable', 'boolean'],
@@ -489,6 +501,20 @@ class WhatsappInboxController extends Controller
 
         if ($request->has('is_pinned')) {
             $updates['is_pinned'] = $request->boolean('is_pinned');
+        }
+        if ($request->has('is_archived')) {
+            $updates['is_archived'] = $request->boolean('is_archived');
+            if ($updates['is_archived']) {
+                $updates['is_pinned'] = false;
+            }
+        }
+        if ($request->has('mark_unread')) {
+            if ($request->boolean('mark_unread')) {
+                $updates['unread_count'] = max(1, (int) $session->unread_count);
+            } else {
+                $this->whatsappSupport->markSessionReadByAdmin($session, sendWhatsappReceipt: false);
+                $updates['unread_count'] = 0;
+            }
         }
         if ($request->has('ai_paused')) {
             $updates['ai_paused'] = $request->boolean('ai_paused');
@@ -523,6 +549,44 @@ class WhatsappInboxController extends Controller
         if ($updates !== []) {
             $session->forceFill($updates)->save();
         }
+
+        $session->refresh();
+
+        return response()->json([
+            'ok' => true,
+            'contact' => $this->serializeContact($session),
+            'active_chat' => $this->serializeActiveChat($session),
+            'total_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', false)->sum('unread_count'),
+            'archived_count' => SupportChatSession::whatsapp()->where('is_archived', true)->count(),
+            'archived_unread' => (int) SupportChatSession::whatsapp()->where('is_archived', true)->sum('unread_count'),
+        ]);
+    }
+
+    /**
+     * Delete a single message inside a WhatsApp thread (and remove its stored media file if present).
+     */
+    public function destroyMessage(int $id, int $messageId): JsonResponse
+    {
+        $session = SupportChatSession::whatsapp()->findOrFail($id);
+        $message = WhatsappMessage::query()
+            ->where('support_chat_session_id', $session->id)
+            ->findOrFail($messageId);
+
+        if ($message->media_path) {
+            $disk = $message->media_disk ?: WhatsappCustomerSupportService::MEDIA_DISK;
+            Storage::disk($disk)->delete($message->media_path);
+        }
+
+        $message->delete();
+
+        $latest = WhatsappMessage::query()
+            ->where('support_chat_session_id', $session->id)
+            ->latest('id')
+            ->first();
+
+        $session->forceFill([
+            'last_message_preview' => $latest?->previewLabel(),
+        ])->save();
 
         $session->refresh();
 
@@ -677,14 +741,20 @@ class WhatsappInboxController extends Controller
             ->orderByDesc('last_message_at')
             ->orderByDesc('id');
 
-        if ($filter === 'unread') {
-            $query->where('unread_count', '>', 0);
-        } elseif ($filter === 'pinned') {
-            $query->where('is_pinned', true);
-        } elseif ($filter === 'ai') {
-            $query->where('ai_paused', false);
-        } elseif ($filter === 'human') {
-            $query->where('ai_paused', true);
+        if ($filter === 'archived') {
+            $query->where('is_archived', true);
+        } elseif ($search === '') {
+            $query->where('is_archived', false);
+
+            if ($filter === 'unread') {
+                $query->where('unread_count', '>', 0);
+            } elseif ($filter === 'pinned') {
+                $query->where('is_pinned', true);
+            } elseif ($filter === 'ai') {
+                $query->where('ai_paused', false);
+            } elseif ($filter === 'human') {
+                $query->where('ai_paused', true);
+            }
         }
 
         if ($search === '') {
@@ -727,13 +797,13 @@ class WhatsappInboxController extends Controller
     protected function serializeContact(SupportChatSession $session): array
     {
         $presence = $this->supportChats->presenceFor($session);
-        $rawPhone = $session->visitor_phone ?: ($session->external_thread_id ? '+'.$session->external_thread_id : '');
+        $isBsuid = $session->external_thread_id && $this->whatsappApi->isBsuid((string) $session->external_thread_id);
+        $rawPhone = $session->visitor_phone ?: ((! $isBsuid && $session->external_thread_id) ? '+'.$session->external_thread_id : '');
         $formattedPhone = $rawPhone !== '' ? $this->whatsappApi->formattedPhone($rawPhone) : '';
+        $cleanUsername = ltrim(trim((string) ($session->visitor_username ?? '')), '@');
         $displayName = trim((string) ($session->visitor_name ?? '')) !== ''
             ? trim((string) $session->visitor_name)
-            : ($formattedPhone ?: $session->visitorLabel());
-
-        $cleanUsername = ltrim(trim((string) ($session->visitor_username ?? '')), '@');
+            : ($cleanUsername !== '' ? '@'.$cleanUsername : ($formattedPhone ?: $session->visitorLabel()));
         $paletteIdx = abs(crc32((string) ($session->external_thread_id ?: $session->id))) % count(self::AVATAR_PALETTE);
 
         $timeLabel = '';
@@ -774,6 +844,7 @@ class WhatsappInboxController extends Controller
             'unread_count' => (int) $session->unread_count,
             'total_messages' => $totalMsgs,
             'is_pinned' => (bool) $session->is_pinned,
+            'is_archived' => (bool) $session->is_archived,
             'ai_paused' => (bool) $session->ai_paused,
             'status' => $session->status,
             'status_label' => $session->statusLabel(),

@@ -71,7 +71,9 @@ class WebsiteChatController extends Controller
             'chatbotEnabled' => $this->supportChats->isEnabled(),
             'contacts' => $contactsPayload,
             'activeChat' => $initialPayload,
-            'totalUnread' => (int) SupportChatSession::web()->sum('unread_count'),
+            'totalUnread' => (int) SupportChatSession::web()->where('is_archived', false)->sum('unread_count'),
+            'archivedCount' => SupportChatSession::web()->where('is_archived', true)->count(),
+            'archivedUnread' => (int) SupportChatSession::web()->where('is_archived', true)->sum('unread_count'),
         ]);
     }
 
@@ -104,7 +106,9 @@ class WebsiteChatController extends Controller
 
         return response()->json([
             'ok' => true,
-            'total_unread' => (int) SupportChatSession::web()->sum('unread_count'),
+            'total_unread' => (int) SupportChatSession::web()->where('is_archived', false)->sum('unread_count'),
+            'archived_count' => SupportChatSession::web()->where('is_archived', true)->count(),
+            'archived_unread' => (int) SupportChatSession::web()->where('is_archived', true)->sum('unread_count'),
             'contacts' => $contacts,
             'active_chat' => $activePayload,
         ]);
@@ -209,6 +213,8 @@ class WebsiteChatController extends Controller
             'contact_notes' => ['nullable', 'string', 'max:3000'],
             'status' => ['nullable', 'in:open,handed_off,closed'],
             'is_pinned' => ['nullable', 'boolean'],
+            'is_archived' => ['nullable', 'boolean'],
+            'mark_unread' => ['nullable', 'boolean'],
             'ai_paused' => ['nullable', 'boolean'],
             'avatar' => ['nullable', 'image', 'max:5120'],
         ]);
@@ -221,6 +227,17 @@ class WebsiteChatController extends Controller
         }
         if ($request->has('is_pinned')) {
             $updates['is_pinned'] = $request->boolean('is_pinned');
+        }
+        if ($request->has('is_archived')) {
+            $updates['is_archived'] = $request->boolean('is_archived');
+            if ($updates['is_archived']) {
+                $updates['is_pinned'] = false;
+            }
+        }
+        if ($request->has('mark_unread')) {
+            $updates['unread_count'] = $request->boolean('mark_unread')
+                ? max(1, (int) $session->unread_count)
+                : 0;
         }
         if ($request->has('ai_paused')) {
             $updates['ai_paused'] = $request->boolean('ai_paused');
@@ -251,6 +268,9 @@ class WebsiteChatController extends Controller
             'ok' => true,
             'contact' => $this->serializeVisitor($session),
             'active_chat' => $this->serializeActiveChat($session),
+            'total_unread' => (int) SupportChatSession::web()->where('is_archived', false)->sum('unread_count'),
+            'archived_count' => SupportChatSession::web()->where('is_archived', true)->count(),
+            'archived_unread' => (int) SupportChatSession::web()->where('is_archived', true)->sum('unread_count'),
         ]);
     }
 
@@ -317,14 +337,20 @@ class WebsiteChatController extends Controller
             ->orderByDesc('last_message_at')
             ->orderByDesc('id');
 
-        if ($filter === 'unread') {
-            $query->where('unread_count', '>', 0);
-        } elseif ($filter === 'pinned') {
-            $query->where('is_pinned', true);
-        } elseif ($filter === 'human') {
-            $query->where(function ($q) {
-                $q->where('ai_paused', true)->orWhere('status', SupportChatSession::STATUS_HANDED_OFF);
-            });
+        if ($filter === 'archived') {
+            $query->where('is_archived', true);
+        } elseif ($search === '') {
+            $query->where('is_archived', false);
+
+            if ($filter === 'unread') {
+                $query->where('unread_count', '>', 0);
+            } elseif ($filter === 'pinned') {
+                $query->where('is_pinned', true);
+            } elseif ($filter === 'human') {
+                $query->where(function ($q) {
+                    $q->where('ai_paused', true)->orWhere('status', SupportChatSession::STATUS_HANDED_OFF);
+                });
+            }
         }
 
         $candidates = $query->limit($search !== '' ? 200 : $limit)->get();
@@ -422,6 +448,7 @@ class WebsiteChatController extends Controller
             'unread_count' => (int) $session->unread_count,
             'total_messages' => (int) $session->message_count,
             'is_pinned' => (bool) $session->is_pinned,
+            'is_archived' => (bool) $session->is_archived,
             'ai_paused' => (bool) $session->ai_paused,
             'status' => $session->status,
             'status_label' => $session->statusLabel(),

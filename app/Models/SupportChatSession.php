@@ -44,7 +44,7 @@ class SupportChatSession extends Model
     protected $fillable = [
         'token', 'conversation_id', 'channel', 'visitor_name', 'visitor_username',
         'visitor_avatar', 'visitor_email', 'visitor_phone', 'external_thread_id',
-        'status', 'ai_paused', 'is_pinned', 'handoff_summary', 'contact_notes',
+        'status', 'ai_paused', 'is_pinned', 'is_archived', 'handoff_summary', 'contact_notes',
         'contact_message_id', 'message_count', 'unread_count', 'ip_address',
         'user_agent', 'landing_page', 'last_external_message_id', 'last_message_preview',
         'last_message_at', 'last_admin_read_at', 'last_customer_message_at',
@@ -59,6 +59,7 @@ class SupportChatSession extends Model
         return [
             'ai_paused' => 'boolean',
             'is_pinned' => 'boolean',
+            'is_archived' => 'boolean',
             'message_count' => 'integer',
             'unread_count' => 'integer',
             'last_message_preview' => EncryptedTextOrPlain::class,

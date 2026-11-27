@@ -543,4 +543,79 @@ class WhatsappCustomerApiTest extends TestCase
         $this->assertNotEmpty($contactUpdate['contact']['avatar_url']);
         $this->actingAs($owner)->get("/admin/whatsapp/conversations/{$session->id}/avatar")->assertOk();
     }
+
+    public function test_bsuid_username_only_replies_use_recipient_field_and_archive_plus_mark_unread_work(): void
+    {
+        Http::fake([
+            'https://graph.facebook.com/*' => Http::response([
+                'messaging_product' => 'whatsapp',
+                'messages' => [['id' => 'wamid.BSUID_OUT_1']],
+            ], 200),
+        ]);
+
+        CustomerSupportAgent::fake(['أهلاً يا أحمد! كيف أساعدك؟']);
+        $owner = $this->owner();
+
+        // 1. Customer with hidden phone number sends inbound message via BSUID (`EG.2124566744990207`)
+        $this->postJson('/api/webhooks/whatsapp', [
+            'entry' => [[
+                'changes' => [[
+                    'value' => [
+                        'contacts' => [[
+                            'wa_id' => '',
+                            'user_id' => 'EG.2124566744990207',
+                            'profile' => [
+                                'name' => 'أحمد',
+                                'username' => 'ahmed_dev',
+                            ],
+                        ]],
+                        'messages' => [[
+                            'from' => 'EG.2124566744990207',
+                            'user_id' => 'EG.2124566744990207',
+                            'id' => 'wamid.BSUID_IN_1',
+                            'type' => 'text',
+                            'text' => ['body' => 'اهلا'],
+                        ]],
+                    ],
+                ]],
+            ]],
+        ])->assertOk()->assertJsonPath('processed', 1);
+
+        $session = SupportChatSession::whatsapp()->where('external_thread_id', 'EG.2124566744990207')->firstOrFail();
+        $this->assertNull($session->visitor_phone);
+        $this->assertSame('ahmed_dev', $session->visitor_username);
+
+        // Verify Meta Graph API received `"recipient": "EG.2124566744990207"` (NOT `"to": "2124566744990207"`)
+        Http::assertSent(function (HttpClientRequest $req): bool {
+            return str_contains($req->url(), '/messages')
+                && ($req['type'] ?? null) === 'text'
+                && ($req['recipient'] ?? null) === 'EG.2124566744990207'
+                && ! isset($req['to']);
+        });
+
+        // 2. Right-click Archive moves chat out of main list into `filter=archived` and updates `archived_count`
+        $this->actingAs($owner)->patchJson("/admin/whatsapp/conversations/{$session->id}", [
+            'is_archived' => true,
+        ])->assertOk()->assertJsonPath('archived_count', 1);
+
+        $mainPoll = $this->actingAs($owner)->getJson('/admin/whatsapp/poll?filter=all')->assertOk()->json();
+        $this->assertCount(0, $mainPoll['contacts']);
+        $this->assertSame(1, $mainPoll['archived_count']);
+
+        $archPoll = $this->actingAs($owner)->getJson('/admin/whatsapp/poll?filter=archived')->assertOk()->json();
+        $this->assertCount(1, $archPoll['contacts']);
+
+        // 3. Right-click Mark as unread & Unarchive + Delete single message
+        $this->actingAs($owner)->patchJson("/admin/whatsapp/conversations/{$session->id}", [
+            'is_archived' => false,
+            'mark_unread' => true,
+        ])->assertOk()
+            ->assertJsonPath('archived_count', 0)
+            ->assertJsonPath('contact.unread_count', 1);
+
+        $firstMsg = WhatsappMessage::query()->where('support_chat_session_id', $session->id)->firstOrFail();
+        $this->actingAs($owner)->deleteJson("/admin/whatsapp/conversations/{$session->id}/messages/{$firstMsg->id}")
+            ->assertOk();
+        $this->assertDatabaseMissing('whatsapp_messages', ['id' => $firstMsg->id]);
+    }
 }
