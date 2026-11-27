@@ -145,6 +145,11 @@
           && \Illuminate\Support\Facades\Schema::hasColumn('support_chat_sessions', 'unread_count'))
           ? (int) \App\Models\SupportChatSession::whatsapp()->sum('unread_count')
           : 0;
+      // Unread Website AI Chat messages for the dedicated Website Chat Studio item.
+      $unreadWebChat = (\Illuminate\Support\Facades\Schema::hasTable('support_chat_sessions')
+          && \Illuminate\Support\Facades\Schema::hasColumn('support_chat_sessions', 'unread_count'))
+          ? (int) \App\Models\SupportChatSession::web()->sum('unread_count')
+          : 0;
       $adminUser = auth()->user();
       $adminRawPhoto = $adminUser?->member?->photo;
       if (! $adminRawPhoto && $adminUser?->email) {
@@ -184,46 +189,19 @@
       <span class="nav-item__text">WhatsApp</span>
       <span class="badge" data-sidebar-wa-badge style="background:#25D366;color:#052e16;font-weight:800;{{ $unreadWhatsapp > 0 ? '' : 'display:none;' }}">{{ $unreadWhatsapp }}</span>
     </a>
+    <a class="nav-item {{ str_starts_with($r, 'admin.website-chat.') ? 'is-active' : '' }}" href="{{ route('admin.website-chat.index') }}" wire:navigate>
+      <span class="nav-ico" style="width:22px;height:22px;border-radius:7px;background:linear-gradient(145deg,#4F46E5,#7C3AED);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(79,70,229,0.32);" aria-hidden="true">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>
+      </span>
+      <span class="nav-item__text">Website Chat</span>
+      <span class="badge" data-sidebar-webchat-badge style="background:#25D366;color:#052e16;font-weight:800;{{ $unreadWebChat > 0 ? '' : 'display:none;' }}">{{ $unreadWebChat }}</span>
+    </a>
     @endcan
     @can('use ai assistant')
     <a class="nav-item {{ str_starts_with($r, 'admin.assistant') ? 'is-active' : '' }}" href="{{ route('admin.assistant.index') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-rocket.png') }}" alt="" width="22" height="22"/>
       <span class="nav-item__text">AI Copilot</span>
     </a>
-    @endcan
-    @can('manage support chats')
-    @php($supportNavOpen = str_starts_with($r, 'admin.support-chats'))
-    <div class="nav-group {{ $supportNavOpen ? 'is-open' : '' }}" data-nav-group>
-      <button
-        type="button"
-        class="nav-item nav-group__trigger {{ $supportNavOpen ? 'is-active' : '' }}"
-        aria-expanded="{{ $supportNavOpen ? 'true' : 'false' }}"
-        onclick="if (document.body.classList.contains('sidebar-collapsed')) { empetixToggleSidebar(); } var g = this.closest('[data-nav-group]'); var open = g.classList.toggle('is-open'); this.setAttribute('aria-expanded', open ? 'true' : 'false');"
-      >
-        <img class="nav-ico" src="{{ asset('assets/images/3d/3d-chat-bubbles.png') }}" alt="" width="22" height="22"/>
-        <span class="nav-item__text">Support Chats</span>
-        @if($handedOffChats > 0)<span class="badge">{{ $handedOffChats }}</span>@endif
-        <svg class="nav-group__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="nav-sublist">
-        <a class="nav-subitem {{ in_array($r, ['admin.support-chats.index', 'admin.support-chats.show'], true) ? 'is-active' : '' }}" href="{{ route('admin.support-chats.index') }}" wire:navigate>
-          <span class="nav-subitem__dot"></span>
-          <span>Conversations</span>
-        </a>
-        <a class="nav-subitem {{ $r === 'admin.support-chats.dispatch' ? 'is-active' : '' }}" href="{{ route('admin.support-chats.dispatch') }}" wire:navigate>
-          <span class="nav-subitem__dot"></span>
-          <span>Send WhatsApp</span>
-        </a>
-        <a class="nav-subitem {{ $r === 'admin.support-chats.whatsapp' ? 'is-active' : '' }}" href="{{ route('admin.support-chats.whatsapp') }}" wire:navigate>
-          <span class="nav-subitem__dot"></span>
-          <span>WhatsApp API</span>
-        </a>
-        <a class="nav-subitem {{ $r === 'admin.support-chats.settings' ? 'is-active' : '' }}" href="{{ route('admin.support-chats.settings') }}" wire:navigate>
-          <span class="nav-subitem__dot"></span>
-          <span>Chatbot &amp; AI Settings</span>
-        </a>
-      </div>
-    </div>
     @endcan
     @can('manage pages')
     <a class="nav-item {{ str_starts_with($r, 'admin.pages') ? 'is-active' : '' }}" href="{{ route('admin.pages.index') }}" wire:navigate>
@@ -309,7 +287,7 @@
     @can('manage settings')
     <a class="nav-item {{ str_starts_with($r, 'admin.settings') ? 'is-active' : '' }}" href="{{ route('admin.settings.edit') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-gear.png') }}" alt="" width="22" height="22"/>
-      <span class="nav-item__text">Settings</span>
+      <span class="nav-item__text">System Settings</span>
     </a>
     <a class="nav-item {{ str_starts_with($r, 'admin.seo') ? 'is-active' : '' }}" href="{{ route('admin.seo.index') }}" wire:navigate>
       <img class="nav-ico" src="{{ asset('assets/images/3d/3d-magnifier.png') }}" alt="" width="22" height="22"/>
@@ -453,10 +431,8 @@
           <li data-name="ai copilot assistant tasks agent"><a href="{{ route('admin.assistant.index') }}" wire:navigate>AI Copilot</a></li>
           @endcan
           @can('manage support chats')
-          <li data-name="support chats conversations customer"><a href="{{ route('admin.support-chats.index') }}" wire:navigate>Support Chats — Conversations</a></li>
-          <li data-name="send whatsapp outbound template customer"><a href="{{ route('admin.support-chats.dispatch') }}" wire:navigate>Support Chats — Send WhatsApp</a></li>
-          <li data-name="whatsapp api webhook meta token"><a href="{{ route('admin.support-chats.whatsapp') }}" wire:navigate>Support Chats — WhatsApp API</a></li>
-          <li data-name="chatbot ai settings faq gemini openai"><a href="{{ route('admin.support-chats.settings') }}" wire:navigate>Support Chats — Chatbot &amp; AI Settings</a></li>
+          <li data-name="whatsapp inbox messages customers"><a href="{{ route('admin.whatsapp.index') }}" wire:navigate>WhatsApp</a></li>
+          <li data-name="website chat live visitor ai concierge"><a href="{{ route('admin.website-chat.index') }}" wire:navigate>Website Chat</a></li>
           @endcan
           <li data-name="inbox briefs messages contact"><a href="{{ route('admin.inbox.index') }}" wire:navigate>Inbox</a></li>
           <li data-name="pages content sections"><a href="{{ route('admin.pages.index') }}" wire:navigate>Pages &amp; Content</a></li>
@@ -472,7 +448,11 @@
           <li data-name="partners clients logos"><a href="{{ route('admin.partners.index') }}" wire:navigate>Partners</a></li>
           <li data-name="navigation menu mega"><a href="{{ route('admin.navigation.index') }}" wire:navigate>Navigation</a></li>
           <li data-name="content lists about careers timeline"><a href="{{ route('admin.content-lists.index') }}" wire:navigate>Content Lists</a></li>
-          <li data-name="settings site social contact"><a href="{{ route('admin.settings.edit') }}" wire:navigate>Settings</a></li>
+          @can('manage settings')
+          <li data-name="system settings cards general"><a href="{{ route('admin.settings.edit') }}" wire:navigate>System Settings</a></li>
+          <li data-name="system settings whatsapp cloud api meta token"><a href="{{ route('admin.settings.edit', ['section' => 'whatsapp']) }}" wire:navigate>System Settings &mdash; WhatsApp</a></li>
+          <li data-name="system settings chatbot ai faq gemini openai"><a href="{{ route('admin.settings.edit', ['section' => 'chatbot']) }}" wire:navigate>System Settings &mdash; Chatbot &amp; AI</a></li>
+          @endcan
         </ul>
       </div>
     </div>
@@ -989,6 +969,7 @@
 @endcan
 <script src="{{ asset('assets/admin/assistant.js') }}?v={{ file_exists(public_path('assets/admin/assistant.js')) ? filemtime(public_path('assets/admin/assistant.js')) : time() }}" data-navigate-once></script>
 <script src="{{ asset('assets/admin/whatsapp-inbox.js') }}?v={{ file_exists(public_path('assets/admin/whatsapp-inbox.js')) ? filemtime(public_path('assets/admin/whatsapp-inbox.js')) : time() }}" data-navigate-once></script>
+<script src="{{ asset('assets/admin/website-chat.js') }}?v={{ file_exists(public_path('assets/admin/website-chat.js')) ? filemtime(public_path('assets/admin/website-chat.js')) : time() }}" data-navigate-once></script>
 @stack('datatables')
 {{-- Livewire drives wire:navigate SPA swaps across the admin shell. --}}
 @livewireScripts

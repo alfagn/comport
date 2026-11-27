@@ -166,6 +166,9 @@ class CustomerSupportChatService
             ];
         }
 
+        $adminViewing = Cache::has("webchat:admin_viewing:{$session->id}");
+        $nextUnread = $adminViewing ? 0 : ($session->unread_count + 1);
+
         // Human Takeover mode on Website Chat: record customer message without invoking AI
         if ($session->ai_paused) {
             $conversationId = $this->ensureWebConversationExists($session, $message);
@@ -180,6 +183,9 @@ class CustomerSupportChatService
             $session->forceFill([
                 'conversation_id' => $conversationId,
                 'message_count' => $session->message_count + 1,
+                'unread_count' => $nextUnread,
+                'last_message_preview' => Str::limit(trim($message), 90),
+                'last_customer_message_at' => now(),
                 'last_message_at' => now(),
             ])->save();
 
@@ -192,6 +198,13 @@ class CustomerSupportChatService
         $provider = $this->guard->resolvedProvider($primaryProvider);
 
         if (! $this->guard->isReady($provider, CustomerSupportAgent::isFaked())) {
+            $session->forceFill([
+                'unread_count' => $nextUnread,
+                'last_message_preview' => Str::limit(trim($message), 90),
+                'last_customer_message_at' => now(),
+                'last_message_at' => now(),
+            ])->save();
+
             return [
                 ...$this->serializeSession($session),
                 'fallback_reply' => $this->fallbackReply(),
@@ -219,6 +232,9 @@ class CustomerSupportChatService
         $session->forceFill([
             'conversation_id' => $response->conversationId ?? $session->conversation_id,
             'message_count' => $session->message_count + 1,
+            'unread_count' => $nextUnread,
+            'last_message_preview' => Str::limit(trim($response->text ?: $message), 90),
+            'last_customer_message_at' => now(),
             'last_message_at' => now(),
         ])->save();
 
@@ -228,11 +244,16 @@ class CustomerSupportChatService
     /**
      * Send a direct human specialist reply from the Admin Dashboard to a Website chat session.
      */
-    public function sendHumanReply(SupportChatSession $session, string $message, bool $pauseAi = true): SupportChatSession
-    {
+    public function sendHumanReply(
+        SupportChatSession $session,
+        string $message,
+        bool $pauseAi = true,
+        ?string $senderName = null,
+    ): SupportChatSession {
         $this->markTyping($session, 'admin', false);
 
-        $conversationId = $this->ensureWebConversationExists($session, $message);
+        $trimmed = trim($message);
+        $conversationId = $this->ensureWebConversationExists($session, $trimmed);
 
         ConversationMessage::query()->create([
             'id' => (string) Str::uuid7(),
@@ -241,17 +262,23 @@ class CustomerSupportChatService
             'participant_id' => Conversation::participantKey($session),
             'agent' => CustomerSupportAgent::class,
             'role' => 'assistant',
-            'content' => trim($message),
+            'content' => $trimmed,
             'attachments' => [],
             'steps' => [],
             'usage' => [],
-            'meta' => ['source' => 'human_agent'],
+            'meta' => array_filter([
+                'source' => 'human_agent',
+                'sender_name' => $senderName,
+            ]),
             'status' => MessageStatus::Completed,
         ]);
 
         $session->forceFill([
             'conversation_id' => $conversationId,
             'ai_paused' => $pauseAi,
+            'unread_count' => 0,
+            'last_admin_read_at' => now(),
+            'last_message_preview' => Str::limit($trimmed, 90),
             'last_message_at' => now(),
         ])->save();
 

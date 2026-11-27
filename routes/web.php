@@ -180,6 +180,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/media/{message}', [Admin\WhatsappInboxController::class, 'media'])->whereNumber('message')->name('media');
         });
 
+        // Dedicated Website Live Chat Studio (WhatsApp-style 3-pane workspace for Visitor <-> AI / Human).
+        Route::middleware('permission:manage support chats')->prefix('website-chat')->name('website-chat.')->group(function () {
+            Route::get('/', [Admin\WebsiteChatController::class, 'index'])->name('index');
+            Route::get('/poll', [Admin\WebsiteChatController::class, 'poll'])->name('poll');
+            Route::get('/conversations/{id}', [Admin\WebsiteChatController::class, 'show'])->whereNumber('id')->name('show');
+            Route::match(['patch', 'post'], '/conversations/{id}', [Admin\WebsiteChatController::class, 'updateVisitor'])->whereNumber('id')->name('visitor.update');
+            Route::get('/conversations/{id}/avatar', [Admin\WebsiteChatController::class, 'avatar'])->whereNumber('id')->name('avatar');
+            Route::post('/conversations/{id}/send', [Admin\WebsiteChatController::class, 'sendMessage'])->whereNumber('id')->name('send');
+            Route::post('/conversations/{id}/typing', [Admin\WebsiteChatController::class, 'typing'])->whereNumber('id')->name('typing');
+            Route::delete('/conversations/{id}', [Admin\WebsiteChatController::class, 'destroy'])->whereNumber('id')->name('destroy');
+        });
+
         // Public AI Customer Support & WhatsApp Cloud API transcripts & configuration.
         Route::middleware('permission:manage support chats')->prefix('support-chats')->name('support-chats.')->group(function () {
             Route::get('/', [Admin\SupportChatController::class, 'index'])->name('index');
@@ -208,10 +220,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/applications/{id}', [Admin\ApplicationController::class, 'destroy'])->name('applications.destroy');
         });
 
-        // Site settings, SEO & Sitemap.
+        // System Settings Hub (Cards for General, WhatsApp & Chatbot), SEO & Sitemap.
         Route::middleware('permission:manage settings')->group(function () {
             Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('settings.edit');
             Route::put('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
+            Route::put('/settings/whatsapp', [Admin\SettingsController::class, 'updateWhatsapp'])->name('settings.whatsapp.update');
+            Route::post('/settings/whatsapp-subscribe', [Admin\SettingsController::class, 'subscribeWhatsappWebhook'])->name('settings.whatsapp.subscribe');
+            Route::put('/settings/chatbot', [Admin\SettingsController::class, 'updateChatbot'])->name('settings.chatbot.update');
 
             // SEO & AI Search Discovery
             Route::get('/seo', [Admin\SeoController::class, 'index'])->name('seo.index');

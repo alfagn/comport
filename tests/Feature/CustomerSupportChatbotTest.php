@@ -17,6 +17,7 @@ use App\Models\SupportChatSession;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Laravel\Ai\Tools\Request as ToolRequest;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
@@ -303,5 +304,93 @@ class CustomerSupportChatbotTest extends TestCase
             ->assertJsonPath('session.ai_paused', true)
             ->assertJsonCount(1, 'session.messages')
             ->assertJsonPath('session.messages.0.source', 'human_agent');
+    }
+
+    public function test_website_chat_studio_and_system_settings_cards_hub_work_end_to_end(): void
+    {
+        $owner = $this->owner();
+        CustomerSupportAgent::fake(['Welcome! How can Empetix help?']);
+
+        // 1. Visitor sends a message on the public website -> increments unread_count on Website Chat Studio
+        $payload = $this->postJson('/support-chat/message', [
+            'message' => 'أحتاج بناء منصة SaaS متكاملة',
+            'landing_page' => '/services',
+        ])->assertOk()->json('session');
+
+        $session = SupportChatSession::web()->where('token', $payload['token'])->firstOrFail();
+        $this->assertSame(1, $session->unread_count);
+
+        // 2. Sidebar shows WhatsApp, Website Chat & System Settings, without the old Support Chats submenu
+        $this->actingAs($owner)->get('/admin/website-chat')
+            ->assertOk()
+            ->assertSee('Empetix Website Live Chat Studio')
+            ->assertSee('Website Chat')
+            ->assertSee('System Settings')
+            ->assertDontSee('Outbound WhatsApp Customer Dispatch');
+
+        // 3. Opening the visitor conversation clears unread_count = 0
+        $showRes = $this->actingAs($owner)
+            ->getJson("/admin/website-chat/conversations/{$session->id}")
+            ->assertOk()
+            ->json();
+
+        $this->assertSame(0, $showRes['active_chat']['contact']['unread_count']);
+        $this->assertSame(0, $session->fresh()->unread_count);
+
+        // 4. Live specialist reply with idempotency_key delivers once even if double-clicked
+        $idemKey = 'wc_double_click_test_1';
+        $first = $this->actingAs($owner)->postJson("/admin/website-chat/conversations/{$session->id}/send", [
+            'message' => 'أهلاً بك! أنا معك مباشرة من فريق الهندسة.',
+            'idempotency_key' => $idemKey,
+        ], ['X-Idempotency-Key' => $idemKey])->assertOk()->json();
+
+        $second = $this->actingAs($owner)->postJson("/admin/website-chat/conversations/{$session->id}/send", [
+            'message' => 'أهلاً بك! أنا معك مباشرة من فريق الهندسة.',
+            'idempotency_key' => $idemKey,
+        ], ['X-Idempotency-Key' => $idemKey])->assertOk()->json();
+
+        $this->assertArrayNotHasKey('duplicate', $first);
+        $this->assertTrue($second['duplicate']);
+        $this->assertCount(3, $first['active_chat']['messages']); // 1 user + 1 AI + 1 human
+
+        // 5. Updating visitor CRM notes stores AES-256 encrypted ciphertext in DB
+        $this->actingAs($owner)->patchJson("/admin/website-chat/conversations/{$session->id}", [
+            'visitor_name' => 'Karim Adel',
+            'contact_notes' => 'ميزانية المشروع ممتازة',
+            'is_pinned' => true,
+        ])->assertOk()->assertJsonPath('contact.name', 'Karim Adel');
+
+        $rawNotes = (string) DB::table('support_chat_sessions')
+            ->where('id', $session->id)
+            ->value('contact_notes');
+        $this->assertStringStartsWith('enc:v1:', $rawNotes);
+
+        // 6. System Settings Hub (/admin/settings) renders the 3 cards and saves General, WhatsApp & Chatbot settings
+        $this->actingAs($owner)->get('/admin/settings')
+            ->assertOk()
+            ->assertSee('data-open-settings-card="general"', false)
+            ->assertSee('data-open-settings-card="whatsapp"', false)
+            ->assertSee('data-open-settings-card="chatbot"', false);
+
+        $this->actingAs($owner)->put('/admin/settings/whatsapp', [
+            'whatsapp_enabled' => '1',
+            'whatsapp_public_number' => '201055209612',
+            'whatsapp_phone_number_id' => '1465962866605942',
+            'whatsapp_business_account_id' => '1735985674703993',
+            'whatsapp_verify_token' => 'empetix-verify-token',
+            'whatsapp_api_version' => 'v22.0',
+        ])->assertRedirect(route('admin.settings.edit', ['section' => 'whatsapp']));
+
+        $this->assertSame('1465962866605942', Setting::getValue('whatsapp_phone_number_id'));
+
+        $this->actingAs($owner)->put('/admin/settings/chatbot', [
+            'ai_support_enabled' => '1',
+            'ai_support_greeting' => 'مرحباً بك في إمبتكس!',
+            'ai_support_knowledge' => 'We build enterprise web & mobile apps.',
+            'ai_support_provider' => 'gemini',
+            'ai_dashboard_provider' => 'gemini',
+        ])->assertRedirect(route('admin.settings.edit', ['section' => 'chatbot']));
+
+        $this->assertSame('مرحباً بك في إمبتكس!', Setting::getValue('ai_support_greeting'));
     }
 }

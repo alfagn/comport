@@ -33,7 +33,9 @@
   <div class="form-actions">
     <a class="btn btn--primary" href="mailto:{{ $message->email }}">Reply by email</a>
     @if($linkedChat && auth()->user()?->can('manage support chats'))
-      <a class="btn btn--ghost" href="{{ route('admin.support-chats.show', $linkedChat->id) }}" wire:navigate>View AI Chat Transcript &rarr;</a>
+      <a class="btn btn--ghost" href="{{ $linkedChat->isWhatsapp() ? route('admin.whatsapp.index', ['chat' => $linkedChat->id]) : route('admin.website-chat.index', ['chat' => $linkedChat->id]) }}" wire:navigate>
+        {{ $linkedChat->isWhatsapp() ? 'Open in WhatsApp Studio' : 'Open in Website Chat Studio' }} &rarr;
+      </a>
     @endif
     <form method="post" action="{{ route('admin.inbox.destroy', $message->id) }}" data-confirm="Delete this message?" data-confirm-title="Delete Brief">
       @csrf @method('DELETE')

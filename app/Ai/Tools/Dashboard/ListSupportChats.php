@@ -51,7 +51,9 @@ class ListSupportChats extends DashboardTool
                 'handoff_summary' => $chat->handoff_summary,
                 'messages' => $chat->message_count,
                 'last_message_at' => $chat->last_message_at?->toDateTimeString(),
-                'admin_url' => route('admin.support-chats.show', $chat->id),
+                'admin_url' => $chat->isWhatsapp()
+                    ? route('admin.whatsapp.index', ['chat' => $chat->id])
+                    : route('admin.website-chat.index', ['chat' => $chat->id]),
             ])->all(),
         ]);
     }

@@ -69,7 +69,7 @@ class SendWhatsappCustomerMessage extends DashboardTool implements Approvable
             'result' => 'WhatsApp message sent.',
             'session_id' => $session->id,
             'phone' => $session->visitor_phone,
-            'transcript_url' => route('admin.support-chats.show', $session->id),
+            'transcript_url' => route('admin.whatsapp.index', ['chat' => $session->id]),
         ]);
     }
 
